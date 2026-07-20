@@ -9,7 +9,7 @@ import { scanRedFlags } from '../engine/redFlags'
 import { useT } from '../i18n'
 import { Card, Details, Select, TextArea } from './ui'
 
-const DECODER_STORAGE_KEY = 'chhalaang.decoder.v1'
+const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
 const NO_APP = 'none'
 
 function useCategoryLabel(): Record<PromptTemplate['category'], string> {

@@ -1,9 +1,9 @@
 import type { Application, Insight, Stage } from './types'
 
-export const STORAGE_KEY = 'chhalaang.tracker.v1'
+export const STORAGE_KEY = 'switchkarle.tracker.v1'
 
 /** Same key App.tsx uses for the CTC Decoder's saved offer — kept in sync here for export/import. */
-const DECODER_STORAGE_KEY = 'chhalaang.decoder.v1'
+const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
 
 export const STAGE_ORDER: Stage[] = ['researching', 'applied', 'interviewing', 'offer', 'decided']
 

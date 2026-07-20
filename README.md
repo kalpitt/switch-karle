@@ -1,11 +1,11 @@
-# छलांग chhalaang
+# Switch Karle
 
 **Decode your Indian job offer. Know what actually reaches your bank.**
 
-**Live: [kalpit.me/chhalaang](https://kalpit.me/chhalaang/)** (mirror: [chhalaang.tiwari-kalpit.workers.dev](https://chhalaang.tiwari-kalpit.workers.dev/))
+**Live: [kalpit.me/switch-karle](https://kalpit.me/switch-karle/)** (mirror: [chhalaang.tiwari-kalpit.workers.dev](https://chhalaang.tiwari-kalpit.workers.dev/))
 
-Chhalaang (Hindi: *the leap*) is a free, open-source toolkit for the Indian job
-switch. Enter your CTC structure and see the truth:
+Switch Karle is a free, open-source toolkit for the Indian job switch. Enter
+your CTC structure and see the truth:
 
 - **Real in-hand salary** — under both tax regimes (FY 2026-27 rules), with the
   cheaper one recommended and every number explained.
@@ -19,8 +19,9 @@ switch. Enter your CTC structure and see the truth:
 - **100% client-side.** No server, no accounts, no analytics. Your offer never
   leaves your device.
 - **No AI calls.** Bring your own AI: the app generates context-rich prompts
-  you can paste into ChatGPT/Claude/Gemini (coming in the Prompt Studio).
-- Data lives in your browser's localStorage with JSON export/import (planned).
+  you can paste into ChatGPT/Claude/Gemini, including one that reads your full
+  offer letter and auto-fills the Decoder for you.
+- Data lives in your browser's localStorage with JSON export/import.
 
 ## Tax engine
 
@@ -52,7 +53,8 @@ npm run build      # production build
 1. **Decoder** — done
 2. **Tracker** — done. Kanban pipeline for your applications, India-native
    fields (CTC discussed, notice/buyout, F&F), unlimited and local
-3. **Prompt Studio** — done. BYO-AI prompts wired to your tracked applications
+3. **Prompt Studio** — done. BYO-AI prompts wired to your tracked applications,
+   including offer-letter auto-fill for the Decoder
 4. **PWA install** — done. Installable, works offline
 5. **Hindi UI** — done. Full app in English or Hindi (professional
    Indian-workplace register — domain terms like CTC/PF/HRA/ESOP stay in

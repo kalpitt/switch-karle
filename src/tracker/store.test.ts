@@ -39,7 +39,7 @@ beforeEach(() => {
   })
 })
 
-const DECODER_STORAGE_KEY = 'chhalaang.decoder.v1'
+const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
 
 describe('load', () => {
   it('returns [] when nothing is stored', () => {

@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   // Relative base: the same build must serve at the domain root
   // (chhalaang.tiwari-kalpit.workers.dev) AND under a subpath
-  // (kalpit.me/chhalaang via GitHub Pages project-page routing).
+  // (kalpit.me/switch-karle via GitHub Pages project-page routing).
   base: './',
   plugins: [react(), tailwindcss()],
   test: {

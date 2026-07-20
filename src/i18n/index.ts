@@ -9,7 +9,7 @@ export type Lang = 'en' | 'hi'
  * here. `hi` only needs the keys that differ; missing ones fall back to `en`. */
 export const dictionaries: Record<Lang, Record<string, string>> = { en, hi }
 
-const STORAGE_KEY = 'chhalaang.lang'
+const STORAGE_KEY = 'switchkarle.lang'
 
 function loadLang(): Lang {
   try {

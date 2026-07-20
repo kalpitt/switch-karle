@@ -78,7 +78,7 @@ export function Tracker() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'chhalaang-backup.json'
+    a.download = 'switch-karle-backup.json'
     a.click()
     URL.revokeObjectURL(url)
   }

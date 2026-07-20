@@ -10,8 +10,8 @@ import { PromptStudio } from './components/PromptStudio'
 import { AutoFill } from './components/AutoFill'
 import { useLang, useT } from './i18n'
 
-const STORAGE_KEY = 'chhalaang.decoder.v1'
-const TAB_STORAGE_KEY = 'chhalaang.tab'
+const STORAGE_KEY = 'switchkarle.decoder.v1'
+const TAB_STORAGE_KEY = 'switchkarle.tab'
 
 type Tab = 'decoder' | 'tracker' | 'prompts'
 
@@ -63,7 +63,7 @@ export default function App() {
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
       <header className="mb-6">
         <h1 className="text-2xl font-extrabold tracking-tight">
-          छलांग <span className="font-semibold text-ink-soft">chhalaang</span>
+          Switch <span className="font-semibold text-ink-soft">Karle</span>
         </h1>
         <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>
         <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">

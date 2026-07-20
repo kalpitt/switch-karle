@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages (kalpit.me/chhalaang)
+name: Deploy to GitHub Pages (kalpit.me/switch-karle)
 
 on:
   push:

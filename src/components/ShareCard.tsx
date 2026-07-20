@@ -22,7 +22,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
       const url = await toPng(ref.current, { pixelRatio: 3, cacheBust: true })
       const a = document.createElement('a')
       a.href = url
-      a.download = 'chhalaang-ctc-truth.png'
+      a.download = 'switch-karle-ctc-truth.png'
       a.click()
     } finally {
       setBusy(false)
@@ -63,7 +63,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
           )}
           <div className="mt-6 flex items-baseline justify-between border-t border-white/15 pt-4">
             <p className="text-[15px] font-extrabold">
-              छलांग <span className="font-semibold text-white/60">chhalaang</span>
+              Switch <span className="font-semibold text-white/60">Karle</span>
             </p>
             <p className="text-[11px] font-semibold text-white/50">{t('shareCard.footer')}</p>
           </div>

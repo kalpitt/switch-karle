@@ -130,7 +130,7 @@ export const en: Record<string, string> = {
   'shareCard.butBank': 'but the bank sees',
   'shareCard.reaches': '{pct}% of CTC reaches the bank',
   'shareCard.redFlags': '⚑ {n} red flag{plural} in this offer',
-  'shareCard.footer': 'kalpit.me/chhalaang',
+  'shareCard.footer': 'kalpit.me/switch-karle',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
@@ -143,7 +143,7 @@ export const en: Record<string, string> = {
   'tracker.confirmDelete': 'Delete this application? This cannot be undone.',
   'tracker.confirmImport': 'Import will overwrite your current tracker and decoder data. Continue?',
   'tracker.importSuccess': 'Backup restored.',
-  'tracker.importError': 'Could not import this file — is it a Chhalaang backup?',
+  'tracker.importError': 'Could not import this file — is it a Switch Karle backup?',
   'stage.researching': 'Researching',
   'stage.applied': 'Applied',
   'stage.interviewing': 'Interviewing',

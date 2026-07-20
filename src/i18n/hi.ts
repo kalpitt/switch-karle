@@ -140,7 +140,7 @@ export const hi: Record<string, string> = {
   'shareCard.butBank': 'लेकिन bank में पहुंचता है',
   'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',
-  'shareCard.footer': 'kalpit.me/chhalaang',
+  'shareCard.footer': 'kalpit.me/switch-karle',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
@@ -153,7 +153,7 @@ export const hi: Record<string, string> = {
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.confirmImport': 'Import करने से आपका मौजूदा tracker और decoder data overwrite हो जाएगा। जारी रखें?',
   'tracker.importSuccess': 'Backup restore हो गया।',
-  'tracker.importError': 'यह file import नहीं हो सकी — क्या यह Chhalaang का backup है?',
+  'tracker.importError': 'यह file import नहीं हो सकी — क्या यह Switch Karle का backup है?',
   'stage.researching': 'Research कर रहे हैं',
   'stage.applied': 'Apply कर दिया',
   'stage.interviewing': 'Interview चल रहा है',

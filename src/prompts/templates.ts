@@ -237,7 +237,7 @@ After reading, respond with exactly two things:
 
 \`\`\`json
 {
-  "chhalaang_offer": 1,
+  "switchkarle_offer": 1,
   "ctc_lpa": null,
   "variable_lpa": null,
   "basic_percent_of_fixed": null,

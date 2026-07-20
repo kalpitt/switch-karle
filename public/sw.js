@@ -1,10 +1,10 @@
 /* Chhalaang service worker: offline-first shell.
    Path-relative: the same worker serves at the domain root
    (chhalaang.tiwari-kalpit.workers.dev) and under a subpath
-   (kalpit.me/chhalaang) — the app shell URL is the registration scope.
+   (kalpit.me/switch-karle) — the app shell URL is the registration scope.
    Navigations: network-first (fresh app when online) with cached fallback.
    Same-origin assets: stale-while-revalidate. Bump VERSION to invalidate. */
-const VERSION = 'chhalaang-v2'
+const VERSION = 'switchkarle-v1'
 const SHELL = self.registration.scope
 
 self.addEventListener('install', (event) => {

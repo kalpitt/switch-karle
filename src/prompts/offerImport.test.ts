@@ -5,7 +5,7 @@ const FULL = `Here's my summary...
 
 \`\`\`json
 {
-  "chhalaang_offer": 1,
+  "switchkarle_offer": 1,
   "ctc_lpa": 28,
   "variable_lpa": 4.2,
   "basic_percent_of_fixed": 38,
@@ -70,6 +70,6 @@ describe('parseAiOffer', () => {
   })
 
   it('throws when JSON contains nothing usable', () => {
-    expect(() => parseAiOffer('{"chhalaang_offer": 1, "ctc_lpa": null}')).toThrow('no-fields')
+    expect(() => parseAiOffer('{"switchkarle_offer": 1, "ctc_lpa": null}')).toThrow('no-fields')
   })
 })
