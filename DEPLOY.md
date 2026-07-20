@@ -5,6 +5,22 @@
 > The repo was still private at deploy time — Cloudflare's GitHub App handles
 > private-repo access fine.
 
+## Second URL: kalpit.me/chhalaang (GitHub Pages)
+
+kalpit.me is the custom domain of the `kalpitt.github.io` user site, so any
+public repo of Kalpit's with GitHub Pages enabled auto-serves at
+`kalpit.me/<repo>` (the saavdhan pattern). The build is path-relative
+(`base: './'` + scope-relative service worker) so the same artifact works at
+the Workers root URL and under this subpath.
+
+Owner steps to activate:
+1. Make this repo public (required for free-plan Pages).
+2. GitHub → chhalaang → Settings → Pages → Source: **GitHub Actions**.
+3. Push to main (or Actions → "Deploy to GitHub Pages" → Run workflow).
+   `.github/workflows/pages.yml` builds, tests, and deploys.
+4. Verify https://kalpit.me/chhalaang/ loads; then update the truth-card
+   footer + OG tags to make it the canonical URL.
+
 The app is a static site: `npm run build` → everything in `dist/`. No server,
 no environment variables, no secrets. Recommended host: **Cloudflare Pages**
 (root-path URLs, so the service worker and manifest work unchanged).

@@ -1,10 +1,14 @@
 /* Chhalaang service worker: offline-first shell.
+   Path-relative: the same worker serves at the domain root
+   (chhalaang.tiwari-kalpit.workers.dev) and under a subpath
+   (kalpit.me/chhalaang) — the app shell URL is the registration scope.
    Navigations: network-first (fresh app when online) with cached fallback.
    Same-origin assets: stale-while-revalidate. Bump VERSION to invalidate. */
-const VERSION = 'chhalaang-v1'
+const VERSION = 'chhalaang-v2'
+const SHELL = self.registration.scope
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(VERSION).then((c) => c.addAll(['/'])))
+  event.waitUntil(caches.open(VERSION).then((c) => c.addAll([SHELL])))
   self.skipWaiting()
 })
 
@@ -26,10 +30,10 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((res) => {
           const copy = res.clone()
-          caches.open(VERSION).then((c) => c.put('/', copy))
+          caches.open(VERSION).then((c) => c.put(SHELL, copy))
           return res
         })
-        .catch(() => caches.match('/')),
+        .catch(() => caches.match(SHELL)),
     )
     return
   }
