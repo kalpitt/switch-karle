@@ -1,0 +1,35 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Chhalaang palette: warm paper, ink, saffron leap, truth-green, alarm-red */
+  --color-paper: #faf7f2;
+  --color-card: #ffffff;
+  --color-ink: #1c1917;
+  --color-ink-soft: #57534e;
+  --color-ink-faint: #a8a29e;
+  --color-line: #e7e0d8;
+  --color-saffron: #e8590c;
+  --color-saffron-soft: #fff0e6;
+  --color-leaf: #2f7d32;
+  --color-leaf-soft: #eaf5ea;
+  --color-alarm: #c92a2a;
+  --color-alarm-soft: #fdecec;
+  --color-amberflag: #b45309;
+  --color-amberflag-soft: #fef6e7;
+  --color-night: #14110f;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numeric alignment for money figures */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
