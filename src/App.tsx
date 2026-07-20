@@ -7,6 +7,7 @@ import { Results } from './components/Results'
 import { ShareButton } from './components/ShareCard'
 import { Tracker } from './components/Tracker'
 import { PromptStudio } from './components/PromptStudio'
+import { useLang, useT } from './i18n'
 
 const STORAGE_KEY = 'chhalaang.decoder.v1'
 const TAB_STORAGE_KEY = 'chhalaang.tab'
@@ -41,6 +42,8 @@ function loadOffer(): OfferInput {
 }
 
 export default function App() {
+  const t = useT()
+  const { lang, setLang } = useLang()
   const [offer, setOffer] = useState<OfferInput>(loadOffer)
   const [tab, setTab] = useState<Tab>(loadTab)
 
@@ -61,24 +64,37 @@ export default function App() {
         <h1 className="text-2xl font-extrabold tracking-tight">
           छलांग <span className="font-semibold text-ink-soft">chhalaang</span>
         </h1>
-        <p className="mt-1 text-[15px] text-ink-soft">
-          Decode your offer. Know what actually reaches your bank.
-        </p>
+        <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>
         <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">
-          <span aria-hidden>●</span> 100% private — runs entirely in your browser, nothing is uploaded
+          <span aria-hidden>●</span> {t('app.privacyBadge')}
         </p>
 
-        <nav className="mt-4 inline-flex gap-1 rounded-full border border-line bg-card p-1">
-          <TabButton active={tab === 'decoder'} onClick={() => setTab('decoder')}>
-            Decoder
-          </TabButton>
-          <TabButton active={tab === 'tracker'} onClick={() => setTab('tracker')}>
-            Tracker
-          </TabButton>
-          <TabButton active={tab === 'prompts'} onClick={() => setTab('prompts')}>
-            Prompts
-          </TabButton>
-        </nav>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <nav className="inline-flex gap-1 rounded-full border border-line bg-card p-1">
+            <TabButton active={tab === 'decoder'} onClick={() => setTab('decoder')}>
+              {t('tab.decoder')}
+            </TabButton>
+            <TabButton active={tab === 'tracker'} onClick={() => setTab('tracker')}>
+              {t('tab.tracker')}
+            </TabButton>
+            <TabButton active={tab === 'prompts'} onClick={() => setTab('prompts')}>
+              {t('tab.prompts')}
+            </TabButton>
+          </nav>
+
+          <div
+            role="group"
+            aria-label={t('app.langToggle.label')}
+            className="inline-flex gap-1 rounded-full border border-line bg-card p-1"
+          >
+            <TabButton active={lang === 'en'} onClick={() => setLang('en')}>
+              EN
+            </TabButton>
+            <TabButton active={lang === 'hi'} onClick={() => setLang('hi')}>
+              हिं
+            </TabButton>
+          </div>
+        </div>
       </header>
 
       <main>
@@ -98,8 +114,7 @@ export default function App() {
       </main>
 
       <footer className="mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
-        FY 2026-27 rules · estimates, not tax or legal advice · free &amp; open source ·{' '}
-        <span className="font-semibold">your data never leaves this device</span>
+        {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
       </footer>
     </div>
   )

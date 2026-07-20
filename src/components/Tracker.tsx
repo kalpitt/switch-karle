@@ -13,22 +13,28 @@ import {
   updateApplication,
 } from '../tracker/store'
 import { formatLPA } from '../engine/format'
+import { useT } from '../i18n'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
 
 const L = 100_000
 
-const STAGE_LABEL: Record<Stage, string> = {
-  researching: 'Researching',
-  applied: 'Applied',
-  interviewing: 'Interviewing',
-  offer: 'Offer',
-  decided: 'Decided',
-}
-
 /** Either the form is closed, adding a new application, or editing an existing one by id. */
 type FormMode = 'closed' | 'add' | { editId: string }
 
+/** Stage labels are translated — each component that needs them calls this hook locally. */
+function useStageLabel(): Record<Stage, string> {
+  const t = useT()
+  return {
+    researching: t('stage.researching'),
+    applied: t('stage.applied'),
+    interviewing: t('stage.interviewing'),
+    offer: t('stage.offer'),
+    decided: t('stage.decided'),
+  }
+}
+
 export function Tracker() {
+  const t = useT()
   const [list, setList] = useState<Application[]>(() => load())
   const [formMode, setFormMode] = useState<FormMode>('closed')
 
@@ -61,7 +67,7 @@ export function Tracker() {
   }
 
   const handleDelete = (id: string) => {
-    if (!confirm('Delete this application? This cannot be undone.')) return
+    if (!confirm(t('tracker.confirmDelete'))) return
     setList((l) => removeApplication(l, id))
   }
 
@@ -78,15 +84,15 @@ export function Tracker() {
   }
 
   const handleImportFile = (file: File) => {
-    if (!confirm('Import will overwrite your current tracker and decoder data. Continue?')) return
+    if (!confirm(t('tracker.confirmImport'))) return
     const reader = new FileReader()
     reader.onload = () => {
       try {
         importAll(String(reader.result))
         setList(load())
-        alert('Backup restored.')
+        alert(t('tracker.importSuccess'))
       } catch (err) {
-        alert(err instanceof Error ? err.message : 'Could not import this file — is it a Chhalaang backup?')
+        alert(err instanceof Error ? err.message : t('tracker.importError'))
       }
     }
     reader.readAsText(file)
@@ -96,10 +102,8 @@ export function Tracker() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold">Applications</h2>
-          <p className="text-[13px] text-ink-soft">
-            {list.length} tracked
-          </p>
+          <h2 className="text-lg font-bold">{t('tracker.title')}</h2>
+          <p className="text-[13px] text-ink-soft">{t('tracker.trackedCount', { n: list.length })}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <ExportImportButtons onExport={handleExport} onImportFile={handleImportFile} />
@@ -109,7 +113,7 @@ export function Tracker() {
               onClick={() => setFormMode('add')}
               className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
             >
-              + Add application
+              {t('tracker.openAdd')}
             </button>
           )}
         </div>
@@ -140,15 +144,16 @@ export function Tracker() {
 }
 
 function EmptyState({ onAdd }: { onAdd: () => void }) {
+  const t = useT()
   return (
     <Card className="flex flex-col items-center gap-3 py-10 text-center">
-      <p className="text-[15px] font-semibold">No applications yet — start tracking your search.</p>
+      <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
       <button
         type="button"
         onClick={onAdd}
         className="rounded-xl bg-saffron px-5 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
       >
-        Add your first application
+        {t('tracker.empty.cta')}
       </button>
     </Card>
   )
@@ -161,6 +166,7 @@ function ExportImportButtons({
   onExport: () => void
   onImportFile: (file: File) => void
 }) {
+  const t = useT()
   const inputRef = useRef<HTMLInputElement>(null)
   return (
     <>
@@ -169,14 +175,14 @@ function ExportImportButtons({
         onClick={onExport}
         className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
-        Export
+        {t('tracker.export')}
       </button>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
-        Import
+        {t('tracker.import')}
       </button>
       <input
         ref={inputRef}
@@ -229,6 +235,8 @@ function ApplicationFormPanel({
   onSave: (data: Omit<Application, 'id' | 'createdAt' | 'updatedAt'>) => void
   onCancel: () => void
 }) {
+  const t = useT()
+  const STAGE_LABEL = useStageLabel()
   const [form, setForm] = useState<FormState>(() => toFormState(initial))
   const set = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }))
   const canSave = form.company.trim() !== '' && form.role.trim() !== ''
@@ -251,61 +259,61 @@ function ApplicationFormPanel({
 
   return (
     <Card className="space-y-4">
-      <h2 className="text-base font-bold">{initial ? 'Edit application' : 'Add application'}</h2>
+      <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <TextField label="Company" value={form.company} onChange={(v) => set({ company: v })} required />
-          <TextField label="Role" value={form.role} onChange={(v) => set({ role: v })} required />
+          <TextField label={t('tracker.field.company.label')} value={form.company} onChange={(v) => set({ company: v })} required />
+          <TextField label={t('tracker.field.role.label')} value={form.role} onChange={(v) => set({ role: v })} required />
           <Select
-            label="Stage"
+            label={t('tracker.field.stage.label')}
             value={form.stage}
             onChange={(v) => set({ stage: v })}
             options={STAGE_ORDER.map((s) => ({ value: s, label: STAGE_LABEL[s] }))}
           />
           <NumberField
-            label="CTC discussed"
+            label={t('tracker.field.ctcDiscussed.label')}
             suffix="LPA"
             step={0.5}
             value={form.ctcLPA}
             onChange={(v) => set({ ctcLPA: v })}
           />
           <NumberField
-            label="Notice period"
-            suffix="days"
+            label={t('tracker.field.notice.label')}
+            suffix={t('unit.days')}
             value={form.noticePeriodDays}
             onChange={(v) => set({ noticePeriodDays: v })}
           />
           <TextField
-            label="Source"
-            hint="Referral, LinkedIn, Naukri…"
+            label={t('tracker.field.source.label')}
+            hint={t('tracker.field.source.hint')}
             value={form.source}
             onChange={(v) => set({ source: v })}
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <TextField label="Next action" value={form.nextAction} onChange={(v) => set({ nextAction: v })} />
+          <TextField label={t('tracker.field.nextAction.label')} value={form.nextAction} onChange={(v) => set({ nextAction: v })} />
           <TextField
-            label="Next action date"
+            label={t('tracker.field.nextActionDate.label')}
             type="date"
             value={form.nextActionDate}
             onChange={(v) => set({ nextActionDate: v })}
           />
         </div>
-        <TextArea label="Notes" value={form.notes} onChange={(v) => set({ notes: v })} />
+        <TextArea label={t('tracker.field.notes.label')} value={form.notes} onChange={(v) => set({ notes: v })} />
         <div className="flex gap-2">
           <button
             type="submit"
             disabled={!canSave}
             className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
           >
-            {initial ? 'Save changes' : 'Add application'}
+            {initial ? t('tracker.saveChanges') : t('tracker.submitAdd')}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="rounded-xl border border-line px-4 py-2.5 text-[14px] font-semibold text-ink-soft"
           >
-            Cancel
+            {t('common.cancel')}
           </button>
         </div>
       </form>
@@ -326,8 +334,13 @@ function StageColumn({
   onDelete: (id: string) => void
   onMove: (id: string, dir: -1 | 1) => void
 }) {
+  const t = useT()
+  const STAGE_LABEL = useStageLabel()
+  // Mobile: a stage with nothing in it just wastes a stacked screen's worth of
+  // scroll, so hide it below lg. At lg+ (the 5-column board) all stages stay
+  // visible so the pipeline shape is always readable.
   return (
-    <div className="space-y-3">
+    <div className={`space-y-3 ${apps.length === 0 ? 'hidden lg:block' : ''}`}>
       <div className="flex items-center gap-2">
         <h3 className="text-sm font-bold">{STAGE_LABEL[stage]}</h3>
         <span className="tnum rounded-full bg-line px-2 py-0.5 text-xs font-bold text-ink-soft">{apps.length}</span>
@@ -335,7 +348,7 @@ function StageColumn({
       <div className="space-y-3">
         {apps.length === 0 ? (
           <p className="rounded-xl border border-dashed border-line px-3 py-4 text-center text-xs text-ink-faint">
-            No applications
+            {t('tracker.noApplicationsInStage')}
           </p>
         ) : (
           apps.map((app) => (
@@ -364,6 +377,8 @@ function ApplicationCard({
   onDelete: () => void
   onMove: (dir: -1 | 1) => void
 }) {
+  const t = useT()
+  const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
   const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
@@ -383,7 +398,7 @@ function ApplicationCard({
       {hasChips && (
         <div className="flex flex-wrap gap-1.5">
           {!!app.ctcDiscussedAnnual && <Chip>{formatLPA(app.ctcDiscussedAnnual)}</Chip>}
-          {!!app.noticePeriodDays && <Chip>{app.noticePeriodDays}d notice</Chip>}
+          {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
           {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
@@ -391,7 +406,7 @@ function ApplicationCard({
 
       {app.nextAction && (
         <p className="text-[13px] leading-snug">
-          <span className="font-semibold">Next: </span>
+          <span className="font-semibold">{t('tracker.nextLabel')} </span>
           {app.nextAction}
           {app.nextActionDate && (
             <span className={`tnum ml-1 ${isOverdue ? 'font-bold text-alarm' : 'text-ink-faint'}`}>
@@ -405,7 +420,7 @@ function ApplicationCard({
         <div className="flex gap-1">
           <button
             type="button"
-            aria-label="Move to previous stage"
+            aria-label={t('tracker.movePrev')}
             disabled={idx === 0}
             onClick={() => onMove(-1)}
             className="rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
@@ -414,7 +429,7 @@ function ApplicationCard({
           </button>
           <button
             type="button"
-            aria-label="Move to next stage"
+            aria-label={t('tracker.moveNext')}
             disabled={idx === STAGE_ORDER.length - 1}
             onClick={() => onMove(1)}
             className="rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
@@ -424,10 +439,10 @@ function ApplicationCard({
         </div>
         <div className="flex gap-1">
           <button type="button" onClick={onEdit} className="rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft">
-            Edit
+            {t('tracker.edit')}
           </button>
           <button type="button" onClick={onDelete} className="rounded-lg px-2 py-1 text-xs font-semibold text-alarm">
-            Delete
+            {t('common.delete')}
           </button>
         </div>
       </div>

@@ -47,10 +47,15 @@ npm run build      # production build
 
 ## Roadmap
 
-1. **Decoder** — done (this release)
-2. **Tracker** — Kanban pipeline for your applications, India-native fields
-   (CTC discussed, notice/buyout, F&F), unlimited and local
-3. **Prompt Studio** — BYO-AI prompts wired to your tracked applications
-4. Hindi UI, PWA install, offer comparison
+1. **Decoder** — done
+2. **Tracker** — done. Kanban pipeline for your applications, India-native
+   fields (CTC discussed, notice/buyout, F&F), unlimited and local
+3. **Prompt Studio** — done. BYO-AI prompts wired to your tracked applications
+4. **PWA install** — done. Installable, works offline
+5. **Hindi UI** — done. Full app in English or Hindi (professional
+   Indian-workplace register — domain terms like CTC/PF/HRA/ESOP stay in
+   English), toggle in the header, persisted locally
+6. Offer comparison UI (side-by-side decode of two offers), professional tax
+   for more states
 
 MIT licensed. Built by a job-switcher, for job-switchers.
