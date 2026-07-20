@@ -116,7 +116,7 @@ export const en: Record<string, string> = {
   'shareCard.butBank': 'but the bank sees',
   'shareCard.reaches': '{pct}% of CTC reaches the bank',
   'shareCard.redFlags': '⚑ {n} red flag{plural} in this offer',
-  'shareCard.footer': 'chhalaang · github.com/kalpitt/chhalaang',
+  'shareCard.footer': 'chhalaang.tiwari-kalpit.workers.dev',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',

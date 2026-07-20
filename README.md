@@ -2,6 +2,8 @@
 
 **Decode your Indian job offer. Know what actually reaches your bank.**
 
+**Live: [chhalaang.tiwari-kalpit.workers.dev](https://chhalaang.tiwari-kalpit.workers.dev/)**
+
 Chhalaang (Hindi: *the leap*) is a free, open-source toolkit for the Indian job
 switch. Enter your CTC structure and see the truth:
 

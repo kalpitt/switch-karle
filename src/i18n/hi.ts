@@ -126,7 +126,7 @@ export const hi: Record<string, string> = {
   'shareCard.butBank': 'लेकिन bank में पहुंचता है',
   'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',
-  'shareCard.footer': 'chhalaang · github.com/kalpitt/chhalaang',
+  'shareCard.footer': 'chhalaang.tiwari-kalpit.workers.dev',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
