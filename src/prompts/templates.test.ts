@@ -32,7 +32,7 @@ const BREAKDOWN = {
 
 describe('TEMPLATES', () => {
   it('has exactly six templates covering all four categories', () => {
-    expect(TEMPLATES).toHaveLength(6)
+    expect(TEMPLATES).toHaveLength(7)
     const categories = new Set(TEMPLATES.map((t) => t.category))
     expect(categories).toEqual(new Set(['research', 'prepare', 'negotiate', 'outreach']))
     const ids = TEMPLATES.map((t) => t.id)

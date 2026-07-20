@@ -119,6 +119,20 @@ export const hi: Record<string, string> = {
     'सब कुछ आपके browser में चलता है। आपका offer कभी किसी server तक नहीं पहुंचता। यह एक estimate है, tax advice नहीं — आपके payroll की असल structure थोड़ी अलग हो सकती है।',
 
   // ---- Share card ----
+  'autofill.summary': '⚡ ये fields नहीं पता? अपने AI से offer letter पढ़वाएं',
+  'autofill.explainer':
+    'यह prompt copy करें, ChatGPT/Claude/Gemini में अपने पूरे offer letter के साथ paste करें, फिर जवाब यहां वापस paste करें — form अपने-आप भर जाएगा।',
+  'autofill.copyPrompt': 'Extractor prompt copy करें',
+  'autofill.copied': 'Copy हो गया ✓',
+  'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहां paste करें (इसमें एक JSON block होगा)…',
+  'autofill.fillButton': 'Form भरें',
+  'autofill.okFilled': 'भर दिया: {fields}',
+  'autofill.okMissing': '{n} field(s) आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
+  'autofill.error':
+    'इसमें valid JSON block नहीं मिला। AI का पूरा जवाब paste करें, ```json``` वाला हिस्सा भी।',
+  'autofill.privacyNote':
+    'ध्यान दें: offer letter किसी AI chatbot में paste करने से वह उस AI provider के पास जाता है — आपकी मर्ज़ी, आपका account। यह app खुद कुछ भी upload नहीं करता।',
+
   'shareCard.cta.rendering': 'बन रहा है…',
   'shareCard.cta.download': 'Truth card डाउनलोड करें ↓',
   'shareCard.eyebrow': 'CTC की सच्चाई',

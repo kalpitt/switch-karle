@@ -86,7 +86,7 @@ export const en: Record<string, string> = {
   'results.row.employerPf': 'Employer PF (locked till exit/retirement)',
   'results.row.gratuity': 'Gratuity (only after 5 years)',
   'results.row.grossSalary': 'Cash salary (gross)',
-  'results.row.incomeTax': 'Income tax ({regime} regime)',
+  'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'Your PF contribution',
   'results.row.professionalTax': 'Professional tax',
   'results.row.inHand': 'In your bank, per year',
@@ -109,6 +109,20 @@ export const en: Record<string, string> = {
     'Everything runs in your browser. Your offer never touches a server. This is an estimate, not tax advice — your payroll\'s exact structure will differ a little.',
 
   // ---- Share card ----
+  'autofill.summary': "⚡ Don't know these fields? Let your AI read the offer letter",
+  'autofill.explainer':
+    'Copy this prompt, paste it into ChatGPT/Claude/Gemini along with your full offer letter, then paste the answer back here — the form fills itself.',
+  'autofill.copyPrompt': 'Copy the extractor prompt',
+  'autofill.copied': 'Copied ✓',
+  'autofill.pastePlaceholder': "Paste your AI's full answer here (it contains a JSON block)…",
+  'autofill.fillButton': 'Fill the form',
+  'autofill.okFilled': 'Filled: {fields}',
+  'autofill.okMissing': "{n} field(s) weren't in your offer letter — your AI listed the exact questions to ask HR.",
+  'autofill.error':
+    "Couldn't find a valid JSON block in that. Paste the AI's complete answer, including the ```json``` part.",
+  'autofill.privacyNote':
+    'Note: pasting your offer letter into an AI chatbot shares it with that AI provider — your choice, your account. This app itself still uploads nothing.',
+
   'shareCard.cta.rendering': 'Rendering…',
   'shareCard.cta.download': 'Download the truth card ↓',
   'shareCard.eyebrow': 'THE CTC TRUTH',

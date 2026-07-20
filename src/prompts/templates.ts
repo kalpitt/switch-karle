@@ -207,4 +207,59 @@ Once you have the inputs, build:
 Ask clarifying questions about my priorities (e.g. how much I weight money vs. growth vs. stability right now) before finalizing the recommendation, since the right answer depends on what season of life I'm in.`
     },
   },
+  {
+    id: 'offer-extract',
+    title: 'Offer letter → Decoder auto-fill',
+    category: 'prepare',
+    description:
+      'Paste your full offer letter — your AI extracts every field the Decoder needs, ready to paste back.',
+    build: (ctx) => {
+      const c = company(ctx)
+      return `You are a meticulous compensation analyst. I will paste my full offer letter / CTC annexure from ${c} below. Your job is to extract EXACTLY the fields my salary-decoder tool needs, without guessing.
+
+[PASTE YOUR FULL OFFER LETTER / ANNEXURE HERE — include the salary structure table and any bond/notice clauses]
+
+Rules:
+- Read the entire document, including fine print and annexures, before answering.
+- NEVER guess. If a field is not explicitly stated, use null — do not infer "typical" values.
+- Money fields are in LAKHS per year (e.g. ₹24,00,000 → 24). Convert monthly figures to annual first.
+- "basic_percent_of_fixed" = annual basic ÷ (CTC − variable − ESOP value) × 100, rounded to the nearest integer.
+- "employer_pf_in_ctc" is true if the employer's PF contribution appears as a line item inside the CTC/annexure total.
+- "gratuity_in_ctc" is true if gratuity appears as a line item inside the CTC total.
+- "pf_on_full_basic" is false if PF is capped at ₹1,800/month (₹15,000 wage ceiling), true if 12% of full basic.
+- "state_code": the state of the work location, as one of KA MH TN TG AP WB GJ MP KL OD DL HR UP RJ, or null if unclear.
+
+After reading, respond with exactly two things:
+
+1. A short plain-language summary (5-8 lines): the headline CTC, what's really fixed cash, and anything unusual you noticed (bond, clawback, low basic, unusual components).
+
+2. This JSON block, filled in (null for anything not stated), inside a \`\`\`json code fence:
+
+\`\`\`json
+{
+  "chhalaang_offer": 1,
+  "ctc_lpa": null,
+  "variable_lpa": null,
+  "basic_percent_of_fixed": null,
+  "hra_percent_of_basic": null,
+  "employer_pf_in_ctc": null,
+  "gratuity_in_ctc": null,
+  "pf_on_full_basic": null,
+  "notice_days": null,
+  "bond_amount_lakh": null,
+  "bond_months": null,
+  "joining_bonus_lakh": null,
+  "clawback_months": null,
+  "esop_annual_lakh": null,
+  "esop_cliff_months": null,
+  "esop_listed": null,
+  "state_code": null
+}
+\`\`\`
+
+3. After the JSON, list "ASK HR:" followed by one line per null field — the exact question I should send HR to pin that number down.
+
+The JSON block must be valid JSON (no comments, no trailing commas) — I will paste it into a tool that parses it mechanically.`
+    },
+  },
 ]

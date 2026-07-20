@@ -7,6 +7,7 @@ import { Results } from './components/Results'
 import { ShareButton } from './components/ShareCard'
 import { Tracker } from './components/Tracker'
 import { PromptStudio } from './components/PromptStudio'
+import { AutoFill } from './components/AutoFill'
 import { useLang, useT } from './i18n'
 
 const STORAGE_KEY = 'chhalaang.decoder.v1'
@@ -101,6 +102,7 @@ export default function App() {
         {tab === 'decoder' ? (
           <div className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
             <div className="space-y-4 lg:sticky lg:top-6">
+              <AutoFill offer={offer} onChange={setOffer} />
               <DecoderForm value={offer} onChange={setOffer} />
               <ShareButton b={breakdown} flags={flags} />
             </div>
