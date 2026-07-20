@@ -1,0 +1,15 @@
+{
+  "name": "Chhalaang — Decode your CTC",
+  "short_name": "Chhalaang",
+  "description": "Decode your Indian job offer: real in-hand salary, red flags, application tracker, BYO-AI prompts. 100% private, in your browser.",
+  "lang": "en-IN",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#faf7f2",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
