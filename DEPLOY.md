@@ -1,11 +1,10 @@
 # Deploying Chhalaang
 
-> **Deployed 2026-07-20**: live at https://chhalaang.tiwari-kalpit.workers.dev/
-> via Cloudflare (Workers & Pages, Git-connected build: `npm run build` → `dist`).
-> The repo was still private at deploy time — Cloudflare's GitHub App handles
-> private-repo access fine.
+> **Canonical URL: https://kalpit.me/chhalaang/** (GitHub Pages, live since
+> 2026-07-20). Mirror: https://chhalaang.tiwari-kalpit.workers.dev/
+> (Cloudflare Pages, deployed first — kept running as a fallback).
 
-## Second URL: kalpit.me/chhalaang (GitHub Pages)
+## Primary: kalpit.me/chhalaang (GitHub Pages)
 
 kalpit.me is the custom domain of the `kalpitt.github.io` user site, so any
 public repo of Kalpit's with GitHub Pages enabled auto-serves at
