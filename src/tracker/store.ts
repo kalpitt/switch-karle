@@ -1,4 +1,4 @@
-import type { Application, Stage } from './types'
+import type { Application, Insight, Stage } from './types'
 
 export const STORAGE_KEY = 'chhalaang.tracker.v1'
 
@@ -73,6 +73,29 @@ export function moveStage(list: Application[], id: string, dir: -1 | 1): Applica
     const next = Math.min(STAGE_ORDER.length - 1, Math.max(0, idx + dir))
     if (next === idx) return a
     return { ...a, stage: STAGE_ORDER[next], updatedAt: nowIso() }
+  })
+}
+
+/** Pure: appends a new insight to `appId`'s application and bumps updatedAt. No-op for an unknown id. */
+export function addInsight(
+  list: Application[],
+  appId: string,
+  insight: Omit<Insight, 'id' | 'savedAt'>,
+): Application[] {
+  return list.map((a) => {
+    if (a.id !== appId) return a
+    const ts = nowIso()
+    const newInsight: Insight = { ...insight, id: crypto.randomUUID(), savedAt: ts }
+    return { ...a, insights: [...(a.insights ?? []), newInsight], updatedAt: ts }
+  })
+}
+
+/** Pure: removes `insightId` from `appId`'s application and bumps updatedAt. No-op for an unknown id. */
+export function removeInsight(list: Application[], appId: string, insightId: string): Application[] {
+  return list.map((a) => {
+    if (a.id !== appId) return a
+    if (!a.insights?.some((i) => i.id === insightId)) return a
+    return { ...a, insights: a.insights.filter((i) => i.id !== insightId), updatedAt: nowIso() }
   })
 }
 

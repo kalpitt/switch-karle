@@ -6,15 +6,16 @@ import { DecoderForm } from './components/DecoderForm'
 import { Results } from './components/Results'
 import { ShareButton } from './components/ShareCard'
 import { Tracker } from './components/Tracker'
+import { PromptStudio } from './components/PromptStudio'
 
 const STORAGE_KEY = 'chhalaang.decoder.v1'
 const TAB_STORAGE_KEY = 'chhalaang.tab'
 
-type Tab = 'decoder' | 'tracker'
+type Tab = 'decoder' | 'tracker' | 'prompts'
 
 function loadTab(): Tab {
   const raw = localStorage.getItem(TAB_STORAGE_KEY)
-  return raw === 'tracker' ? 'tracker' : 'decoder'
+  return raw === 'tracker' || raw === 'prompts' ? raw : 'decoder'
 }
 
 const DEFAULT_OFFER: OfferInput = {
@@ -74,6 +75,9 @@ export default function App() {
           <TabButton active={tab === 'tracker'} onClick={() => setTab('tracker')}>
             Tracker
           </TabButton>
+          <TabButton active={tab === 'prompts'} onClick={() => setTab('prompts')}>
+            Prompts
+          </TabButton>
         </nav>
       </header>
 
@@ -86,8 +90,10 @@ export default function App() {
             </div>
             <Results b={breakdown} flags={flags} />
           </div>
-        ) : (
+        ) : tab === 'tracker' ? (
           <Tracker />
+        ) : (
+          <PromptStudio onGoToTracker={() => setTab('tracker')} />
         )}
       </main>
 

@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import {
   addApplication,
+  addInsight,
   exportAll,
   importAll,
   load,
   moveStage,
   removeApplication,
+  removeInsight,
   save,
   STORAGE_KEY,
   updateApplication,
@@ -183,6 +185,75 @@ describe('moveStage', () => {
     const before = list[0].updatedAt
     const moved = moveStage(list, list[0].id, -1)
     expect(moved[0].updatedAt).toBe(before)
+  })
+})
+
+describe('addInsight', () => {
+  it('appends an insight and bumps updatedAt', async () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    const before = list[0].updatedAt
+    await new Promise((r) => setTimeout(r, 2))
+    const updated = addInsight(list, list[0].id, {
+      templateId: 'company-research',
+      title: 'Company research',
+      content: 'Some AI answer text.',
+    })
+    expect(updated[0].insights).toHaveLength(1)
+    expect(updated[0].insights![0]).toMatchObject({
+      templateId: 'company-research',
+      title: 'Company research',
+      content: 'Some AI answer text.',
+    })
+    expect(updated[0].insights![0].id).toBeTruthy()
+    expect(updated[0].insights![0].savedAt).toBeTruthy()
+    expect(updated[0].updatedAt).not.toBe(before)
+  })
+
+  it('appends to existing insights rather than replacing them', () => {
+    let list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
+    list = addInsight(list, list[0].id, { templateId: 'b', title: 'B', content: '2' })
+    expect(list[0].insights).toHaveLength(2)
+  })
+
+  it('is a no-op for an unknown application id', () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    const updated = addInsight(list, 'does-not-exist', { templateId: 'a', title: 'A', content: '1' })
+    expect(updated).toEqual(list)
+  })
+
+  it('does not mutate the input list', () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
+    expect(list[0].insights).toBeUndefined()
+  })
+})
+
+describe('removeInsight', () => {
+  it('removes only the matching insight and bumps updatedAt', async () => {
+    let list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
+    list = addInsight(list, list[0].id, { templateId: 'b', title: 'B', content: '2' })
+    const [first, second] = list[0].insights!
+    const before = list[0].updatedAt
+    await new Promise((r) => setTimeout(r, 2))
+    const updated = removeInsight(list, list[0].id, first.id)
+    expect(updated[0].insights).toHaveLength(1)
+    expect(updated[0].insights![0].id).toBe(second.id)
+    expect(updated[0].updatedAt).not.toBe(before)
+  })
+
+  it('is a no-op for an unknown insight id', () => {
+    let list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
+    const updated = removeInsight(list, list[0].id, 'does-not-exist')
+    expect(updated).toEqual(list)
+  })
+
+  it('is a no-op for an unknown application id', () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    const updated = removeInsight(list, 'does-not-exist', 'also-not-exist')
+    expect(updated).toEqual(list)
   })
 })
 

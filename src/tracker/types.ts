@@ -2,6 +2,17 @@
 
 export type Stage = 'researching' | 'applied' | 'interviewing' | 'offer' | 'decided'
 
+/** A pasted-back answer from the user's own AI, saved against an application. */
+export interface Insight {
+  id: string
+  /** id of the PromptTemplate this answer responds to. */
+  templateId: string
+  title: string
+  content: string
+  /** ISO timestamp */
+  savedAt: string
+}
+
 export interface Application {
   id: string
   company: string
@@ -16,6 +27,8 @@ export interface Application {
   /** ISO yyyy-mm-dd */
   nextActionDate?: string
   notes?: string
+  /** Saved AI answers from Prompt Studio, most-recent-last. */
+  insights?: Insight[]
   /** ISO timestamp */
   createdAt: string
   /** ISO timestamp */

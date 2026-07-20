@@ -366,7 +366,7 @@ function ApplicationCard({
 }) {
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
-  const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source
+  const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
 
   return (
     <Card className="space-y-2 p-3.5">
@@ -385,6 +385,7 @@ function ApplicationCard({
           {!!app.ctcDiscussedAnnual && <Chip>{formatLPA(app.ctcDiscussedAnnual)}</Chip>}
           {!!app.noticePeriodDays && <Chip>{app.noticePeriodDays}d notice</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
+          {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
       )}
 
