@@ -72,6 +72,71 @@ export function Toggle(props: {
   )
 }
 
+export function TextField(props: {
+  label: string
+  hint?: string
+  value: string
+  onChange: (v: string) => void
+  placeholder?: string
+  type?: 'text' | 'date'
+  required?: boolean
+}) {
+  return (
+    <label className="block">
+      <Label hint={props.hint}>{props.label}</Label>
+      <span className="mt-1.5 flex items-center gap-2 rounded-xl border border-line bg-paper px-3 focus-within:border-saffron">
+        <input
+          type={props.type ?? 'text'}
+          className="w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
+          value={props.value}
+          placeholder={props.placeholder}
+          required={props.required}
+          onChange={(e) => props.onChange(e.target.value)}
+        />
+      </span>
+    </label>
+  )
+}
+
+export function TextArea(props: { label: string; hint?: string; value: string; onChange: (v: string) => void; rows?: number }) {
+  return (
+    <label className="block">
+      <Label hint={props.hint}>{props.label}</Label>
+      <textarea
+        className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
+        rows={props.rows ?? 3}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+      />
+    </label>
+  )
+}
+
+export function Select<T extends string>(props: {
+  label: string
+  hint?: string
+  value: T
+  options: { value: T; label: string }[]
+  onChange: (v: T) => void
+}) {
+  return (
+    <label className="block">
+      <Label hint={props.hint}>{props.label}</Label>
+      <select
+        className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value as T)}
+      >
+        {props.options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  )
+}
+
 export function Details({ summary, children }: { summary: string; children: ReactNode }) {
   return (
     <details className="group rounded-xl border border-line bg-paper">
