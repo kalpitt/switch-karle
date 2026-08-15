@@ -13,11 +13,11 @@ import { useLang, useT } from './i18n'
 const STORAGE_KEY = 'switchkarle.decoder.v1'
 const TAB_STORAGE_KEY = 'switchkarle.tab'
 
-type Tab = 'tracker' | 'prompts' | 'decoder'
+type Tab = 'decoder' | 'tracker' | 'prompts'
 
 function loadTab(): Tab {
   const raw = localStorage.getItem(TAB_STORAGE_KEY)
-  return raw === 'decoder' || raw === 'prompts' ? raw : 'tracker'
+  return raw === 'tracker' || raw === 'prompts' ? raw : 'decoder'
 }
 
 const DEFAULT_OFFER: OfferInput = {
@@ -72,14 +72,14 @@ export default function App() {
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <nav className="inline-flex gap-1 rounded-full border border-line bg-card p-1">
+            <TabButton active={tab === 'decoder'} onClick={() => setTab('decoder')}>
+              {t('tab.decoder')}
+            </TabButton>
             <TabButton active={tab === 'tracker'} onClick={() => setTab('tracker')}>
               {t('tab.tracker')}
             </TabButton>
             <TabButton active={tab === 'prompts'} onClick={() => setTab('prompts')}>
               {t('tab.prompts')}
-            </TabButton>
-            <TabButton active={tab === 'decoder'} onClick={() => setTab('decoder')}>
-              {t('tab.decoder')}
             </TabButton>
           </nav>
 
@@ -99,11 +99,7 @@ export default function App() {
       </header>
 
       <main>
-        {tab === 'tracker' ? (
-          <Tracker />
-        ) : tab === 'prompts' ? (
-          <PromptStudio onGoToTracker={() => setTab('tracker')} />
-        ) : (
+        {tab === 'decoder' ? (
           <div className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
             <div className="space-y-4 lg:sticky lg:top-6">
               <AutoFill offer={offer} onChange={setOffer} />
@@ -112,11 +108,29 @@ export default function App() {
             </div>
             <Results b={breakdown} flags={flags} />
           </div>
+        ) : tab === 'tracker' ? (
+          <Tracker />
+        ) : (
+          <PromptStudio onGoToTracker={() => setTab('tracker')} />
         )}
       </main>
 
       <footer className="mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
+        <br />
+        {t('app.footer.feedback')}{' '}
+        <a href="mailto:tiwari.kalpit@gmail.com" className="font-semibold underline">
+          {t('app.footer.feedbackEmail')}
+        </a>{' '}
+        ·{' '}
+        <a
+          href="https://github.com/kalpitt/switch-karle/issues"
+          target="_blank"
+          rel="noreferrer"
+          className="font-semibold underline"
+        >
+          GitHub
+        </a>
       </footer>
     </div>
   )

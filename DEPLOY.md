@@ -44,6 +44,13 @@ URL.
   `VERSION` in `public/sw.js` if you need clients to refetch immediately.
   Bumped to `switchkarle-v1` as part of the rename so every existing visitor
   picks up the new branding on next load.
-- Analytics: none, by design. If you ever want traffic numbers, use
-  Cloudflare's server-side analytics (free, no cookies, no script) — never a
-  client-side tracker; "nothing is uploaded" is a product promise.
+- Analytics: none, by design — no client-side tracker; "nothing is uploaded"
+  is a product promise. For traffic numbers on the **canonical URL**, use
+  GitHub repo Insights → Traffic (visits/uniques/referrers, 14-day rolling,
+  no script, no cookies — works because the canonical URL is served straight
+  from GitHub Pages). The earlier note here about using Cloudflare's
+  server-side analytics was wrong for the canonical URL: `kalpit.me`'s
+  nameservers are on Porkbun, not Cloudflare, and resolve straight to GitHub
+  Pages' IPs — so no Cloudflare edge ever sees that traffic. Cloudflare zone
+  analytics would only ever cover the Workers mirror, which real visitors
+  won't be using.
