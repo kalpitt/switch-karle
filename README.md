@@ -2,64 +2,57 @@
 
 **Decode your Indian job offer. Know what actually reaches your bank.**
 
-**Live: [kalpit.me/switch-karle](https://kalpit.me/switch-karle/)** (mirror: [chhalaang.tiwari-kalpit.workers.dev](https://chhalaang.tiwari-kalpit.workers.dev/))
+**Live: [kalpit.me/switch-karle](https://kalpit.me/switch-karle/)** · target origin: `switchkarle.fyi` (not serving yet)
 
-Switch Karle is a free, open-source toolkit for the Indian job switch. Enter
-your CTC structure and see the truth:
+A free, open-source suite of instant micro-tools for the Indian job switch. Every
+number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 
-- **Real in-hand salary** — under both tax regimes (FY 2026-27 rules), with the
-  cheaper one recommended and every number explained.
-- **Red-flag scanner** — 90-day notice periods, service bonds, inflated
-  variable pay, gratuity stuffed into CTC, illiquid ESOPs, hostile clawbacks —
-  each with the legal/market context and one concrete line to negotiate with.
-- **The truth card** — a shareable image of what your CTC really pays.
+[![CI](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml/badge.svg)](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml)
+
+## Tools
+
+| URL | What it answers |
+| --- | --- |
+| `/decoder/` | What does this CTC actually pay in-hand, and which red flags are in the offer? |
+| `/tracker/` | Where is each application, and what's the next action? |
+| `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
+
+More tools land on the `build/suite` branch (rolling PR, not production until Kalpit merges).
 
 ## Privacy is the architecture
 
-- **100% client-side.** No server, no accounts, no analytics. Your offer never
-  leaves your device.
-- **No AI calls.** Bring your own AI: the app generates context-rich prompts
-  you can paste into ChatGPT/Claude/Gemini, including one that reads your full
-  offer letter and auto-fills the Decoder for you.
-- Data lives in your browser's localStorage with JSON export/import.
+- **100% client-side.** No server, no accounts, no analytics. Your offer never leaves this device.
+- **No AI calls.** Bring your own AI: the app generates prompts you paste into ChatGPT/Claude/Gemini.
+- Data lives in `localStorage` under `switchkarle.<tool>.v<N>`, with JSON export/import on the Tracker.
+
+See [PRIVACY.md](PRIVACY.md).
 
 ## Tax engine
 
-Pure TypeScript, exhaustively unit-tested against hand-computed golden cases
-(`src/engine/engine.test.ts`). FY 2026-27 assumptions:
+Pure TypeScript, golden-tested against hand-computed cases (`src/engine/engine.test.ts`). FY 2026-27:
 
-- New regime: slabs ₹0–4L nil → 30% above ₹24L; ₹75,000 standard deduction;
-  rebate u/s 157 (zero tax to ₹12L taxable) with marginal relief; surcharge
-  tiers; 4% cess.
-- Old regime: ₹50,000 standard deduction, HRA exemption, 80C/80D,
-  professional-tax deduction.
-- EPF 12% of basic (with statutory-ceiling option), gratuity accrual 4.81%,
-  state-wise professional tax (approximate).
+- New regime: slabs ₹0–4L nil → 30% above ₹24L; ₹75,000 standard deduction; rebate (zero tax to ₹12L taxable) with marginal relief; surcharge tiers; 4% cess.
+- Old regime: ₹50,000 standard deduction, HRA exemption, 80C/80D, professional-tax deduction.
+- EPF 12% of basic (statutory-ceiling option), gratuity accrual 4.81%, state professional tax (approximate).
 
-**Estimates, not tax or legal advice.** Payroll structures differ; verify with
-your finance team or a CA.
+**Estimates, not tax or legal advice.** Footer chip shows when the rules were last verified. A practising CA is reviewing the constants; until then statutory tools on `build/suite` ship as `provisional-pending-CA`.
+
+How the repo is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Develop
 
 ```bash
 npm install
-npm run dev        # local dev server
-npx vitest run     # engine test suite
-npm run build      # production build
+npm run dev          # Astro dev server
+npm test             # vitest — engine goldens, i18n freeze, purity
+npm run typecheck    # tsc -b --noEmit
+npm run lint         # oxlint
+npm run build        # astro build
+npm run check:base   # asset URLs resolve under the configured base
+npm run check:seo    # canonical + OG on every route; no analytics in dist/
+npm run new-tool     # node scripts/new-tool.mjs <slug>
 ```
 
-## Roadmap
-
-1. **Decoder** — done
-2. **Tracker** — done. Kanban pipeline for your applications, India-native
-   fields (CTC discussed, notice/buyout, F&F), unlimited and local
-3. **Prompt Studio** — done. BYO-AI prompts wired to your tracked applications,
-   including offer-letter auto-fill for the Decoder
-4. **PWA install** — done. Installable, works offline
-5. **Hindi UI** — done. Full app in English or Hindi (professional
-   Indian-workplace register — domain terms like CTC/PF/HRA/ESOP stay in
-   English), toggle in the header, persisted locally
-6. Offer comparison UI (side-by-side decode of two offers), professional tax
-   for more states
+`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must all pass before a push to `build/suite`.
 
 MIT licensed. Built by a job-switcher, for job-switchers.

@@ -46,15 +46,21 @@ AI's opinion. The same holds for every other statutory constant in the engine.
 
 ```bash
 npm install
-npm run dev        # local dev server
-npm test           # vitest — engine golden cases + i18n parity
+npm run dev        # Astro dev server
+npm test           # vitest — engine goldens, i18n freeze, purity
 npm run typecheck  # tsc -b --noEmit
 npm run lint       # oxlint
-npm run build      # tsc -b && vite build
+npm run build      # astro build
+npm run check:base # asset URLs under the configured base
+npm run check:seo  # canonical + OG; no analytics in dist/
 ```
 
-All four of `test`, `typecheck`, `lint` and `build` must pass before you open a
-PR. CI runs the same four and blocks the deploy on any of them.
+`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must pass
+before you push to `build/suite`. Merging to `main` deploys — only Kalpit does
+that.
+
+On `build/suite`, new tools are English-only until the Hindi pass. Do not delete
+or blank keys in `hi.ts`. Do not add `/hi/` routes yet.
 
 ## The one architectural rule
 
