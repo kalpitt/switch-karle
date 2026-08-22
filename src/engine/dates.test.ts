@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addMonths, completedYearsWithDayCount, daysBetween } from './dates'
+import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, lastWorkingDay } from './dates'
 
 describe('daysBetween', () => {
   it('is 0 for the same day', () => {
@@ -45,6 +45,24 @@ describe('addMonths — month-end clamping', () => {
     expect(() => addMonths('2026-08-23', 1.5)).toThrow(/finite integer/)
     expect(() => addMonths('2026-08-23', Number.NaN)).toThrow(/finite integer/)
     expect(() => addMonths('2026-08-23', Number.POSITIVE_INFINITY)).toThrow(/finite integer/)
+  })
+})
+
+describe('addDays and lastWorkingDay', () => {
+  it('adds across a month end', () => {
+    expect(addDays('2026-08-01', 29)).toBe('2026-08-30')
+    expect(addDays('2024-02-01', 29)).toBe('2024-03-01')
+  })
+
+  it('LWD is resignation + notice − 1 calendar day', () => {
+    expect(lastWorkingDay('2026-08-01', 30)).toBe('2026-08-30')
+    expect(lastWorkingDay('2026-08-01', 1)).toBe('2026-08-01')
+  })
+
+  it('flags EPFO overlap when the new join is on or before LWD', () => {
+    expect(epfoDateOverlap('2026-08-30', '2026-08-30')).toBe(true)
+    expect(epfoDateOverlap('2026-08-30', '2026-08-29')).toBe(true)
+    expect(epfoDateOverlap('2026-08-30', '2026-08-31')).toBe(false)
   })
 })
 
