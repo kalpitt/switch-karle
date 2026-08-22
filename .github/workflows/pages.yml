@@ -27,8 +27,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx vitest run
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
       - run: npm run build
+      # Guards the path-relative build so the subpath deploy cannot break
+      # silently. Retire with `base: './'` when the custom domain lands.
+      - run: npm run check:relative-build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
