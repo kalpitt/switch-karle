@@ -19,7 +19,7 @@ src/
   engine/          pure TS — never imports react (purity.test.ts)
   tools/<slug>/    one island per tool (form + result)
   components/ui.tsx  shared primitives only — do not restyle per tool
-  data/tools.ts    registry: grid, routes, sitemap, future cmdk
+  data/tools.ts    registry: grid, routes, sitemap, cmdk palette
   lib/storage.ts   switchkarle.<tool>.v<N>
   i18n/            en.ts canonical; hi.ts frozen no-regression until Hindi pass
   layouts/Base.astro  head contract, PWA register
@@ -80,6 +80,7 @@ citation landmine.**
 | HRA exemption (s.10(13A) / Rule 2A three limbs) | `src/engine/salary.ts` `hraExemptionAnnual` | Candidate |
 | Joining-bonus tax delta (not TDS) | `src/engine/clawback.ts` | Candidate; gross-repay is contractual |
 | ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; sale / startup TDS deferral not modelled |
+| PF premature withdrawal (s.192A / s.392(7) recollection) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap is flagged, CA R3 |
 | Relocation HRA metro limb + PT | `src/engine/relocation.ts`, `professionalTax.ts` | Candidate; PT table incomplete |
 | State professional tax table | `src/engine/professionalTax.ts` | Incomplete (`other` → ₹0; unlisted states levy PT) |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped on production; still provisional pending R1 |
