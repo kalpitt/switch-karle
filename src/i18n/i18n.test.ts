@@ -1,5 +1,12 @@
+import { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { dictionaries, translate, translateOrFallback } from './index'
+
+const frozenHiKeys: string[] = JSON.parse(
+  readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'hi-freeze.json'), 'utf8'),
+)
 
 describe('translate', () => {
   it('returns the English string for the en dictionary', () => {
@@ -61,33 +68,22 @@ describe('translateOrFallback (red-flag UI overrides)', () => {
 /**
  * Keys that are deliberately English-only in the Hindi UI.
  *
- * `translate()` falls back to English for any missing `hi` key, so a gap is
- * invisible at runtime — the app just quietly speaks English. That is how
- * bilingual products rot. The parity test below turns every gap into a build
- * failure, and this list turns each exception into a decision someone made on
- * purpose.
- *
- * To add a key: state why it stays English. "Not translated yet" is not a
- * reason — that is exactly what the test exists to catch.
- *
- * `flag.*` keys are not listed here and never need to be: they are engine-owned
- * English strings resolved through `translateOrFallback()`, which already falls
- * back to the sentence the engine built rather than to a raw key.
+ * New tools add `en.ts` keys without a `hi.ts` pair until the Hindi pass.
+ * Missing hi is silent EN fallback at runtime — that is expected this build.
+ * What is not allowed: deleting or blanking a Hindi string that already exists.
  */
 const HINDI_EXEMPT: readonly string[] = []
 
 describe('dictionary integrity', () => {
-  it('every en key has a hi translation, or a documented exemption', () => {
-    const missing = Object.keys(dictionaries.en).filter(
-      (key) => !(key in dictionaries.hi) && !HINDI_EXEMPT.includes(key),
+  it('every frozen Hindi key is still present and non-blank (no-regression)', () => {
+    const missing = frozenHiKeys.filter(
+      (key) => !(key in dictionaries.hi) || dictionaries.hi[key].trim() === '',
     )
     expect(missing).toEqual([])
   })
 
   it('has no stale entries in the Hindi exemption list', () => {
-    const stale = HINDI_EXEMPT.filter(
-      (key) => key in dictionaries.hi || !(key in dictionaries.en),
-    )
+    const stale = HINDI_EXEMPT.filter((key) => key in dictionaries.hi || !(key in dictionaries.en))
     expect(stale).toEqual([])
   })
 

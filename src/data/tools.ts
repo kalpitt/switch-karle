@@ -1,7 +1,5 @@
 /**
  * Tool registry — home grid, catch-all routes, sitemap, palette, check-seo.
- * Island loaders live in `islands.ts` so this module is safe to import from
- * client components without pulling every tool into the bundle.
  */
 export interface ToolDef {
   slug: string
