@@ -5,7 +5,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, Select, VerdictBanner } from '../../components/ui'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.notice-buyout.v1' as const
 
@@ -17,9 +17,9 @@ interface Draft {
   monthlyGross: number
 }
 
-export default function NoticeBuyoutTool() {
+export default function NoticeBuyoutTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="notice-buyout">
+    <IslandRoot lang={lang} current="notice-buyout">
       <Body />
     </IslandRoot>
   )

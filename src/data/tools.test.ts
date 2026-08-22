@@ -10,7 +10,7 @@ describe('tool registry', () => {
     }
   })
 
-  it('does not occupy /hi/ — that path is reserved for the Hindi pass', () => {
+  it('does not occupy the hi slug — /hi/ is the language prefix', () => {
     expect(TOOLS.some((t) => t.slug === 'hi' || t.slug.startsWith('hi/'))).toBe(false)
   })
 })

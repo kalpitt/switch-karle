@@ -4,7 +4,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, NumberField, Select, TextField, VerdictBanner } from '../../components/ui'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.resignation.v1' as const
 
@@ -25,9 +25,9 @@ function todayISO() {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
 }
 
-export default function ResignationLetterTool() {
+export default function ResignationLetterTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="resignation-letter">
+    <IslandRoot lang={lang} current="resignation-letter">
       <Body />
     </IslandRoot>
   )

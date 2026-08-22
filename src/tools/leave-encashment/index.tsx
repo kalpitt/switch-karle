@@ -4,7 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, Select, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.leave.v1' as const
 
@@ -22,9 +22,9 @@ const DEFAULT_DRAFT: Draft = {
   reason: 'resignation',
 }
 
-export default function LeaveEncashmentTool() {
+export default function LeaveEncashmentTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="leave-encashment">
+    <IslandRoot lang={lang} current="leave-encashment">
       <Body />
     </IslandRoot>
   )

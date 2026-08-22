@@ -21,6 +21,7 @@ export type EpfFlagId =
   | 'name-mismatch'
   | 'dob-mismatch'
   | 'interest-after-exit'
+  | 'five-year-exempt'
 
 export interface EpfFlag {
   id: EpfFlagId
@@ -65,6 +66,9 @@ export function epfGuide(input: EpfGuideInput): EpfGuideResult {
   if (input.intent === 'withdraw' && !continuousFiveYears) {
     flags.push({ id: 'prefer-transfer', severity: 'red' })
     flags.push({ id: 'premature-withdrawal', severity: 'red' })
+  }
+  if (input.intent === 'withdraw' && continuousFiveYears) {
+    flags.push({ id: 'five-year-exempt', severity: 'info' })
   }
   if (input.intent === 'withdraw') {
     flags.push({ id: 'interest-after-exit', severity: 'amber' })

@@ -51,6 +51,8 @@ for (const file of htmlFiles) {
     ['og:url', /<meta\s+property="og:url"\s+content="https?:\/\//],
     ['og:image', /<meta\s+property="og:image"\s+content="https?:\/\//],
     ['twitter:card', /<meta\s+name="twitter:card"\s+content="summary_large_image"/],
+    ['hreflang-hi', /<link[^>]+hreflang="hi"/],
+    ['hreflang-en', /<link[^>]+hreflang="en"/],
   ]
   for (const [name, re] of need) {
     if (!re.test(html)) {
@@ -88,14 +90,23 @@ if (!existsSync(sitemapPath)) {
   const slugs = [...readFileSync(toolsSrc, 'utf8').matchAll(/slug:\s*'([a-z0-9-]+)'/g)].map((m) => m[1])
   const base = BASE.endsWith('/') ? BASE.slice(0, -1) : BASE
   const origin = `${SITE}${base}`
-  if (!sitemap.includes(`${origin}/`)) {
+  if (!sitemap.includes(`<loc>${origin}/</loc>`)) {
     console.error(`check-seo: FAIL — sitemap missing home ${origin}/`)
+    failed = true
+  }
+  if (!sitemap.includes(`<loc>${origin}/hi/</loc>`)) {
+    console.error(`check-seo: FAIL — sitemap missing Hindi home ${origin}/hi/`)
     failed = true
   }
   for (const slug of slugs) {
     const loc = `${origin}/${slug}/`
     if (!sitemap.includes(`<loc>${loc}</loc>`)) {
       console.error(`check-seo: FAIL — sitemap missing ${loc}`)
+      failed = true
+    }
+    const hiLoc = `${origin}/hi/${slug}/`
+    if (!sitemap.includes(`<loc>${hiLoc}</loc>`)) {
+      console.error(`check-seo: FAIL — sitemap missing ${hiLoc}`)
       failed = true
     }
   }

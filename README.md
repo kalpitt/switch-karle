@@ -37,10 +37,18 @@ number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 | `/counter-offer/` | Is this counter actually better than the outside offer? |
 | `/handover-doc/` | What do I leave behind so the work does not fall over? |
 | `/relieving-chaser/` | What do I send on day 7, 14 and 30 if relieving has not come? |
+| `/epf-transfer/` | Should I transfer PF (Form 13) or withdraw, and why is the claim stuck? |
+| `/bgv-prep/` | What will background verification see, and what should I pack? |
+| `/insurance-gap/` | How many days am I uncovered between jobs? |
+| `/tax-declaration/` | What do I tell the new employer about regime, HRA proofs, and Form 16? |
+| `/notice-tracker/` | What is my last working day, and what is left on the exit checklist? |
+| `/bond-scanner/` | Does this clause look like a training-bond / liquidated-damages trap? |
+| `/redactor/` | Can I share a payslip with identifiers stripped? |
+| `/clause-library/` | What does this common offer clause actually mean? |
 | `/tracker/` | Where is each application, and what's the next action? |
 | `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
 
-More tools land on the `build/suite` branch (rolling PR, not production until Kalpit merges).
+Every English URL has a Hindi twin at `/hi/<same-slug>/`. Language follows the URL.
 
 ## Privacy is the architecture
 

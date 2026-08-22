@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, Disclaimer, MoneyField, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { taxDeclaration } from '../../engine/taxDeclaration'
 import { formatINR } from '../../engine/format'
+import { STATE_NAMES } from '../../engine/professionalTax'
+import type { OfferInput, StateCode } from '../../engine/types'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
-import type { OfferInput } from '../../engine/types'
+import { withLang } from '../../lib/langPath'
+import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.tax-declaration.v1' as const
 
@@ -17,9 +19,11 @@ interface Draft {
 
 const DEFAULT: Draft = { claimingHra: true, extra80C: false }
 
-export default function TaxDeclarationTool() {
+const EMPTY_OLD = { rentPaidMonthly: 0, metro: false, deduction80CExtra: 0, deduction80D: 0 }
+
+export default function TaxDeclarationTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="tax-declaration">
+    <IslandRoot lang={lang} current="tax-declaration">
       <Body />
     </IslandRoot>
   )
@@ -27,6 +31,7 @@ export default function TaxDeclarationTool() {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(DEFAULT)
   const [offer, setOffer] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
@@ -43,11 +48,42 @@ function Body() {
 
   const result = useMemo(() => taxDeclaration({ offer, ...draft }), [offer, draft])
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const old = offer.old ?? EMPTY_OLD
+  const states = (Object.keys(STATE_NAMES) as StateCode[]).map((s) => ({ value: s, label: t(`state.${s}`) }))
 
   return (
     <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('tax-declaration.formTitle')}</h2>
+        <p className="text-[13px] leading-relaxed text-ink-soft">{t('tax-declaration.profileHint')}</p>
+        <p className="text-[13px]">
+          <a href={withLang(lang, 'decoder')} className="font-semibold underline">
+            {t('tax-declaration.openDecoder')}
+          </a>
+        </p>
+        <MoneyField
+          label={t('tax-declaration.ctc')}
+          value={offer.ctcAnnual}
+          onChange={(v) => setOffer((o) => ({ ...o, ctcAnnual: v }))}
+        />
+        <NumberField
+          label={t('tax-declaration.basic')}
+          value={offer.basicPercent}
+          suffix="%"
+          max={100}
+          onChange={(v) => setOffer((o) => ({ ...o, basicPercent: v }))}
+        />
+        <MoneyField
+          label={t('tax-declaration.rent')}
+          value={old.rentPaidMonthly}
+          onChange={(v) => setOffer((o) => ({ ...o, old: { ...old, rentPaidMonthly: v } }))}
+        />
+        <Select
+          label={t('tax-declaration.state')}
+          value={offer.state}
+          onChange={(v) => setOffer((o) => ({ ...o, state: v }))}
+          options={states}
+        />
         <Toggle
           label={t('tax-declaration.hra')}
           hint={t('tax-declaration.hraHint')}

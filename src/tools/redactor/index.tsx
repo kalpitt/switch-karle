@@ -4,13 +4,13 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, PrintButton, TextArea, VerdictBanner } from '../../components/ui'
 import { redactText } from '../../engine/redact'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.redactor.v1' as const
 
-export default function RedactorTool() {
+export default function RedactorTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="redactor">
+    <IslandRoot lang={lang} current="redactor">
       <Body />
     </IslandRoot>
   )

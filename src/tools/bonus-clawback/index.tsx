@@ -6,7 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.clawback.v1' as const
 
@@ -29,9 +29,9 @@ function fromDecoder(): Draft {
   }
 }
 
-export default function BonusClawbackTool() {
+export default function BonusClawbackTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="bonus-clawback">
+    <IslandRoot lang={lang} current="bonus-clawback">
       <Body />
     </IslandRoot>
   )

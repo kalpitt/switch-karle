@@ -4,7 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.fnf.v1' as const
 
@@ -28,9 +28,9 @@ const DEFAULT_DRAFT: Draft = {
   gratuityEligible: true,
 }
 
-export default function FnfCheckerTool() {
+export default function FnfCheckerTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="fnf-checker">
+    <IslandRoot lang={lang} current="fnf-checker">
       <Body />
     </IslandRoot>
   )

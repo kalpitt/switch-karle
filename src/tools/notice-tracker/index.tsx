@@ -5,7 +5,7 @@ import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayUTC } from '../../engine/dates'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.notice.v1' as const
 
@@ -19,9 +19,9 @@ function emptyDraft(): Draft {
   return { resignDate: todayUTC(), noticePeriodDays: 90, done: [] }
 }
 
-export default function NoticeTrackerTool() {
+export default function NoticeTrackerTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="notice-tracker">
+    <IslandRoot lang={lang} current="notice-tracker">
       <Body />
     </IslandRoot>
   )

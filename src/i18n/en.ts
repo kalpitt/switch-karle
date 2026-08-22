@@ -367,13 +367,14 @@ export const en: Record<string, string> = {
   'epf-transfer.intent.transfer': 'Transfer to the new employer (Form 13)',
   'epf-transfer.intent.withdraw': 'Withdraw the balance in cash',
   'epf-transfer.join': 'Joined this employer',
+  'epf-transfer.tenureScope': 'Years counted here are this employer only. Prior PF you already transferred is not added — if aggregate continuous service is already past 5 years, confirm on the portal / with a CA.',
   'epf-transfer.exit': 'Last working day / date of exit',
   'epf-transfer.doe': 'Old employer has marked date of exit on EPFO',
   'epf-transfer.name': 'Name on UAN matches Aadhaar',
   'epf-transfer.dob': 'Date of birth on UAN matches Aadhaar',
   'epf-transfer.verdict.transfer': '{years} completed years. Transfer (Form 13) keeps the corpus in the fund.',
-  'epf-transfer.verdict.withdraw': '{years} completed years. A cash withdrawal before 5 years is usually the taxable path — transfer instead.',
-  'epf-transfer.verdict.okWithdraw': '{years} completed years. A withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
+  'epf-transfer.verdict.withdraw': '{years} completed years. CANDIDATE: a cash withdrawal before 5 years is usually the taxable path — transfer instead.',
+  'epf-transfer.verdict.okWithdraw': '{years} completed years. CANDIDATE: a withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
   'epf-transfer.flag.prefer-transfer': 'Do not withdraw to “start clean”. Transfer is the switcher’s move.',
   'epf-transfer.flag.premature-withdrawal':
     'CANDIDATE: premature withdrawal of a recognised PF can attract TDS (recollection s.192A / s.392(7)) and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
@@ -382,6 +383,8 @@ export const en: Record<string, string> = {
   'epf-transfer.flag.dob-mismatch': 'Date-of-birth mismatch vs Aadhaar blocks claims. Same remedy: employer KYC, then retry.',
   'epf-transfer.flag.interest-after-exit':
     'CANDIDATE: interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
+  'epf-transfer.flag.five-year-exempt':
+    'CANDIDATE: after 5 years of continuous recognised-PF service a withdrawal is the usual exempt case (Fourth Schedule recollection). Confirm on the portal and with a CA. This tool does not invent a rupee.',
   'epf-transfer.steps': 'Form 13 path (member portal)',
   'epf-transfer.step.activate-uan': 'Activate / log in to your UAN on the EPFO member portal.',
   'epf-transfer.step.kyc': 'Seed Aadhaar, PAN and bank. Name and DOB must match Aadhaar.',
@@ -432,6 +435,12 @@ export const en: Record<string, string> = {
   'tax-declaration.title': 'Tax declaration',
   'tax-declaration.desc': 'What to tell the new employer: regime, HRA proofs, and the Form 16 that arrives after you have left.',
   'tax-declaration.formTitle': 'This year’s declarations',
+  'tax-declaration.ctc': 'CTC driving these numbers',
+  'tax-declaration.basic': 'Basic',
+  'tax-declaration.rent': 'Monthly rent (old-regime HRA)',
+  'tax-declaration.state': 'Work state',
+  'tax-declaration.profileHint': 'Seeded from Decoder. Changing fields here does not overwrite Decoder.',
+  'tax-declaration.openDecoder': 'Open Decoder',
   'tax-declaration.hra': 'I will claim HRA (old regime)',
   'tax-declaration.hraHint': 'Needs actual rent receipts. Useless if new regime is cheaper.',
   'tax-declaration.80c': 'I will invest extra 80C beyond PF',
@@ -444,7 +453,8 @@ export const en: Record<string, string> = {
   'tax-declaration.proof.80c': '80C: investment proofs. Payroll typically asks by January.',
   'tax-declaration.proof.80d': '80D: health-premium receipts if you declared them.',
   'tax-declaration.proof.form16-prev': 'Previous employer Form 16 often arrives weeks after you leave. You still need it to file. Chase it like a relieving letter.',
-  'tax-declaration.proof.form12b': 'Hand Form 12B (previous income/TDS) to the new payroll in month 1 so they do not give you a second slab benefit.',
+  'tax-declaration.proof.form12b':
+    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. CANDIDATE: Rule 26A / s.192(2) multi-employer withholding — confirm the exact mechanism with a CA.',
 
   'notice-tracker.title': 'Notice tracker',
   'notice-tracker.desc': 'Dates and a checklist: F&F, asset return, insurance end, PF date of exit.',

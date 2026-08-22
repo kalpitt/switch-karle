@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro'
+import HomeTool from '../../tools/home/index'
+
+const title = 'स्विच कर ले — CTC decode करें। असल salary जानें।'
+const description =
+  'स्विच कर ले — भारतीय job offer decode करें. CTC से असल in-hand, notice period, bond और variable pay के red flags. Free, open source, पूरी तरह आपके browser में.'
+const site = (import.meta.env.SITE || 'https://kalpit.me').replace(/\/$/, '')
+const base = (import.meta.env.BASE_URL || '/').endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`
+const url = `${site}${base}hi/`
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'स्विच कर ले',
+  url,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+  description,
+}
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} lang="hi">
+  <HomeTool client:load lang="hi" />
+</Base>

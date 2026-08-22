@@ -3,7 +3,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.epf.v1' as const
 
@@ -25,9 +25,9 @@ const DEFAULT: Draft = {
   dobMatchesAadhaar: true,
 }
 
-export default function EpfTransferTool() {
+export default function EpfTransferTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="epf-transfer">
+    <IslandRoot lang={lang} current="epf-transfer">
       <Body />
     </IslandRoot>
   )
@@ -77,7 +77,12 @@ function Body() {
             { value: 'withdraw', label: t('epf-transfer.intent.withdraw') },
           ]}
         />
-        <DateField label={t('epf-transfer.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
+        <DateField
+          label={t('epf-transfer.join')}
+          hint={t('epf-transfer.tenureScope')}
+          value={draft.joinDate}
+          onChange={(v) => set({ joinDate: v })}
+        />
         <DateField label={t('epf-transfer.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
         <Toggle label={t('epf-transfer.doe')} checked={draft.dateOfExitMarked} onChange={(v) => set({ dateOfExitMarked: v })} />
         <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />

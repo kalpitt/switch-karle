@@ -3,13 +3,13 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, TextArea, VerdictBanner } from '../../components/ui'
 import { scanBondClause } from '../../engine/bondScan'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.bond.v1' as const
 
-export default function BondScannerTool() {
+export default function BondScannerTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="bond-scanner">
+    <IslandRoot lang={lang} current="bond-scanner">
       <Body />
     </IslandRoot>
   )

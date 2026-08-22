@@ -16,7 +16,7 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.compare.v1' as const
 const L = 100_000
@@ -38,9 +38,9 @@ function defaultSlots(): Slot[] {
   ]
 }
 
-export default function OfferComparisonTool() {
+export default function OfferComparisonTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="offer-comparison">
+    <IslandRoot lang={lang} current="offer-comparison">
       <CompareBody />
     </IslandRoot>
   )

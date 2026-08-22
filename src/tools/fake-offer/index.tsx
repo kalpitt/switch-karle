@@ -3,7 +3,7 @@ import { scanOfferScam } from '../../engine/offerScam'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.fake-offer.v1' as const
 
@@ -15,9 +15,9 @@ interface Draft {
 
 const EMPTY: Draft = { company: '', emailDomain: '', offerText: '' }
 
-export default function FakeOfferTool() {
+export default function FakeOfferTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="fake-offer">
+    <IslandRoot lang={lang} current="fake-offer">
       <Body />
     </IslandRoot>
   )

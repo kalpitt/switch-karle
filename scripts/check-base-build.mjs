@@ -26,7 +26,14 @@ if (!existsSync(dist)) {
 
 const basePrefix = BASE.endsWith('/') ? BASE : `${BASE}/`
 
-const required = ['index.html', 'decoder/index.html', 'tracker/index.html', 'prompts/index.html']
+const required = [
+  'index.html',
+  'decoder/index.html',
+  'tracker/index.html',
+  'prompts/index.html',
+  'hi/index.html',
+  'hi/decoder/index.html',
+]
 const missing = required.filter((f) => !existsSync(join(dist, f)))
 if (missing.length > 0) {
   console.error('check-base-build: FAIL — missing prerendered pages:')

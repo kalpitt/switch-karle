@@ -1,11 +1,11 @@
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, VerdictBanner } from '../../components/ui'
 import { CLAUSES } from '../../data/clauses'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
-export default function ClauseLibraryTool() {
+export default function ClauseLibraryTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="clause-library">
+    <IslandRoot lang={lang} current="clause-library">
       <Body />
     </IslandRoot>
   )

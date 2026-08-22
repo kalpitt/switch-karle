@@ -1,8 +1,8 @@
 ---
-import Base from '../layouts/Base.astro'
-import { islandTools, toolBySlug } from '../data/tools'
-import ToolIslands from '../components/ToolIslands.astro'
-import { epfFaqJsonLd } from '../data/epfFaq'
+import Base from '../../layouts/Base.astro'
+import { islandTools, toolBySlug } from '../../data/tools'
+import ToolIslands from '../../components/ToolIslands.astro'
+import { epfFaqJsonLd } from '../../data/epfFaq'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -16,6 +16,6 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
 const epfFaq = slug === 'epf-transfer' ? epfFaqJsonLd() : undefined
 ---
 
-<Base title={def.seoTitle} description={def.seoDescription} slug={slug} jsonLd={epfFaq} lang="en">
-  <ToolIslands slug={slug} lang="en" />
+<Base title={def.seoTitle} description={def.seoDescription} slug={slug} jsonLd={epfFaq} lang="hi">
+  <ToolIslands slug={slug} lang="hi" />
 </Base>
