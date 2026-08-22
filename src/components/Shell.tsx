@@ -14,7 +14,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
-      <header className="mb-6">
+      <header className="no-print mb-6">
         <a href={withBase()} className="inline-block">
           <h1 className="text-2xl font-extrabold tracking-tight">
             Switch <span className="font-semibold text-ink-soft">Karle</span>
@@ -54,7 +54,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
       <main>{children}</main>
 
-      <footer className="mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
+      <footer className="no-print mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
         <br />
         {t('app.footer.feedback')}{' '}

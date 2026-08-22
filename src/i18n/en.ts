@@ -28,6 +28,13 @@ export const en: Record<string, string> = {
   'common.delete': 'Delete',
   'common.cancel': 'Cancel',
 
+  'ui.copy': 'Copy the headline',
+  'ui.copied': 'Copied ✓',
+  'ui.print': 'Print',
+  'ui.disclaimer':
+    'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
+  'ui.money.hint': '12L, 12,00,000 or 1200000',
+
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
   'decoder.field.ctc.label': 'Total CTC',
