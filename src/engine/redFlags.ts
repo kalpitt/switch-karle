@@ -11,7 +11,8 @@ import type { RedFlag, SalaryBreakdown } from './types'
  * Act s.74); blanket penalties and restraints on joining competitors after
  * exit are void (s.27). Practical enforcement is F&F deduction and relieving-
  * letter withholding. Cognizant cut notice to 30 days in 2023; Flipkart,
- * Razorpay, Swiggy run 30-day standards.
+ * Razorpay, Swiggy run 30-day standards. Pasted-letter bond/probation
+ * patterns live in `bondScan.ts`.
  */
 
 interface Rule {

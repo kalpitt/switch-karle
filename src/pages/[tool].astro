@@ -27,6 +27,9 @@ import BgvPrepTool from '../tools/bgv-prep/index'
 import InsuranceGapTool from '../tools/insurance-gap/index'
 import TaxDeclarationTool from '../tools/tax-declaration/index'
 import NoticeTrackerTool from '../tools/notice-tracker/index'
+import BondScannerTool from '../tools/bond-scanner/index'
+import RedactorTool from '../tools/redactor/index'
+import ClauseLibraryTool from '../tools/clause-library/index'
 import { isHrScriptSlug } from '../data/hrScripts'
 import { EPFO_MEMBER_PORTAL } from '../engine/epf'
 
@@ -93,4 +96,7 @@ const epfFaq =
   {slug === 'insurance-gap' && <InsuranceGapTool client:load />}
   {slug === 'tax-declaration' && <TaxDeclarationTool client:load />}
   {slug === 'notice-tracker' && <NoticeTrackerTool client:load />}
+  {slug === 'bond-scanner' && <BondScannerTool client:load />}
+  {slug === 'redactor' && <RedactorTool client:load />}
+  {slug === 'clause-library' && <ClauseLibraryTool client:load />}
 </Base>

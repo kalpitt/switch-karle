@@ -19,6 +19,9 @@ export const en: Record<string, string> = {
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',
   'nav.searchEmpty': 'No tool matches.',
+  'app.stealth': 'Stealth',
+  'app.stealthHint': 'Looks like notes. Same tools.',
+  'app.stealthTitle': 'Notes',
   'home.kicker': 'A suite of instant micro-tools that decode every money moment of an Indian job switch — entirely on this device.',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
   'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
@@ -33,6 +36,7 @@ export const en: Record<string, string> = {
   'common.cancel': 'Cancel',
 
   'ui.copy': 'Copy the headline',
+  'ui.copyText': 'Copy',
   'ui.copied': 'Copied ✓',
   'ui.print': 'Print',
   'ui.disclaimer':
@@ -146,7 +150,7 @@ export const en: Record<string, string> = {
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
   'relocation.metroWarn': '{state} has no HRA metro city (only Delhi, Mumbai, Kolkata, Chennai qualify). The 50% limb you just switched on will not apply there.',
-  'relocation.ptApprox': 'Professional tax is approximate. Unlisted states (Punjab, Bihar, Assam and others) levy PT; “Other” is ₹0 and will overstate in-hand.',
+  'relocation.ptApprox': 'Professional tax is approximate. Punjab, Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',
@@ -457,6 +461,63 @@ export const en: Record<string, string> = {
   'notice-tracker.item.relieving-chase': 'If no relieving letter, start the day-7 chase',
   'notice-tracker.due': 'Due {date}',
 
+  'bond-scanner.title': 'Bond scanner',
+  'bond-scanner.desc': 'Paste the bond, non-compete or probation clause. This flags patterns — it is not a court.',
+  'bond-scanner.formTitle': 'The clause',
+  'bond-scanner.text': 'Offer / appointment text',
+  'bond-scanner.textHint': 'Paste the bond or restraint paragraph. It never leaves this device.',
+  'bond-scanner.verdict.clean': 'No bond, certificate-deposit or post-exit restraint pattern in this paste.',
+  'bond-scanner.verdict.flags': '{n} pattern(s) worth a lawyer, not a panic. Case law is fact-specific.',
+  'bond-scanner.flag.original-certificates':
+    'Retaining original degrees is widely treated as unlawful restraint. Do not hand over originals. (Not a substitute for a lawyer.)',
+  'bond-scanner.flag.post-exit-noncompete':
+    'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
+  'bond-scanner.flag.training-bond':
+    'CANDIDATE: courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed.',
+  'bond-scanner.flag.liquidated-damages':
+    'CANDIDATE: liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific.',
+  'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
+  'bond-scanner.disclaimer':
+    'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
+
+  'redactor.title': 'Payslip redactor',
+  'redactor.desc': 'Mask Aadhaar, PAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
+  'redactor.formTitle': 'Paste the page',
+  'redactor.text': 'Payslip or offer text',
+  'redactor.textHint': 'Nothing is uploaded. Download a PNG or print the masked page.',
+  'redactor.verdict.none': 'Nothing matched. Paste text that includes PAN, Aadhaar, a phone, or a ₹ amount.',
+  'redactor.verdict.hits': 'Masked {n} item(s). Download a PNG or print — pdf-lib is not used.',
+  'redactor.download': 'Download PNG',
+  'redactor.busy': 'Rendering…',
+  'redactor.preview': 'Masked preview',
+
+  'clause-library.title': 'Clause library',
+  'clause-library.desc': 'Plain-English readings of clauses that show up in Indian appointment letters. Not legal advice.',
+  'clause-library.verdict': 'Read the clause you actually signed. These notes are a map, not your contract.',
+  'clause-library.cat.notice': 'Notice',
+  'clause-library.cat.bond': 'Bond',
+  'clause-library.cat.variable': 'Variable',
+  'clause-library.cat.pf': 'PF',
+  'clause-library.cat.probation': 'Probation',
+  'clause-library.notice-90.title': '90-day notice',
+  'clause-library.notice-90.body':
+    'No Indian statute requires 90 days for typical IT/managerial roles. It is contractual. Long notice makes you harder to hire next time. Ask for a buyout formula in writing.',
+  'clause-library.notice-buyout.title': 'Salary in lieu of notice',
+  'clause-library.notice-buyout.body':
+    'Ordinary Indian letters let either side pay unserved notice. That is not a scam deposit. Switch Karle’s notice-buyout tool estimates the cash using the letter’s /30 convention.',
+  'clause-library.bond-training.title': 'Training / service bond',
+  'clause-library.bond-training.body':
+    'A rupee figure is not automatically payable. Courts have looked for specialised training cost and actual loss. Paste the clause into the bond scanner.',
+  'clause-library.variable-discretion.title': 'Variable at company discretion',
+  'clause-library.variable-discretion.body':
+    'If payout is “at discretion”, the CTC headline is not a promise. Use the variable-reality tool at 0 / 50 / 100%.',
+  'clause-library.pf-transfer.title': 'PF transfer on exit',
+  'clause-library.pf-transfer.body':
+    'Transfer (Form 13) is the switcher’s move. Withdrawing before five years of continuous service can be a taxable premature withdrawal — see EPF transfer.',
+  'clause-library.probation-confirm.title': 'Probation then confirmation',
+  'clause-library.probation-confirm.body':
+    'Confirmation is often “subject to performance” with an extendable probation. Get the maximum length in writing so the date cannot slide forever.',
+
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
   'decoder.field.ctc.label': 'Total CTC',
@@ -506,6 +567,15 @@ export const en: Record<string, string> = {
   'state.HR': 'Haryana',
   'state.UP': 'Uttar Pradesh',
   'state.RJ': 'Rajasthan',
+  'state.PB': 'Punjab',
+  'state.BR': 'Bihar',
+  'state.AS': 'Assam',
+  'state.JH': 'Jharkhand',
+  'state.CG': 'Chhattisgarh',
+  'state.SK': 'Sikkim',
+  'state.ML': 'Meghalaya',
+  'state.TR': 'Tripura',
+  'state.PY': 'Puducherry',
   'state.other': 'Other / not sure',
 
   // ---- Results ----

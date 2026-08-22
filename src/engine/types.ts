@@ -2,9 +2,32 @@
 
 export type Regime = 'new' | 'old'
 
-/** States we have professional-tax data for; 'other' uses 0 and is flagged approximate. */
+/** States we have a PT slot for; unverified-levy codes are ₹0 and flagged approximate. */
 export type StateCode =
-  | 'KA' | 'MH' | 'TN' | 'TG' | 'AP' | 'WB' | 'GJ' | 'MP' | 'KL' | 'OD' | 'DL' | 'HR' | 'UP' | 'RJ' | 'other'
+  | 'KA'
+  | 'MH'
+  | 'TN'
+  | 'TG'
+  | 'AP'
+  | 'WB'
+  | 'GJ'
+  | 'MP'
+  | 'KL'
+  | 'OD'
+  | 'DL'
+  | 'HR'
+  | 'UP'
+  | 'RJ'
+  | 'PB'
+  | 'BR'
+  | 'AS'
+  | 'JH'
+  | 'CG'
+  | 'SK'
+  | 'ML'
+  | 'TR'
+  | 'PY'
+  | 'other'
 
 export interface EsopGrant {
   /** Annualized grant value as quoted in the CTC. */
