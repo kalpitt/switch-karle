@@ -14,6 +14,7 @@ number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 | URL | What it answers |
 | --- | --- |
 | `/decoder/` | What does this CTC actually pay in-hand, and which red flags are in the offer? |
+| `/offer-comparison/` | Which of these 2–3 offers puts more in the bank once stuffing and paper ESOP are stripped? |
 | `/tracker/` | Where is each application, and what's the next action? |
 | `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
 

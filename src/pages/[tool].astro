@@ -4,6 +4,7 @@ import { islandTools, toolBySlug } from '../data/tools'
 import DecoderTool from '../tools/decoder/index'
 import TrackerTool from '../tools/tracker/index'
 import PromptsTool from '../tools/prompts/index'
+import OfferComparisonTool from '../tools/offer-comparison/index'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -19,4 +20,5 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
   {slug === 'decoder' && <DecoderTool client:load />}
   {slug === 'tracker' && <TrackerTool client:load />}
   {slug === 'prompts' && <PromptsTool client:load />}
+  {slug === 'offer-comparison' && <OfferComparisonTool client:load />}
 </Base>
