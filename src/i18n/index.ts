@@ -62,15 +62,26 @@ interface LangContextValue {
 const LangContext = createContext<LangContextValue | null>(null)
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>(loadLang)
+  // Always start at English so SSR HTML matches the first client render.
+  // Stored preference is applied after mount — writing it in the initializer
+  // would hydrate-mismatch, and a save-on-mount of the default would clobber Hindi.
+  const [lang, setLang] = useState<Lang>('en')
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
+    setLang(loadLang())
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
     try {
       localStorage.setItem(STORAGE_KEY, lang)
     } catch {
       /* storage unavailable (private mode, quota) — language just won't persist */
     }
-  }, [lang])
+    document.documentElement.lang = lang === 'hi' ? 'hi' : 'en'
+  }, [lang, hydrated])
 
   return createElement(LangContext.Provider, { value: { lang, setLang } }, children)
 }

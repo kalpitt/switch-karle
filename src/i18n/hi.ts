@@ -24,6 +24,12 @@ export const hi: Record<string, string> = {
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',
 
+  'nav.home': 'होम',
+  'home.kicker': 'भारतीय job switch के हर पैसे वाले पल को decode करने वाले instant micro-tools — पूरी तरह इसी device पर।',
+  'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
+  'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
+  'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता.',
+
   'tab.decoder': 'डिकोडर',
   'tab.tracker': 'ट्रैकर',
   'tab.prompts': 'प्रॉम्प्ट्स',

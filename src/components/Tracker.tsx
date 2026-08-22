@@ -35,12 +35,21 @@ function useStageLabel(): Record<Stage, string> {
 
 export function Tracker() {
   const t = useT()
-  const [list, setList] = useState<Application[]>(() => load())
+  // Empty until mount so SSR HTML matches the first client render. Do not
+  // save until hydrated — a save of [] would wipe real tracker data.
+  const [list, setList] = useState<Application[]>([])
+  const [hydrated, setHydrated] = useState(false)
   const [formMode, setFormMode] = useState<FormMode>('closed')
 
   useEffect(() => {
+    setList(load())
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
     save(list)
-  }, [list])
+  }, [list, hydrated])
 
   const grouped = useMemo(() => {
     const g: Record<Stage, Application[]> = {
