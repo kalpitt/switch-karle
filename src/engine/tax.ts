@@ -70,11 +70,13 @@ function surchargeWithMarginalRelief(taxable: number, tax: number, regime: Regim
   return Math.max(0, Math.min(uncapped, capped))
 }
 
-/**
- * Full tax on a taxable income (i.e. AFTER standard deduction and all
- * applicable deductions/exemptions have been subtracted by the caller).
- */
-export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
+function rawTax(taxable: number, regime: Regime): {
+  gross: number
+  rebate: number
+  surcharge: number
+  cess: number
+  total: number
+} {
   const slabs = regime === 'new' ? NEW_REGIME_SLABS : OLD_REGIME_SLABS
   const gross = slabTax(taxable, slabs)
 
@@ -92,15 +94,30 @@ export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
   const afterRebate = gross - rebate
   const surcharge = surchargeWithMarginalRelief(taxable, afterRebate, regime)
   const cess = (afterRebate + surcharge) * 0.04
-  const totalTax = Math.round(afterRebate + surcharge + cess)
+  return { gross, rebate, surcharge, cess, total: afterRebate + surcharge + cess }
+}
 
+/**
+ * Unrounded total tax. `computeTax` rounds this; `marginalRate` differences
+ * it so the +₹1 derivative is not lost to `Math.round`.
+ */
+export function taxTotalUnrounded(taxable: number, regime: Regime): number {
+  return rawTax(taxable, regime).total
+}
+
+/**
+ * Full tax on a taxable income (i.e. AFTER standard deduction and all
+ * applicable deductions/exemptions have been subtracted by the caller).
+ */
+export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
+  const r = rawTax(taxable, regime)
   return {
     regime,
     taxableIncome: taxable,
-    slabTax: Math.round(gross),
-    rebate: Math.round(rebate),
-    surcharge: Math.round(surcharge),
-    cess: Math.round(cess),
-    totalTax,
+    slabTax: Math.round(r.gross),
+    rebate: Math.round(r.rebate),
+    surcharge: Math.round(r.surcharge),
+    cess: Math.round(r.cess),
+    totalTax: Math.round(r.total),
   }
 }
