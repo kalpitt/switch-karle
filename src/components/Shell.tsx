@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
+import { RULES_LAST_VERIFIED } from '../data/rules'
 import { withBase } from '../lib/base'
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
@@ -56,6 +57,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
       <footer className="no-print mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
+        <br />
+        <span className="mt-1 inline-flex items-center rounded-full border border-line bg-card px-2.5 py-0.5 font-semibold text-ink-soft">
+          {t('app.footer.verified', { date: RULES_LAST_VERIFIED })}
+        </span>
         <br />
         {t('app.footer.feedback')}{' '}
         <a href="mailto:tiwari.kalpit@gmail.com" className="font-semibold underline">

@@ -20,6 +20,7 @@ export const hi: Record<string, string> = {
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
+  'app.footer.verified': 'नियम last verified {date}',
   'app.footer.feedback': 'कोई number गलत लगा या bug मिला? बताएं:',
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',

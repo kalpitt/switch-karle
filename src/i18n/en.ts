@@ -10,6 +10,7 @@ export const en: Record<string, string> = {
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
   'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source ·',
   'app.footer.privacy': 'your data never leaves this device',
+  'app.footer.verified': 'rules last verified {date}',
   'app.footer.feedback': 'Found a wrong number or a bug? Tell me:',
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'Language',
