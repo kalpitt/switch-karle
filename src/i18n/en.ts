@@ -36,6 +36,24 @@ export const en: Record<string, string> = {
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
   'ui.money.hint': '12L, 12,00,000 or 1200000',
 
+  'offer-comparison.title': 'Offer comparison',
+  'offer-comparison.desc': 'Two or three offers, side by side — in-hand, not headline CTC.',
+  'offer-comparison.offer': 'Offer {label}',
+  'offer-comparison.addThird': 'Add a third offer',
+  'offer-comparison.removeThird': 'Remove offer C',
+  'offer-comparison.delta': 'Side by side',
+  'offer-comparison.row.ctc': 'CTC as quoted',
+  'offer-comparison.row.inHand': 'In-hand / month',
+  'offer-comparison.row.ratio': 'In-hand / CTC',
+  'offer-comparison.row.variable': 'Variable in CTC',
+  'offer-comparison.verdict.tie': 'In-hand is a dead heat once paper ESOP is ignored.',
+  'offer-comparison.verdict.win': 'Offer {label} puts {amount}/month in the bank — the higher in-hand.',
+  'offer-comparison.esopPolicy':
+    'Paper ESOP is valued at zero on every side so a grant cannot swing the verdict. Liquidity is a separate conversation.',
+  'offer-comparison.flag.gratuity': 'Gratuity is inside CTC on one side only — that inflates the headline, not the bank.',
+  'offer-comparison.flag.pf': 'Employer PF is inside CTC on one side only. Compare like with like.',
+  'offer-comparison.flag.ceiling': 'One offer computes PF on full basic, the other uses the wage ceiling.',
+
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
   'decoder.field.ctc.label': 'Total CTC',

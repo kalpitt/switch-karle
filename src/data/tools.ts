@@ -19,6 +19,20 @@ export interface ToolDef {
 
 export const TOOLS: ToolDef[] = [
   {
+    slug: 'offer-comparison',
+    category: 'offer',
+    stage: 1,
+    icon: 'compare',
+    titleKey: 'offer-comparison.title',
+    descKey: 'offer-comparison.desc',
+    seoTitle: 'Offer Comparison',
+    seoDescription:
+      'Compare two or three Indian job offers side by side: real in-hand, CTC stuffing, and a one-line verdict. Paper ESOP cannot swing the call.',
+    hasIsland: true,
+    statutory: false,
+    storageKey: 'switchkarle.compare.v1',
+  },
+  {
     slug: 'decoder',
     category: 'offer',
     stage: 0,
