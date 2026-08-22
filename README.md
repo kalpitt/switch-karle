@@ -21,6 +21,11 @@ number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 | `/esop-reality/` | What does exercising this grant cost, and what tax hits at my slab? |
 | `/relocation/` | Does this CTC move in-hand when I change city? |
 | `/fake-offer/` | Does this letter look like a job scam? |
+| `/notice-buyout/` | What does unserved notice cost to buy out or recover? |
+| `/gratuity/` | Am I eligible, how much, and which date flips me over the line? |
+| `/leave-encashment/` | On a resignation, is this leave balance taxable? |
+| `/fnf-checker/` | Does this full-and-final sheet add up, or do I owe them? |
+| `/form16-shock/` | Two Form-16s this year — what extra tax is waiting? |
 | `/tracker/` | Where is each application, and what's the next action? |
 | `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
 
