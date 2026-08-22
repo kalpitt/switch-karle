@@ -63,6 +63,33 @@ export function addMonths(iso: string, months: number): string {
   return formatISO({ y, m, d })
 }
 
+/** Add whole days (may be negative). UTC calendar, same rules as `daysBetween`. */
+export function addDays(iso: string, days: number): string {
+  if (!Number.isInteger(days) || !Number.isFinite(days)) {
+    throw new Error(`dates: days must be a finite integer, got ${String(days)}`)
+  }
+  const ms = toUtcMs(parts(iso)) + days * MS_PER_DAY
+  const d = new Date(ms)
+  return formatISO({ y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate() })
+}
+
+/**
+ * Last working day if the full notice is served.
+ * CANDIDATE: LWD = resignation date + notice days − 1 (calendar). The letter can count differently.
+ */
+export function lastWorkingDay(resignDate: string, noticePeriodDays: number): string {
+  const n = Number.isInteger(noticePeriodDays) && noticePeriodDays >= 1 ? noticePeriodDays : 1
+  return addDays(resignDate, n - 1)
+}
+
+/**
+ * True when the new join date is on or before LWD. EPFO's member portal often
+ * cannot record two employers on overlapping days — portal behaviour, not a named statute.
+ */
+export function epfoDateOverlap(lwd: string, newJoinDate: string): boolean {
+  return daysBetween(lwd, newJoinDate) <= 0
+}
+
 export interface Tenure {
   completedYears: number
   /** Elapsed days since the last join-anniversary (0 on an exact anniversary). */
