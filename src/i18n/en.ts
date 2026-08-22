@@ -14,6 +14,12 @@ export const en: Record<string, string> = {
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'Language',
 
+  'nav.home': 'Home',
+  'home.kicker': 'A suite of instant micro-tools that decode every money moment of an Indian job switch — entirely on this device.',
+  'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
+  'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
+  'home.prompts.desc': 'Copy a prompt into your own AI. This app never sends your data anywhere.',
+
   'tab.decoder': 'Decoder',
   'tab.tracker': 'Tracker',
   'tab.prompts': 'Prompts',

@@ -1,0 +1,44 @@
+---
+import '../index.css'
+
+interface Props {
+  title: string
+  description: string
+  slug?: string
+}
+
+const { title, description, slug } = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+const fullTitle = slug ? `${title} — Switch Karle` : title
+const ogImage = new URL(`${import.meta.env.BASE_URL}icon-512.png`, Astro.site).href
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}icon.svg`} />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}icon-180.png`} />
+    <link rel="manifest" href={`${import.meta.env.BASE_URL}manifest.webmanifest`} />
+    <meta name="theme-color" content="#faf7f2" />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import { registerSW } from 'virtual:pwa-register'
+      if (import.meta.env.PROD) {
+        registerSW({ immediate: true })
+      }
+    </script>
+  </body>
+</html>

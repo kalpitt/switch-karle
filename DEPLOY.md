@@ -9,9 +9,10 @@
 
 kalpit.me is the custom domain of the `kalpitt.github.io` user site, so any
 public repo of Kalpit's with GitHub Pages enabled auto-serves at
-`kalpit.me/<repo>` (the saavdhan pattern). The build is path-relative
-(`base: './'` + scope-relative service worker) so the same artifact works at
-the Workers root URL and under this subpath.
+`kalpit.me/<repo>` (the saavdhan pattern). The Astro build sets `site` +
+`base: '/switch-karle'` once in `astro.config.mjs` (via `site.config.mjs`).
+The Workers root-URL mirror will 404 assets until the domain cutover flips
+`base` to `/`. The GitHub Pages subpath is the canonical deploy.
 
 Owner steps to activate (already done for this repo):
 1. Make this repo public (required for free-plan Pages).
@@ -34,16 +35,15 @@ URL.
 
 ## Notes
 
-- **GitHub Pages caveat**: project pages serve under `/switch-karle/`, but the
-  manifest, icons and service worker use root-relative paths by default —
-  this repo's `vite.config.ts` sets `base: './'` and the service worker reads
-  `self.registration.scope` specifically so both the root-domain mirror and
-  this subpath work off the same build. Don't reintroduce absolute `/...`
-  paths in index.html or the manifest.
-- The service worker caches aggressively. After deploying a change, bump
-  `VERSION` in `public/sw.js` if you need clients to refetch immediately.
-  Bumped to `switchkarle-v1` as part of the rename so every existing visitor
-  picks up the new branding on next load.
+- **GitHub Pages caveat**: project pages serve under `/switch-karle/`. Asset
+  URLs are `/switch-karle/_astro/...`. `npm run check:base` fails the build
+  if any prerendered HTML points outside that prefix. Don't reintroduce
+  root-absolute `/assets/...` paths.
+- The service worker is Workbox `generateSW` (precache-all HTML, **no** SPA
+  navigateFallback). Offline reload of `/decoder/` must render the decoder,
+  never the home grid. `@vite-pwa/astro` defaults fallback to `base` if we
+  forget to set `navigateFallback: undefined` — the smoke check greps for
+  `createHandlerBoundToURL` so that cannot land silently.
 - Analytics: none, by design — no client-side tracker; "nothing is uploaded"
   is a product promise. For traffic numbers on the **canonical URL**, use
   GitHub repo Insights → Traffic (visits/uniques/referrers, 14-day rolling,

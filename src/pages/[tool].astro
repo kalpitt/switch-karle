@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro'
+import { islandTools, toolBySlug } from '../data/tools'
+import DecoderTool from '../tools/decoder/index'
+import TrackerTool from '../tools/tracker/index'
+import PromptsTool from '../tools/prompts/index'
+
+export function getStaticPaths() {
+  return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
+}
+
+const slug = Astro.params.tool
+if (!slug) throw new Error('missing tool slug')
+const def = toolBySlug(slug)
+if (!def) throw new Error(`unknown tool: ${slug}`)
+---
+
+<Base title={def.seoTitle} description={def.seoDescription} slug={slug}>
+  {slug === 'decoder' && <DecoderTool client:load />}
+  {slug === 'tracker' && <TrackerTool client:load />}
+  {slug === 'prompts' && <PromptsTool client:load />}
+</Base>
