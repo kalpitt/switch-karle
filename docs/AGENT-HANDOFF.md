@@ -78,9 +78,18 @@ Commands: `npm install`, `npm run dev`, `npx vitest run`, `npm run build`.
 
 ## 3. Hard rules (never violate)
 
-1. **100% client-side, forever.** No server, no accounts, no API calls with
-   user data. "Your offer never leaves your device" is the moat. AI features
-   stay BYO-prompt (generate text the user pastes into their own AI).
+1. **No one but the user can ever read their data.** (Reworded 2026-08-22
+   from "100% client-side, forever" to permit cross-device sync.) The
+   privacy promise is absolute; the no-server part is an implementation
+   choice, not the rule. Allowed: local-only storage (default), sync
+   through storage the user owns (their GitHub, via PAT in localStorage —
+   the pattern Kalpit's personal-os console uses), and — distribution-era
+   only — end-to-end encrypted sync where any server stores ciphertext it
+   cannot decrypt. Forbidden forever: accounts on our side, any backend
+   that can read user data, sending offer/tracker data to any third party.
+   AI features stay BYO-prompt (generate text the user pastes into their
+   own AI). Only the Tracker has state worth syncing; calculators stay
+   stateless.
 2. **No analytics, no trackers** — until Kalpit explicitly reopens
    distribution.
 3. **Engine purity.** `src/engine/` stays pure TypeScript, React-free,
@@ -182,6 +191,23 @@ Implementation guidance (decide in-session, propose in the PR):
    moonlighting-era dual PF? relieving letter pending?) → personalized
    "what background verification will see and what to prepare". Client-side.
 
+### Tracker cross-device sync (owner-approved 2026-08-22; slot after Wave 1)
+
+Kalpit's use case: update the pipeline on the phone, continue on the laptop.
+Two phases, both within hard rule 1 as reworded:
+
+- **Sync-a: painless manual transfer, zero backend.** Export/import already
+  exists; add one-tap "send to my other device" (Web Share API file share)
+  and/or a QR-code / copy-paste blob — tracker data is tiny. ~An evening.
+- **Sync-b: sync through the user's own GitHub.** Private gist or repo,
+  written with a PAT the user pastes once (stored in localStorage only,
+  never in code — same pattern as Kalpit's personal-os console). Data lives
+  in the user's GitHub, no server of ours. Handle merge conflicts simply:
+  last-writer-wins with a visible "synced at" stamp is enough at this scale.
+
+E2E-encrypted sync via a Worker (for non-GitHub users) is deliberately
+parked with distribution — see below.
+
 ### Wave 3 — the unserved transition tools (hardest, most valuable)
 
 10. **Two-Form-16 Tax Shock Estimator** — the April sting: both employers
@@ -207,7 +233,10 @@ engine every February (the engine is FY-stamped).
 ### Parked with distribution — do NOT build now
 
 Per-LPA in-hand pages ("15 LPA in hand"), hike-matrix pSEO pages, new
-share-card variants, domain purchase, analytics, FAQ JSON-LD/SEO work.
+share-card variants, domain purchase, analytics, FAQ JSON-LD/SEO work, and
+E2E-encrypted sync infrastructure (a Cloudflare Worker storing ciphertext
+only, passphrase-derived key — for lay users without GitHub; free tier
+likely suffices, anything beyond is a money gate).
 
 ## 7. Domain knowledge — the insight behind the tools
 
