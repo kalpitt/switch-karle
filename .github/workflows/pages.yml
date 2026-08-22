@@ -1,3 +1,5 @@
+# Deploys. The checks below duplicate ci.yml on purpose — ci.yml gates the PR,
+# this gates production. Keep the two step lists in sync.
 name: Deploy to GitHub Pages (kalpit.me/switch-karle)
 
 on:
