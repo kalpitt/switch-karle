@@ -11,6 +11,11 @@ import BonusClawbackTool from '../tools/bonus-clawback/index'
 import EsopRealityTool from '../tools/esop-reality/index'
 import RelocationTool from '../tools/relocation/index'
 import FakeOfferTool from '../tools/fake-offer/index'
+import NoticeBuyoutTool from '../tools/notice-buyout/index'
+import GratuityTool from '../tools/gratuity/index'
+import LeaveEncashmentTool from '../tools/leave-encashment/index'
+import FnfCheckerTool from '../tools/fnf-checker/index'
+import Form16ShockTool from '../tools/form16-shock/index'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -33,4 +38,9 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
   {slug === 'esop-reality' && <EsopRealityTool client:load />}
   {slug === 'relocation' && <RelocationTool client:load />}
   {slug === 'fake-offer' && <FakeOfferTool client:load />}
+  {slug === 'notice-buyout' && <NoticeBuyoutTool client:load />}
+  {slug === 'gratuity' && <GratuityTool client:load />}
+  {slug === 'leave-encashment' && <LeaveEncashmentTool client:load />}
+  {slug === 'fnf-checker' && <FnfCheckerTool client:load />}
+  {slug === 'form16-shock' && <Form16ShockTool client:load />}
 </Base>
