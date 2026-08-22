@@ -22,7 +22,13 @@ import HrScriptTool from '../tools/hr-script/index'
 import CounterOfferTool from '../tools/counter-offer/index'
 import HandoverDocTool from '../tools/handover-doc/index'
 import RelievingChaserTool from '../tools/relieving-chaser/index'
+import EpfTransferTool from '../tools/epf-transfer/index'
+import BgvPrepTool from '../tools/bgv-prep/index'
+import InsuranceGapTool from '../tools/insurance-gap/index'
+import TaxDeclarationTool from '../tools/tax-declaration/index'
+import NoticeTrackerTool from '../tools/notice-tracker/index'
 import { isHrScriptSlug } from '../data/hrScripts'
+import { EPFO_MEMBER_PORTAL } from '../engine/epf'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -32,9 +38,35 @@ const slug = Astro.params.tool
 if (!slug) throw new Error('missing tool slug')
 const def = toolBySlug(slug)
 if (!def) throw new Error(`unknown tool: ${slug}`)
+
+const epfFaq =
+  slug === 'epf-transfer'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'Should I withdraw my EPF when I switch jobs?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Usually no. File an online Form 13 transfer to the new employer. A cash withdrawal before five years of continuous service can be a taxable premature withdrawal. Switch Karle does not invent a TDS rupee — confirm with a CA.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Why is my PF transfer stuck?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: `The usual blockers are an unmarked date of exit on the old establishment, or a name/date-of-birth mismatch versus Aadhaar. Ask old HR to mark the date of exit, fix KYC, then retry on the member portal: ${EPFO_MEMBER_PORTAL}`,
+            },
+          },
+        ],
+      }
+    : undefined
 ---
 
-<Base title={def.seoTitle} description={def.seoDescription} slug={slug}>
+<Base title={def.seoTitle} description={def.seoDescription} slug={slug} jsonLd={epfFaq}>
   {slug === 'decoder' && <DecoderTool client:load />}
   {slug === 'tracker' && <TrackerTool client:load />}
   {slug === 'prompts' && <PromptsTool client:load />}
@@ -56,4 +88,9 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
   {slug === 'counter-offer' && <CounterOfferTool client:load />}
   {slug === 'handover-doc' && <HandoverDocTool client:load />}
   {slug === 'relieving-chaser' && <RelievingChaserTool client:load />}
+  {slug === 'epf-transfer' && <EpfTransferTool client:load />}
+  {slug === 'bgv-prep' && <BgvPrepTool client:load />}
+  {slug === 'insurance-gap' && <InsuranceGapTool client:load />}
+  {slug === 'tax-declaration' && <TaxDeclarationTool client:load />}
+  {slug === 'notice-tracker' && <NoticeTrackerTool client:load />}
 </Base>

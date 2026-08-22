@@ -4,6 +4,7 @@ import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
 import { RULES_LAST_VERIFIED } from '../data/rules'
 import { withBase } from '../lib/base'
+import { CommandPalette } from './CommandPalette'
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
   const t = useT()
@@ -37,6 +38,8 @@ export function Shell({ current, children }: { current: string; children: ReactN
               </NavLink>
             ))}
           </nav>
+
+          <CommandPalette />
 
           <div
             role="group"
