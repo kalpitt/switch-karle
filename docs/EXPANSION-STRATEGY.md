@@ -1,14 +1,16 @@
 # SwitchKarle expansion strategy — "iLovePDF of job switching in India"
 
-Date: 2026-08-22. Status: **PROPOSAL — not adopted until Kalpit merges this PR.**
+Date: 2026-08-22 (revised same day). Status: **PROPOSAL — adopted when Kalpit
+merges this PR.**
 
-> **Decision gate.** On 2026-08-18 Kalpit directed: Switch Karle is a personal
-> hunt OS, distribution off the table (personal-os handoff
-> `2026-08-18-switch-karle-personal-use.md`, ROADMAP line Class-A deleted,
-> Chhalaang portal plan stamped SUPERSEDED). This document reverses that.
-> Merging this PR is the explicit owner decision that distribution is back on.
-> The 7-evening personal-use gate set on 08-18 can still run in parallel — the
-> tracker (personal OS) and the tools (public utility) are separable halves.
+> **Scope, clarified by Kalpit 2026-08-22.** The "iLovePDF" comparison means
+> breadth and quality of micro-tools, NOT distribution. Goal: an amazing
+> product built for his own use and as a showcase of dev capability.
+> Distribution comes later, deliberately. This is consistent with the
+> 2026-08-18 direction (personal hunt OS, distribution off the table) —
+> it extends it with a build-out intent. The 7-evening personal-use gate
+> stays. Everything distribution-shaped in this doc (§4) is parked, not
+> deleted, so nothing has to be re-invented when that day comes.
 
 ## 1. What exists today
 
@@ -110,50 +112,63 @@ Ten phases. **Bold** = friction point with no good tool anywhere today.
 
 ## 3. Tool suite — four waves
 
-Principle: every tool is one URL, answer-first, client-side, EN+HI, with a
-shareable card where the output is braggable or warnable.
+Principle: every tool is one URL, answer-first, client-side, EN+HI, done to
+showcase depth — a tool ships when its numbers are golden-case-tested, both
+languages read natively, and the edge cases are explained in the UI, not
+before. Build order follows Kalpit's own hunt: tools he will personally hit
+get built first and QA'd by real use.
 
-### Wave 1 — calculators the engine mostly already powers (highest SEO volume)
-1. **Hike Calculator** — % hike between two CTCs, and the killer feature:
+Craft bar over count: **8–10 deep tools beat 17 shallow ones** as a showcase.
+Waves 3–4 are a backlog, not a commitment.
+
+### Wave 1 — calculators the engine mostly already powers (and the hunt needs)
+1. **Offer Comparison** — README roadmap item 6; two decodes side by side,
+   verdict line. First because it's the tool an active hunt hits first.
+2. **Hike Calculator** — % hike between two CTCs, and the killer feature:
    *in-hand hike vs CTC hike* ("30% on paper, 21% in your bank"). Reuses the
-   engine twice. Shareable "hike card".
-2. **In-hand salary pages** — programmatic: one prerendered page per LPA point
-   (8, 10, 12 … 80 LPA), answer visible before any input. This is the
-   highest-volume query family in the space ("15 lpa in hand salary").
+   engine twice.
 3. **Notice Period Buyout Calculator** — basic vs gross convention toggle.
 4. **Gratuity Calculator** — with the 4-years-240-days rule explained.
-5. **Offer Comparison** — roadmap item 6; two decodes side by side, verdict
-   line, shareable comparison card.
-6. **Leave Encashment / F&F Estimator** — the exit-paperwork calculator.
+5. **Leave Encashment / F&F Estimator** — the exit-paperwork calculator.
 
 ### Wave 2 — documents and scripts (word-of-mouth, WhatsApp-forwardable)
-7. **Resignation Letter Generator** — EN/HI, tones (standard / grateful /
+6. **Resignation Letter Generator** — EN/HI, tones (standard / grateful /
    strictly formal), notice-date math built in, .docx/PDF/copy output.
-8. **HR Scripts Library** — expected-CTC answer, early-release ask, buyout
+7. **HR Scripts Library** — expected-CTC answer, early-release ask, buyout
    negotiation, offer decline, counteroffer response, follow-up nudges. Static
    content + fill-in variables; each script its own URL.
-9. **Counteroffer Evaluator** — number + non-number factors, verdict framing.
-10. **BGV Prep Checklist** — generated from a few questions (gaps? moonlighting?
-    pending relieving letter?), client-side.
+8. **Counteroffer Evaluator** — number + non-number factors, verdict framing.
+9. **BGV Prep Checklist** — generated from a few questions (gaps? moonlighting?
+   pending relieving letter?), client-side.
 
 ### Wave 3 — the unserved transition tools (hardest, most defensible)
-11. **Two-Form-16 Tax Shock Estimator** — enter both employments, see the
-    true liability now instead of in July. Seasonal marketing gift.
-12. **EPF Transfer Wizard** — decision-tree walkthrough of Form 13, date-of-
-    exit, UAN mismatch remedies. Content-heavy, calculator-light, ranks hard.
-13. **ESOP Decoder** — vesting math, perquisite tax at exercise, red flags.
-14. **Fake Offer Scanner** — heuristics from the offer letter (deposit asks,
+10. **Two-Form-16 Tax Shock Estimator** — enter both employments, see the
+    true liability now instead of in July. Hits every switcher.
+11. **EPF Transfer Wizard** — decision-tree walkthrough of Form 13, date-of-
+    exit, UAN mismatch remedies. Content-heavy, calculator-light.
+12. **ESOP Decoder** — vesting math, perquisite tax at exercise, red flags.
+13. **Fake Offer Scanner** — heuristics from the offer letter (deposit asks,
     domain mismatch, EPFO establishment lookup pointers). Saavdhan-adjacent.
 
 ### Wave 4 — deepen, don't widen
-15. Joining-bonus clawback cost calculator (fold into red flags).
-16. Probation/bond clause scanner (extend red-flag engine).
-17. More states' professional tax; FY updates as an annual ritual.
+14. Joining-bonus clawback cost calculator (fold into red flags).
+15. Probation/bond clause scanner (extend red-flag engine).
+16. More states' professional tax; FY updates as an annual ritual.
+
+### Parked with distribution (build only when distribution switches on)
+- **In-hand salary LPA pages** (one prerendered page per LPA point) and
+  hike-matrix pages — pure programmatic-SEO plays with no personal-use or
+  showcase value; trivially generated later from the engine.
+- Share-card variants beyond the existing truth card.
 
 Not building: job discovery, resume builder, interview prep, anything needing
 accounts or a server. Crowded, off-thesis, or breaks the privacy architecture.
 
-## 4. Growth loops
+## 4. Growth loops — PARKED until distribution switches on
+
+Kept so the thinking survives; none of this starts now. Only §4-relevant
+build decision that matters today: the per-tool-URL architecture in §5, which
+makes all of this a config change later instead of a rewrite.
 
 - **Programmatic SEO is the engine.** Tool pages (head terms) + LPA pages +
   hike-matrix pages ("20% hike on 12 LPA") + script pages (long tail). Hindi
@@ -197,32 +212,40 @@ accounts or a server. Crowded, off-thesis, or breaks the privacy architecture.
 - **Repo shape:** one repo, three layers — `engine/` (pure logic + tests),
   `tools/` (one folder per tool page), `content/` (scripts, guides, EN/HI
   strings). No monorepo tooling until it hurts.
-- **Cadence:** ship one Wave-1 tool per week; each is a page + an engine
-  function + tests + two share-card templates. Sonnet-tier implementation
-  against this doc; frontier tier only for tool UX first-passes and the
+- **Cadence:** one Wave-1 tool per week; each is a page + an engine function
+  + golden-case tests + EN/HI strings. Sonnet-tier implementation against
+  this doc; frontier tier only for tool UX first-passes and the
   Astro/prerender architecture call.
+- **The showcase is the repo, not just the app.** A reviewer of dev
+  capability reads the README, the engine tests, and one tool's code. Keep
+  the README's tool table current, document each tool's tax/legal reasoning
+  beside its code, and let the architecture (pure engine, prerendered
+  routes, bilingual i18n, client-side privacy) tell the story.
 - **Annual ritual:** tax engine is FY-stamped; every February, a "FY update"
-  release. This is also an SEO moment ("in-hand salary FY 2027-28").
+  release.
 
 ## 6. Proposed roadmap (needs your Class-B approval to become real)
 
-- **Now:** (0) own domain + Cloudflare analytics decision; (1) per-tool
-  routing/prerender architecture; (2) Hike Calculator; (3) Offer Comparison.
-- **Next:** LPA pages, buyout + gratuity calculators, resignation letter
+- **Now:** (1) per-tool routing/prerender architecture; (2) Offer
+  Comparison; (3) Hike Calculator.
+- **Next:** buyout + gratuity calculators, F&F estimator, resignation letter
   generator, HR scripts.
-- **Later:** F&F, two-Form-16 estimator, EPF wizard, ESOP decoder, fake-offer
-  scanner.
+- **Later:** two-Form-16 estimator, EPF wizard, ESOP decoder, fake-offer
+  scanner, BGV checklist, counteroffer evaluator.
+- **Parked with distribution:** domain, analytics, LPA/pSEO pages, share
+  cards, all of §4.
 - **Not doing:** job board, resume builder, accounts/server, interview prep.
 
 ## 7. Where I push back
 
-1. **The 08-18 gate was good product discipline.** "Use it yourself for 7
-   evenings" tests whether the tracker half is real. Reversing distribution
-   doesn't require abandoning that gate — run both: tools are for strangers,
-   the tracker is for you, and the tools don't depend on the tracker.
-2. **Don't build 30 tools before one has traffic.** Ship Wave 1 + the domain,
-   watch 8 weeks of Search Console, then fund Wave 2 with evidence.
-3. **Without the domain and analytics decisions (both are gates: money), the
-   rest of this plan should not start.** Building more tools behind a
-   personal-site subpath with no measurement repeats the "distribution is
-   the whole game" mistake in the opposite direction.
+1. **"Sheer availability of features" is the wrong finish line for a
+   showcase.** iLovePDF impresses through polish and consistency, not count.
+   8–10 deep tools, each tested and bilingual, showcase more capability than
+   17 shallow ones — and a wall of half-tools would repeat the failure mode
+   the 08-18 session caught, inverted.
+2. **Keep the 7-evening personal-use gate.** Build Wave 1 in the order your
+   own hunt needs it, so every tool gets one real user before it counts as
+   done.
+3. **Do the per-tool-URL architecture first even though distribution is
+   parked.** It's cheap now, expensive to retrofit under 10 tools, is itself
+   showcase material, and keeps distribution a config change later.
