@@ -5,6 +5,12 @@ import DecoderTool from '../tools/decoder/index'
 import TrackerTool from '../tools/tracker/index'
 import PromptsTool from '../tools/prompts/index'
 import OfferComparisonTool from '../tools/offer-comparison/index'
+import RealHikeTool from '../tools/real-hike/index'
+import VariableRealityTool from '../tools/variable-reality/index'
+import BonusClawbackTool from '../tools/bonus-clawback/index'
+import EsopRealityTool from '../tools/esop-reality/index'
+import RelocationTool from '../tools/relocation/index'
+import FakeOfferTool from '../tools/fake-offer/index'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -21,4 +27,10 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
   {slug === 'tracker' && <TrackerTool client:load />}
   {slug === 'prompts' && <PromptsTool client:load />}
   {slug === 'offer-comparison' && <OfferComparisonTool client:load />}
+  {slug === 'real-hike' && <RealHikeTool client:load />}
+  {slug === 'variable-reality' && <VariableRealityTool client:load />}
+  {slug === 'bonus-clawback' && <BonusClawbackTool client:load />}
+  {slug === 'esop-reality' && <EsopRealityTool client:load />}
+  {slug === 'relocation' && <RelocationTool client:load />}
+  {slug === 'fake-offer' && <FakeOfferTool client:load />}
 </Base>
