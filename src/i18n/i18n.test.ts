@@ -58,7 +58,46 @@ describe('translateOrFallback (red-flag UI overrides)', () => {
   })
 })
 
+/**
+ * Keys that are deliberately English-only in the Hindi UI.
+ *
+ * `translate()` falls back to English for any missing `hi` key, so a gap is
+ * invisible at runtime — the app just quietly speaks English. That is how
+ * bilingual products rot. The parity test below turns every gap into a build
+ * failure, and this list turns each exception into a decision someone made on
+ * purpose.
+ *
+ * To add a key: state why it stays English. "Not translated yet" is not a
+ * reason — that is exactly what the test exists to catch.
+ *
+ * `flag.*` keys are not listed here and never need to be: they are engine-owned
+ * English strings resolved through `translateOrFallback()`, which already falls
+ * back to the sentence the engine built rather than to a raw key.
+ */
+const HINDI_EXEMPT: readonly string[] = []
+
 describe('dictionary integrity', () => {
+  it('every en key has a hi translation, or a documented exemption', () => {
+    const missing = Object.keys(dictionaries.en).filter(
+      (key) => !(key in dictionaries.hi) && !HINDI_EXEMPT.includes(key),
+    )
+    expect(missing).toEqual([])
+  })
+
+  it('has no stale entries in the Hindi exemption list', () => {
+    const stale = HINDI_EXEMPT.filter(
+      (key) => key in dictionaries.hi || !(key in dictionaries.en),
+    )
+    expect(stale).toEqual([])
+  })
+
+  it('no hi value is an empty string', () => {
+    // `translate()` uses `??`, so '' is a hit, not a miss: an empty Hindi value
+    // renders as blank text instead of falling back to English.
+    const blank = Object.keys(dictionaries.hi).filter((key) => dictionaries.hi[key].trim() === '')
+    expect(blank).toEqual([])
+  })
+
   it('every hi key that overrides a flag.* engine string is non-empty', () => {
     const flagKeys = Object.keys(dictionaries.hi).filter((k) => k.startsWith('flag.'))
     expect(flagKeys.length).toBeGreaterThan(0)
