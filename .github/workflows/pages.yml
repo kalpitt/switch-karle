@@ -36,6 +36,7 @@ jobs:
       # Guards that asset URLs resolve under the configured base so the
       # subpath deploy cannot break silently. Cutover flips base to `/`.
       - run: npm run check:base
+      - run: npm run check:seo
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

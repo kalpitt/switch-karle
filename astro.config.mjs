@@ -14,14 +14,21 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      includeAssets: ['icon.svg', 'icon-180.png', 'icon-512.png', 'favicon.svg', 'icons.svg'],
+      includeAssets: [
+        'icon.svg',
+        'icon-180.png',
+        'icon-512.png',
+        'favicon.svg',
+        'icons.svg',
+        'og/default.png',
+      ],
       manifest: false,
       workbox: {
         // MUST be present as a key. @vite-pwa/astro otherwise defaults this to
         // `base` (the home page), so an offline reload of /decoder would render
         // the home shell. Precache-all HTML + no SPA fallback = each URL is itself.
         navigateFallback: undefined,
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest,xml,txt}'],
         cleanupOutdatedCaches: true,
       },
       experimental: {
