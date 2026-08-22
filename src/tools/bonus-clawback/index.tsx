@@ -124,8 +124,10 @@ function Body() {
         <VerdictBanner tone={tone}>{verdict}</VerdictBanner>
         <Card className="space-y-2">
           <p className="tnum text-[13px]">{t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) })}</p>
-          <p className="tnum text-[13px]">{t('bonus-clawback.marginal', { pct: Math.round(result.marginal * 100) })}</p>
-          {result.noticeOverlapsClawback && <p className="text-[13px] text-amberflag">{t('bonus-clawback.noticeOverlap')}</p>}
+          <p className="tnum text-[13px]">{t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) })}</p>
+          {result.noticeWouldCoverClawback && <p className="text-[13px] text-amberflag">{t('bonus-clawback.noticeOverlap')}</p>}
+          <p className="text-[13px] text-ink-soft">{t('bonus-clawback.allOrNothing')}</p>
+          <p className="text-[13px] text-ink-soft">{t('bonus-clawback.taxRecovery')}</p>
         </Card>
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('bonus-clawback.curve')}</h3>

@@ -33,7 +33,6 @@ const DEPOSIT_PATTERNS: RegExp[] = [
   /joining\s+fee/i,
   /training\s+fee/i,
   /pay\s+to\s+receive\s+(?:a\s+)?laptop/i,
-  /(?:must|need\s+to|required\s+to)\s+pay/i,
   /registration\s+fee/i,
   /refundable\s+deposit/i,
   /equipment\s+deposit/i,
@@ -49,7 +48,7 @@ const WHATSAPP_PATTERNS: RegExp[] = [
 ]
 
 const LOOKALIKE_SUFFIXES = ['careers', 'hr', 'jobs', 'recruitment', 'hiring'] as const
-const LEGIT_TLDS = new Set(['com', 'org', 'in', 'net', 'co.in'])
+const LEGIT_TLDS = new Set(['com', 'org', 'in', 'net', 'co.in', 'co.uk', 'com.au'])
 
 const EPFO_URL = 'https://www.epfindia.gov.in/'
 const MCA_URL = 'https://www.mca.gov.in/'
@@ -124,7 +123,7 @@ const RULES: Rule[] = [
     id: 'free-mail',
     applies: (input) => FREE_MAIL_DOMAINS.has(normalizeDomain(input.emailDomain)),
     build: (input) => ({
-      severity: 'red',
+      severity: 'amber',
       title: `Recruiter email uses a free mailbox (${normalizeDomain(input.emailDomain)})`,
       detail:
         'Corporate hiring teams almost always email from their own company domain. Offers sent from Gmail, Yahoo, Outlook, or similar free providers are a strong impersonation signal.',

@@ -31,7 +31,7 @@ export const TOOLS: ToolDef[] = [
     seoDescription:
       'Compare two or three Indian job offers side by side: real in-hand, CTC stuffing, and a one-line verdict. Paper ESOP cannot swing the call.',
     hasIsland: true,
-    statutory: false,
+    statutory: true,
     storageKey: 'switchkarle.compare.v1',
   },
   {
@@ -45,7 +45,7 @@ export const TOOLS: ToolDef[] = [
     seoDescription:
       'See the CTC hike versus the in-hand hike on an Indian job switch. Joining bonus stays out of the run-rate; variable can be haircut to 70%.',
     hasIsland: true,
-    statutory: false,
+    statutory: true,
     storageKey: 'switchkarle.hike.v1',
   },
   {
@@ -59,7 +59,7 @@ export const TOOLS: ToolDef[] = [
     seoDescription:
       'Monthly in-hand if variable pays 0%, 50% or 100%, plus first-year pro-rating and lump-versus-spread tax.',
     hasIsland: true,
-    statutory: false,
+    statutory: true,
     storageKey: 'switchkarle.variable.v1',
   },
   {

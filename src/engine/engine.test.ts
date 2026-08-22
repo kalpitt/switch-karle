@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { computeTax } from './tax'
-import { decodeOffer } from './salary'
+import { hraExemptionAnnual, decodeOffer, stateHasHraMetroCity } from './salary'
 import { scanRedFlags } from './redFlags'
 import { formatCompact, formatINR, formatLPA } from './format'
 import type { OfferInput } from './types'
@@ -68,6 +68,7 @@ describe('decodeOffer — ₹24L CTC golden case (Karnataka, PF on full basic)',
     expect(b.employeePfAnnual).toBe(115_200)
     expect(b.grossSalary).toBe(2_284_800)
     expect(b.professionalTaxAnnual).toBe(2_400)
+    expect(b.hraExemptionAnnual).toBe(0)
   })
 
   it('new regime: taxable ₹22,09,800 → tax ₹2,62,548 → ₹1,58,721/month in hand', () => {
@@ -118,6 +119,53 @@ describe('scanRedFlags', () => {
     )
     expect(flags.map((f) => f.id)).toEqual(['employer-pf-in-ctc'])
     expect(flags[0].severity).toBe('info')
+  })
+})
+
+describe('hraExemptionAnnual — Rule 2A limbs (₹24L KA: basic ₹9.6L, HRA ₹4.8L)', () => {
+  const basic = 960_000
+  const hra = 480_000
+
+  it('actual HRA received caps when rent is high', () => {
+    expect(hraExemptionAnnual(basic, hra, 100_000, true)).toBe(480_000)
+  })
+
+  it('rent − 10% of basic binds on modest rent', () => {
+    // ₹30k × 12 − 10% of ₹9.6L = ₹3.6L − ₹96k = ₹2.64L
+    expect(hraExemptionAnnual(basic, hra, 30_000, true)).toBe(264_000)
+  })
+
+  it('40% of basic binds non-metro when rent is high enough to skip the rent limb', () => {
+    expect(hraExemptionAnnual(basic, hra, 50_000, false)).toBe(384_000)
+  })
+
+  it('50% of basic binds metro (and equals actual HRA) at the same rent', () => {
+    expect(hraExemptionAnnual(basic, hra, 50_000, true)).toBe(480_000)
+  })
+})
+
+describe('decodeOffer — HRA exemption on old-regime taxable only', () => {
+  it('applies the Rule 2A result and does not change new-regime taxable', () => {
+    const none = decodeOffer(baseOffer)
+    const withRent = decodeOffer({
+      ...baseOffer,
+      old: { rentPaidMonthly: 50_000, metro: true, deduction80CExtra: 0, deduction80D: 0 },
+    })
+    expect(none.hraExemptionAnnual).toBe(0)
+    expect(withRent.hraExemptionAnnual).toBe(480_000)
+    expect(withRent.newRegime.taxableIncome).toBe(none.newRegime.taxableIncome)
+    expect(withRent.oldRegime.taxableIncome).toBe(none.oldRegime.taxableIncome - 480_000)
+  })
+})
+
+describe('HRA metro cities', () => {
+  it('only Delhi, Mumbai, Kolkata, Chennai state codes qualify', () => {
+    expect(stateHasHraMetroCity('DL')).toBe(true)
+    expect(stateHasHraMetroCity('MH')).toBe(true)
+    expect(stateHasHraMetroCity('WB')).toBe(true)
+    expect(stateHasHraMetroCity('TN')).toBe(true)
+    expect(stateHasHraMetroCity('KA')).toBe(false)
+    expect(stateHasHraMetroCity('other')).toBe(false)
   })
 })
 

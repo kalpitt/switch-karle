@@ -81,6 +81,8 @@ export interface SalaryBreakdown {
   /** Annual cash gross salary (excludes employer PF and gratuity). */
   grossSalary: number
   professionalTaxAnnual: number
+  /** Old-regime HRA exemption baked into oldRegime.taxableIncome. 0 if no rent. */
+  hraExemptionAnnual: number
   newRegime: TaxBreakdown
   oldRegime: TaxBreakdown
   /** The cheaper of the two regimes. */

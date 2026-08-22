@@ -47,8 +47,27 @@ function skeleton(): Draft {
   }
 }
 
-function asOffer(ctc: number, variable: number, state: StateCode, template: OfferInput): OfferInput {
-  return { ...template, ctcAnnual: ctc, variableAnnual: variable, state }
+function asOffer(
+  ctc: number,
+  variable: number,
+  state: StateCode,
+  template: OfferInput,
+  kind: 'current' | 'next',
+): OfferInput {
+  const offer: OfferInput = { ...template, ctcAnnual: ctc, variableAnnual: variable, state }
+  if (kind === 'next') {
+    return {
+      ...offer,
+      joiningBonus: undefined,
+      old: {
+        rentPaidMonthly: 0,
+        metro: false,
+        deduction80CExtra: 0,
+        deduction80D: 0,
+      },
+    }
+  }
+  return offer
 }
 
 export default function RealHikeTool() {
@@ -81,8 +100,8 @@ function Body() {
   const result = useMemo(
     () =>
       realHike({
-        current: asOffer(draft.currentCtc, draft.currentVariable, draft.currentState, template),
-        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template),
+        current: asOffer(draft.currentCtc, draft.currentVariable, draft.currentState, template, 'current'),
+        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template, 'next'),
         variablePayout: draft.haircut ? 0.7 : 1,
       }),
     [draft, template],

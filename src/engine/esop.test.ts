@@ -22,6 +22,8 @@ describe('esopReality — provisional-pending-CA', () => {
     expect(r.exerciseCost).toBe(10_000)
     // computeTax(₹19L) − computeTax(₹18L) new regime
     expect(r.taxOnPerq).toBe(20_800)
+    expect(r.cashNeeded).toBe(30_800)
+    expect(r.underwater).toBe(false)
     expect(r.postExitWindowNote).toBe(false)
   })
 
@@ -43,5 +45,36 @@ describe('esopReality — provisional-pending-CA', () => {
       { month: 48, vestedShares: 1_000, stillCliffed: false },
     ])
     expect(r.postExitWindowNote).toBe(true)
+  })
+
+  it('underwater grant: perquisite 0, cashNeeded is still the strike cost', () => {
+    const r = esopReality({
+      shares: 1_000,
+      strike: 110,
+      fmv: 10,
+      cliffMonths: 12,
+      vestMonths: 48,
+      liquid: true,
+      taxableIncomeWithoutPerq: 1_800_000,
+      regime: 'new',
+    })
+    expect(r.perquisiteTotal).toBe(0)
+    expect(r.taxOnPerq).toBe(0)
+    expect(r.underwater).toBe(true)
+    expect(r.cashNeeded).toBe(110_000)
+  })
+
+  it('dedupes vest-table months when cliff is 0', () => {
+    const r = esopReality({
+      shares: 1_000,
+      strike: 10,
+      fmv: 110,
+      cliffMonths: 0,
+      vestMonths: 48,
+      liquid: true,
+      taxableIncomeWithoutPerq: 1_800_000,
+      regime: 'new',
+    })
+    expect(r.vestTable.map((row) => row.month)).toEqual([0, 48])
   })
 })

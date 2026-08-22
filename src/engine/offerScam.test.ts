@@ -15,7 +15,7 @@ describe('scanOfferScam', () => {
     expect(flags.every((f) => f.severity === 'info')).toBe(true)
   })
 
-  it('gmail plus deposit text returns both red flags plus info hints', () => {
+  it('gmail plus deposit text returns deposit as the only red, free-mail as amber', () => {
     const flags = scanOfferScam({
       company: 'Acme Technologies',
       emailDomain: 'gmail.com',
@@ -23,7 +23,7 @@ describe('scanOfferScam', () => {
     })
     expect(flags.map((f) => f.id)).toEqual(['deposit-ask', 'free-mail', 'epfo-hint', 'mca-hint'])
     expect(flags[0]!.severity).toBe('red')
-    expect(flags[1]!.severity).toBe('red')
+    expect(flags[1]!.severity).toBe('amber')
   })
 
   describe('deposit-ask', () => {
@@ -36,6 +36,14 @@ describe('scanOfferScam', () => {
     ])('flags deposit language: %s', (offerText) => {
       const ids = scanOfferScam({ ...cleanInput, offerText }).map((f) => f.id)
       expect(ids).toContain('deposit-ask')
+    })
+
+    it.each([
+      'You will be required to pay salary in lieu of the unserved notice period.',
+      'You must pay back the joining bonus if you leave within 12 months.',
+    ])('does not flag ordinary notice/clawback language: %s', (offerText) => {
+      const ids = scanOfferScam({ ...cleanInput, offerText }).map((f) => f.id)
+      expect(ids).not.toContain('deposit-ask')
     })
   })
 
@@ -72,6 +80,15 @@ describe('scanOfferScam', () => {
         ...cleanInput,
         company: 'Infosys',
         emailDomain: 'infosys.com',
+      }).map((f) => f.id)
+      expect(ids).not.toContain('lookalike-domain')
+    })
+
+    it('does not flag a legitimate .co.uk corporate domain', () => {
+      const ids = scanOfferScam({
+        ...cleanInput,
+        company: 'Infosys',
+        emailDomain: 'infosys.co.uk',
       }).map((f) => f.id)
       expect(ids).not.toContain('lookalike-domain')
     })
@@ -113,6 +130,6 @@ describe('scanOfferScam', () => {
       emailDomain: 'gmail.com',
       offerText: 'Continue only on WhatsApp. Pay a joining fee. We represent Infosys.',
     })
-    expect(flags.map((f) => f.severity)).toEqual(['red', 'red', 'amber', 'info', 'info'])
+    expect(flags.map((f) => f.severity)).toEqual(['red', 'amber', 'amber', 'info', 'info'])
   })
 })

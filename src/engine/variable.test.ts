@@ -27,6 +27,7 @@ describe('variableReality', () => {
     expect(r.rows[2]!.netVariableAnnual).toBe(178_572)
     expect(r.withheldVsSpread.lumpNet).toBe(178_572)
     expect(r.withheldVsSpread.spreadMonthly).toBe(160_391)
+    expect(r.taxedOnFullYearBase).toBe(true)
   })
 
   it('flags first-year pro-rating when months in FY are under 12', () => {
@@ -34,5 +35,6 @@ describe('variableReality', () => {
     expect(r.firstYearProrate).toBe(true)
     expect(r.proratedVariable).toBe(120_000)
     expect(r.rows[2]!.netVariableAnnual).toBe(89_772)
+    expect(r.taxedOnFullYearBase).toBe(true)
   })
 })
