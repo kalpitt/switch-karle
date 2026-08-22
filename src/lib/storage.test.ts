@@ -59,4 +59,28 @@ describe('storage', () => {
     const second = migrateJson('switchkarle.demo.v1', 'switchkarle.demo.v2', () => ({ n: 0 }), { n: 0 })
     expect(second).toEqual({ n: 11 })
   })
+
+  it('keeps the old key if writing the new key fails', () => {
+    install()
+    writeJson('switchkarle.demo.v1', { n: 1 })
+    const failing = {
+      getItem: (k: string) => mem.getItem(k),
+      setItem: (k: string, v: string) => {
+        if (k.endsWith('.v2')) throw new Error('quota')
+        mem.setItem(k, v)
+      },
+      removeItem: (k: string) => mem.removeItem(k),
+    }
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: failing })
+    const got = migrateJson(
+      'switchkarle.demo.v1',
+      'switchkarle.demo.v2',
+      () => ({ n: 2 }),
+      { n: 0 },
+    )
+    expect(got).toEqual({ n: 2 })
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: mem })
+    expect(mem.getItem('switchkarle.demo.v1')).not.toBeNull()
+    expect(mem.getItem('switchkarle.demo.v2')).toBeNull()
+  })
 })
