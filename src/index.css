@@ -33,3 +33,9 @@ html {
 .tnum {
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

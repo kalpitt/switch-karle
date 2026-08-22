@@ -1,7 +1,7 @@
 import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
-import { Card, Details } from './ui'
+import { Card, Details, Disclaimer, ShareRow } from './ui'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -46,6 +46,16 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             tax={b.oldRegime.totalTax}
             inHand={b.inHandMonthlyOld}
           />
+        </div>
+
+        <div className="mt-4 space-y-3">
+          <ShareRow
+            copyText={`${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}/month`}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+          <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         </div>
       </Card>
 

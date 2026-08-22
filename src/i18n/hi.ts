@@ -38,6 +38,13 @@ export const hi: Record<string, string> = {
   'common.delete': 'हटाएं',
   'common.cancel': 'रद्द करें',
 
+  'ui.copy': 'Headline कॉपी करें',
+  'ui.copied': 'कॉपी हो गया ✓',
+  'ui.print': 'प्रिंट',
+  'ui.disclaimer':
+    'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
+  'ui.money.hint': '12L, 12,00,000 या 1200000',
+
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
   'decoder.field.ctc.label': 'Total CTC',
