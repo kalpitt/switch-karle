@@ -7,11 +7,24 @@ import type { StateCode } from './types'
  * (MH charges ₹300 in February) folded into the annual figure. Tamil Nadu,
  * Kerala and Odisha are local-body levies that can vary by municipality.
  *
- * `'other'` is 0 and is approximate — Punjab, Bihar, Assam, Jharkhand,
- * Chhattisgarh, Sikkim, Meghalaya, Tripura and Puducherry levy PT and are
- * not in this table. Constitutional ceiling is ₹2,500/year.
+ * Codes in `PT_AMOUNT_UNVERIFIED` levy PT but have no primary-sourced amount
+ * in this table — they are 0 and must be labelled approximate. Constitutional
+ * ceiling is ₹2,500/year.
  */
 export const PROFESSIONAL_TAX_CEILING = 2_500
+
+export const PT_AMOUNT_UNVERIFIED: readonly StateCode[] = [
+  'PB',
+  'BR',
+  'AS',
+  'JH',
+  'CG',
+  'SK',
+  'ML',
+  'TR',
+  'PY',
+  'other',
+]
 
 export const PROFESSIONAL_TAX_ANNUAL: Record<StateCode, number> = {
   KA: 2_400,
@@ -28,6 +41,15 @@ export const PROFESSIONAL_TAX_ANNUAL: Record<StateCode, number> = {
   HR: 0,
   UP: 0,
   RJ: 0,
+  PB: 0,
+  BR: 0,
+  AS: 0,
+  JH: 0,
+  CG: 0,
+  SK: 0,
+  ML: 0,
+  TR: 0,
+  PY: 0,
   other: 0,
 }
 
@@ -46,5 +68,14 @@ export const STATE_NAMES: Record<StateCode, string> = {
   HR: 'Haryana',
   UP: 'Uttar Pradesh',
   RJ: 'Rajasthan',
+  PB: 'Punjab',
+  BR: 'Bihar',
+  AS: 'Assam',
+  JH: 'Jharkhand',
+  CG: 'Chhattisgarh',
+  SK: 'Sikkim',
+  ML: 'Meghalaya',
+  TR: 'Tripura',
+  PY: 'Puducherry',
   other: 'Other / not sure',
 }
