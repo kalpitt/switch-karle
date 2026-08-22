@@ -16,6 +16,13 @@ import GratuityTool from '../tools/gratuity/index'
 import LeaveEncashmentTool from '../tools/leave-encashment/index'
 import FnfCheckerTool from '../tools/fnf-checker/index'
 import Form16ShockTool from '../tools/form16-shock/index'
+import ResignationLetterTool from '../tools/resignation-letter/index'
+import ManagerScriptTool from '../tools/manager-script/index'
+import HrScriptTool from '../tools/hr-script/index'
+import CounterOfferTool from '../tools/counter-offer/index'
+import HandoverDocTool from '../tools/handover-doc/index'
+import RelievingChaserTool from '../tools/relieving-chaser/index'
+import { isHrScriptSlug } from '../data/hrScripts'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -43,4 +50,10 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
   {slug === 'leave-encashment' && <LeaveEncashmentTool client:load />}
   {slug === 'fnf-checker' && <FnfCheckerTool client:load />}
   {slug === 'form16-shock' && <Form16ShockTool client:load />}
+  {slug === 'resignation-letter' && <ResignationLetterTool client:load />}
+  {slug === 'manager-script' && <ManagerScriptTool client:load />}
+  {isHrScriptSlug(slug) && <HrScriptTool client:load slug={slug} />}
+  {slug === 'counter-offer' && <CounterOfferTool client:load />}
+  {slug === 'handover-doc' && <HandoverDocTool client:load />}
+  {slug === 'relieving-chaser' && <RelievingChaserTool client:load />}
 </Base>

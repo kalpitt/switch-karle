@@ -239,6 +239,108 @@ export const en: Record<string, string> = {
   'form16-shock.form12b':
     'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B). This is a helper draft, not the statutory form.',
 
+  'resignation-letter.title': 'Resignation letter',
+  'resignation-letter.desc': 'Three tones. Last working day is resignation date plus notice minus one calendar day.',
+  'resignation-letter.formTitle': 'The letter',
+  'resignation-letter.company': 'Company',
+  'resignation-letter.manager': 'Manager',
+  'resignation-letter.role': 'Your role',
+  'resignation-letter.date': 'Resignation date',
+  'resignation-letter.notice': 'Notice period',
+  'resignation-letter.join': 'New join date (optional)',
+  'resignation-letter.joinHint': 'Used only to warn if EPFO dates would overlap. Leave blank to skip.',
+  'resignation-letter.tone': 'Tone',
+  'resignation-letter.tone.professional': 'Professional',
+  'resignation-letter.tone.grateful': 'Grateful',
+  'resignation-letter.tone.firm': 'Firm and short',
+  'resignation-letter.verdict': 'Last working day if you serve the full notice: {lwd}.',
+  'resignation-letter.epfo':
+    'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
+  'resignation-letter.body.professional':
+    'Dear {manager},\n\nPlease accept this letter as my resignation from the position of {role} at {company}, dated {date}. I will serve my notice. My last working day will be {lwd}.\n\nI will share a written handover and remain available for a clean transition. Please confirm receipt and the relieving process.\n\nYours sincerely',
+  'resignation-letter.body.grateful':
+    'Dear {manager},\n\nThank you for the chance to work as {role} at {company}. I am resigning, dated {date}. Serving notice, my last working day is {lwd}.\n\nI am grateful for the trust and the work. I will leave the books in order and the handover written down.\n\nWith thanks',
+  'resignation-letter.body.firm':
+    'Dear {manager},\n\nI resign from {role} at {company}, effective {date}. Last working day: {lwd}. Please acknowledge and share the F&F / relieving checklist.\n\nRegards',
+
+  'manager-script.title': 'Manager conversation',
+  'manager-script.desc': 'What to say when you resign in person — supportive shop, counter-offer risk, or a hard room.',
+  'manager-script.formTitle': 'The room you are walking into',
+  'manager-script.preset': 'How this manager usually is',
+  'manager-script.preset.supportive': 'Supportive',
+  'manager-script.preset.counter-risk': 'Will likely counter',
+  'manager-script.preset.hostile': 'Hostile / guilt shop',
+  'manager-script.verdict.supportive': 'Lead with thanks, then the date. Do not over-explain the new role.',
+  'manager-script.verdict.counter-risk': 'Decide before you walk in. If you will still leave, say so once.',
+  'manager-script.verdict.hostile': 'Keep it short, in writing afterwards. Do not argue policy in the room.',
+  'manager-script.body.supportive':
+    'I wanted to tell you first. I have accepted another role. This is not a surprise-counter conversation — I have decided. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
+  'manager-script.body.counter-risk':
+    'I have accepted another offer. I am telling you because I respect the team, not because I am shopping a counter. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
+  'manager-script.body.hostile':
+    'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
+
+  'hr.lead': 'Copy, fill the brackets, send from your own mail. Nothing here leaves this device.',
+  'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
+  'hr.expected-ctc.title': 'Expected CTC',
+  'hr.expected-ctc.desc': 'When the recruiter asks for a number before they share the band.',
+  'hr.early-release.title': 'Early release',
+  'hr.early-release.desc': 'Ask current HR/manager to shorten notice.',
+  'hr.buyout-ask.title': 'Buyout ask',
+  'hr.buyout-ask.desc': 'Confirm basic vs gross and the /30 divisor in writing.',
+  'hr.decline-accepted.title': 'Decline after yes',
+  'hr.decline-accepted.desc': 'Withdraw an acceptance without turning it into a negotiation.',
+  'hr.counter-offer-reply.title': 'Counter-offer reply',
+  'hr.counter-offer-reply.desc': 'Close the loop with your current manager in writing.',
+  'hr.recruiter-followup.title': 'Recruiter follow-up',
+  'hr.recruiter-followup.desc': 'A one-mail nudge after a promised timeline.',
+
+  'counter-offer.title': 'Counter-offer',
+  'counter-offer.desc': 'The rupee gap versus the outside offer, plus the non-rupee reasons people stay — and the honest stay-rate warning.',
+  'counter-offer.formTitle': 'Three CTCs',
+  'counter-offer.current': 'Current CTC',
+  'counter-offer.counter': 'Counter they offered',
+  'counter-offer.outside': 'Outside offer',
+  'counter-offer.promo': 'They promised a promotion / title',
+  'counter-offer.team': 'The team is why I would stay',
+  'counter-offer.verdict.out': 'The outside offer is still {paper} higher on paper, about {bank}/month more in-hand on this structure.',
+  'counter-offer.verdict.in': 'The counter matches or beats the outside CTC on this simplified structure. The non-rupee reasons still matter.',
+  'counter-offer.honest':
+    'People who accept a counter often leave within a year anyway — the trust is already cracked. That is a pattern, not a statistic I am inventing a percentage for. Treat a counter as a stay-or-go decision, not a bidding war.',
+  'counter-offer.nonRupee': 'You turned on a non-rupee reason. If you stay, get the promotion or team change in writing with a date.',
+
+  'handover-doc.title': 'Handover doc',
+  'handover-doc.desc': 'A structured KT note you can paste into mail or a doc.',
+  'handover-doc.formTitle': 'What the next owner needs',
+  'handover-doc.role': 'Role',
+  'handover-doc.owner': 'Who owns this after you',
+  'handover-doc.projects': 'Projects / status',
+  'handover-doc.access': 'Access, repos, keys to rotate',
+  'handover-doc.risks': 'What breaks if this is dropped',
+  'handover-doc.verdict': 'Copy the markdown. Keep secrets out of it — this still sits on this device only.',
+  'handover-doc.disclaimer': 'A handover aid, not a legal document. Do not paste passwords.',
+
+  'relieving-chaser.title': 'Relieving chaser',
+  'relieving-chaser.desc': 'Day 7, 14 and 30 mails if the relieving letter has not arrived.',
+  'relieving-chaser.formTitle': 'Who to chase',
+  'relieving-chaser.company': 'Company',
+  'relieving-chaser.hr': 'HR name',
+  'relieving-chaser.role': 'Role you left',
+  'relieving-chaser.lwd': 'Last working day',
+  'relieving-chaser.day': 'Which chase',
+  'relieving-chaser.day.7': 'Day 7 — polite',
+  'relieving-chaser.day.14': 'Day 14 — firm',
+  'relieving-chaser.day.30': 'Day 30 — escalation',
+  'relieving-chaser.verdict.7': 'A short nudge. Assume they are busy, not hostile.',
+  'relieving-chaser.verdict.14': 'Ask for a date. Copy your manager if that is safe.',
+  'relieving-chaser.verdict.30': 'Background checks stall without this letter. Say so plainly.',
+  'relieving-chaser.body.7':
+    'Hi {hr},\n\nI left {company} as {role} on {lwd}. Could you share an update on my relieving letter and F&F? I am happy to send any document still pending.\n\nThank you',
+  'relieving-chaser.body.14':
+    'Hi {hr},\n\nFollowing up on my relieving letter from {company} ({role}, LWD {lwd}). Please share a date by which it will be issued, or the checklist still open on my side.\n\nThis blocks background verification at my new employer. Thank you',
+  'relieving-chaser.body.30':
+    'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have a relieving letter.\n\nPlease treat this as a formal request to issue it this week, and copy me on the F&F status. I will escalate to [labour commissioner / internal grievance] only if I hear nothing — I would rather close this with you.\n\nRegards',
+
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
   'decoder.field.ctc.label': 'Total CTC',
