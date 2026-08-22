@@ -4,7 +4,7 @@ import { Card, DateField, Disclaimer, Toggle, VerdictBanner } from '../../compon
 import { todayUTC, addDays } from '../../engine/dates'
 import { insuranceGap } from '../../engine/insurance'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.insurance.v1' as const
 
@@ -19,9 +19,9 @@ function skeleton(): Draft {
   return { lastWorkingDay: today, newJoinDate: addDays(today, 15), hasPersonalCover: false }
 }
 
-export default function InsuranceGapTool() {
+export default function InsuranceGapTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="insurance-gap">
+    <IslandRoot lang={lang} current="insurance-gap">
       <Body />
     </IslandRoot>
   )

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.handover.v1' as const
 
@@ -16,9 +16,9 @@ interface Draft {
 
 const EMPTY: Draft = { role: '', owner: '', projects: '', access: '', risks: '' }
 
-export default function HandoverDocTool() {
+export default function HandoverDocTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="handover-doc">
+    <IslandRoot lang={lang} current="handover-doc">
       <Body />
     </IslandRoot>
   )

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.relieving.v1' as const
 
@@ -16,9 +16,9 @@ interface Draft {
   day: Day
 }
 
-export default function RelievingChaserTool() {
+export default function RelievingChaserTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="relieving-chaser">
+    <IslandRoot lang={lang} current="relieving-chaser">
       <Body />
     </IslandRoot>
   )

@@ -26,6 +26,10 @@ export interface TaxDeclarationResult {
  * are employer-process, not independently primary-sourced this session.
  * Form 16 from the previous employer often arrives after you have left —
  * that delay is the point of the tool, not a statute.
+ *
+ * CANDIDATE: Form 12B (recollection Rule 26A / s.192(2)) is the previous-
+ * employer income/TDS declaration to the new payroll. This engine does not
+ * assert a "second slab benefit" withholding mechanism — confirm with a CA.
  */
 export function taxDeclaration(input: TaxDeclarationInput): TaxDeclarationResult {
   const breakdown = decodeOffer(input.offer)
@@ -33,9 +37,9 @@ export function taxDeclaration(input: TaxDeclarationInput): TaxDeclarationResult
   const hraUseful = breakdown.recommendedRegime === 'old' && hraExemptionAnnual > 0 && input.claimingHra
 
   const proofIds: ProofId[] = ['form12b', 'form16-prev']
-  if (input.claimingHra) proofIds.push('hra')
+  if (hraUseful) proofIds.push('hra')
   if (input.extra80C) proofIds.push('80c')
-  proofIds.push('80d')
+  if ((input.offer.old?.deduction80D ?? 0) > 0) proofIds.push('80d')
 
   return {
     breakdown,

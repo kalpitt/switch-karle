@@ -31,7 +31,7 @@ describe('epfGuide', () => {
     expect(r.continuousFiveYears).toBe(true)
     expect(r.prematureWithdrawalTrap).toBe(false)
     expect(r.recommendedIntent).toBe('withdraw')
-    expect(r.flags.map((f) => f.id)).toEqual(['interest-after-exit'])
+    expect(r.flags.map((f) => f.id)).toEqual(['five-year-exempt', 'interest-after-exit'])
   })
 
   it('unmarked date of exit and KYC mismatches flag even on a transfer', () => {

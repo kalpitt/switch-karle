@@ -68,9 +68,8 @@ describe('translateOrFallback (red-flag UI overrides)', () => {
 /**
  * Keys that are deliberately English-only in the Hindi UI.
  *
- * New tools add `en.ts` keys without a `hi.ts` pair until the Hindi pass.
- * Missing hi is silent EN fallback at runtime — that is expected this build.
- * What is not allowed: deleting or blanking a Hindi string that already exists.
+ * New tools add `en.ts` keys; the Hindi pass requires a non-blank `hi` pair
+ * for every English key. Frozen keys must also remain present (no-regression).
  */
 const HINDI_EXEMPT: readonly string[] = []
 
@@ -80,6 +79,23 @@ describe('dictionary integrity', () => {
       (key) => !(key in dictionaries.hi) || dictionaries.hi[key].trim() === '',
     )
     expect(missing).toEqual([])
+  })
+
+  it('every English key has a non-blank Hindi pair (full EN→HI parity)', () => {
+    const missing = Object.keys(dictionaries.en).filter(
+      (key) => !(key in dictionaries.hi) || dictionaries.hi[key].trim() === '',
+    )
+    expect(missing).toEqual([])
+  })
+
+  it('Hindi strings do not invent {placeholders} that English does not have', () => {
+    const names = (s: string) => new Set([...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]))
+    const invented = Object.keys(dictionaries.en).filter((key) => {
+      const enNames = names(dictionaries.en[key])
+      const hiNames = names(dictionaries.hi[key] ?? '')
+      return [...hiNames].some((name) => !enNames.has(name))
+    })
+    expect(invented).toEqual([])
   })
 
   it('has no stale entries in the Hindi exemption list', () => {

@@ -1,29 +1,38 @@
 ---
 import '../index.css'
+import { englishPath, hindiPath } from '../lib/langPath'
+import type { Lang } from '../i18n'
 
 interface Props {
   title: string
   description: string
   slug?: string
   jsonLd?: Record<string, unknown>
+  lang?: Lang
 }
 
-const { title, description, slug, jsonLd } = Astro.props
+const { title, description, slug, jsonLd, lang = 'en' } = Astro.props
+const base = import.meta.env.BASE_URL || '/'
 const canonical = new URL(Astro.url.pathname, Astro.site).href
-const fullTitle = slug ? `${title} — Switch Karle` : title
+const enHref = new URL(englishPath(Astro.url.pathname, base), Astro.site).href
+const hiHref = new URL(hindiPath(Astro.url.pathname, base), Astro.site).href
+const brand = lang === 'hi' ? 'स्विच कर ले' : 'Switch Karle'
+const fullTitle = slug ? `${title} — ${brand}` : title
 const ogImage = new URL(`${import.meta.env.BASE_URL}og/default.png`, Astro.site).href
+const htmlLang = lang === 'hi' ? 'hi' : 'en'
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={canonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="hi" href={hiHref} />
+    <link rel="alternate" hreflang="x-default" href={enHref} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />

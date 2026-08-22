@@ -6,7 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.esop.v1' as const
 
@@ -28,9 +28,9 @@ const DEFAULT_DRAFT: Draft = {
   liquid: false,
 }
 
-export default function EsopRealityTool() {
+export default function EsopRealityTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="esop-reality">
+    <IslandRoot lang={lang} current="esop-reality">
       <Body />
     </IslandRoot>
   )

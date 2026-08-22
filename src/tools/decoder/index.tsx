@@ -7,8 +7,9 @@ import { ShareButton } from '../../components/ShareCard'
 import { AutoFill } from '../../components/AutoFill'
 import { IslandRoot } from '../../components/IslandRoot'
 import { DEFAULT_OFFER, loadOffer, saveOffer } from '../../data/defaults'
+import type { Lang } from '../../i18n'
 
-export default function DecoderTool() {
+export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
   const [offer, setOffer] = useState(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
 
@@ -26,7 +27,7 @@ export default function DecoderTool() {
   const flags = useMemo(() => scanRedFlags(breakdown), [breakdown])
 
   return (
-    <IslandRoot current="decoder">
+    <IslandRoot lang={lang} current="decoder">
       <div data-tool="decoder" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
         <div className="space-y-4 lg:sticky lg:top-6">
           <AutoFill offer={offer} onChange={setOffer} />

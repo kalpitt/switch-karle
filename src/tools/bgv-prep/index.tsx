@@ -3,7 +3,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { bgvPrep, type BgvCompanyType } from '../../engine/bgv'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.bgv.v1' as const
 
@@ -16,9 +16,9 @@ interface Draft {
 
 const DEFAULT: Draft = { gapMonths: 0, dualPf: false, relievingPending: false, companyType: 'product' }
 
-export default function BgvPrepTool() {
+export default function BgvPrepTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="bgv-prep">
+    <IslandRoot lang={lang} current="bgv-prep">
       <Body />
     </IslandRoot>
   )

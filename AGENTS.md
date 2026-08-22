@@ -59,8 +59,9 @@ npm run check:seo  # canonical + OG; no analytics in dist/
 before you push to `build/suite`. Merging to `main` deploys — only Kalpit does
 that.
 
-On `build/suite`, new tools are English-only until the Hindi pass. Do not delete
-or blank keys in `hi.ts`. Do not add `/hi/` routes yet.
+Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not
+delete or blank keys in `hi.ts`. `/hi/<slug>/` twins are first-class; do not
+occupy the `hi` slug.
 
 ## The one architectural rule
 

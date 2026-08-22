@@ -1,23 +1,20 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { englishPath, hindiPath } from '../lib/langPath'
 import { en } from './en'
 import { hi } from './hi'
+import { hiSuite } from './hi-suite'
 
 export type Lang = 'en' | 'hi'
 
-/** All dictionaries. `en` is canonical — every key used in the UI must exist
- * here. `hi` only needs the keys that differ; missing ones fall back to `en`. */
-export const dictionaries: Record<Lang, Record<string, string>> = { en, hi }
+/** `en` is canonical. Hindi is `hi.ts` (frozen chrome) plus `hi-suite.ts`
+ * (suite tools). `translate()` still falls back to English if a key is missing. */
+export const dictionaries: Record<Lang, Record<string, string>> = {
+  en,
+  hi: { ...hi, ...hiSuite },
+}
 
 const STORAGE_KEY = 'switchkarle.lang'
-
-function loadLang(): Lang {
-  try {
-    return localStorage.getItem(STORAGE_KEY) === 'hi' ? 'hi' : 'en'
-  } catch {
-    return 'en'
-  }
-}
 
 /** Replace `{name}` placeholders in `template` with values from `vars`. Any
  * placeholder without a matching var is left untouched (never throws). */
@@ -61,17 +58,29 @@ interface LangContextValue {
 
 const LangContext = createContext<LangContextValue | null>(null)
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  // Always start at English so SSR HTML matches the first client render.
-  // Stored preference is applied after mount — writing it in the initializer
-  // would hydrate-mismatch, and a save-on-mount of the default would clobber Hindi.
-  const [lang, setLang] = useState<Lang>('en')
+export function LangProvider({ children, initialLang = 'en' }: { children: ReactNode; initialLang?: Lang }) {
+  // SSR and the first client render must match. Hindi routes pass initialLang="hi".
+  const [lang, setLangState] = useState<Lang>(initialLang)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    setLang(loadLang())
     setHydrated(true)
   }, [])
+
+  const setLang = useCallback(
+    (next: Lang) => {
+      if (typeof window !== 'undefined') {
+        const base = import.meta.env.BASE_URL || '/'
+        const target = next === 'hi' ? hindiPath(window.location.pathname, base) : englishPath(window.location.pathname, base)
+        if (target !== window.location.pathname) {
+          window.location.assign(target)
+          return
+        }
+      }
+      setLangState(next)
+    },
+    [],
+  )
 
   useEffect(() => {
     if (!hydrated) return

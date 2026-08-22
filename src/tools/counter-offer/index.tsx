@@ -5,7 +5,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, Toggle, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.counter.v1' as const
 
@@ -17,9 +17,9 @@ interface Draft {
   teamStay: boolean
 }
 
-export default function CounterOfferTool() {
+export default function CounterOfferTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="counter-offer">
+    <IslandRoot lang={lang} current="counter-offer">
       <Body />
     </IslandRoot>
   )

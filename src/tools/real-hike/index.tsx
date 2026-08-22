@@ -7,7 +7,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.hike.v1' as const
 const L = 100_000
@@ -70,9 +70,9 @@ function asOffer(
   return offer
 }
 
-export default function RealHikeTool() {
+export default function RealHikeTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="real-hike">
+    <IslandRoot lang={lang} current="real-hike">
       <Body />
     </IslandRoot>
   )

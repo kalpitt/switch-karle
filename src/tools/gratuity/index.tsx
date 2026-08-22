@@ -4,7 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, MoneyField, Toggle, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.gratuity.v1' as const
 
@@ -22,9 +22,9 @@ const DEFAULT_DRAFT: Draft = {
   coveredByAct: true,
 }
 
-export default function GratuityTool() {
+export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="gratuity">
+    <IslandRoot lang={lang} current="gratuity">
       <Body />
     </IslandRoot>
   )

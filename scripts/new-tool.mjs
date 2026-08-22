@@ -40,7 +40,7 @@ const islandDir = join(root, 'src/tools', slug)
 const islandFile = join(islandDir, 'index.tsx')
 const toolsFile = join(root, 'src/data/tools.ts')
 const enFile = join(root, 'src/i18n/en.ts')
-const astroFile = join(root, 'src/pages/[tool].astro')
+const islandsFile = join(root, 'src/components/ToolIslands.astro')
 
 if (existsSync(engineFile) || existsSync(islandDir)) {
   console.error(`new-tool: ${slug} already exists`)
@@ -74,11 +74,11 @@ writeFileSync(
   islandFile,
   `import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, VerdictBanner } from '../../components/ui'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
-export default function ${Comp}() {
+export default function ${Comp}({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="${slug}">
+    <IslandRoot lang={lang} current="${slug}">
       <${Comp}Body />
     </IslandRoot>
   )
@@ -135,22 +135,22 @@ if (!en.includes(`'${slug}.title'`)) {
   writeFileSync(enFile, en)
 }
 
-let astro = readFileSync(astroFile, 'utf8')
+let astro = readFileSync(islandsFile, 'utf8')
 if (!astro.includes(`${Comp} from`)) {
   astro = astro.replace(
     `import PromptsTool from '../tools/prompts/index'\n`,
     `import PromptsTool from '../tools/prompts/index'\nimport ${Comp} from '../tools/${slug}/index'\n`,
   )
   astro = astro.replace(
-    `{slug === 'prompts' && <PromptsTool client:load />}`,
-    `{slug === 'prompts' && <PromptsTool client:load />}\n  {slug === '${slug}' && <${Comp} client:load />}`,
+    `{slug === 'prompts' && <PromptsTool client:load lang={lang} />}`,
+    `{slug === 'prompts' && <PromptsTool client:load lang={lang} />}\n{slug === '${slug}' && <${Comp} client:load lang={lang} />}`,
   )
-  writeFileSync(astroFile, astro)
+  writeFileSync(islandsFile, astro)
 }
 
 console.log(`new-tool: scaffolded ${slug}`)
 console.log(`  ${engineFile}`)
 console.log(`  ${testFile}  (golden should FAIL until you implement)`)
 console.log(`  ${islandFile}`)
-console.log('  registry + en.ts + [tool].astro patched')
+console.log('  registry + en.ts + ToolIslands.astro patched')
 console.log('Next: make the golden pass, then npm test && npm run typecheck && npm run lint && npm run build && npm run check:seo')

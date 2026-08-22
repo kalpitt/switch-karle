@@ -7,10 +7,12 @@ function siteRoot(): string {
   return `${site}${base}`
 }
 
-/** English-only this build. Hindi pass doubles the list — do not introduce a sitemap-index. */
+/** English + Hindi twins. Do not introduce a sitemap-index. */
 export const GET: APIRoute = () => {
   const root = siteRoot()
-  const locs = [`${root}/`, ...TOOLS.map((t) => `${root}/${t.slug}/`)]
+  const en = [`${root}/`, ...TOOLS.map((t) => `${root}/${t.slug}/`)]
+  const hi = [`${root}/hi/`, ...TOOLS.map((t) => `${root}/hi/${t.slug}/`)]
+  const locs = [...en, ...hi]
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${locs.map((loc) => `  <url><loc>${loc}</loc></url>`).join('\n')}

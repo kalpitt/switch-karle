@@ -1,12 +1,12 @@
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer } from '../../components/ui'
 import { HR_SCRIPTS, type HrScriptSlug } from '../../data/hrScripts'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
-export default function HrScriptTool({ slug }: { slug: HrScriptSlug }) {
+export default function HrScriptTool({ slug, lang = 'en' }: { slug: HrScriptSlug; lang?: Lang }) {
   const script = HR_SCRIPTS[slug]
   return (
-    <IslandRoot current={slug}>
+    <IslandRoot lang={lang} current={slug}>
       <Body slug={slug} body={script.body} />
     </IslandRoot>
   )

@@ -6,7 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, NumberField, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.variable.v1' as const
 const L = 100_000
@@ -22,9 +22,9 @@ function fromDecoder(): Draft {
   return { ctc: o.ctcAnnual, variable: o.variableAnnual, monthsInFy: 12 }
 }
 
-export default function VariableRealityTool() {
+export default function VariableRealityTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="variable-reality">
+    <IslandRoot lang={lang} current="variable-reality">
       <Body />
     </IslandRoot>
   )

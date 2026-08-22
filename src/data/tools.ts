@@ -10,7 +10,7 @@ export interface ToolDef {
   icon: string
   titleKey: string
   descKey: string
-  /** English, baked into <title> / OG at build time. Hindi pass adds /hi/ twins. */
+  /** English, baked into <title> / OG at build time. Hindi twins live at /hi/<slug>/. */
   seoTitle: string
   seoDescription: string
   /** Absent ⇒ zero-JS content tool. */

@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, Select, VerdictBanner } from '../../components/ui'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 type Preset = 'supportive' | 'counter-risk' | 'hostile'
 
-export default function ManagerScriptTool() {
+export default function ManagerScriptTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="manager-script">
+    <IslandRoot lang={lang} current="manager-script">
       <Body />
     </IslandRoot>
   )

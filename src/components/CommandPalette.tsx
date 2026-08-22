@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TOOLS } from '../data/tools'
-import { withBase } from '../lib/base'
+import { withLang } from '../lib/langPath'
 import { filterPalette, paletteItems } from '../lib/palette'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
 
 export function CommandPalette() {
   const t = useT()
+  const { lang } = useLang()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -30,7 +31,7 @@ export function CommandPalette() {
     inputRef.current?.focus()
   }, [open])
 
-  const items = useMemo(() => paletteItems(TOOLS, withBase(), (slug) => withBase(slug)), [])
+  const items = useMemo(() => paletteItems(TOOLS, withLang(lang), (slug) => withLang(lang, slug)), [lang])
   const shown = useMemo(() => filterPalette(items, query, t), [items, query, t])
 
   return (

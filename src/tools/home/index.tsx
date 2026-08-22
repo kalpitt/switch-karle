@@ -1,11 +1,11 @@
-import { useT } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
 import { TOOLS } from '../../data/tools'
-import { withBase } from '../../lib/base'
+import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
 
-export default function HomeTool() {
+export default function HomeTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="home">
+    <IslandRoot lang={lang} current="home">
       <HomeGrid />
     </IslandRoot>
   )
@@ -13,6 +13,7 @@ export default function HomeTool() {
 
 function HomeGrid() {
   const t = useT()
+  const { lang } = useLang()
 
   return (
     <div data-tool="home">
@@ -21,7 +22,7 @@ function HomeGrid() {
         {TOOLS.map((tool) => (
           <li key={tool.slug}>
             <a
-              href={withBase(tool.slug)}
+              href={withLang(lang, tool.slug)}
               className="block h-full rounded-2xl border border-line bg-card p-5 shadow-[0_1px_3px_rgba(28,25,23,0.06)] transition-colors hover:border-saffron"
             >
               <h2 className="text-base font-bold">{t(tool.titleKey)}</h2>

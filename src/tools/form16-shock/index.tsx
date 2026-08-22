@@ -6,7 +6,7 @@ import { Card, CopyButton, Disclaimer, MoneyField, VerdictBanner } from '../../c
 import { decodeOffer } from '../../engine/salary'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.form16.v1' as const
 
@@ -17,9 +17,9 @@ interface Draft {
   employer2Tds: number
 }
 
-export default function Form16ShockTool() {
+export default function Form16ShockTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="form16-shock">
+    <IslandRoot lang={lang} current="form16-shock">
       <Body />
     </IslandRoot>
   )

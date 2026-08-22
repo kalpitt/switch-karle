@@ -21,28 +21,28 @@ src/
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
   lib/storage.ts   switchkarle.<tool>.v<N>
-  i18n/            en.ts canonical; hi.ts frozen no-regression until Hindi pass
-  layouts/Base.astro  head contract, PWA register
-  pages/[tool].astro  catch-all from the registry (EN only)
+  i18n/            en.ts canonical; hi.ts + hi-suite.ts full EN→HI parity
+  layouts/Base.astro  head contract, hreflang en/hi/x-default, PWA register
+  pages/[tool].astro + pages/hi/[tool].astro  EN and Hindi twins
 ```
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
 wired to `VerdictBanner` + `Disclaimer` → registry row → `en.ts` keys**. The
 catch-all picks up the slug. `node scripts/new-tool.mjs <slug>` scaffolds that
-loop (and patches `[tool].astro` with one static import — Astro cannot hydrate a
+loop (and patches `ToolIslands.astro` with one static import — Astro cannot hydrate a
 variable component).
 
 ## Head contract
 
 Every prerendered HTML route has a unique `<title>`, meta description, canonical,
-OG title/description/url/image (1200×630 at `public/og/default.png`), and
-`twitter:card=summary_large_image`. Home adds JSON-LD `WebApplication`.
-`hreflang` hi and `/hi/` routes wait for the Hindi pass; until then `en` +
-`x-default` point at the English URL.
+OG title/description/url/image (1200×630 at `public/og/default.png`),
+`twitter:card=summary_large_image`, and `hreflang` en + hi + x-default. Hindi
+titles use `— स्विच कर ले` so they do not collide with English. Home adds JSON-LD
+`WebApplication`. `/hi/` twins live at `src/pages/hi/`.
 
-`sitemap.xml` and `robots.txt` are generated from the registry. Allow-all.
-Generated ≠ submitted. No sitemap-index. No analytics scripts — `check-seo.mjs`
-greps `dist/` for `googletagmanager|gtag|plausible|umami|fathom`.
+`sitemap.xml` and `robots.txt` are generated from the registry (EN + HI locs).
+Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
+`check-seo.mjs` greps `dist/` for `googletagmanager|gtag|plausible|umami|fathom`.
 
 ## PWA
 
@@ -53,10 +53,10 @@ reload of `/decoder/` must be the decoder. `check-base` greps `dist/sw.js` for
 
 ## i18n
 
-Existing Decoder / Tracker / Prompts chrome stays bilingual (`hi.ts`). New tools
-add `en.ts` only; Hindi mode falls back to English. `src/i18n/hi-freeze.json` is
-the no-regression list. The Hindi pass fills the delta, adds `/hi/<slug>`, and
-flips the test back to full EN→HI parity.
+`en.ts` is canonical. `hi.ts` is the frozen chrome (no-regression via
+`hi-freeze.json`). `hi-suite.ts` fills every remaining English key. Combined
+Hindi must be 1:1 with English. Language follows the URL: `/hi/<slug>/` vs
+`/<slug>/`. The EN/HI toggle navigates to the sibling path.
 
 ## Privacy
 

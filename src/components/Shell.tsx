@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
 import { RULES_LAST_VERIFIED } from '../data/rules'
-import { withBase } from '../lib/base'
+import { withLang } from '../lib/langPath'
 import { readJson, writeJson } from '../lib/storage'
 import { CommandPalette } from './CommandPalette'
 
@@ -33,7 +33,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
       <header className="no-print mb-6">
-        <a href={withBase()} className="inline-block">
+        <a href={withLang(lang)} className="inline-block">
           <h1 className="text-2xl font-extrabold tracking-tight">
             {stealth ? (
               t('app.stealthTitle')
@@ -51,11 +51,11 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <nav className="inline-flex flex-wrap gap-1 rounded-full border border-line bg-card p-1">
-            <NavLink href={withBase()} active={current === 'home'}>
+            <NavLink href={withLang(lang)} active={current === 'home'}>
               {t('nav.home')}
             </NavLink>
             {TOOLS.filter((tool) => ['decoder', 'tracker', 'prompts'].includes(tool.slug)).map((tool) => (
-              <NavLink key={tool.slug} href={withBase(tool.slug)} active={current === tool.slug}>
+              <NavLink key={tool.slug} href={withLang(lang, tool.slug)} active={current === tool.slug}>
                 {t(tool.titleKey)}
               </NavLink>
             ))}

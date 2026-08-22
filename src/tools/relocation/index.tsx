@@ -8,7 +8,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, Disclaimer, MoneyField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT } from '../../i18n'
+import { useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.relocation.v1' as const
 
@@ -52,9 +52,9 @@ function migrateDraft(saved: Draft | (Draft & { rentPaidMonthly?: number }) | nu
   }
 }
 
-export default function RelocationTool() {
+export default function RelocationTool({ lang = 'en' }: { lang?: Lang }) {
   return (
-    <IslandRoot current="relocation">
+    <IslandRoot lang={lang} current="relocation">
       <Body />
     </IslandRoot>
   )
