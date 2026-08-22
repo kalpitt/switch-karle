@@ -40,6 +40,12 @@ describe('addMonths — month-end clamping', () => {
   it('subtracts months and keeps ISO shape', () => {
     expect(addMonths('2026-03-15', -1)).toBe('2026-02-15')
   })
+
+  it('rejects fractional, NaN, and infinite month counts', () => {
+    expect(() => addMonths('2026-08-23', 1.5)).toThrow(/finite integer/)
+    expect(() => addMonths('2026-08-23', Number.NaN)).toThrow(/finite integer/)
+    expect(() => addMonths('2026-08-23', Number.POSITIVE_INFINITY)).toThrow(/finite integer/)
+  })
 })
 
 describe('completedYearsWithDayCount — 4 years 240 days', () => {

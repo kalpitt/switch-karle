@@ -15,17 +15,21 @@ export function readJson<T>(key: StorageKey, fallback: T): T {
   }
 }
 
-export function writeJson(key: StorageKey, value: unknown): void {
+export function writeJson(key: StorageKey, value: unknown): boolean {
   try {
     localStorage.setItem(key, JSON.stringify(value))
+    return localStorage.getItem(key) != null
   } catch {
     /* private mode / quota — tool just will not persist */
+    return false
   }
 }
 
 /**
  * If `to` is empty, read `from`, run `map`, write `to`, delete `from`.
  * If `to` already has data, leave `from` alone (the new version won).
+ * The old key is removed only after the new key is confirmed written —
+ * a quota/private-mode failure must not destroy the only copy.
  */
 export function migrateJson<T>(
   from: StorageKey,
@@ -39,7 +43,7 @@ export function migrateJson<T>(
     const raw = localStorage.getItem(from)
     if (raw == null) return fallback
     const next = map(JSON.parse(raw))
-    writeJson(to, next)
+    if (!writeJson(to, next)) return next
     localStorage.removeItem(from)
     return next
   } catch {

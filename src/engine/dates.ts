@@ -50,6 +50,9 @@ export function daysBetween(from: string, to: string): number {
 
 /** Add `months` (may be negative). Excess days clamp to the target month's last day. */
 export function addMonths(iso: string, months: number): string {
+  if (!Number.isInteger(months) || !Number.isFinite(months)) {
+    throw new Error(`dates: months must be a finite integer, got ${String(months)}`)
+  }
   const p = parts(iso)
   const total = p.y * 12 + (p.m - 1) + months
   const y = Math.floor(total / 12)
