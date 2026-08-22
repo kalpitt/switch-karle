@@ -15,6 +15,12 @@ number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 | --- | --- |
 | `/decoder/` | What does this CTC actually pay in-hand, and which red flags are in the offer? |
 | `/offer-comparison/` | Which of these 2–3 offers puts more in the bank once stuffing and paper ESOP are stripped? |
+| `/real-hike/` | How much of this CTC hike actually shows up in-hand? |
+| `/variable-reality/` | What is monthly in-hand if variable pays 0, 50 or 100%? |
+| `/bonus-clawback/` | If I leave before the clawback window, do I repay more than I kept? |
+| `/esop-reality/` | What does exercising this grant cost, and what tax hits at my slab? |
+| `/relocation/` | Does this CTC move in-hand when I change city? |
+| `/fake-offer/` | Does this letter look like a job scam? |
 | `/tracker/` | Where is each application, and what's the next action? |
 | `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
 

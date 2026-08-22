@@ -31,7 +31,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
             <NavLink href={withBase()} active={current === 'home'}>
               {t('nav.home')}
             </NavLink>
-            {TOOLS.map((tool) => (
+            {TOOLS.filter((tool) => ['decoder', 'tracker', 'prompts'].includes(tool.slug)).map((tool) => (
               <NavLink key={tool.slug} href={withBase(tool.slug)} active={current === tool.slug}>
                 {t(tool.titleKey)}
               </NavLink>
