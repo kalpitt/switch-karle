@@ -43,6 +43,11 @@ function formatISO(p: Ymd): string {
   return `${y}-${m}-${d}`
 }
 
+/** Calendar date in UTC from a Date (tests inject `now`). */
+export function todayUTC(now = new Date()): string {
+  return formatISO({ y: now.getUTCFullYear(), m: now.getUTCMonth() + 1, d: now.getUTCDate() })
+}
+
 /** Signed whole days from `from` to `to`, not including the start day. */
 export function daysBetween(from: string, to: string): number {
   return Math.round((toUtcMs(parts(to)) - toUtcMs(parts(from))) / MS_PER_DAY)
