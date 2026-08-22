@@ -66,9 +66,10 @@ network calls carrying user data are prohibited. No IndexedDB. No salary in URLs
 
 ## Provisional statutory list
 
-Ship on `build/suite` with goldens + `VERIFIED:` comments + gate (d). Flip the
-marker in a reconciliation commit when the CA's written answers arrive. **Do not
-AI-fix the citation landmine.**
+Ship on `build/suite` with goldens + `CANDIDATE:` comments + gate (d). Do not
+invent a `VERIFIED:` marker — that waits on the CA's written answers. Flip
+status in a reconciliation commit when those arrive. **Do not AI-fix the
+citation landmine.**
 
 | Item | Where | Status |
 | --- | --- | --- |
@@ -76,7 +77,11 @@ AI-fix the citation landmine.**
 | FY 2026-27 slabs, rebate amounts, cess, surcharge, standard deduction | `src/engine/tax.ts` | Candidate; last verified 2026-07-20 |
 | EPF 12% / ₹15,000 wage ceiling | `src/engine/salary.ts` | Candidate |
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
-| State professional tax table | `src/engine/professionalTax.ts` | Incomplete (unlisted states → ₹0) |
+| HRA exemption (s.10(13A) / Rule 2A three limbs) | `src/engine/salary.ts` `hraExemptionAnnual` | Candidate |
+| Joining-bonus tax delta (not TDS) | `src/engine/clawback.ts` | Candidate; gross-repay is contractual |
+| ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; sale / startup TDS deferral not modelled |
+| Relocation HRA metro limb + PT | `src/engine/relocation.ts`, `professionalTax.ts` | Candidate; PT table incomplete |
+| State professional tax table | `src/engine/professionalTax.ts` | Incomplete (`other` → ₹0; unlisted states levy PT) |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped on production; still provisional pending R1 |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.

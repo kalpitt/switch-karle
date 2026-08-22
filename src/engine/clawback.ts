@@ -1,20 +1,20 @@
 import type { Regime } from './types'
 import { computeTax } from './tax'
-import { marginalRate } from './marginal'
 
 /**
  * Joining-bonus clawback. Indian letters typically demand the **gross**
- * amount back if you leave before the clawback window, even though TDS
+ * amount back if you leave before the clawback window, even though tax
  * already went to the government — you received net, you repay gross.
  *
  * Tax on receipt is the `computeTax` delta on the bonus against the
  * supplied taxable income (decoder's recommended-regime taxable), not an
- * invented TDS percentage. `marginalRate` is surfaced so the UI can say
- * "at your ~X% marginal rate" without a second formula.
+ * invented TDS percentage. `effectiveRate` is taxOnBonus / amount so the
+ * rebate zone cannot print "0%" next to a non-zero tax on the bonus.
  *
  * CANDIDATE / not a statute: the gross-repay convention is contractual
- * practice, not a section of the Income-tax Act. Notice overlap is a
- * cash-flow framing, not legal advice.
+ * practice, not a section of the Income-tax Act. Whether the tax already
+ * paid can be recovered (same-year revised Form 16, etc.) is fact-specific.
+ * `noticeWouldCoverClawback` is cash-flow framing, not legal advice.
  */
 export interface ClawbackInput {
   amount: number
@@ -36,12 +36,17 @@ export interface ClawbackPoint {
 export interface ClawbackResult {
   taxOnBonus: number
   netReceived: number
-  marginal: number
+  /** taxOnBonus / amount (0 if amount is 0). Not the pre-bonus marginal rupee. */
+  effectiveRate: number
   curve: ClawbackPoint[]
   repaymentIfLeaveAtPlanned: number
   effectiveValueAtPlanned: number
-  /** Remaining clawback window is shorter than notice — you cannot leave cleanly. */
-  noticeOverlapsClawback: boolean
+  /**
+   * Remaining clawback is shorter than notice: serving full notice from today
+   * may land the last working day after the window. A buyout is the move that
+   * can pull the exit back inside.
+   */
+  noticeWouldCoverClawback: boolean
 }
 
 function clampNonNeg(n: number): number {
@@ -60,7 +65,7 @@ export function bonusClawback(input: ClawbackInput): ClawbackResult {
       : computeTax(taxableIncome + amount, input.regime).totalTax -
         computeTax(taxableIncome, input.regime).totalTax
   const netReceived = amount - taxOnBonus
-  const marginal = marginalRate(taxableIncome, input.regime)
+  const effectiveRate = amount > 0 ? taxOnBonus / amount : 0
 
   const curve: ClawbackPoint[] = []
   for (let m = 0; m <= clawbackMonths; m++) {
@@ -71,15 +76,15 @@ export function bonusClawback(input: ClawbackInput): ClawbackResult {
   const repaymentIfLeaveAtPlanned = plannedTenureMonths < clawbackMonths ? amount : 0
   const noticeMonths = clampNonNeg(input.noticePeriodDays) / 30
   const remaining = Math.max(0, clawbackMonths - plannedTenureMonths)
-  const noticeOverlapsClawback = remaining > 0 && remaining <= noticeMonths
+  const noticeWouldCoverClawback = remaining > 0 && remaining <= noticeMonths
 
   return {
     taxOnBonus,
     netReceived,
-    marginal,
+    effectiveRate,
     curve,
     repaymentIfLeaveAtPlanned,
     effectiveValueAtPlanned: netReceived - repaymentIfLeaveAtPlanned,
-    noticeOverlapsClawback,
+    noticeWouldCoverClawback,
   }
 }

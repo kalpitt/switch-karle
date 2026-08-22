@@ -19,25 +19,6 @@ export interface RelocationDelta {
   nationalSlabDeltaIsNil: true
 }
 
-function hraExemption(breakdown: SalaryBreakdown): number {
-  const old = breakdown.input.old ?? {
-    rentPaidMonthly: 0,
-    metro: false,
-    deduction80CExtra: 0,
-    deduction80D: 0,
-  }
-  const rentAnnual = old.rentPaidMonthly * 12
-  if (rentAnnual <= 0) return 0
-  return Math.max(
-    0,
-    Math.min(
-      breakdown.hra,
-      rentAnnual - 0.1 * breakdown.basic,
-      (old.metro ? 0.5 : 0.4) * breakdown.basic,
-    ),
-  )
-}
-
 function cloneForTarget(input: OfferInput, target: RelocationTarget): OfferInput {
   const old = input.old ?? {
     rentPaidMonthly: 0,
@@ -61,23 +42,22 @@ function cloneForTarget(input: OfferInput, target: RelocationTarget): OfferInput
  * Compare in-hand and deductions when relocating: same offer, different city.
  * State PT changes; old-regime HRA exemption changes with metro/rent limbs.
  * New-regime tax is unchanged by metro (HRA exemption is 0 there).
+ *
+ * CANDIDATE: PT table is approximate (municipal notifications); HRA metro limb
+ * is Rule 2A as implemented in `hraExemptionAnnual`. No cost-of-living index.
  */
-export function relocationDelta(
-  input: OfferInput,
-  to: RelocationTarget,
-): RelocationDelta {
+export function relocationDelta(input: OfferInput, to: RelocationTarget): RelocationDelta {
   const from = decodeOffer(input)
   const toBreakdown = decodeOffer(cloneForTarget(input, to))
 
-  const ptDeltaAnnual =
-    PROFESSIONAL_TAX_ANNUAL[to.state] - PROFESSIONAL_TAX_ANNUAL[input.state]
+  const ptDeltaAnnual = PROFESSIONAL_TAX_ANNUAL[to.state] - PROFESSIONAL_TAX_ANNUAL[input.state]
 
   return {
     from,
     to: toBreakdown,
     ptDeltaAnnual,
-    hraExemptionFrom: hraExemption(from),
-    hraExemptionTo: hraExemption(toBreakdown),
+    hraExemptionFrom: from.hraExemptionAnnual,
+    hraExemptionTo: toBreakdown.hraExemptionAnnual,
     inHandDeltaMonthly: toBreakdown.inHandMonthly - from.inHandMonthly,
     nationalSlabDeltaIsNil: true,
   }

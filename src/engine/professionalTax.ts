@@ -1,13 +1,18 @@
 import type { StateCode } from './types'
 
 /**
- * Annual professional tax for a salaried employee earning above each state's
- * top slab (true for anyone using a CTC decoder). Values are the standard
- * published maxima; a few states have month-specific quirks (MH charges ₹300
- * in February) which are folded into the annual figure.
+ * CANDIDATE: annual professional tax for a salaried employee at each state's
+ * published maximum (true for anyone using a CTC decoder). Not independently
+ * primary-sourced this session. A few states have month-specific quirks
+ * (MH charges ₹300 in February) folded into the annual figure. Tamil Nadu,
+ * Kerala and Odisha are local-body levies that can vary by municipality.
  *
- * Marked APPROXIMATE in the UI: slabs change by municipal notification.
+ * `'other'` is 0 and is approximate — Punjab, Bihar, Assam, Jharkhand,
+ * Chhattisgarh, Sikkim, Meghalaya, Tripura and Puducherry levy PT and are
+ * not in this table. Constitutional ceiling is ₹2,500/year.
  */
+export const PROFESSIONAL_TAX_CEILING = 2_500
+
 export const PROFESSIONAL_TAX_ANNUAL: Record<StateCode, number> = {
   KA: 2_400,
   MH: 2_500,

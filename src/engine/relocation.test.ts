@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { OfferInput } from './types'
 import { relocationDelta } from './relocation'
+import { stateHasHraMetroCity } from './salary'
 
 const baseOffer: OfferInput = {
   ctcAnnual: 2_400_000,
@@ -49,5 +50,16 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
     expect(d.ptDeltaAnnual).toBe(100)
     expect(d.inHandDeltaMonthly).toBe(-8)
     expect(d.nationalSlabDeltaIsNil).toBe(true)
+  })
+
+  it('KA metro=true is a user assertion the formula honours; KA is not a metro state', () => {
+    expect(stateHasHraMetroCity('KA')).toBe(false)
+    const d = relocationDelta(baseOffer, {
+      state: 'DL',
+      metro: true,
+      rentPaidMonthly: 50_000,
+    })
+    expect(d.hraExemptionTo).toBe(480_000)
+    expect(stateHasHraMetroCity('DL')).toBe(true)
   })
 })

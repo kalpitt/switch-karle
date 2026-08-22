@@ -68,11 +68,14 @@ function Body() {
     [draft, taxable, regime],
   )
 
-  const verdict = t('esop-reality.verdict', {
-    perq: formatINR(result.perquisiteTotal),
-    tax: formatINR(result.taxOnPerq),
-    cost: formatINR(result.exerciseCost),
-  })
+  const verdict = result.underwater
+    ? t('esop-reality.underwater', { cost: formatINR(result.exerciseCost) })
+    : t('esop-reality.verdict', {
+        perq: formatINR(result.perquisiteTotal),
+        tax: formatINR(result.taxOnPerq),
+        cost: formatINR(result.exerciseCost),
+        cash: formatINR(result.cashNeeded),
+      })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
   return (
@@ -81,7 +84,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('esop-reality.formTitle')}</h2>
         <NumberField label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
         <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
-        <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.perShare')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
+        <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
         <NumberField label={t('esop-reality.cliff')} suffix="mo" value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
         <NumberField label={t('esop-reality.vest')} suffix="mo" value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
         <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
@@ -91,8 +94,8 @@ function Body() {
         <VerdictBanner tone={result.postExitWindowNote ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('esop-reality.vestTitle')}</h3>
-          {result.vestTable.map((row) => (
-            <p key={row.month} className="tnum flex justify-between text-[13px]">
+          {result.vestTable.map((row, i) => (
+            <p key={`${row.month}-${i}`} className="tnum flex justify-between text-[13px]">
               <span>{t('esop-reality.vestRow', { month: row.month })}</span>
               <span>
                 {row.stillCliffed
@@ -103,6 +106,8 @@ function Body() {
           ))}
         </Card>
         {result.postExitWindowNote && <p className="text-[13px] text-amberflag">{t('esop-reality.illiquid')}</p>}
+        <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLinear')}</p>
+        <p className="text-[13px] text-ink-soft">{t('esop-reality.saleNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.provisional')}</p>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

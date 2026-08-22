@@ -6,8 +6,10 @@ import { computeTax } from './tax'
  * What the monthly bank credit looks like if variable pays 0 / 50 / 100%,
  * plus the first-year pro-rate and the lump-vs-spread cashflow split.
  *
- * Tax on a variable slice is withheld against the recommended-regime
- * taxable income (`computeTax` delta). We do not invent a separate TDS rate.
+ * Tax on a variable slice is a `computeTax` delta against the recommended
+ * regime's **full-year** taxable from `decodeOffer` — we do not invent a
+ * separate TDS rate, and we do not shrink the tax base when `monthsInFy` < 12
+ * (a mid-year switcher usually already has income from the earlier employer).
  */
 export interface VariableRealityInput {
   offer: OfferInput
@@ -28,6 +30,11 @@ export interface VariableRealityResult {
   firstYearProrate: boolean
   monthsInFy: number
   regime: Regime
+  /**
+   * Variable slice is pro-rated; tax is still computed on the decoder's
+   * full-year taxable (as if this CTC applied all year). Disclose in the UI.
+   */
+  taxedOnFullYearBase: true
   /** Monthly in-hand on fixed pay only (variable = 0). */
   inHandMonthlyFixed: number
   rows: VariablePayoutRow[]
@@ -81,6 +88,7 @@ export function variableReality(input: VariableRealityInput): VariableRealityRes
     firstYearProrate: monthsInFy < 12,
     monthsInFy,
     regime,
+    taxedOnFullYearBase: true,
     inHandMonthlyFixed: b.inHandMonthly,
     rows,
     withheldVsSpread: {

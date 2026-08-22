@@ -117,6 +117,7 @@ function Body() {
           {result.firstYearProrate && (
             <p className="text-[13px] text-amberflag">{t('variable-reality.prorate', { months: result.monthsInFy })}</p>
           )}
+          <p className="text-[13px] text-ink-soft">{t('variable-reality.fullYearTax')}</p>
         </Card>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
