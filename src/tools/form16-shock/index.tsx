@@ -30,7 +30,7 @@ function Body() {
   const [draft, setDraft] = useState<Draft>({
     employer1Gross: 1_200_000,
     employer1Tds: 0,
-    employer2Gross: 1_200_000,
+    employer2Gross: 0,
     employer2Tds: 0,
   })
   const [regime, setRegime] = useState<'new' | 'old'>('new')
@@ -40,7 +40,8 @@ function Body() {
     const b = decodeOffer(loadOffer())
     setRegime(b.recommendedRegime)
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
-    setDraft(saved ?? { employer1Gross: b.grossSalary, employer1Tds: 0, employer2Gross: b.grossSalary, employer2Tds: 0 })
+    // Employer 2 is never cloned from employer 1's figures (master plan 3.3).
+    setDraft(saved ?? { employer1Gross: b.grossSalary, employer1Tds: 0, employer2Gross: 0, employer2Tds: 0 })
     setHydrated(true)
   }, [])
 
@@ -88,6 +89,7 @@ function Body() {
           <h3 className="text-sm font-bold">{t('form16-shock.form12bTitle')}</h3>
           <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-ink-soft">{form12b}</p>
           <CopyButton text={form12b} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+          <p className="text-xs leading-relaxed text-ink-faint">{t('form16-shock.form12bNote')}</p>
         </Card>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

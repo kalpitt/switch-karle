@@ -327,7 +327,8 @@ export const hiSuite: Record<string, string> = {
     's.234B/234C का interest तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
   'form16-shock.form12bTitle': 'Employer 2 को देने वाला Form 12B text',
   'form16-shock.form12b':
-    'इस FY में previous employer: salary/gross {gross}, TDS {tds}। कृपया मेरी बाकी salary पर tax deduct करते समय इस income को ध्यान में रखें (Form 12B)। यह एक helper draft है, statutory form नहीं।',
+    'इस FY में previous employer: salary/gross {gross}, TDS {tds}। कृपया मेरी बाकी salary पर tax deduct करते समय इस income को ध्यान में रखें (Form 12B)।',
+  'form16-shock.form12bNote': 'यह एक plain summary है, statutory form नहीं — payroll इससे आपकी बाकी TDS का अंदाज़ा लेता है।',
 
   // ---- Resignation letter ----
   'resignation-letter.title': 'Resignation Letter',

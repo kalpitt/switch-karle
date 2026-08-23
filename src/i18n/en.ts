@@ -314,7 +314,8 @@ export const en: Record<string, string> = {
   'form16-shock.omit234': 'Interest u/s 234B/234C is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
   'form16-shock.form12bTitle': 'Form 12B text to hand employer 2',
   'form16-shock.form12b':
-    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B). This is a helper draft, not the statutory form.',
+    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B).',
+  'form16-shock.form12bNote': 'This is a plain summary, not the statutory form — payroll uses it to size your remaining TDS.',
 
   'resignation-letter.title': 'Resignation letter',
   'resignation-letter.desc': 'Three tones. Last working day is resignation date plus notice minus one calendar day.',
