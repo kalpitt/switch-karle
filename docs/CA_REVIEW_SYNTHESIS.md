@@ -1,8 +1,11 @@
 # CA Review R1 — Consolidated Synthesis (Pure)
 
 > **Not an execution spec.** Conflict map only. Do **not** apply §5 diffs.
-> Execution plan: `docs/MASTER_IMPROVEMENT_PLAN.md` (PR C1 cites the official
-> ITA 2025 PDF; contested PT stays ₹0 except Punjab PSDT ₹2,400).
+> Execution status (2026-08-23): slices C1 and G1 shipped on
+> `quality/suite-pass` (PR #8) from the official ITA 2025 PDF and PGA sources —
+> see the `VERIFIED:` markers in `src/engine/tax.ts` / `gratuity.ts`. The §5
+> diffs remain NOT applied; parked items stay parked per the record file below.
+> Record: `docs/MASTER_IMPROVEMENT_PLAN.md`.
 
 **Date:** 2026-08-23  
 **FY / Tax Year:** FY 2026-27 / Tax Year 2026-27 (AY 2027-28)  
