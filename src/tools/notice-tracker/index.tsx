@@ -62,7 +62,7 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('notice-tracker.formTitle')}</h2>
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
-        <NumberField label={t('notice-tracker.notice')} suffix="days" value={draft.noticePeriodDays} onChange={(v) => set({ noticePeriodDays: v })} />
+        <NumberField label={t('notice-tracker.notice')} suffix={t('unit.days')} value={draft.noticePeriodDays} onChange={(v) => set({ noticePeriodDays: v })} />
       </Card>
       <div className="space-y-4">
         <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>

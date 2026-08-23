@@ -20,4 +20,18 @@ describe('redactText', () => {
     expect(r.redacted).toBe('We are pleased to offer you the role of Software Engineer.')
     expect(r.hits).toEqual([])
   })
+
+  it('masks a labelled UAN without colliding with Aadhaar numbers', () => {
+    const r = redactText('UAN: 101234567890 and Aadhaar 2345 6789 0123')
+    expect(r.redacted).toContain('[UAN]')
+    expect(r.redacted).not.toContain('101234567890')
+    // The bare Aadhaar run is still an Aadhaar hit, not swallowed by UAN.
+    expect(r.redacted).toContain('XXXX XXXX XXXX')
+    expect(r.hits.map((h) => h.kind).sort()).toEqual(['aadhaar', 'uan'])
+  })
+
+  it('does not treat a bare 12-digit number as UAN', () => {
+    const r = redactText('Member id 101234567890 pending')
+    expect(r.hits.some((h) => h.kind === 'uan')).toBe(false)
+  })
 })

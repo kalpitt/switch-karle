@@ -19,7 +19,7 @@ export const en: Record<string, string> = {
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',
   'nav.searchEmpty': 'No tool matches.',
-  'app.stealth': 'Stealth',
+  'app.stealth': 'Notes mode',
   'app.stealthHint': 'Looks like notes. Same tools.',
   'app.stealthTitle': 'Notes',
   'home.kicker': 'A suite of instant micro-tools that decode every money moment of an Indian job switch — entirely on this device.',
@@ -192,7 +192,7 @@ export const en: Record<string, string> = {
     "Find the company's official careers email or HR contact on their website and confirm this recruiter is listed there.",
   'fake-offer.flag.lookalike-domain.title': 'Email domain may impersonate {company}',
   'fake-offer.flag.lookalike-domain.detail':
-    'The sender domain looks like a well-known company name with small changes — digit swaps (o→0), hyphenated “-hr/-careers/-jobs” labels, or unusual TLDs such as .co instead of .com.',
+    'The sender domain looks like a well-known company name with small changes — digit swaps (o→0), hyphenated “-hr/-careers/-jobs” labels, or unusual TLDs such as .co instead of .com. Note: .io and .ai are common startup domains — an unusual TLD is a reason to verify, not proof of fraud.',
   'fake-offer.flag.lookalike-domain.hint':
     "Compare the domain character-by-character with the company's official website domain before replying or sharing documents.",
   'fake-offer.flag.whatsapp-only.title': 'Offer wants to move the process to WhatsApp or Telegram only',
@@ -569,8 +569,8 @@ export const en: Record<string, string> = {
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
 
-  'redactor.title': 'Payslip redactor',
-  'redactor.desc': 'Mask Aadhaar, PAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
+  'redactor.title': 'Mask text (not a photo)',
+  'redactor.desc': 'Mask Aadhaar, PAN, UAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
   'redactor.formTitle': 'Paste the page',
   'redactor.text': 'Payslip or offer text',
   'redactor.textHint': 'Nothing is uploaded. Download a PNG or print the masked page.',
