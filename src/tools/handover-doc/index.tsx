@@ -41,20 +41,20 @@ function Body() {
 
   const md = useMemo(() => {
     return [
-      `# Handover — ${draft.role || '[Role]'}`,
+      `# ${t('handover-doc.md.title', { role: draft.role || '[Role]' })}`,
       '',
-      `Owner after I leave: ${draft.owner || '[Name]'}`,
+      t('handover-doc.md.owner', { owner: draft.owner || '[Name]' }),
       '',
-      '## Projects / status',
+      `## ${t('handover-doc.md.projects')}`,
       draft.projects || '_Add running work, tickets, and who to ask._',
       '',
-      '## Access & artefacts',
+      `## ${t('handover-doc.md.access')}`,
       draft.access || '_Repos, dashboards, keys to rotate, docs._',
       '',
-      '## Risks if this is dropped',
+      `## ${t('handover-doc.md.risks')}`,
       draft.risks || '_Dates, customers, audits._',
     ].join('\n')
-  }, [draft])
+  }, [draft, t])
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
