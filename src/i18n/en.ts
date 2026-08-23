@@ -387,6 +387,11 @@ export const en: Record<string, string> = {
   'handover-doc.risks': 'What breaks if this is dropped',
   'handover-doc.verdict': 'Copy the markdown. Keep secrets out of it — this still sits on this device only.',
   'handover-doc.disclaimer': 'A handover aid, not a legal document. Do not paste passwords.',
+  'handover-doc.md.title': 'Handover — {role}',
+  'handover-doc.md.owner': 'Owner after I leave: {owner}',
+  'handover-doc.md.projects': 'Projects / status',
+  'handover-doc.md.access': 'Access & artefacts',
+  'handover-doc.md.risks': 'Risks if this is dropped',
 
   'relieving-chaser.title': 'Relieving chaser',
   'relieving-chaser.desc': 'Day 7, 14 and 30 mails if the relieving letter has not arrived.',

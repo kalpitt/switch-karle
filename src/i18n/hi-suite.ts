@@ -407,6 +407,11 @@ export const hiSuite: Record<string, string> = {
   'handover-doc.risks': 'अगर यह drop हो जाए तो क्या टूटेगा',
   'handover-doc.verdict': 'Markdown copy करें। इसमें secrets न रखें — यह अभी भी सिर्फ इस device पर है।',
   'handover-doc.disclaimer': 'यह एक handover aid है, legal document नहीं। Passwords paste न करें।',
+  'handover-doc.md.title': 'Handover — {role}',
+  'handover-doc.md.owner': 'मेरे जाने के बाद owner: {owner}',
+  'handover-doc.md.projects': 'Projects / status',
+  'handover-doc.md.access': 'Access और artefacts',
+  'handover-doc.md.risks': 'अगर यह drop हुआ तो risks',
 
   // ---- Relieving chaser ----
   'relieving-chaser.title': 'Relieving Chaser',
