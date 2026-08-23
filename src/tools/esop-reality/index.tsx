@@ -85,8 +85,8 @@ function Body() {
         <NumberField label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
         <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
         <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
-        <NumberField label={t('esop-reality.cliff')} suffix="mo" value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
-        <NumberField label={t('esop-reality.vest')} suffix="mo" value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
+        <NumberField label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
+        <NumberField label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
         <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
       </Card>
 

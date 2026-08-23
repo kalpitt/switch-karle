@@ -18,7 +18,7 @@ export const hiSuite: Record<string, string> = {
   'nav.search': 'टूल खोजें',
   'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
   'nav.searchEmpty': 'कोई tool match नहीं हुआ।',
-  'app.stealth': 'Stealth',
+  'app.stealth': 'नोट्स मोड',
   'app.stealthHint': 'दिखने में notes जैसा। Tools वही हैं।',
   'app.stealthTitle': 'Notes',
   'ui.copyText': 'कॉपी करें',
@@ -196,7 +196,7 @@ export const hiSuite: Record<string, string> = {
     "Company की website पर official careers email या HR contact ढूंढें और confirm करें कि यह recruiter वहां listed है।",
   'fake-offer.flag.lookalike-domain.title': 'Email domain {company} की नकल हो सकता है',
   'fake-offer.flag.lookalike-domain.detail':
-    'Sender domain किसी जाने-माने company name से मिलता-जुलता है — digit swaps (o→0), "-hr/-careers/-jobs" labels, या .co जैसे unusual TLDs।',
+    'Sender domain किसी जाने-माने company name से मिलता-जुलता है — digit swaps (o→0), "-hr/-careers/-jobs" labels, या .co जैसे unusual TLDs। ध्यान दें: .io और .ai startup domains में आम हैं — unusual TLD verify करने की वजह है, fraud का proof नहीं।',
   'fake-offer.flag.lookalike-domain.hint':
     'Reply या documents share करने से पहले domain को company की official website domain से character-by-character compare करें।',
   'fake-offer.flag.whatsapp-only.title': 'Offer process को सिर्फ WhatsApp या Telegram पर ले जाना चाहता है',
@@ -607,8 +607,8 @@ export const hiSuite: Record<string, string> = {
     'यह एक pattern scan है, legal advice नहीं। भारतीय case law fact-specific होता है। ऊपर दिए दो citations आपकी letter पर holdings नहीं हैं।',
 
   // ---- Payslip redactor ----
-  'redactor.title': 'Payslip Redactor',
-  'redactor.desc': 'Payslip या offer का screenshot लेने से पहले Aadhaar, PAN, phone, email और rupee amounts को इस device पर mask करें।',
+  'redactor.title': 'Mask text (फोटो नहीं)',
+  'redactor.desc': 'Payslip या offer का screenshot लेने से पहले Aadhaar, PAN, UAN, phone, email और rupee amounts को इस device पर mask करें।',
   'redactor.formTitle': 'Page paste करें',
   'redactor.text': 'Payslip या offer text',
   'redactor.textHint': 'कुछ भी upload नहीं होता। Masked page को PNG में download करें या print करें।',

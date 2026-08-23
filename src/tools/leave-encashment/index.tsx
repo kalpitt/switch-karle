@@ -36,7 +36,10 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    setDraft(readJson<Draft>(STORAGE_KEY, DEFAULT_DRAFT))
+    const saved = readJson<Draft>(STORAGE_KEY, DEFAULT_DRAFT)
+    // Retirement path is hidden (master plan 5.2): the switcher case is
+    // resignation — always fully taxable. Coerce any stored retirement draft.
+    setDraft({ ...saved, reason: 'resignation' })
     setHydrated(true)
   }, [])
 
@@ -55,7 +58,7 @@ function Body() {
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('leave-encashment.formTitle')}</h2>
-        <NumberField label={t('leave-encashment.days')} suffix="days" value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
+        <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
         <MoneyField label={t('leave-encashment.basic')} hint={t('ui.money.hint')} value={draft.monthlyBasic} onChange={(v) => set({ monthlyBasic: v })} />
         <Select
           label={t('leave-encashment.basis')}
@@ -64,15 +67,6 @@ function Body() {
           options={[
             { value: '26', label: t('leave-encashment.basis.26') },
             { value: '30', label: t('leave-encashment.basis.30') },
-          ]}
-        />
-        <Select
-          label={t('leave-encashment.reason')}
-          value={draft.reason}
-          onChange={(v) => set({ reason: v })}
-          options={[
-            { value: 'resignation', label: t('leave-encashment.reason.resign') },
-            { value: 'retirement', label: t('leave-encashment.reason.retire') },
           ]}
         />
       </Card>

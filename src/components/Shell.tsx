@@ -28,7 +28,9 @@ export function Shell({ current, children }: { current: string; children: ReactN
     if (!stealthHydrated) return
     writeJson(STEALTH_KEY, stealth)
     document.documentElement.classList.toggle('stealth', stealth)
-  }, [stealth, stealthHydrated])
+    // Stealth stays a naming trick: only the tab title changes, nothing else.
+    if (stealth) document.title = t('app.stealthTitle')
+  }, [stealth, stealthHydrated, t])
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
