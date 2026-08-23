@@ -346,6 +346,11 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.tone.grateful': 'Grateful',
   'resignation-letter.tone.firm': 'Firm और छोटा',
   'resignation-letter.verdict': 'पूरा notice serve करने पर last working day: {lwd}।',
+  'resignation-letter.yourName': 'आपका नाम',
+  'resignation-letter.yourNameHint': 'Signature में जाएगा। यह भरने तक copy locked रहेगा।',
+  'resignation-letter.empId': 'Employee ID (optional)',
+  'resignation-letter.empIdHint': 'सिर्फ इसी page पर रहता है।',
+  'resignation-letter.copyBlocked': 'Copy unlock करने के लिए company, role, manager और अपना नाम भरें।',
   'resignation-letter.epfo':
     'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
   'resignation-letter.body.professional':
