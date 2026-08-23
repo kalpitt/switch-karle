@@ -11,6 +11,7 @@ import {
   MoneyField,
   NumberField,
   Select,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -30,7 +31,6 @@ function defaultSlots(): Slot[] {
     ctcAnnual: Math.round(a.ctcAnnual * 1.2),
     variableAnnual: a.variableAnnual,
     state: a.state,
-    gratuityInCtc: true,
   }
   return [
     { label: 'A', offer: a },
@@ -52,7 +52,7 @@ function CompareBody() {
     { label: 'A', offer: DEFAULT_OFFER },
     {
       label: 'B',
-      offer: { ...DEFAULT_OFFER, ctcAnnual: 2_880_000, gratuityInCtc: true },
+      offer: { ...DEFAULT_OFFER, ctcAnnual: 2_880_000 },
     },
   ])
   const [hydrated, setHydrated] = useState(false)
@@ -70,17 +70,37 @@ function CompareBody() {
 
   const result = useMemo(() => compareOffers(slots.map((s) => s.offer)), [slots])
 
+  /**
+   * Example state = untouched fixture (§9.2). Slots seeded from a saved
+   * Decoder offer differ from the fixture, so they correctly show Entered.
+   */
+  const isExample =
+    JSON.stringify(slots.map((s) => s.offer)) === JSON.stringify(defaultSlots().map((s) => s.offer))
+
   const patch = (i: number, offer: OfferInput) => {
     setSlots((prev) => prev.map((s, idx) => (idx === i ? { ...s, offer } : s)))
   }
 
-  const verdict =
-    result.verdictIndex === null
+  const verdict = isExample
+    ? null
+    : result.verdictIndex === null
       ? t('offer-comparison.verdict.tie')
       : t('offer-comparison.verdict.win', {
           label: slots[result.verdictIndex]!.label,
           amount: formatINR(result.forVerdict[result.verdictIndex]!.inHandMonthly),
         })
+
+  const copyText = isExample
+    ? ''
+    : [
+        t('offer-comparison.copyTitle'),
+        ...slots.map(
+          (s, i) =>
+            `${t('offer-comparison.offer', { label: s.label })}: ${formatLPA(s.offer.ctcAnnual)} → ${formatINR(result.forVerdict[i]!.inHandMonthly)}/${t('offer-comparison.perMonth')}`,
+        ),
+        verdict ?? '',
+        t('ui.disclaimer'),
+      ].join('\n')
 
   const rows = [
     {
@@ -141,7 +161,16 @@ function CompareBody() {
       </div>
 
       <div className="space-y-4">
-        <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        {isExample ? (
+          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('offer-comparison.exampleChip')}
+            </span>
+            {t('offer-comparison.exampleNote')}
+          </p>
+        ) : (
+          <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         {slots.length === 2 ? (
           <Card>
             <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>
@@ -169,6 +198,14 @@ function CompareBody() {
         )}
         {result.flags.asymmetricPfCeiling && (
           <p className="text-[13px] text-amberflag">{t('offer-comparison.flag.ceiling')}</p>
+        )}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('offer-comparison.copyLine')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

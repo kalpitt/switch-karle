@@ -19,7 +19,7 @@ export const en: Record<string, string> = {
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',
   'nav.searchEmpty': 'No tool matches.',
-  'app.stealth': 'Stealth',
+  'app.stealth': 'Notes mode',
   'app.stealthHint': 'Looks like notes. Same tools.',
   'app.stealthTitle': 'Notes',
   'home.kicker': 'A suite of instant micro-tools that decode every money moment of an Indian job switch — entirely on this device.',
@@ -35,9 +35,11 @@ export const en: Record<string, string> = {
   'common.delete': 'Delete',
   'common.cancel': 'Cancel',
 
-  'ui.copy': 'Copy the headline',
+  'ui.copy': 'Copy',
   'ui.copyText': 'Copy',
   'ui.copied': 'Copied ✓',
+  'ui.exampleChip': 'Example',
+  'ui.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
   'ui.print': 'Print',
   'ui.disclaimer':
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
@@ -54,7 +56,12 @@ export const en: Record<string, string> = {
   'offer-comparison.row.ratio': 'In-hand / CTC',
   'offer-comparison.row.variable': 'Variable in CTC',
   'offer-comparison.verdict.tie': 'In-hand is a dead heat once paper ESOP is ignored.',
-  'offer-comparison.verdict.win': 'Offer {label} puts {amount}/month in the bank — the higher in-hand.',
+  'offer-comparison.verdict.win': 'Offer {label} works out higher in-hand: {amount}/month.',
+  'offer-comparison.exampleChip': 'Example',
+  'offer-comparison.exampleNote': 'This is a worked example — nothing about you has been checked yet. Edit any field to compare your own offers.',
+  'offer-comparison.copyTitle': 'Offer comparison — Switch Karle',
+  'offer-comparison.perMonth': 'month',
+  'offer-comparison.copyLine': 'Copy summary',
   'offer-comparison.esopPolicy':
     'Paper ESOP is valued at zero on every side so a grant cannot swing the verdict. Liquidity is a separate conversation.',
   'offer-comparison.flag.gratuity': 'Gratuity is inside CTC on one side only — that inflates the headline, not the bank.',
@@ -62,7 +69,7 @@ export const en: Record<string, string> = {
   'offer-comparison.flag.ceiling': 'One offer computes PF on full basic, the other uses the wage ceiling.',
 
   'real-hike.title': 'Real hike',
-  'real-hike.desc': 'The CTC jump versus what actually lands in the bank each month.',
+  'real-hike.desc': 'The CTC jump versus what actually reaches your account each month.',
   'real-hike.formTitle': 'This job → next job',
   'real-hike.currentCtc': 'Current CTC',
   'real-hike.currentVariable': 'Current variable',
@@ -72,7 +79,7 @@ export const en: Record<string, string> = {
   'real-hike.nextState': 'New state',
   'real-hike.haircut': 'Assume variable pays 70%',
   'real-hike.haircutHint': 'Average-year haircut. Off = treat quoted variable as certain.',
-  'real-hike.verdict': '{paper}% on paper, {bank}% in your bank.',
+  'real-hike.verdict': '{paper}% on paper, {bank}% in hand.',
   'real-hike.row.paper': 'CTC as quoted',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus is a one-off — it is not in this run-rate.',
@@ -150,7 +157,7 @@ export const en: Record<string, string> = {
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
   'relocation.metroWarn': '{state} has no HRA metro city (only Delhi, Mumbai, Kolkata, Chennai qualify). The 50% limb you just switched on will not apply there.',
-  'relocation.ptApprox': 'Professional tax is approximate. Punjab, Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. “Other” is also ₹0.',
+  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',
@@ -173,7 +180,36 @@ export const en: Record<string, string> = {
   'fake-offer.textHint': 'Paste the email or letter. It never leaves this device.',
   'fake-offer.verdict.red': '{n} hard stop(s). Do not pay, and do not share documents until you verify the sender.',
   'fake-offer.verdict.amber': 'Something looks off — often a free-mail recruiter or lookalike domain. Verify before you reply or share documents.',
-  'fake-offer.verdict.clean': 'No deposit ask. Still check EPFO and MCA — clean text is not a guarantee.',
+  'fake-offer.verdict.blank': 'Nothing has been checked yet. Paste the offer email or letter text above.',
+  'fake-offer.verdict.clean': 'No deposit ask found in the text. Clean text is not verification — confirm the sender and the company yourself before relying on it.',
+  'fake-offer.flag.deposit-ask.title': 'Offer asks you to pay money upfront',
+  'fake-offer.flag.deposit-ask.detail':
+    'Legitimate employers do not ask candidates to pay security deposits, joining fees, training fees, or laptop deposits before joining. Any upfront payment request is a common job-scam pattern.',
+  'fake-offer.flag.deposit-ask.hint':
+    'Do not pay. Ask for a written offer on company letterhead and verify the recruiter through the company’s official careers page or HR contact.',
+  'fake-offer.flag.free-mail.title': 'Recruiter email uses a free mailbox ({domain})',
+  'fake-offer.flag.free-mail.detail':
+    'Corporate hiring teams almost always email from their own company domain. Offers sent from Gmail, Yahoo, Outlook, or similar free providers are a strong impersonation signal.',
+  'fake-offer.flag.free-mail.hint':
+    "Find the company's official careers email or HR contact on their website and confirm this recruiter is listed there.",
+  'fake-offer.flag.lookalike-domain.title': 'Email domain may impersonate {company}',
+  'fake-offer.flag.lookalike-domain.detail':
+    'The sender domain looks like a well-known company name with small changes — digit swaps (o→0), hyphenated “-hr/-careers/-jobs” labels, or unusual TLDs such as .co instead of .com. Note: .io and .ai are common startup domains — an unusual TLD is a reason to verify, not proof of fraud.',
+  'fake-offer.flag.lookalike-domain.hint':
+    "Compare the domain character-by-character with the company's official website domain before replying or sharing documents.",
+  'fake-offer.flag.whatsapp-only.title': 'Offer wants to move the process to WhatsApp or Telegram only',
+  'fake-offer.flag.whatsapp-only.detail':
+    'Scammers often push candidates off email onto messaging apps where conversations are harder to verify and document. Real employers still use formal email for offer letters.',
+  'fake-offer.flag.whatsapp-only.hint':
+    'Insist on continuing over official company email and ask for a verifiable HR contact on the corporate domain.',
+  'fake-offer.flag.epfo-hint.title': 'Check whether the employer is registered with EPFO',
+  'fake-offer.flag.epfo-hint.detail':
+    "Search EPFO's establishment register by company name to see if the employer has an active PF registration.",
+  'fake-offer.flag.epfo-hint.hint': 'EPFO member portal: https://www.epfindia.gov.in/',
+  'fake-offer.flag.mca-hint.title': 'Confirm the company exists on MCA records',
+  'fake-offer.flag.mca-hint.detail':
+    'Look up the company name on the Ministry of Corporate Affairs portal to confirm it is a registered company in India.',
+  'fake-offer.flag.mca-hint.hint': 'MCA company search: https://www.mca.gov.in/',
   'fake-offer.verify': 'Verify:',
 
   'notice-buyout.title': 'Notice buyout',
@@ -191,6 +227,13 @@ export const en: Record<string, string> = {
   'notice-buyout.verdict.pay': 'Buying out the rest of the notice is about {amount}. The letter, not a statute, sets this.',
   'notice-buyout.verdict.recover': 'They can try to recover about {amount} from F&F for unserved notice. Check the appointment letter.',
   'notice-buyout.divisor': 'Most letters divide the monthly figure by 30, not 26 and not the actual calendar month. That is contractual practice, not a law.',
+  'notice-buyout.bothBases': 'Both bases, side by side',
+  'notice-buyout.row.basic': 'On monthly basic',
+  'notice-buyout.row.gross': 'On monthly cash gross',
+  'notice-buyout.gstNote': 'GST / income-tax treatment of a notice buyout is disputed and fact-specific — this tool does not compute any tax on it.',
+  'notice-buyout.seed.decoder': 'Monthly figures seeded from your Decoder’s cash salary.',
+  'notice-buyout.seed.ctc12':
+    'Seeded from your Decoder. Cash gross works out to CTC ÷ 12 here — check whether employer PF and gratuity actually sit inside the CTC.',
 
   'gratuity.title': 'Gratuity',
   'gratuity.desc': 'Are you eligible, how much, and which date flips you over the line.',
@@ -201,9 +244,18 @@ export const en: Record<string, string> = {
   'gratuity.exit': 'Last working day',
   'gratuity.covered': 'Establishment has 10+ employees',
   'gratuity.coveredHint': 'The Payment of Gratuity Act applies only if the establishment is covered. We ask; we do not assume.',
-  'gratuity.verdict.yes': 'Eligible after {years} completed years. Estimate {amount} (15/26 × last drawn × years).',
-  'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-year-240-day rule.',
+  'gratuity.week5.label': '5-day work week (Sat–Sun off)',
+  'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 days into year five; a 6-day one needs 240.',
+  'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
+  'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-years-plus-190-or-240-day rule.',
   'gratuity.flip': 'The next date that changes this picture: {date}.',
+  'gratuity.note.s42-rounding':
+    'Under PGA s.4(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
+  'gratuity.note.act-may-not-apply':
+    'Payment of Gratuity Act may not apply (employer below 10-employee threshold). Company policy may still pay gratuity.',
+  'gratuity.note.ineligible-service':
+    'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
+  'gratuity.note.cap-applied': 'Capped at the statutory ₹20,00,000 ceiling (PGA s.4(3)).',
 
   'leave-encashment.title': 'Leave encashment',
   'leave-encashment.desc': 'On a resignation, leave encashment is typically fully taxable as salary.',
@@ -239,6 +291,14 @@ export const en: Record<string, string> = {
   'fnf-checker.verdict.pay': 'Recomputed net payable to you: {amount}.',
   'fnf-checker.verdict.owe': 'Recomputed net is negative — you may owe them {amount}.',
   'fnf-checker.audit': 'Claimed vs recomputed',
+  'fnf-checker.line.salary': 'Salary (full month)',
+  'fnf-checker.line.notice': 'Notice recovery',
+  'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
+  'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
+  'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
+  'fnf-checker.flag.gratuity-missing':
+    'No gratuity line on this sheet. On your service it works out to about ₹{amount} — if you are eligible under the Gratuity Act, ask HR (in writing) for it to be included in the settlement.',
 
   'form16-shock.title': 'Two Form-16 shock',
   'form16-shock.desc': 'Two employers both gave you the slab benefit. One return has to put them together.',
@@ -256,7 +316,8 @@ export const en: Record<string, string> = {
   'form16-shock.omit234': 'Interest u/s 234B/234C is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
   'form16-shock.form12bTitle': 'Form 12B text to hand employer 2',
   'form16-shock.form12b':
-    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B). This is a helper draft, not the statutory form.',
+    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B).',
+  'form16-shock.form12bNote': 'This is a plain summary, not the statutory form — payroll uses it to size your remaining TDS.',
 
   'resignation-letter.title': 'Resignation letter',
   'resignation-letter.desc': 'Three tones. Last working day is resignation date plus notice minus one calendar day.',
@@ -273,6 +334,11 @@ export const en: Record<string, string> = {
   'resignation-letter.tone.grateful': 'Grateful',
   'resignation-letter.tone.firm': 'Firm and short',
   'resignation-letter.verdict': 'Last working day if you serve the full notice: {lwd}.',
+  'resignation-letter.yourName': 'Your name',
+  'resignation-letter.yourNameHint': 'Goes in the signature. Copy stays locked until it is filled.',
+  'resignation-letter.empId': 'Employee ID (optional)',
+  'resignation-letter.empIdHint': 'Stays on this page only.',
+  'resignation-letter.copyBlocked': 'Fill company, role, manager and your name to unlock copy.',
   'resignation-letter.epfo':
     'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
   'resignation-letter.body.professional':
@@ -283,19 +349,20 @@ export const en: Record<string, string> = {
     'Dear {manager},\n\nI resign from {role} at {company}, effective {date}. Last working day: {lwd}. Please acknowledge and share the F&F / relieving checklist.\n\nRegards',
 
   'manager-script.title': 'Manager conversation',
-  'manager-script.desc': 'What to say when you resign in person — supportive shop, counter-offer risk, or a hard room.',
+  'manager-script.desc': 'What to say when you resign in person — a supportive room, counter-offer risk, or a hard room.',
   'manager-script.formTitle': 'The room you are walking into',
   'manager-script.preset': 'How this manager usually is',
   'manager-script.preset.supportive': 'Supportive',
   'manager-script.preset.counter-risk': 'Will likely counter',
-  'manager-script.preset.hostile': 'Hostile / guilt shop',
+  'manager-script.preset.hostile': 'Manager push-back',
   'manager-script.verdict.supportive': 'Lead with thanks, then the date. Do not over-explain the new role.',
   'manager-script.verdict.counter-risk': 'Decide before you walk in. If you will still leave, say so once.',
   'manager-script.verdict.hostile': 'Keep it short, in writing afterwards. Do not argue policy in the room.',
   'manager-script.body.supportive':
-    'I wanted to tell you first. I have accepted another role. This is not a surprise-counter conversation — I have decided. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
+    'I wanted to tell you first. I have accepted another role. My decision is made. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
   'manager-script.body.counter-risk':
-    'I have accepted another offer. I am telling you because I respect the team, not because I am shopping a counter. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
+    'I have accepted another offer. I am telling you because I respect the team. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
+  'manager-script.copyBlocked': 'This script fills its last working day from your saved resignation letter — make one first, then copy.',
   'manager-script.body.hostile':
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
@@ -303,6 +370,24 @@ export const en: Record<string, string> = {
   'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'When the recruiter asks for a number before they share the band.',
+  'hr.early-release.body':
+    'Hi [Manager name],\n\nI have shared my resignation dated [date], with last working day [LWD] as per my notice.\n\nI am due to join my next employer on [new joining date], so an earlier release would help me start on time. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?\n\nI will follow whatever the appointment letter allows. Thank you for considering it.',
+  'hr.buyout-ask.body':
+    'Hi [HR name],\n\nCould you confirm how notice buyout works in my letter — is it on basic or on gross, and is the divisor 30 days?\n\nI am hoping to make [proposed last day] my last working day. If buyout is allowed, please share the amount and whether it will be recovered from F&F or paid by me before relieving.\n\nI will complete the handover either way.',
+  'hr.decline-accepted.body':
+    'Hi [Recruiter / HR name],\n\nThank you again for the offer for [role] at [company]. After thinking it through with my family, I need to withdraw my acceptance. My decision is made — I will not be joining.\n\nI am sorry for the disruption. Please treat this mail as my formal decline.\n\nI appreciate the time you spent, and I wish the team well.',
+  'hr.counter-offer-reply.body':
+    'Hi [Manager name],\n\nThank you for the counter-offer and for making time to talk.\n\nI have thought about the rupee gap and about the work itself. I am going to go ahead with the new role.\n\nI will keep the handover clean and stick to the notice we agreed. Thank you for the years here — I am leaving on good terms and I hope we stay in touch.',
+  'hr.recruiter-followup.body':
+    'Hi [Name],\n\nChecking in on [role] at [company], as discussed on [date]. I remain interested and can share any extra document you need.\n\nIf the timeline has moved, a one-line update helps me plan notice with my current employer. Thank you.',
+  'hr.expected-ctc.formTitle': 'Your two numbers',
+  'hr.expected-ctc.role': 'Role',
+  'hr.expected-ctc.roleHint': 'Optional — used in the first line.',
+  'hr.expected-ctc.current': 'Current CTC (per year)',
+  'hr.expected-ctc.expected': 'Expected CTC (per year)',
+  'hr.expected-ctc.body':
+    'Thank you for the conversation about the {role} role.\n\nI am looking at this role on total compensation and the work, not one headline number. My current CTC is {current} per year, and for a similar scope I am targeting around {expected}. If you can share the band for this level, I can tell you quickly whether we are in range. Happy to talk structure — fixed vs variable, notice, joining bonus — once the band is on the table.',
+  'hr.expected-ctc.copyBlocked': 'Fill the role and both numbers to unlock copy.',
   'hr.early-release.title': 'Early release',
   'hr.early-release.desc': 'Ask current HR/manager to shorten notice.',
   'hr.buyout-ask.title': 'Buyout ask',
@@ -338,6 +423,15 @@ export const en: Record<string, string> = {
   'handover-doc.risks': 'What breaks if this is dropped',
   'handover-doc.verdict': 'Copy the markdown. Keep secrets out of it — this still sits on this device only.',
   'handover-doc.disclaimer': 'A handover aid, not a legal document. Do not paste passwords.',
+  'handover-doc.md.title': 'Handover — {role}',
+  'handover-doc.md.owner': 'Owner after I leave: {owner}',
+  'handover-doc.md.projects': 'Projects / status',
+  'handover-doc.md.access': 'Access & artefacts',
+  'handover-doc.md.risks': 'Risks if this is dropped',
+  'handover-doc.md.projectsHint': '_Add running work, tickets, and who to ask._',
+  'handover-doc.md.accessHint': '_Repos, dashboards, keys to rotate, docs._',
+  'handover-doc.md.risksHint': '_Dates, customers, audits._',
+  'handover-doc.copyBlocked': 'Fill role and owner above (and any section you want to include) to unlock copy.',
 
   'relieving-chaser.title': 'Relieving chaser',
   'relieving-chaser.desc': 'Day 7, 14 and 30 mails if the relieving letter has not arrived.',
@@ -352,13 +446,15 @@ export const en: Record<string, string> = {
   'relieving-chaser.day.30': 'Day 30 — escalation',
   'relieving-chaser.verdict.7': 'A short nudge. Assume they are busy, not hostile.',
   'relieving-chaser.verdict.14': 'Ask for a date. Copy your manager if that is safe.',
-  'relieving-chaser.verdict.30': 'Background checks stall without this letter. Say so plainly.',
+  'relieving-chaser.verdict.30': 'Background checks stall without this letter. Ask for a firm date.',
   'relieving-chaser.body.7':
     'Hi {hr},\n\nI left {company} as {role} on {lwd}. Could you share an update on my relieving letter and F&F? I am happy to send any document still pending.\n\nThank you',
   'relieving-chaser.body.14':
     'Hi {hr},\n\nFollowing up on my relieving letter from {company} ({role}, LWD {lwd}). Please share a date by which it will be issued, or the checklist still open on my side.\n\nThis blocks background verification at my new employer. Thank you',
   'relieving-chaser.body.30':
-    'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have a relieving letter.\n\nPlease treat this as a formal request to issue it this week, and copy me on the F&F status. I will escalate to [labour commissioner / internal grievance] only if I hear nothing — I would rather close this with you.\n\nRegards',
+    'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have my relieving letter.\n\nPlease share the current status and an issue-by date this week. This letter is blocking my background verification, so it is time-sensitive. I will send any document still pending from my side.\n\nRegards',
+  'relieving-chaser.setLwd': 'Set a past last-working-day first — a chase makes sense only after it.',
+  'relieving-chaser.fillFields': 'Fill company, HR name and role to unlock copy.',
 
   'epf-transfer.title': 'EPF transfer',
   'epf-transfer.desc': 'Form 13 online, unmarked date-of-exit, KYC mismatches, and why withdrawing early is usually the expensive move.',
@@ -373,18 +469,18 @@ export const en: Record<string, string> = {
   'epf-transfer.name': 'Name on UAN matches Aadhaar',
   'epf-transfer.dob': 'Date of birth on UAN matches Aadhaar',
   'epf-transfer.verdict.transfer': '{years} completed years. Transfer (Form 13) keeps the corpus in the fund.',
-  'epf-transfer.verdict.withdraw': '{years} completed years. CANDIDATE: a cash withdrawal before 5 years is usually the taxable path — transfer instead.',
-  'epf-transfer.verdict.okWithdraw': '{years} completed years. CANDIDATE: a withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
+  'epf-transfer.verdict.withdraw': '{years} completed years. A cash withdrawal before 5 years is usually the taxable path — transfer instead.',
+  'epf-transfer.verdict.okWithdraw': '{years} completed years. A withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
   'epf-transfer.flag.prefer-transfer': 'Do not withdraw to “start clean”. Transfer is the switcher’s move.',
   'epf-transfer.flag.premature-withdrawal':
-    'CANDIDATE: premature withdrawal of a recognised PF can attract TDS (recollection s.192A / s.392(7)) and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
+    'Premature withdrawal of a recognised PF can attract TDS and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
   'epf-transfer.flag.doe-unmarked': 'Online transfer often freezes until the old employer marks date of exit. Raise it on the member portal and mail HR the same day.',
   'epf-transfer.flag.name-mismatch': 'Name mismatch vs Aadhaar blocks claims. Get KYC updated through the employer before you file Form 13.',
   'epf-transfer.flag.dob-mismatch': 'Date-of-birth mismatch vs Aadhaar blocks claims. Same remedy: employer KYC, then retry.',
   'epf-transfer.flag.interest-after-exit':
-    'CANDIDATE: interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
+    'Interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
   'epf-transfer.flag.five-year-exempt':
-    'CANDIDATE: after 5 years of continuous recognised-PF service a withdrawal is the usual exempt case (Fourth Schedule recollection). Confirm on the portal and with a CA. This tool does not invent a rupee.',
+    'After 5 years of continuous recognised-PF service a withdrawal is the usual exempt case. Confirm on the portal and with a CA. This tool does not invent a rupee.',
   'epf-transfer.steps': 'Form 13 path (member portal)',
   'epf-transfer.step.activate-uan': 'Activate / log in to your UAN on the EPFO member portal.',
   'epf-transfer.step.kyc': 'Seed Aadhaar, PAN and bank. Name and DOB must match Aadhaar.',
@@ -449,12 +545,12 @@ export const en: Record<string, string> = {
   'tax-declaration.hraRow': 'HRA exemption in the old-regime math: {amount}/year.',
   'tax-declaration.hraUseless': 'That exemption does not change new-regime tax.',
   'tax-declaration.proofs': 'Proof calendar',
-  'tax-declaration.proof.hra': 'HRA: monthly rent receipts. Landlord PAN is usually needed once rent crosses ₹1 lakh/year (employer process, CANDIDATE).',
+  'tax-declaration.proof.hra': 'HRA: monthly rent receipts. Landlord PAN is usually needed once rent crosses ₹1 lakh/year (employer process).',
   'tax-declaration.proof.80c': '80C: investment proofs. Payroll typically asks by January.',
   'tax-declaration.proof.80d': '80D: health-premium receipts if you declared them.',
   'tax-declaration.proof.form16-prev': 'Previous employer Form 16 often arrives weeks after you leave. You still need it to file. Chase it like a relieving letter.',
   'tax-declaration.proof.form12b':
-    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. CANDIDATE: Rule 26A / s.192(2) multi-employer withholding — confirm the exact mechanism with a CA.',
+    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. Rule 26A / s.192(2) multi-employer withholding — confirm the exact mechanism with a CA.',
 
   'notice-tracker.title': 'Notice tracker',
   'notice-tracker.desc': 'Dates and a checklist: F&F, asset return, insurance end, PF date of exit.',
@@ -476,6 +572,7 @@ export const en: Record<string, string> = {
   'bond-scanner.formTitle': 'The clause',
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint': 'Paste the bond or restraint paragraph. It never leaves this device.',
+  'bond-scanner.verdict.blank': 'Nothing has been checked yet. Paste the bond clause or appointment-letter text above.',
   'bond-scanner.verdict.clean': 'No bond, certificate-deposit or post-exit restraint pattern in this paste.',
   'bond-scanner.verdict.flags': '{n} pattern(s) worth a lawyer, not a panic. Case law is fact-specific.',
   'bond-scanner.flag.original-certificates':
@@ -483,15 +580,15 @@ export const en: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
   'bond-scanner.flag.training-bond':
-    'CANDIDATE: courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed.',
+    'Courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed — confirm with a CA.',
   'bond-scanner.flag.liquidated-damages':
-    'CANDIDATE: liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific.',
+    'Liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific — confirm with a CA.',
   'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
 
-  'redactor.title': 'Payslip redactor',
-  'redactor.desc': 'Mask Aadhaar, PAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
+  'redactor.title': 'Mask text (not a photo)',
+  'redactor.desc': 'Mask Aadhaar, PAN, UAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
   'redactor.formTitle': 'Paste the page',
   'redactor.text': 'Payslip or offer text',
   'redactor.textHint': 'Nothing is uploaded. Download a PNG or print the masked page.',
@@ -590,6 +687,9 @@ export const en: Record<string, string> = {
 
   // ---- Results ----
   'results.headline': 'Your {ctc} CTC actually pays',
+  'results.exampleChip': 'Example',
+  'results.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
+  'decoder.fixedPayNote': 'In-hand counts fixed pay only. Tax is on fixed pay, not variable. Old-regime comparison assumes age under 60.',
   'results.headlineSub': 'not the {amount}/month the CTC number suggests.',
   'results.reaches': 'of CTC reaches your bank · {amount}/year in hand',
   'regime.new': 'New regime',
@@ -606,6 +706,7 @@ export const en: Record<string, string> = {
   'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'Your PF contribution',
   'results.row.professionalTax': 'Professional tax',
+  'results.row.professionalTax.pb': 'State Development Tax (Punjab)',
   'results.row.inHand': 'In your bank, per year',
   'results.offerCheck': 'Offer check',
   'results.flagsBadge': '{n} flag{plural}',
@@ -616,7 +717,7 @@ export const en: Record<string, string> = {
   'flagChip.info': 'KNOW THIS',
   'results.howComputed': 'How we computed this (every number, no magic)',
   'results.howComputed.bullet1':
-    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 157 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
+    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 156 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
   'results.howComputed.bullet2':
     'In-hand counts fixed pay only. Variable and ESOPs are at-risk money — shown separately, never in the monthly figure. Tax on them applies when they actually pay out.',
   'results.howComputed.bullet3': 'PF: 12% of basic, both sides. Gratuity accrual: 4.81% of basic when in CTC.',

@@ -101,19 +101,19 @@ function Body() {
         <MoneyField label={t('bonus-clawback.amount')} hint={t('ui.money.hint')} value={draft.amount} onChange={(v) => set({ amount: v })} />
         <NumberField
           label={t('bonus-clawback.window')}
-          suffix="mo"
+          suffix={t('unit.months')}
           value={draft.clawbackMonths}
           onChange={(v) => set({ clawbackMonths: v })}
         />
         <NumberField
           label={t('bonus-clawback.tenure')}
-          suffix="mo"
+          suffix={t('unit.months')}
           value={draft.plannedTenureMonths}
           onChange={(v) => set({ plannedTenureMonths: v })}
         />
         <NumberField
           label={t('bonus-clawback.notice')}
-          suffix="days"
+          suffix={t('unit.days')}
           value={draft.noticePeriodDays}
           onChange={(v) => set({ noticePeriodDays: v })}
         />

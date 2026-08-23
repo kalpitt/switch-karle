@@ -14,7 +14,7 @@ describe('auditFnF', () => {
       gratuityEligible: false,
     })
     expect(r.lines).toEqual([
-      { label: 'Salary', claimed: 50_000, recomputed: 50_000, delta: 0 },
+      { id: 'salary', label: 'Salary', claimed: 50_000, recomputed: 50_000, delta: 0 },
     ])
     expect(r.netPayable).toBe(25_000)
     expect(r.flags.some((f) => f.id === 'notice-recovery')).toBe(true)
@@ -36,8 +36,15 @@ describe('auditFnF', () => {
       gratuityEligible: true,
     })
     const unpaidRecomputed = 2 * (120_000 / 30)
-    const unpaidLine = r.lines.find((l) => l.label === 'Unpaid leave')
+    const unpaidLine = r.lines.find((l) => l.id === 'unpaid-leave')
     expect(unpaidLine?.recomputed).toBeCloseTo(unpaidRecomputed)
-    expect(r.lines.some((l) => l.label === 'Gratuity' && l.recomputed === 288_462)).toBe(true)
+    // Gratuity is eligible but NOT on the claimed sheet: it must surface as a
+    // flag and never be appended into the lines or the net (master plan 3.2).
+    expect(r.lines.some((l) => l.id === 'gratuity')).toBe(false)
+    const missing = r.flags.find((f) => f.id === 'gratuity-missing')!
+    expect(missing.severity).toBe('amber')
+    expect(missing.params?.amount).toBe('2,88,462')
+    // Net excludes the unclaimed gratuity: salary − unpaid leave only.
+    expect(r.netPayable).toBe(100_000 - unpaidRecomputed)
   })
 })

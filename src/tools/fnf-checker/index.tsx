@@ -69,6 +69,9 @@ function Body() {
     [draft, t],
   )
 
+  /** Untouched fixture on first paint = worked example, not the user's sheet. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
+
   const verdict =
     result.netPayable < 0
       ? t('fnf-checker.verdict.owe', { amount: formatINR(-result.netPayable) })
@@ -83,17 +86,26 @@ function Body() {
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField label={t('fnf-checker.basic')} hint={t('ui.money.hint')} value={draft.monthlyBasic} onChange={(v) => set({ monthlyBasic: v })} />
         <MoneyField label={t('fnf-checker.gross')} hint={t('ui.money.hint')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
-        <NumberField label={t('fnf-checker.unpaid')} suffix="days" value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
+        <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
       </Card>
       <div className="space-y-4">
-        <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        {isExample ? (
+          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('ui.exampleChip')}
+            </span>
+            {t('ui.exampleNote')}
+          </p>
+        ) : (
+          <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
           {result.lines.map((line) => (
-            <p key={line.label} className="tnum flex justify-between gap-3 text-[13px]">
-              <span>{line.label}</span>
+            <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
+              <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
               <span>
                 {formatINR(line.claimed)} → {formatINR(line.recomputed)}
                 {line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''}
@@ -103,7 +115,7 @@ function Body() {
         </Card>
         {result.flags.map((f) => (
           <p key={f.id} className={`text-[13px] ${f.severity === 'red' ? 'text-alarm' : 'text-amberflag'}`}>
-            {f.title} — {f.detail}
+            {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>

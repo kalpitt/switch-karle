@@ -13,6 +13,8 @@ interface Draft {
   joinDate: string
   exitDate: string
   coveredByAct: boolean
+  /** 5-day or 6-day establishment week; missing in old drafts → engine defaults to 6. */
+  workWeekDays?: 5 | 6
 }
 
 const DEFAULT_DRAFT: Draft = {
@@ -20,6 +22,7 @@ const DEFAULT_DRAFT: Draft = {
   joinDate: '2019-08-01',
   exitDate: '2024-08-01',
   coveredByAct: true,
+  workWeekDays: 6,
 }
 
 export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
@@ -46,6 +49,10 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => gratuity(draft), [draft])
+  /** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample =
+    JSON.stringify({ ...draft, workWeekDays: draft.workWeekDays ?? 6 }) ===
+    JSON.stringify(DEFAULT_DRAFT)
   const verdict = result.eligible
     ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
     : t('gratuity.verdict.no', { years: result.completedYears })
@@ -69,13 +76,28 @@ function Body() {
           checked={draft.coveredByAct}
           onChange={(v) => set({ coveredByAct: v })}
         />
+        <Toggle
+          label={t('gratuity.week5.label')}
+          hint={t('gratuity.week5.hint')}
+          checked={draft.workWeekDays === 5}
+          onChange={(v) => set({ workWeekDays: v ? 5 : 6 })}
+        />
       </Card>
       <div className="space-y-4">
-        <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
+        {isExample ? (
+          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('ui.exampleChip')}
+            </span>
+            {t('ui.exampleNote')}
+          </p>
+        ) : (
+          <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
+        )}
         {result.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
         {result.notes.map((n) => (
           <p key={n.id} className="text-[13px] text-ink-soft">
-            {n.detail}
+            {t(`gratuity.note.${n.id}`)}
           </p>
         ))}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>

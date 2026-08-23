@@ -1,7 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, Select, VerdictBanner } from '../../components/ui'
+import { readJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
+
+/** Read-only pull from the resignation island's own key (allowed per D10). */
+const RESIGNATION_KEY = 'switchkarle.resignation.v1' as const
 
 type Preset = 'supportive' | 'counter-risk' | 'hostile'
 
@@ -16,7 +21,25 @@ export default function ManagerScriptTool({ lang = 'en' }: { lang?: Lang }) {
 function Body() {
   const t = useT()
   const [preset, setPreset] = useState<Preset>('supportive')
-  const script = useMemo(() => t(`manager-script.body.${preset}`), [t, preset])
+  /** LWD from a stored resignation letter, if the user already made one. */
+  const [lwd, setLwd] = useState('')
+
+  useEffect(() => {
+    const res = readJson<{ resignDate?: string; noticeDays?: number } | null>(RESIGNATION_KEY, null)
+    if (res?.resignDate && res.noticeDays) {
+      try {
+        setLwd(lastWorkingDay(res.resignDate, Math.max(1, Math.round(res.noticeDays))))
+      } catch {
+        /* malformed stored dates — leave LWD empty */
+      }
+    }
+  }, [])
+
+  const script = useMemo(
+    () => t(`manager-script.body.${preset}`).replaceAll('[LWD]', lwd || '[LWD]'),
+    [t, preset, lwd],
+  )
+  const canCopy = !script.includes('[')
 
   return (
     <div data-tool="manager-script" className="mx-auto grid max-w-3xl gap-4">
@@ -37,10 +60,14 @@ function Body() {
       <Card>
         <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{script}</pre>
         <div className="mt-4">
-          <CopyButton text={script} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+          {canCopy ? (
+            <CopyButton text={script} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+          ) : (
+            <p className="text-[13px] font-semibold text-amberflag">{t('manager-script.copyBlocked')}</p>
+          )}
         </div>
       </Card>
-      <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+      <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
     </div>
   )
 }

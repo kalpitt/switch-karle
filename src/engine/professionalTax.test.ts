@@ -12,4 +12,9 @@ describe('professional tax table', () => {
       expect(PROFESSIONAL_TAX_ANNUAL[state]).toBe(0)
     }
   })
+
+  it('Punjab levies State Development Tax at ₹2,400 and is verified, not unverified', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.PB).toBe(2_400)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('PB')
+  })
 })

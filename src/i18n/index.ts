@@ -14,7 +14,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
   hi: { ...hi, ...hiSuite },
 }
 
-const STORAGE_KEY = 'switchkarle.lang'
+const STORAGE_KEY = 'switchkarle.lang.v1'
 
 /** Replace `{name}` placeholders in `template` with values from `vars`. Any
  * placeholder without a matching var is left untouched (never throws). */

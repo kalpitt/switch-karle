@@ -94,4 +94,11 @@ describe('completedYearsWithDayCount — 4 years 240 days', () => {
     expect(t.daysIntoCurrentYear).toBe(0)
     expect(t.qualifiesFourYear240Day).toBe(true)
   })
+
+  it('a 190-day threshold (5-day week) qualifies at 4y + 190d but not a day before', () => {
+    expect(completedYearsWithDayCount('2020-01-01', '2024-07-09', 190).qualifiesFourYear240Day).toBe(true)
+    expect(completedYearsWithDayCount('2020-01-01', '2024-07-08', 190).qualifiesFourYear240Day).toBe(false)
+    // Same tenure stays ineligible at the default 240-day threshold.
+    expect(completedYearsWithDayCount('2020-01-01', '2024-07-09').qualifiesFourYear240Day).toBe(false)
+  })
 })
