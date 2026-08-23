@@ -21,6 +21,20 @@ export interface ToolDef {
 
 export const TOOLS: ToolDef[] = [
   {
+    slug: 'decoder',
+    category: 'offer',
+    stage: 0,
+    icon: 'decoder',
+    titleKey: 'tab.decoder',
+    descKey: 'home.decoder.desc',
+    seoTitle: 'Offer Decoder',
+    seoDescription:
+      'Decode your Indian job offer: CTC to real in-hand salary under both tax regimes, plus a red-flag scanner for notice periods, bonds and variable pay.',
+    hasIsland: true,
+    statutory: true,
+    storageKey: 'switchkarle.decoder.v1',
+  },
+  {
     slug: 'offer-comparison',
     category: 'offer',
     stage: 1,
@@ -33,6 +47,20 @@ export const TOOLS: ToolDef[] = [
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.compare.v1',
+  },
+  {
+    slug: 'resignation-letter',
+    category: 'documents',
+    stage: 3,
+    icon: 'letter',
+    titleKey: 'resignation-letter.title',
+    descKey: 'resignation-letter.desc',
+    seoTitle: 'Resignation Letter',
+    seoDescription:
+      'Draft an Indian resignation letter in three tones. Last working day is resignation date plus notice minus one calendar day.',
+    hasIsland: true,
+    statutory: false,
+    storageKey: 'switchkarle.resignation.v1',
   },
   {
     slug: 'real-hike',
@@ -187,20 +215,6 @@ export const TOOLS: ToolDef[] = [
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.form16.v1',
-  },
-  {
-    slug: 'resignation-letter',
-    category: 'documents',
-    stage: 3,
-    icon: 'letter',
-    titleKey: 'resignation-letter.title',
-    descKey: 'resignation-letter.desc',
-    seoTitle: 'Resignation Letter',
-    seoDescription:
-      'Draft an Indian resignation letter in three tones. Last working day is resignation date plus notice minus one calendar day.',
-    hasIsland: true,
-    statutory: false,
-    storageKey: 'switchkarle.resignation.v1',
   },
   {
     slug: 'manager-script',
@@ -436,20 +450,6 @@ export const TOOLS: ToolDef[] = [
       'Plain-English readings of notice, bond, variable and PF clauses in Indian appointment letters. Not legal advice.',
     hasIsland: true,
     statutory: false,
-  },
-  {
-    slug: 'decoder',
-    category: 'offer',
-    stage: 0,
-    icon: 'decoder',
-    titleKey: 'tab.decoder',
-    descKey: 'home.decoder.desc',
-    seoTitle: 'Offer Decoder',
-    seoDescription:
-      'Decode your Indian job offer: CTC to real in-hand salary under both tax regimes, plus a red-flag scanner for notice periods, bonds and variable pay.',
-    hasIsland: true,
-    statutory: true,
-    storageKey: 'switchkarle.decoder.v1',
   },
   {
     slug: 'tracker',

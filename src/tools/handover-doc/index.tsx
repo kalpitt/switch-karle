@@ -41,20 +41,22 @@ function Body() {
 
   const md = useMemo(() => {
     return [
-      `# Handover — ${draft.role || '[Role]'}`,
+      `# ${t('handover-doc.md.title', { role: draft.role || '[Role]' })}`,
       '',
-      `Owner after I leave: ${draft.owner || '[Name]'}`,
+      t('handover-doc.md.owner', { owner: draft.owner || '[Name]' }),
       '',
-      '## Projects / status',
-      draft.projects || '_Add running work, tickets, and who to ask._',
+      `## ${t('handover-doc.md.projects')}`,
+      draft.projects || t('handover-doc.md.projectsHint'),
       '',
-      '## Access & artefacts',
-      draft.access || '_Repos, dashboards, keys to rotate, docs._',
+      `## ${t('handover-doc.md.access')}`,
+      draft.access || t('handover-doc.md.accessHint'),
       '',
-      '## Risks if this is dropped',
-      draft.risks || '_Dates, customers, audits._',
+      `## ${t('handover-doc.md.risks')}`,
+      draft.risks || t('handover-doc.md.risksHint'),
     ].join('\n')
-  }, [draft])
+  }, [draft, t])
+  /** Blank sections produce placeholder scaffold — never let it reach a paste. */
+  const canCopy = !md.includes('[Role]') && !md.includes('[Name]') && !md.includes('_Add ')
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
@@ -73,7 +75,11 @@ function Body() {
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>
           <div className="mt-4">
-            <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            {canCopy ? (
+              <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            ) : (
+              <p className="text-[13px] font-semibold text-amberflag">{t('handover-doc.copyBlocked')}</p>
+            )}
           </div>
         </Card>
         <Disclaimer>{t('handover-doc.disclaimer')}</Disclaimer>

@@ -14,15 +14,18 @@ interface Draft {
   company: string
   manager: string
   role: string
+  yourName: string
+  empId: string
   resignDate: string
   noticeDays: number
   newJoinDate: string
   tone: Tone
 }
 
+/** Local calendar date, not UTC — a 1 AM IST resignation must not say yesterday. */
 function todayISO() {
   const d = new Date()
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 export default function ResignationLetterTool({ lang = 'en' }: { lang?: Lang }) {
@@ -39,6 +42,8 @@ function Body() {
     company: '',
     manager: '',
     role: '',
+    yourName: '',
+    empId: '',
     resignDate: todayISO(),
     noticeDays: 90,
     newJoinDate: '',
@@ -54,6 +59,8 @@ function Body() {
         company: '',
         manager: '',
         role: '',
+        yourName: '',
+        empId: '',
         resignDate: todayISO(),
         noticeDays: o.noticePeriodDays,
         newJoinDate: '',
@@ -88,6 +95,12 @@ function Body() {
     })()
 
   const letter = useMemo(() => buildLetter(draft, lwd, t), [draft, lwd, t])
+  const canCopy =
+    draft.yourName.trim() !== '' &&
+    draft.manager.trim() !== '' &&
+    draft.company.trim() !== '' &&
+    draft.role.trim() !== '' &&
+    !letter.includes('[')
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
   return (
@@ -97,8 +110,25 @@ function Body() {
         <TextField label={t('resignation-letter.company')} value={draft.company} onChange={(v) => set({ company: v })} />
         <TextField label={t('resignation-letter.manager')} value={draft.manager} onChange={(v) => set({ manager: v })} />
         <TextField label={t('resignation-letter.role')} value={draft.role} onChange={(v) => set({ role: v })} />
+        <TextField
+          label={t('resignation-letter.yourName')}
+          hint={t('resignation-letter.yourNameHint')}
+          value={draft.yourName}
+          onChange={(v) => set({ yourName: v })}
+        />
+        <TextField
+          label={t('resignation-letter.empId')}
+          hint={t('resignation-letter.empIdHint')}
+          value={draft.empId}
+          onChange={(v) => set({ empId: v })}
+        />
         <DateField label={t('resignation-letter.date')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
-        <NumberField label={t('resignation-letter.notice')} suffix="days" value={draft.noticeDays} onChange={(v) => set({ noticeDays: v })} />
+        <NumberField
+          label={t('resignation-letter.notice')}
+          suffix={t('unit.days')}
+          value={draft.noticeDays}
+          onChange={(v) => set({ noticeDays: v })}
+        />
         <DateField
           label={t('resignation-letter.join')}
           hint={t('resignation-letter.joinHint')}
@@ -122,10 +152,14 @@ function Body() {
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
           <div className="mt-4">
-            <CopyButton text={letter} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            {canCopy ? (
+              <CopyButton text={letter} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            ) : (
+              <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
+            )}
           </div>
         </Card>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
       </div>
     </div>
   )
@@ -136,5 +170,6 @@ function buildLetter(d: Draft, lwd: string, t: (k: string, v?: Record<string, st
   const manager = d.manager.trim() || '[Manager name]'
   const role = d.role.trim() || '[Role]'
   const opening = t(`resignation-letter.body.${d.tone}`, { manager, company, role, date: d.resignDate, lwd })
-  return opening
+  const empIdLine = d.empId.trim() ? `\nEmployee ID: ${d.empId.trim()}` : ''
+  return `${opening}\n${d.yourName.trim()}${empIdLine}`
 }

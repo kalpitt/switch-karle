@@ -64,26 +64,30 @@ See `PRIVACY.md`. Sanctioned data leaving the device: user pastes a prompt into
 their own AI tab; user exports JSON; user downloads a share image. App-initiated
 network calls carrying user data are prohibited. No IndexedDB. No salary in URLs.
 
-## Provisional statutory list
+## Statutory constants
 
-Ship on `build/suite` with goldens + `CANDIDATE:` comments + gate (d). Do not
-invent a `VERIFIED:` marker — that waits on the CA's written answers. Flip
-status in a reconciliation commit when those arrive. **Do not AI-fix the
-citation landmine.**
+Ship with goldens. A constant's status lives beside its code:
+
+- `CANDIDATE` — plausible, unverified; UI flags it where it matters.
+- `VERIFIED: <date> | Source: <primary URL> §<n> | FY:` — checked against the
+  named Act, notification, or official PDF. Never from a blog or another AI.
+- Flip a status only with the primary source in hand. Do not AI-fix numbers.
 
 | Item | Where | Status |
 | --- | --- | --- |
-| New-regime rebate citation (s.157 / Act 2026 vs s.156 / Act 2025) | `src/engine/tax.ts`, `src/i18n/en.ts` | **Landmine — waiting on CA R1. Computed values golden-tested.** |
-| FY 2026-27 slabs, rebate amounts, cess, surcharge, standard deduction | `src/engine/tax.ts` | Candidate; last verified 2026-07-20 |
+| Rebate citation s.156 ITA 2025 (was s.157/"Act 2026"); s.157 = arrears only | `src/engine/tax.ts`, i18n how-computed strings | **VERIFIED 2026-08-23** (ITA 2025 PDF) |
+| SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
+| FY 2026-27 slabs, rebate amounts, cess, surcharge | `src/engine/tax.ts` | Golden-tested; last verified 2026-07-20 |
+| Gratuity: eligibility §2A, payable years §4(2), ₹20L cap §4(3), 190/240-day rule | `src/engine/gratuity.ts` | VERIFIED 2026-08-23 (PGA 1972 PDF + S.O. 1420(E)) |
+| Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
 | EPF 12% / ₹15,000 wage ceiling | `src/engine/salary.ts` | Candidate |
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
-| HRA exemption (s.10(13A) / Rule 2A three limbs) | `src/engine/salary.ts` `hraExemptionAnnual` | Candidate |
-| Joining-bonus tax delta (not TDS) | `src/engine/clawback.ts` | Candidate; gross-repay is contractual |
-| ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; sale / startup TDS deferral not modelled |
-| PF premature withdrawal (s.192A / s.392(7) recollection) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap is flagged, CA R3 |
-| Relocation HRA metro limb + PT | `src/engine/relocation.ts`, `professionalTax.ts` | Candidate; PT table incomplete |
-| State professional tax table | `src/engine/professionalTax.ts` | Incomplete (`other` → ₹0; unlisted states levy PT) |
-| Decoder in-hand (uses the engine) | `/decoder/` | Shipped on production; still provisional pending R1 |
+| HRA exemption three limbs (Rule 2A) | `src/engine/salary.ts` `hraExemptionAnnual` | Candidate |
+| Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
+| ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |
+| PF premature withdrawal TDS (s.192A / s.392(7)) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap flagged, transfer recommended |
+| Relocation PT table | `professionalTax.ts`, `relocation.ts` | Incomplete by design (unverified states → ₹0) |
+| Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.
 

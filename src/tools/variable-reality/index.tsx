@@ -81,7 +81,7 @@ function Body() {
         <NumberField
           label={t('variable-reality.months')}
           hint={t('variable-reality.monthsHint')}
-          suffix="mo"
+          suffix={t('unit.months')}
           max={12}
           value={draft.monthsInFy}
           onChange={(v) => set({ monthsInFy: v })}

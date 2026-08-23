@@ -1,4 +1,4 @@
-export type RedactKind = 'aadhaar' | 'pan' | 'email' | 'phone' | 'ifsc' | 'rupee'
+export type RedactKind = 'aadhaar' | 'pan' | 'uan' | 'email' | 'phone' | 'ifsc' | 'rupee'
 
 export interface RedactHit {
   kind: RedactKind
@@ -11,6 +11,13 @@ export interface RedactResult {
 }
 
 const PATTERNS: { kind: RedactKind; re: RegExp; mask: string }[] = [
+  // UAN is also 12 digits, so match it FIRST (label required) — a bare
+  // 12-digit run then falls through to the Aadhaar rule below.
+  {
+    kind: 'uan',
+    re: /\bUAN(?:\s*(?:No\.?|Number|नं\.?)?)?\s*[:-]?\s*[0-9]{3}\s?[0-9]{3}\s?[0-9]{6}\b/gi,
+    mask: '[UAN]',
+  },
   { kind: 'aadhaar', re: /\b[2-9]\d{3}\s?\d{4}\s?\d{4}\b/g, mask: 'XXXX XXXX XXXX' },
   { kind: 'pan', re: /\b[A-Z]{5}\d{4}[A-Z]\b/g, mask: 'XXXXX0000X' },
   { kind: 'email', re: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, mask: '[email]' },

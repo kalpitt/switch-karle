@@ -1,4 +1,4 @@
-import { addMonths, completedYearsWithDayCount } from './dates'
+import { addDays, addMonths, completedYearsWithDayCount } from './dates'
 
 export interface GratuityInput {
   /** Monthly last-drawn basic + DA. */
@@ -7,6 +7,12 @@ export interface GratuityInput {
   exitDate: string
   /** 10+ employees — asked, not assumed. */
   coveredByAct: boolean
+  /**
+   * Working days per week at the establishment. Sets the s.2A fast-path
+   * threshold into year five: 190 days on a 5-day week, 240 on a 6-day week.
+   * Defaults to 6 (the more common schedule).
+   */
+  workWeekDays?: 5 | 6
 }
 
 export interface GratuityNote {
@@ -18,58 +24,61 @@ export interface GratuityResult {
   completedYears: number
   daysIntoCurrentYear: number
   eligible: boolean
+  /** Years the payout is computed on (PGA s.4(2)) — can exceed completedYears. */
+  payableYears: number
   amount: number
   /** Next ISO date at which eligibility (or a rounded-up year) flips, or null. */
   flipDate: string | null
   notes: GratuityNote[]
 }
 
-// CANDIDATE: Payment of Gratuity Act 1972 s.4 — gratuity = (15/26) × last-drawn monthly basic+DA × completed years of service. Ceiling omitted pending primary source.
+/**
+ * Payment of Gratuity Act, 1972 — two separate tests:
+ *
+ * 1. ELIGIBILITY (s.2A): 5 years of continuous service, or 4 years plus
+ *    240 days (6-day week) / 190 days (5-day week) into the fifth year.
+ * 2. PAYABLE YEARS (s.4(2)): 15/26 × last-drawn monthly basic+DA for every
+ *    completed year, counting any part of a year IN EXCESS OF SIX MONTHS as a
+ *    full year. Exactly six months does NOT bump.
+ *
+ * VERIFIED: 2026-08-23 | Source: PGA 1972 https://labour.gov.in/sites/default/files/gratuity_2.pdf §2A §4(2); ceiling ₹20L per s.4(3) + S.O. 1420(E) 29-Mar-2018
+ */
 
-const ISO = /^(\d{4})-(\d{2})-(\d{2})$/
-const MS_PER_DAY = 86_400_000
+export const GRATUITY_CAP = 2_000_000
 
-function addDays(iso: string, days: number): string {
-  const match = ISO.exec(iso)
-  if (!match) throw new Error(`gratuity: expected YYYY-MM-DD, got ${JSON.stringify(iso)}`)
-  const ms = Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])) + days * MS_PER_DAY
-  const d = new Date(ms)
-  const y = d.getUTCFullYear()
-  const m = String(d.getUTCMonth() + 1).padStart(2, '0')
-  const day = String(d.getUTCDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+const FAST_PATH_DAYS = { 5: 190, 6: 240 } as const
+
+/** s.4(2): a stub beyond six calendar months rounds up to a full payable year. */
+function payableYearsFor(joinISO: string, exitISO: string, completedYears: number): number {
+  const lastAnniversary = addMonths(joinISO, completedYears * 12)
+  const stubBeyondSixMonths = exitISO > addMonths(lastAnniversary, 6)
+  return completedYears + (stubBeyondSixMonths ? 1 : 0)
 }
 
-/** Soonest date after join when the 4-year + 240-day rule qualifies. */
-function fourYear240FlipDate(joinDate: string): string {
-  const fourthAnniversary = addMonths(joinDate, 48)
-  return addDays(fourthAnniversary, 240)
-}
-
-function fiveYearFlipDate(joinDate: string): string {
+function flipDateWhenIneligible(
+  joinDate: string,
+  tenure: ReturnType<typeof completedYearsWithDayCount>,
+  fastPathDays: number,
+): string {
+  // First date eligibility can flip on: 4 years + the week's fast-path days.
+  if (tenure.completedYears < 5) return addDays(addMonths(joinDate, 48), fastPathDays)
   return addMonths(joinDate, 60)
 }
 
-function serviceEligible(tenure: ReturnType<typeof completedYearsWithDayCount>): boolean {
-  return tenure.completedYears >= 5 || tenure.qualifiesFourYear240Day
-}
-
-function flipDateWhenIneligible(joinDate: string, tenure: ReturnType<typeof completedYearsWithDayCount>): string {
-  const fourYear240 = fourYear240FlipDate(joinDate)
-  const fiveYear = fiveYearFlipDate(joinDate)
-  if (tenure.completedYears < 4) return fourYear240
-  if (tenure.completedYears === 4 && !tenure.qualifiesFourYear240Day) {
-    const daysNeeded = 240 - tenure.daysIntoCurrentYear
-    const lastAnniversary = addMonths(joinDate, 48)
-    return addDays(lastAnniversary, daysNeeded)
-  }
-  return fiveYear
-}
-
 export function gratuity(input: GratuityInput): GratuityResult {
+  const workWeekDays = input.workWeekDays ?? 6
+  const fastPathDays = FAST_PATH_DAYS[workWeekDays]
   const lastDrawnBasicDA = Math.max(0, input.lastDrawnBasicDA)
+  // completedYears/daysIntoCurrentYear are threshold-independent; the s.2A
+  // fast-path comparison happens here, against this establishment's schedule.
   const tenure = completedYearsWithDayCount(input.joinDate, input.exitDate)
-  const notes: GratuityNote[] = [{ id: 'ceiling-omitted', detail: 'Statutory gratuity ceiling omitted pending primary source.' }]
+  const notes: GratuityNote[] = [
+    {
+      id: 's42-rounding',
+      detail:
+        'Under PGA s.4(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
+    },
+  ]
 
   if (!input.coveredByAct) {
     notes.push({
@@ -81,21 +90,43 @@ export function gratuity(input: GratuityInput): GratuityResult {
       completedYears: tenure.completedYears,
       daysIntoCurrentYear: tenure.daysIntoCurrentYear,
       eligible: false,
+      payableYears: 0,
       amount: 0,
-      flipDate: flipDateWhenIneligible(input.joinDate, tenure),
+      flipDate: flipDateWhenIneligible(input.joinDate, tenure, fastPathDays),
       notes,
     }
   }
 
-  const eligible = serviceEligible(tenure)
-  const amount = eligible
-    ? Math.round((15 / 26) * lastDrawnBasicDA * tenure.completedYears)
-    : 0
+  // Eligibility is its own test (s.2A). It must not reuse completedYears as
+  // the multiplier — that is what underpaid the 4y+240d case before G1.
+  const eligible =
+    tenure.completedYears >= 5 ||
+    (tenure.completedYears === 4 && tenure.daysIntoCurrentYear >= fastPathDays)
 
   if (!eligible) {
     notes.push({
       id: 'ineligible-service',
-      detail: 'Service below 5 completed years and below the 4-year + 240-day threshold.',
+      detail:
+        'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
+    })
+    return {
+      completedYears: tenure.completedYears,
+      daysIntoCurrentYear: tenure.daysIntoCurrentYear,
+      eligible,
+      payableYears: 0,
+      amount: 0,
+      flipDate: flipDateWhenIneligible(input.joinDate, tenure, fastPathDays),
+      notes,
+    }
+  }
+
+  const payableYears = payableYearsFor(input.joinDate, input.exitDate, tenure.completedYears)
+  const exact = Math.round((15 / 26) * lastDrawnBasicDA * payableYears)
+  const capped = exact > GRATUITY_CAP
+  if (capped) {
+    notes.push({
+      id: 'cap-applied',
+      detail: 'Capped at the statutory ₹20,00,000 ceiling (PGA s.4(3)).',
     })
   }
 
@@ -103,8 +134,9 @@ export function gratuity(input: GratuityInput): GratuityResult {
     completedYears: tenure.completedYears,
     daysIntoCurrentYear: tenure.daysIntoCurrentYear,
     eligible,
-    amount,
-    flipDate: eligible ? null : flipDateWhenIneligible(input.joinDate, tenure),
+    payableYears,
+    amount: capped ? GRATUITY_CAP : exact,
+    flipDate: null,
     notes,
   }
 }
