@@ -39,7 +39,7 @@ export const hi: Record<string, string> = {
   'common.delete': 'हटाएं',
   'common.cancel': 'रद्द करें',
 
-  'ui.copy': 'Headline कॉपी करें',
+  'ui.copy': 'कॉपी करें',
   'ui.copied': 'कॉपी हो गया ✓',
   'ui.print': 'प्रिंट',
   'ui.disclaimer':
