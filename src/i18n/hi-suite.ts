@@ -182,7 +182,8 @@ export const hiSuite: Record<string, string> = {
   'fake-offer.verdict.red': '{n} hard stop। Sender verify होने तक payment न करें और documents share न करें।',
   'fake-offer.verdict.amber':
     'कुछ ठीक नहीं लगता — अक्सर free-mail recruiter या lookalike domain होता है। Reply करने या documents share करने से पहले verify करें।',
-  'fake-offer.verdict.clean': 'Deposit की मांग नहीं है। फिर भी EPFO और MCA check करें — clean text कोई guarantee नहीं है।',
+  'fake-offer.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर offer email या letter का text paste करें।',
+  'fake-offer.verdict.clean': 'Text में deposit की मांग नहीं मिली। Clean text verification नहीं है — भरोसा करने से पहले sender और company खुद confirm करें।',
   'fake-offer.verify': 'Verify करें:',
 
   // ---- Notice buyout ----
@@ -520,6 +521,7 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.formTitle': 'Clause',
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint': 'Bond या restraint वाला paragraph paste करें। यह कभी इस device से बाहर नहीं जाता।',
+  'bond-scanner.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर bond clause या appointment letter का text paste करें।',
   'bond-scanner.verdict.clean': 'इस paste में bond, certificate-deposit या post-exit restraint का pattern नहीं है।',
   'bond-scanner.verdict.flags': '{n} pattern lawyer से बात करने लायक हैं, panic करने की नहीं। Case law fact-specific होता है।',
   'bond-scanner.flag.original-certificates':
