@@ -13,6 +13,8 @@ interface Draft {
   joinDate: string
   exitDate: string
   coveredByAct: boolean
+  /** 5-day or 6-day establishment week; missing in old drafts → engine defaults to 6. */
+  workWeekDays?: 5 | 6
 }
 
 const DEFAULT_DRAFT: Draft = {
@@ -20,6 +22,7 @@ const DEFAULT_DRAFT: Draft = {
   joinDate: '2019-08-01',
   exitDate: '2024-08-01',
   coveredByAct: true,
+  workWeekDays: 6,
 }
 
 export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
@@ -68,6 +71,12 @@ function Body() {
           hint={t('gratuity.coveredHint')}
           checked={draft.coveredByAct}
           onChange={(v) => set({ coveredByAct: v })}
+        />
+        <Toggle
+          label={t('gratuity.week5.label')}
+          hint={t('gratuity.week5.hint')}
+          checked={draft.workWeekDays === 5}
+          onChange={(v) => set({ workWeekDays: v ? 5 : 6 })}
         />
       </Card>
       <div className="space-y-4">

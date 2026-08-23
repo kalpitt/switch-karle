@@ -201,8 +201,10 @@ export const en: Record<string, string> = {
   'gratuity.exit': 'Last working day',
   'gratuity.covered': 'Establishment has 10+ employees',
   'gratuity.coveredHint': 'The Payment of Gratuity Act applies only if the establishment is covered. We ask; we do not assume.',
-  'gratuity.verdict.yes': 'Eligible after {years} completed years. Estimate {amount} (15/26 × last drawn × years).',
-  'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-year-240-day rule.',
+  'gratuity.week5.label': '5-day work week (Sat–Sun off)',
+  'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 days into year five; a 6-day one needs 240.',
+  'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
+  'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-years-plus-190-or-240-day rule.',
   'gratuity.flip': 'The next date that changes this picture: {date}.',
 
   'leave-encashment.title': 'Leave encashment',
