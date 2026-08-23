@@ -73,6 +73,7 @@ export function auditFnF(input: FnFInput): FnFResult {
   const lines: FnFAuditLine[] = []
   let earnings = 0
   let deductions = 0
+  const flags: FnFFlag[] = []
 
   for (const line of input.payslipLines) {
     const claimed = clampNonNeg(line.amount)
@@ -92,16 +93,23 @@ export function auditFnF(input: FnFInput): FnFResult {
   }
 
   for (const [id, recomputed] of recomputedById) {
+    // A gratuity the sheet never claimed is money NOT on the sheet: surface it
+    // as a flag, never append it into the net (master plan §9.3).
+    if (id === 'gratuity') {
+      flags.push({
+        id: 'gratuity-missing',
+        severity: 'amber',
+        params: { amount: formatINRPlain(recomputed) },
+      })
+      continue
+    }
     const label = id === 'unpaid-leave' ? 'Unpaid leave recovery' : id === 'gratuity' ? 'Gratuity' : id
     lines.push({ id, label, claimed: 0, recomputed, delta: -recomputed })
-    if (id === 'gratuity') earnings += recomputed
-    else if (id === 'unpaid-leave') deductions += recomputed
+    if (id === 'unpaid-leave') deductions += recomputed
   }
 
   const recoveryTotal = input.recoveries.reduce((sum, r) => sum + clampNonNeg(r.amount), 0)
   const netPayable = earnings - deductions - recoveryTotal
-
-  const flags: FnFFlag[] = []
 
   if (netPayable < 0) {
     flags.push({

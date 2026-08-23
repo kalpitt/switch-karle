@@ -59,7 +59,7 @@ describe('islands never render engine prose raw', () => {
 describe('engine ids have bilingual strings', () => {
   const FAKE_OFFER_IDS = [...OFFER_SCAM_RULE_IDS]
   const FNF_LINE_IDS = ['salary', 'notice', 'unpaid-leave', 'gratuity']
-  const FNF_FLAG_IDS = ['negative-net', 'notice-recovery']
+  const FNF_FLAG_IDS = ['negative-net', 'notice-recovery', 'gratuity-missing']
   const GRATUITY_NOTE_IDS = ['s42-rounding', 'act-may-not-apply', 'ineligible-service', 'cap-applied']
 
   const required: [string, string[]][] = [
