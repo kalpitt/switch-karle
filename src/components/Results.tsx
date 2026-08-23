@@ -1,6 +1,7 @@
 import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
+import { DEFAULT_OFFER } from '../data/defaults'
 import { Card, Details, Disclaimer, ShareRow } from './ui'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
@@ -8,10 +9,20 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
   const ctcMonthlyIllusion = b.input.ctcAnnual / 12
   const pct = Math.round(b.inHandRatio * 100)
   const realFlagCount = flags.filter((f) => f.severity !== 'info').length
+  /** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(b.input) === JSON.stringify(DEFAULT_OFFER)
 
   return (
     <div className="space-y-4">
       <Card>
+        {isExample && (
+          <p className="mb-3 rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('results.exampleChip')}
+            </span>
+            {t('results.exampleNote')}
+          </p>
+        )}
         <p className="text-[13px] font-semibold text-ink-soft">
           {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
         </p>
@@ -50,11 +61,12 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
 
         <div className="mt-4 space-y-3">
           <ShareRow
-            copyText={`${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}/month`}
+            copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}/month`}
             copyLabel={t('ui.copy')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />
+          <p className="text-xs leading-relaxed text-ink-faint">{t('decoder.fixedPayNote')}</p>
           <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         </div>
       </Card>
