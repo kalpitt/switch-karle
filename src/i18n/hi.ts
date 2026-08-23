@@ -99,6 +99,9 @@ export const hi: Record<string, string> = {
 
   // ---- Results ----
   'results.headline': 'आपका {ctc} CTC असल में देता है',
+  'results.exampleChip': 'उदाहरण',
+  'results.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
+  'decoder.fixedPayNote': 'In-hand सिर्फ fixed pay पर count होता है। Tax सिर्फ fixed pay पर, variable पर नहीं। Old-regime तुलना age 60 से कम मानकर है।',
   'results.headlineSub': 'उतना नहीं जितना CTC नंबर से {amount}/month लगता है।',
   'results.reaches': 'आपके bank तक पहुंचता है · सालाना {amount} in-hand',
   'regime.new': 'New regime',

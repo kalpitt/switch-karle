@@ -599,6 +599,9 @@ export const en: Record<string, string> = {
 
   // ---- Results ----
   'results.headline': 'Your {ctc} CTC actually pays',
+  'results.exampleChip': 'Example',
+  'results.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
+  'decoder.fixedPayNote': 'In-hand counts fixed pay only. Tax is on fixed pay, not variable. Old-regime comparison assumes age under 60.',
   'results.headlineSub': 'not the {amount}/month the CTC number suggests.',
   'results.reaches': 'of CTC reaches your bank · {amount}/year in hand',
   'regime.new': 'New regime',
