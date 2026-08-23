@@ -291,19 +291,19 @@ export const en: Record<string, string> = {
     'Dear {manager},\n\nI resign from {role} at {company}, effective {date}. Last working day: {lwd}. Please acknowledge and share the F&F / relieving checklist.\n\nRegards',
 
   'manager-script.title': 'Manager conversation',
-  'manager-script.desc': 'What to say when you resign in person — supportive shop, counter-offer risk, or a hard room.',
+  'manager-script.desc': 'What to say when you resign in person — a supportive room, counter-offer risk, or a hard room.',
   'manager-script.formTitle': 'The room you are walking into',
   'manager-script.preset': 'How this manager usually is',
   'manager-script.preset.supportive': 'Supportive',
   'manager-script.preset.counter-risk': 'Will likely counter',
-  'manager-script.preset.hostile': 'Hostile / guilt shop',
+  'manager-script.preset.hostile': 'Manager push-back',
   'manager-script.verdict.supportive': 'Lead with thanks, then the date. Do not over-explain the new role.',
   'manager-script.verdict.counter-risk': 'Decide before you walk in. If you will still leave, say so once.',
   'manager-script.verdict.hostile': 'Keep it short, in writing afterwards. Do not argue policy in the room.',
   'manager-script.body.supportive':
-    'I wanted to tell you first. I have accepted another role. This is not a surprise-counter conversation — I have decided. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
+    'I wanted to tell you first. I have accepted another role. My decision is made. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
   'manager-script.body.counter-risk':
-    'I have accepted another offer. I am telling you because I respect the team, not because I am shopping a counter. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
+    'I have accepted another offer. I am telling you because I respect the team. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
   'manager-script.body.hostile':
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
@@ -381,18 +381,18 @@ export const en: Record<string, string> = {
   'epf-transfer.name': 'Name on UAN matches Aadhaar',
   'epf-transfer.dob': 'Date of birth on UAN matches Aadhaar',
   'epf-transfer.verdict.transfer': '{years} completed years. Transfer (Form 13) keeps the corpus in the fund.',
-  'epf-transfer.verdict.withdraw': '{years} completed years. CANDIDATE: a cash withdrawal before 5 years is usually the taxable path — transfer instead.',
-  'epf-transfer.verdict.okWithdraw': '{years} completed years. CANDIDATE: a withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
+  'epf-transfer.verdict.withdraw': '{years} completed years. A cash withdrawal before 5 years is usually the taxable path — transfer instead.',
+  'epf-transfer.verdict.okWithdraw': '{years} completed years. A withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
   'epf-transfer.flag.prefer-transfer': 'Do not withdraw to “start clean”. Transfer is the switcher’s move.',
   'epf-transfer.flag.premature-withdrawal':
-    'CANDIDATE: premature withdrawal of a recognised PF can attract TDS (recollection s.192A / s.392(7)) and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
+    'Premature withdrawal of a recognised PF can attract TDS and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
   'epf-transfer.flag.doe-unmarked': 'Online transfer often freezes until the old employer marks date of exit. Raise it on the member portal and mail HR the same day.',
   'epf-transfer.flag.name-mismatch': 'Name mismatch vs Aadhaar blocks claims. Get KYC updated through the employer before you file Form 13.',
   'epf-transfer.flag.dob-mismatch': 'Date-of-birth mismatch vs Aadhaar blocks claims. Same remedy: employer KYC, then retry.',
   'epf-transfer.flag.interest-after-exit':
-    'CANDIDATE: interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
+    'Interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
   'epf-transfer.flag.five-year-exempt':
-    'CANDIDATE: after 5 years of continuous recognised-PF service a withdrawal is the usual exempt case (Fourth Schedule recollection). Confirm on the portal and with a CA. This tool does not invent a rupee.',
+    'After 5 years of continuous recognised-PF service a withdrawal is the usual exempt case. Confirm on the portal and with a CA. This tool does not invent a rupee.',
   'epf-transfer.steps': 'Form 13 path (member portal)',
   'epf-transfer.step.activate-uan': 'Activate / log in to your UAN on the EPFO member portal.',
   'epf-transfer.step.kyc': 'Seed Aadhaar, PAN and bank. Name and DOB must match Aadhaar.',
@@ -457,12 +457,12 @@ export const en: Record<string, string> = {
   'tax-declaration.hraRow': 'HRA exemption in the old-regime math: {amount}/year.',
   'tax-declaration.hraUseless': 'That exemption does not change new-regime tax.',
   'tax-declaration.proofs': 'Proof calendar',
-  'tax-declaration.proof.hra': 'HRA: monthly rent receipts. Landlord PAN is usually needed once rent crosses ₹1 lakh/year (employer process, CANDIDATE).',
+  'tax-declaration.proof.hra': 'HRA: monthly rent receipts. Landlord PAN is usually needed once rent crosses ₹1 lakh/year (employer process).',
   'tax-declaration.proof.80c': '80C: investment proofs. Payroll typically asks by January.',
   'tax-declaration.proof.80d': '80D: health-premium receipts if you declared them.',
   'tax-declaration.proof.form16-prev': 'Previous employer Form 16 often arrives weeks after you leave. You still need it to file. Chase it like a relieving letter.',
   'tax-declaration.proof.form12b':
-    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. CANDIDATE: Rule 26A / s.192(2) multi-employer withholding — confirm the exact mechanism with a CA.',
+    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. Rule 26A / s.192(2) multi-employer withholding — confirm the exact mechanism with a CA.',
 
   'notice-tracker.title': 'Notice tracker',
   'notice-tracker.desc': 'Dates and a checklist: F&F, asset return, insurance end, PF date of exit.',
@@ -492,9 +492,9 @@ export const en: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
   'bond-scanner.flag.training-bond':
-    'CANDIDATE: courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed.',
+    'Courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed — confirm with a CA.',
   'bond-scanner.flag.liquidated-damages':
-    'CANDIDATE: liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific.',
+    'Liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific — confirm with a CA.',
   'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',

@@ -306,19 +306,19 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Manager conversation ----
   'manager-script.title': 'Manager से बातचीत',
-  'manager-script.desc': 'सामने resign करते समय क्या कहें — supportive manager, counter-offer का risk, या hard room।',
+  'manager-script.desc': 'सामने resign करते समय क्या कहें — supportive room, counter-offer का risk, या hard room।',
   'manager-script.formTitle': 'जिस room में आप जा रहे हैं',
   'manager-script.preset': 'यह manager आमतौर पर कैसा है',
   'manager-script.preset.supportive': 'Supportive',
   'manager-script.preset.counter-risk': 'Counter करने की संभावना है',
-  'manager-script.preset.hostile': 'Hostile / guilt shop',
+  'manager-script.preset.hostile': 'Manager push-back',
   'manager-script.verdict.supportive': 'पहले thanks कहें, फिर date बताएं। नई role को ज़्यादा explain न करें।',
   'manager-script.verdict.counter-risk': 'Room में जाने से पहले decide कर लें। अगर फिर भी जाना है, तो एक बार साफ कह दें।',
   'manager-script.verdict.hostile': 'Short रखें, बाद में writing में confirm करें। Room में policy पर बहस न करें।',
   'manager-script.body.supportive':
-    'आपको सबसे पहले बताना था। एक और role accept हो गई है। यह कोई surprise-counter वाली बातचीत नहीं है — decision पहले ही हो चुका है। पूरा notice serve करने पर last working day [LWD] होगा। इस हफ्ते handover लिख दिया जाएगा। यहां के काम के लिए आभार है, और अच्छे से जाना है।',
+    'आपको सबसे पहले बताना था। एक और role accept हो गई है। Decision पहले ही हो चुका है। पूरा notice serve करने पर last working day [LWD] होगा। इस हफ्ते handover लिख दिया जाएगा। यहां के काम के लिए आभार है, और अच्छे से जाना है।',
   'manager-script.body.counter-risk':
-    'एक और offer accept हो गया है। यह बताया जा रहा है क्योंकि team का respect है, किसी counter की shopping के लिए नहीं। Company कोई counter देना चाहे तो एक बार, writing में सुना जाएगा, लेकिन बात को एक हफ्ते की meetings में नहीं बदलना है। दोनों सूरत में handover साफ-सुथरा रहेगा।',
+    'एक और offer accept हो गया है। Team का respect है, इसलिए यह बताया जा रहा है। Company कोई counter देना चाहे तो एक बार, writing में सुना जाएगा, लेकिन बात को एक हफ्ते की meetings में नहीं बदलना है। दोनों सूरत में handover साफ-सुथरा रहेगा।',
   'manager-script.body.hostile':
     'यह resignation है। Letter inbox में है / यहां paper पर है। Notice के हिसाब से last working day [LWD] है। Handover पूरा किया जाएगा। इस meeting में decision पर बहस नहीं करनी। HR को कुछ चाहिए तो mail किया जा सकता है।',
 
@@ -405,21 +405,21 @@ export const hiSuite: Record<string, string> = {
   'epf-transfer.dob': 'UAN पर date of birth Aadhaar से match करती है',
   'epf-transfer.verdict.transfer': '{years} completed years। Transfer (Form 13) से corpus fund में ही रहता है।',
   'epf-transfer.verdict.withdraw':
-    '{years} completed years। CANDIDATE: 5 साल से पहले cash withdrawal आमतौर पर taxable path है — इसके बदले transfer करें।',
+    '{years} completed years। 5 साल से पहले cash withdrawal आमतौर पर taxable path है — इसके बदले transfer करें।',
   'epf-transfer.verdict.okWithdraw':
-    '{years} completed years। CANDIDATE: 5 साल की continuous service के बाद withdrawal आमतौर पर exempt case है — फिर भी portal पर confirm करें।',
+    '{years} completed years। 5 साल की continuous service के बाद withdrawal आमतौर पर exempt case है — फिर भी portal पर confirm करें।',
   'epf-transfer.flag.prefer-transfer': '"Start clean" के लिए withdraw न करें। Transfer switcher का move है।',
   'epf-transfer.flag.premature-withdrawal':
-    'CANDIDATE: recognised PF की premature withdrawal पर TDS लग सकता है (recollection s.192A / s.392(7)) और employer contribution plus interest पर tax। यह tool कोई rupee figure नहीं बनाता। इसके बदले transfer करें, फिर किसी CA से confirm करें।',
+    'Recognised PF की premature withdrawal पर TDS लग सकता है और employer contribution plus interest पर tax। यह tool कोई rupee figure नहीं बनाता। इसके बदले transfer करें, फिर किसी CA से confirm करें।',
   'epf-transfer.flag.doe-unmarked':
     'Online transfer अक्सर तब तक freeze रहता है जब तक old employer date of exit mark न करे। इसे member portal पर raise करें और उसी दिन HR को mail करें।',
   'epf-transfer.flag.name-mismatch':
     'Aadhaar से name mismatch claims को block करता है। Form 13 file करने से पहले employer के through KYC update कराएं।',
   'epf-transfer.flag.dob-mismatch': 'Aadhaar से date-of-birth mismatch claims को block करता है। वही remedy: employer KYC, फिर retry।',
   'epf-transfer.flag.interest-after-exit':
-    'CANDIDATE: employment छोड़ने के बाद credited interest taxable हो सकता है अगर balance untransferred रहे। Transfer करने से यह recognised fund के अंदर ही रहता है।',
+    'Employment छोड़ने के बाद credited interest taxable हो सकता है अगर balance untransferred रहे। Transfer करने से यह recognised fund के अंदर ही रहता है।',
   'epf-transfer.flag.five-year-exempt':
-    'CANDIDATE: 5 साल की continuous recognised-PF service के बाद withdrawal आमतौर पर exempt case है (Fourth Schedule recollection)। Portal और किसी CA से confirm करें। यह tool कोई rupee नहीं बनाता।',
+    '5 साल की continuous recognised-PF service के बाद withdrawal आमतौर पर exempt case है। Portal और किसी CA से confirm करें। यह tool कोई rupee नहीं बनाता।',
   'epf-transfer.steps': 'Form 13 का path (member portal)',
   'epf-transfer.step.activate-uan': 'EPFO member portal पर अपना UAN activate करें / log in करें।',
   'epf-transfer.step.kyc': 'Aadhaar, PAN और bank seed करें। Name और DOB Aadhaar से match होना चाहिए।',
@@ -491,13 +491,13 @@ export const hiSuite: Record<string, string> = {
   'tax-declaration.hraUseless': 'यह exemption new-regime tax नहीं बदलता।',
   'tax-declaration.proofs': 'Proof Calendar',
   'tax-declaration.proof.hra':
-    'HRA: monthly rent receipts। Rent ₹1 lakh/साल से ऊपर जाने पर आमतौर पर landlord का PAN चाहिए (employer process, CANDIDATE)।',
+    'HRA: monthly rent receipts। Rent ₹1 lakh/साल से ऊपर जाने पर आमतौर पर landlord का PAN चाहिए (employer process)।',
   'tax-declaration.proof.80c': '80C: investment proofs। Payroll आमतौर पर January तक मांगता है।',
   'tax-declaration.proof.80d': '80D: अगर declare किया है तो health-premium receipts।',
   'tax-declaration.proof.form16-prev':
     'Previous employer का Form 16 अक्सर आपके जाने के हफ्तों बाद आता है। File करने के लिए आपको फिर भी चाहिए। इसे relieving letter जैसे chase करें।',
   'tax-declaration.proof.form12b':
-    'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। CANDIDATE: Rule 26A / s.192(2) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
+    'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। Rule 26A / s.192(2) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
 
   // ---- Notice tracker ----
   'notice-tracker.title': 'Notice Tracker',
@@ -529,9 +529,9 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes आमतौर पर Contract Act s.27 के तहत void होते हैं। Employment के दौरान वाला सवाल अलग है।',
   'bond-scanner.flag.training-bond':
-    'CANDIDATE: courts ने specialised training cost मांगा है, ordinary onboarding नहीं (*Sicpa India v. Manas Pratim Deb*)। Letter में लिखा number automatically owed नहीं है।',
+    'Courts ने specialised training cost मांगा है, ordinary onboarding नहीं (*Sicpa India v. Manas Pratim Deb*)। Letter में लिखा number automatically owed नहीं है — किसी CA से confirm करें।',
   'bond-scanner.flag.liquidated-damages':
-    'CANDIDATE: liquidated damages एक ceiling हैं जिसके लिए फिर भी actual loss का proof चाहिए (*Kailash Nath Associates v. DDA*)। यह fact-specific है।',
+    'Liquidated damages एक ceiling हैं जिसके लिए फिर भी actual loss का proof चाहिए (*Kailash Nath Associates v. DDA*)। यह fact-specific है — किसी CA से confirm करें।',
   'bond-scanner.flag.probation-extend':
     'Discretion पर extendable probation का मतलब है confirmation कोई पक्की date नहीं है। Max extension writing में लें।',
   'bond-scanner.disclaimer':
