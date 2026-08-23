@@ -42,7 +42,8 @@ export function hraExemptionAnnual(
  *   wage ceiling (₹1,800/mo each side). CANDIDATE: EPF wage ceiling.
  * - Old regime: 80C is auto-filled with employee PF (capped ₹1.5L with any
  *   extra investments), plus HRA exemption if rent is entered, plus 80D,
- *   plus professional tax u/s 16(iii).
+ *   plus professional tax. Salary deductions (standard deduction + PT):
+ *   s.19 of the ITA 2025; 80C-style cap: s.123.
  */
 export function decodeOffer(input: OfferInput): SalaryBreakdown {
   const esopValue = input.esop?.annualValue ?? 0
@@ -62,7 +63,7 @@ export function decodeOffer(input: OfferInput): SalaryBreakdown {
 
   const professionalTaxAnnual = PROFESSIONAL_TAX_ANNUAL[input.state]
 
-  // New regime: standard deduction only.
+  // New regime (scheme u/s 202 of the ITA 2025): standard deduction u/s 19 only.
   const newTaxable = Math.max(0, Math.round(grossSalary - STANDARD_DEDUCTION.new))
   const newRegime = computeTax(newTaxable, 'new')
 

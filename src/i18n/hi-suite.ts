@@ -152,7 +152,7 @@ export const hiSuite: Record<string, string> = {
   'relocation.metroWarn':
     '{state} में HRA metro city नहीं है (सिर्फ Delhi, Mumbai, Kolkata, Chennai qualify करते हैं)। आपने जो 50% वाला limb on किया है, वह वहां apply नहीं होगा।',
   'relocation.ptApprox':
-    'Professional tax approximate है। Punjab, Bihar, Assam और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। "Other" भी ₹0 है।',
+    'Professional tax approximate है। Bihar, Assam और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ old-regime comparison के लिए दिखाई गई है।',
   'relocation.verdict.nil': 'In-hand नहीं बदलता। National tax slabs हर राज्य में same हैं।',
   'relocation.verdict.delta': 'Same CTC, move के बाद in-hand {amount}/month {dir}।',

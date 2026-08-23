@@ -7,11 +7,12 @@ import type { OfferInput } from './types'
 
 /**
  * Golden cases hand-computed from the FY 2026-27 rules (slabs unchanged by
- * Budget 2026; rebate u/s 157 max ₹60k to ₹12L taxable with marginal relief;
- * cess 4%; surcharge 10% above ₹50L taxable).
+ * Budget 2026; rebate u/s 156 of the Income-tax Act, 2025 — max ₹60k to ₹12L
+ * taxable with marginal relief; cess 4%; surcharge 10% above ₹50L taxable,
+ * capped 25% for the new regime above ₹5 Cr).
  */
 describe('computeTax — new regime FY 2026-27', () => {
-  it('zero tax at ₹12,00,000 taxable (rebate u/s 157)', () => {
+  it('zero tax at ₹12,00,000 taxable (rebate u/s 156)', () => {
     const t = computeTax(1_200_000, 'new')
     expect(t.slabTax).toBe(60_000)
     expect(t.rebate).toBe(60_000)
@@ -33,6 +34,13 @@ describe('computeTax — new regime FY 2026-27', () => {
     expect(t.slabTax).toBe(1_380_000)
     expect(t.surcharge).toBe(138_000)
     expect(t.totalTax).toBe(1_578_720)
+  })
+
+  it('₹51,00,00,000 taxable (above ₹5 Cr) → new-regime surcharge still capped at 25%', () => {
+    const t = computeTax(51_000_000, 'new')
+    expect(t.slabTax).toBe(14_880_000)
+    expect(t.surcharge).toBe(3_720_000)
+    expect(t.totalTax).toBe(19_344_000)
   })
 })
 

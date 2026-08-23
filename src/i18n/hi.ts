@@ -115,6 +115,7 @@ export const hi: Record<string, string> = {
   'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'आपका PF योगदान',
   'results.row.professionalTax': 'Professional tax',
+  'results.row.professionalTax.pb': 'State Development Tax (पंजाब)',
   'results.row.inHand': 'सालाना आपके bank में',
   'results.offerCheck': 'Offer जांच',
   'results.flagsBadge': '{n} flag',
@@ -125,7 +126,7 @@ export const hi: Record<string, string> = {
   'flagChip.info': 'यह जान लें',
   'results.howComputed': 'यह कैसे calculate किया (हर नंबर, बिना किसी जादू के)',
   'results.howComputed.bullet1':
-    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 157 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
+    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 156 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
   'results.howComputed.bullet2':
     'In-hand में सिर्फ fixed pay गिना जाता है। Variable और ESOPs जोखिम वाला पैसा हैं — इन्हें अलग दिखाया जाता है, monthly figure में कभी नहीं। इन पर tax तभी लगता है जब असल में payout मिलता है।',
   'results.howComputed.bullet3': 'PF: Basic का 12%, दोनों तरफ से। Gratuity accrual: CTC में होने पर Basic का 4.81%।',

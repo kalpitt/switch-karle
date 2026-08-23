@@ -150,7 +150,7 @@ export const en: Record<string, string> = {
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
   'relocation.metroWarn': '{state} has no HRA metro city (only Delhi, Mumbai, Kolkata, Chennai qualify). The 50% limb you just switched on will not apply there.',
-  'relocation.ptApprox': 'Professional tax is approximate. Punjab, Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. “Other” is also ₹0.',
+  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',
@@ -606,6 +606,7 @@ export const en: Record<string, string> = {
   'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'Your PF contribution',
   'results.row.professionalTax': 'Professional tax',
+  'results.row.professionalTax.pb': 'State Development Tax (Punjab)',
   'results.row.inHand': 'In your bank, per year',
   'results.offerCheck': 'Offer check',
   'results.flagsBadge': '{n} flag{plural}',
@@ -616,7 +617,7 @@ export const en: Record<string, string> = {
   'flagChip.info': 'KNOW THIS',
   'results.howComputed': 'How we computed this (every number, no magic)',
   'results.howComputed.bullet1':
-    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 157 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
+    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 156 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
   'results.howComputed.bullet2':
     'In-hand counts fixed pay only. Variable and ESOPs are at-risk money — shown separately, never in the monthly figure. Tax on them applies when they actually pay out.',
   'results.howComputed.bullet3': 'PF: 12% of basic, both sides. Gratuity accrual: 4.81% of basic when in CTC.',

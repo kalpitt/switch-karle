@@ -78,7 +78,14 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
           />
           <Row label={t('results.row.employeePf')} value={-b.employeePfAnnual} />
           {b.professionalTaxAnnual > 0 && (
-            <Row label={t('results.row.professionalTax')} value={-b.professionalTaxAnnual} />
+            <Row
+              label={
+                b.input.state === 'PB'
+                  ? t('results.row.professionalTax.pb')
+                  : t('results.row.professionalTax')
+              }
+              value={-b.professionalTaxAnnual}
+            />
           )}
           <Row label={t('results.row.inHand')} value={b.inHandMonthly * 12} strong divider accent />
         </div>
