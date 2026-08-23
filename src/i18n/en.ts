@@ -54,7 +54,12 @@ export const en: Record<string, string> = {
   'offer-comparison.row.ratio': 'In-hand / CTC',
   'offer-comparison.row.variable': 'Variable in CTC',
   'offer-comparison.verdict.tie': 'In-hand is a dead heat once paper ESOP is ignored.',
-  'offer-comparison.verdict.win': 'Offer {label} puts {amount}/month in the bank — the higher in-hand.',
+  'offer-comparison.verdict.win': 'Offer {label} works out higher in-hand: {amount}/month.',
+  'offer-comparison.exampleChip': 'Example',
+  'offer-comparison.exampleNote': 'This is a worked example — nothing about you has been checked yet. Edit any field to compare your own offers.',
+  'offer-comparison.copyTitle': 'Offer comparison — Switch Karle',
+  'offer-comparison.perMonth': 'month',
+  'offer-comparison.copyLine': 'Copy summary',
   'offer-comparison.esopPolicy':
     'Paper ESOP is valued at zero on every side so a grant cannot swing the verdict. Liquidity is a separate conversation.',
   'offer-comparison.flag.gratuity': 'Gratuity is inside CTC on one side only — that inflates the headline, not the bank.',
