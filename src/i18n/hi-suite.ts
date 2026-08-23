@@ -35,7 +35,12 @@ export const hiSuite: Record<string, string> = {
   'offer-comparison.row.ratio': 'In-hand / CTC',
   'offer-comparison.row.variable': 'CTC में Variable',
   'offer-comparison.verdict.tie': 'Paper ESOP हटाकर देखें तो in-hand लगभग बराबर है।',
-  'offer-comparison.verdict.win': 'Offer {label} bank में {amount}/month डालता है — यही ज़्यादा in-hand है।',
+  'offer-comparison.verdict.win': '{label} offer का in-hand ज़्यादा आता है: {amount}/month।',
+  'offer-comparison.exampleChip': 'उदाहरण',
+  'offer-comparison.exampleNote': 'यह एक worked example है — अभी कुछ भी check नहीं हुआ है। अपने offers compare करने के लिए कोई भी field edit करें।',
+  'offer-comparison.copyTitle': 'Offer तुलना — Switch Karle',
+  'offer-comparison.perMonth': 'महीना',
+  'offer-comparison.copyLine': 'Summary copy करें',
   'offer-comparison.esopPolicy':
     'हर तरफ paper ESOP को zero माना गया है ताकि एक grant verdict न बदल दे। Liquidity अलग बात है।',
   'offer-comparison.flag.gratuity': 'सिर्फ एक तरफ Gratuity CTC के अंदर है — यह headline बढ़ाता है, bank नहीं।',
