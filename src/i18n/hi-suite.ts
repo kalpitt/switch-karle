@@ -49,7 +49,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Real hike ----
   'real-hike.title': 'असली Hike',
-  'real-hike.desc': 'CTC में उछाल बनाम हर महीने bank में असल में क्या पहुंचता है।',
+  'real-hike.desc': 'CTC में उछाल बनाम हर महीने असल में क्या आपके account तक पहुंचता है।',
   'real-hike.formTitle': 'यह job → अगली job',
   'real-hike.currentCtc': 'मौजूदा CTC',
   'real-hike.currentVariable': 'मौजूदा variable',
@@ -59,7 +59,7 @@ export const hiSuite: Record<string, string> = {
   'real-hike.nextState': 'नया राज्य',
   'real-hike.haircut': 'मानें कि variable 70% pay होगा',
   'real-hike.haircutHint': 'Average-year haircut। Off करने पर quoted variable को पक्का मान लिया जाता है।',
-  'real-hike.verdict': 'कागज़ पर {paper}%, आपके bank में {bank}%।',
+  'real-hike.verdict': 'कागज़ पर {paper}%, असल में {bank}% in-hand।',
   'real-hike.row.paper': 'बताया गया CTC',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus एक बार मिलने वाला है — यह इस run-rate में शामिल नहीं है।',
@@ -375,6 +375,7 @@ export const hiSuite: Record<string, string> = {
     'आपको सबसे पहले बताना था। एक और role accept हो गई है। Decision पहले ही हो चुका है। पूरा notice serve करने पर last working day [LWD] होगा। इस हफ्ते handover लिख दिया जाएगा। यहां के काम के लिए आभार है, और अच्छे से जाना है।',
   'manager-script.body.counter-risk':
     'एक और offer accept हो गया है। Team का respect है, इसलिए यह बताया जा रहा है। Company कोई counter देना चाहे तो एक बार, writing में सुना जाएगा, लेकिन बात को एक हफ्ते की meetings में नहीं बदलना है। दोनों सूरत में handover साफ-सुथरा रहेगा।',
+  'manager-script.copyBlocked': 'इस script की last working day आपकी saved resignation letter से आती है — पहले वह बनाएं, फिर copy करें।',
   'manager-script.body.hostile':
     'यह resignation है। Letter inbox में है / यहां paper पर है। Notice के हिसाब से last working day [LWD] है। Handover पूरा किया जाएगा। इस meeting में decision पर बहस नहीं करनी। HR को कुछ चाहिए तो mail किया जा सकता है।',
 
@@ -383,6 +384,16 @@ export const hiSuite: Record<string, string> = {
   'hr.disclaimer': 'Templates हैं, legal advice नहीं। भेजने से पहले इन्हें अपनी appointment letter से match करें।',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'जब recruiter band share करने से पहले एक number मांगे।',
+  'hr.early-release.body':
+    'नमस्ते [Manager name],\n\nमैंने [date] को अपना resignation share किया था, notice के हिसाब से last working day [LWD] है।\n\nमुझे अपनी अगली job में [new joining date] को join करना है, इसलिए early release से मुझे समय पर शुरुआत करने में मदद मिलेगी। मैं एक written handover पूरा करूंगा और जाने के बाद भी सवालों के लिए उपलब्ध रहूंगा। क्या हम early release या बचे हुए notice का buyout देख सकते हैं, ताकि मेरा आखिरी दिन [proposed LWD] हो सके?\n\nजो appointment letter allow करती है, वही follow किया जाएगा। ध्यान देने के लिए धन्यवाद।',
+  'hr.buyout-ask.body':
+    'नमस्ते [HR name],\n\nक्या आप confirm कर सकते हैं कि मेरी letter में notice buyout कैसे काम करता है — basic पर या gross पर, और divisor 30 दिन है?\n\nमैं [proposed last day] को अपना last working day बनाना चाहता हूं। Buyout allowed हो तो कृपया amount और यह भी बताएं कि वह F&F से recover होगी या relieving से पहले मुझे देनी होगी।\n\nदोनों सूरत में handover पूरा किया जाएगा।',
+  'hr.decline-accepted.body':
+    'नमस्ते [Recruiter / HR name],\n\n[company] में [role] के offer के लिए फिर से धन्यवाद। परिवार के साथ सोच-विचार करने के बाद, मुझे अपनी acceptance वापस लेनी है। Decision पहले ही हो चुका है — मैं join नहीं कर रहा।\n\nदिक्कत के लिए माफी है। कृपया इस mail को मेरा formal decline मानें।\n\nआपके समय के लिए आभारी हूं, और team के लिए शुभकामनाएं।',
+  'hr.counter-offer-reply.body':
+    'नमस्ते [Manager name],\n\nCounter-offer के लिए और बात करने के लिए धन्यवाद।\n\nमैंने rupee gap और काम दोनों के बारे में सोचा है। मैं नई role के साथ आगे बढ़ रहा हूं।\n\nHandover साफ-सुथरा रखूंगा और तय हुए notice पर डटा रहूंगा। यहां के सालों के लिए धन्यवाद — अच्छे relations के साथ जा रहा हूं और उम्मीद है कि संपर्क बना रहेगा।',
+  'hr.recruiter-followup.body':
+    'नमस्ते [Name],\n\n[date] को discussion के अनुसार [company] में [role] को लेकर follow-up कर रहा हूं। मेरी interest बरकरार है और कोई भी extra document चाहिए तो भेज दूंगा।\n\nअगर timeline बदल गया है, तो एक line का update मुझे current employer के साथ notice plan करने में मदद करेगा। धन्यवाद।',
   'hr.expected-ctc.formTitle': 'आपके दो numbers',
   'hr.expected-ctc.role': 'Role',
   'hr.expected-ctc.roleHint': 'Optional — पहली line में आता है।',
@@ -390,7 +401,7 @@ export const hiSuite: Record<string, string> = {
   'hr.expected-ctc.expected': 'Expected CTC (सालाना)',
   'hr.expected-ctc.body':
     '{role} role के लिए बातचीत के लिए धन्यवाद।\n\nमैं इस role को single headline number नहीं, total compensation और work के हिसाब से देख रहा हूं। मेरी current CTC सालाना {current} है, और similar scope के लिए मुझे लगभग {expected} target है। अगर आप इस level का band share कर दें, तो मैं तुरंत बता सकता हूं कि हम range में हैं या नहीं। Band आने के बाद structure — fixed vs variable, notice, joining bonus — पर बात करने में खुशी होगी।',
-  'hr.expected-ctc.copyBlocked': 'Copy unlock करने के लिए दोनों numbers भरें।',
+  'hr.expected-ctc.copyBlocked': 'Copy unlock करने के लिए role और दोनों numbers भरें।',
   'hr.early-release.title': 'Early Release',
   'hr.early-release.desc': 'मौजूदा HR/manager से notice छोटा करने के लिए कहें।',
   'hr.buyout-ask.title': 'Buyout Ask',
@@ -435,6 +446,10 @@ export const hiSuite: Record<string, string> = {
   'handover-doc.md.projects': 'Projects / status',
   'handover-doc.md.access': 'Access और artefacts',
   'handover-doc.md.risks': 'अगर यह drop हुआ तो risks',
+  'handover-doc.md.projectsHint': '_चल रहा काम, tickets, और किससे पूछना है, यहां लिखें।_',
+  'handover-doc.md.accessHint': '_Repos, dashboards, rotate करनी हैं keys, docs।_',
+  'handover-doc.md.risksHint': '_Dates, customers, audits।_',
+  'handover-doc.copyBlocked': 'Copy unlock करने के लिए ऊपर role और owner भरें (और जो sections चाहिए वे भी)।',
 
   // ---- Relieving chaser ----
   'relieving-chaser.title': 'Relieving Chaser',
@@ -458,6 +473,7 @@ export const hiSuite: Record<string, string> = {
   'relieving-chaser.body.30':
     'Hi {hr},\n\n{company} में {role} के रूप में मेरे last working day ({lwd}) को 30 दिन हो गए हैं। मुझे अभी तक relieving letter नहीं मिली है।\n\nकृपया अभी का status और इस हफ्ते issue होने की एक date share करें। यह letter मेरी background verification block कर रही है, इसलिए यह time-sensitive है। मेरी तरफ से जो document pending है, वह भेज दूंगा।\n\nRegards',
   'relieving-chaser.setLwd': 'पहले बीत चुकी last working day set करें — LWD के बाद ही chase समझ आता है।',
+  'relieving-chaser.fillFields': 'Copy unlock करने के लिए company, HR का नाम और role भरें।',
   // ---- EPF transfer ----
   'epf-transfer.title': 'EPF Transfer',
   'epf-transfer.desc': 'Online Form 13, unmarked date-of-exit, KYC mismatches, और जल्दी withdraw करना आमतौर पर क्यों ज़्यादा costly move है।',

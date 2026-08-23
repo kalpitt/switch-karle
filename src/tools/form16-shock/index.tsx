@@ -4,7 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, MoneyField, VerdictBanner } from '../../components/ui'
 import { decodeOffer } from '../../engine/salary'
-import { loadOffer } from '../../data/defaults'
+import { DECODER_STORAGE_KEY, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -35,13 +35,22 @@ function Body() {
   })
   const [regime, setRegime] = useState<'new' | 'old'>('new')
   const [hydrated, setHydrated] = useState(false)
+  /** Where the numbers came from: fixture (example) vs decoder seed vs saved draft. */
+  const [origin, setOrigin] = useState<'example' | 'decoder' | 'saved'>('example')
 
   useEffect(() => {
+    let decoderHasData = false
+    try {
+      decoderHasData = localStorage.getItem(DECODER_STORAGE_KEY) != null
+    } catch {
+      /* storage unavailable */
+    }
     const b = decodeOffer(loadOffer())
     setRegime(b.recommendedRegime)
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     // Employer 2 is never cloned from employer 1's figures (master plan 3.3).
     setDraft(saved ?? { employer1Gross: b.grossSalary, employer1Tds: 0, employer2Gross: 0, employer2Tds: 0 })
+    setOrigin(saved ? 'saved' : decoderHasData ? 'decoder' : 'example')
     setHydrated(true)
   }, [])
 
@@ -71,7 +80,16 @@ function Body() {
         <MoneyField label={t('form16-shock.e2tds')} hint={t('ui.money.hint')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
       </Card>
       <div className="space-y-4">
-        <VerdictBanner tone={result.shock > 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        {origin === 'example' ? (
+          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('ui.exampleChip')}
+            </span>
+            {t('ui.exampleNote')}
+          </p>
+        ) : (
+          <VerdictBanner tone={result.shock > 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card className="space-y-1 tnum text-[13px]">
           <p>
             {t('form16-shock.taxable')}: {formatINR(result.combinedTaxableApprox)}
@@ -85,12 +103,14 @@ function Body() {
         </Card>
         <p className="text-[13px] text-ink-soft">{t('form16-shock.stdNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('form16-shock.omit234')}</p>
-        <Card className="space-y-2">
-          <h3 className="text-sm font-bold">{t('form16-shock.form12bTitle')}</h3>
-          <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-ink-soft">{form12b}</p>
-          <CopyButton text={form12b} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
-          <p className="text-xs leading-relaxed text-ink-faint">{t('form16-shock.form12bNote')}</p>
-        </Card>
+        {origin !== 'example' && (
+          <Card className="space-y-2">
+            <h3 className="text-sm font-bold">{t('form16-shock.form12bTitle')}</h3>
+            <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-ink-soft">{form12b}</p>
+            <CopyButton text={form12b} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            <p className="text-xs leading-relaxed text-ink-faint">{t('form16-shock.form12bNote')}</p>
+          </Card>
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>
