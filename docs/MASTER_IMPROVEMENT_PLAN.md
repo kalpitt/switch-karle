@@ -1,11 +1,14 @@
 # Switch Karle — Master Implementation Plan
 
 **Date:** 2026-08-23  
-**Status:** Locked. This file is the only brief the next agent needs.  
+**Status:** Locked. This file is the only brief the next agent needs.
+
+**Give the next agent this, nothing else:**  
+Read `docs/MASTER_IMPROVEMENT_PLAN.md`. One branch `quality/suite-pass`, one PR into `build/suite`. Start at slice C1. Do not open more PRs. Do not merge to `main`.  
 **Owner:** Kalpit. He is not a developer. Lead with one plain-English line before any technical block.  
 **If this file and the repo disagree on a path or a number, believe the repo. If this file and Kalpit disagree, believe Kalpit.**
 
-Do not implement until Kalpit names a PR id. Then do **only** that slice. Recommended first slice: **PR C1**.
+Kalpit wants **one implementation PR**, not a stack of slices. Do all the work below on a single branch, push to that one PR, and stop when the checklist is done. Do not open C1 / G1 / 1.1 as separate GitHub PRs. Those labels are **commit slices inside the one PR**.
 
 Direction for *what the product is* still lives in personal-os §A  
 (`context/handoffs/2026-08-22-switch-karle-master-roadmap-v2.md`).  
@@ -20,12 +23,16 @@ cd /Users/kalpit/Documents/GitHub/switch-karle
 git fetch --prune
 git checkout build/suite
 git pull --ff-only origin build/suite
-git checkout -b quality/<pr-id>-<slug>   # e.g. quality/c1-citations
+git checkout -b quality/suite-pass
 npm install
 npm run dev   # http://127.0.0.1:4321/switch-karle/
+# After the first push:
+#   git push -u origin HEAD
+#   gh pr create --base build/suite --title "quality: suite pass (citations, gratuity, honesty)"
+# All later work stays on this branch / this PR.
 ```
 
-PRs target **`build/suite`**. Never merge to `main` (merging deploys). No force-push. No branch deletes unless Kalpit says so.
+**One PR into `build/suite`.** Never merge to `main` (merging deploys). No force-push. No branch deletes unless Kalpit says so. Do not open additional PRs for later slices. Leave existing doc PRs (#6 audit, #7 this plan) alone.
 
 Before every push:
 
@@ -40,7 +47,7 @@ npm run check:seo
 
 Phone-check the changed URL at **390px** and `/hi/<slug>/`.
 
-**AGENTS.md still says “do not fix s.157.”** That sentence is **superseded for PR C1 only**, by Kalpit on 2026-08-23, after the official Income-tax Act, 2025 PDF was checked. Do not treat AGENTS.md as a ban on PR C1. Do not “fix” any other statutory constant from memory or a blog.
+**AGENTS.md still says “do not fix s.157.”** That sentence is **superseded for slice C1 in this PR**, by Kalpit on 2026-08-23, after the official Income-tax Act, 2025 PDF was checked. Do the citation fix in this PR. Do not “fix” any other statutory constant from memory or a blog.
 
 ---
 
@@ -211,17 +218,20 @@ URLs stay. Strip never-ship sentences. No Harvard-PON rewrite.
 
 ---
 
-## 6. Sequential checklist
+## 6. Sequential checklist (one PR, many commits)
 
-Do not start Phase N+1 while Phase N’s last PR is unmerged unless Kalpit says so.  
-**C1 and G1 may run in parallel** (different files). **2.1 must not fight G1:** if G1 is not merged, 2.1 does not change amounts; if G1 is merged, 2.1 must not re-assert 4-year money.
+Work **in this order** on `quality/suite-pass`. One GitHub PR. Prefer one commit per slice (C1, G1, 1.1, …) so Kalpit can read the history. Push as you go; do not open a new PR.
 
-### Phase 0 — Kalpit
+**C1 then G1 first** (money + citation). Then honesty 1.1→1.5, bilingual 2.x, money-depth 3.x, letters 4.x, cleanup 5.x.  
+Slice 2.1 must not re-assert 4-year gratuity money after G1.
+
+Do not merge this PR to `main`. Kalpit merges it into `build/suite` when the done-gate in §10 passes. `build/suite` → `main` is a later, separate decision.
+
+### Phase 0 — already done
 
 - [x] R1 reviews + official ITA 2025 PDF checked.
 - [x] Gratuity A1–A4 + s.4(2) follow-up received.
-- [ ] Hold `main` until he says deploy.
-- [ ] Name **PR C1** (recommended first) or another id.
+- [x] Kalpit: one implementation PR, not a stack. Do not merge to `main` yet.
 
 ### PR C1 — Citations + Punjab PSDT
 
@@ -264,7 +274,7 @@ Goldens at basic **₹50,000** (₹2,88,462 is the ₹1L × 5 figure — do not 
 
 **Verify:** table above. Amount never exceeds ₹20L. Six npm gates. EN+HI.
 
-### Phase 1 — Honesty (small PRs)
+### Phase 1 — Honesty (commits 1.1–1.5 on the same PR)
 
 **PR 1.1** `src/tools/offer-comparison/index.tsx` — Example on `defaultSlots()`; both gratuity defaults gone; unit lock; `ShareRow`; no “in the bank.”  
 **Done:** type nothing → no green winner. Edit B CTC → winner + copyable line.
@@ -361,7 +371,7 @@ When a **human CA** answers B–G with a primary source: one new PR, `VERIFIED` 
 3. Change one field. Copy. Paste. No forbidden strings. No “in the bank” on an estimate.
 4. Open `/hi/` if copy was touched. The **body** is Hindi.
 
-The agent runs the six npm commands and opens the PR. **The agent does not merge.**
+The agent runs the six npm commands on the **one** PR and does not open further PRs. **The agent does not merge** — not to `build/suite`, not to `main`.
 
 ---
 
@@ -369,11 +379,10 @@ The agent runs the six npm commands and opens the PR. **The agent does not merge
 
 | Action | Est. | Unblocks |
 |---|---|---|
-| Name **PR C1** | 1 min | Citation + Punjab work |
-| Name **PR G1** (after or beside C1) | 1 min | Gratuity underpay + cap + 190-day |
-| Merge each PR into `build/suite` | 2 min | Next PR can rebase |
-| Merge `build/suite` → `main` | his call | Production |
-| Paste remaining CA answers (leave encash, GST, 234B/C, leftover PT) when they arrive | 5 min | Later PRs only |
+| Point the next agent at this file + “one PR, `quality/suite-pass`” | 1 min | Work starts |
+| Review / merge that one PR into `build/suite` when §10 passes | 15 min | Suite quality lands |
+| Merge `build/suite` → `main` | his call, later | Production |
+| Paste remaining CA answers (leave encash, GST, 234B/C, leftover PT) | 5 min | A later pass, not this PR |
 
 ---
 
@@ -391,4 +400,4 @@ The agent runs the six npm commands and opens the PR. **The agent does not merge
 
 ---
 
-*End. Next human action: name **PR C1**.*
+*End. Next human action: hand this file to the next agent and say: one PR, `quality/suite-pass` → `build/suite`, start at slice C1.*
