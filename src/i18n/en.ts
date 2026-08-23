@@ -225,6 +225,13 @@ export const en: Record<string, string> = {
   'notice-buyout.verdict.pay': 'Buying out the rest of the notice is about {amount}. The letter, not a statute, sets this.',
   'notice-buyout.verdict.recover': 'They can try to recover about {amount} from F&F for unserved notice. Check the appointment letter.',
   'notice-buyout.divisor': 'Most letters divide the monthly figure by 30, not 26 and not the actual calendar month. That is contractual practice, not a law.',
+  'notice-buyout.bothBases': 'Both bases, side by side',
+  'notice-buyout.row.basic': 'On monthly basic',
+  'notice-buyout.row.gross': 'On monthly cash gross',
+  'notice-buyout.gstNote': 'GST / income-tax treatment of a notice buyout is disputed and fact-specific — this tool does not compute any tax on it.',
+  'notice-buyout.seed.decoder': 'Monthly figures seeded from your Decoder’s cash salary.',
+  'notice-buyout.seed.ctc12':
+    'Seeded from your Decoder. Cash gross works out to CTC ÷ 12 here — check whether employer PF and gratuity actually sit inside the CTC.',
 
   'gratuity.title': 'Gratuity',
   'gratuity.desc': 'Are you eligible, how much, and which date flips you over the line.',
