@@ -232,6 +232,13 @@ export const hiSuite: Record<string, string> = {
     'वे unserved notice के लिए F&F से लगभग {amount} recover करने की कोशिश कर सकते हैं। Appointment letter check करें।',
   'notice-buyout.divisor':
     'ज़्यादातर letters monthly figure को 30 से divide करती हैं, 26 से नहीं और actual calendar month से भी नहीं। यह contractual practice है, कानून नहीं।',
+  'notice-buyout.bothBases': 'दोनों bases, side by side',
+  'notice-buyout.row.basic': 'Monthly basic पर',
+  'notice-buyout.row.gross': 'Monthly cash gross पर',
+  'notice-buyout.gstNote': 'Notice buyout पर GST / income-tax का treatment disputed है — यह tool कोई tax compute नहीं करता।',
+  'notice-buyout.seed.decoder': 'Monthly figures आपके Decoder की cash salary से seed हुए हैं।',
+  'notice-buyout.seed.ctc12':
+    'आपके Decoder से seed किया गया। यहां cash gross CTC ÷ 12 बनता है — check करें कि employer PF और gratuity सच में CTC के अंदर हैं या नहीं।',
 
   // ---- Gratuity ----
   'gratuity.title': 'Gratuity',
