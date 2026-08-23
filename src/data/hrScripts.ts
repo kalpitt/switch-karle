@@ -41,7 +41,7 @@ If you can share the band for this level, I can tell you quickly whether we are 
 
 I have shared my resignation dated [date], with last working day [LWD] as per my notice.
 
-The new employer has asked if an earlier joining date is possible. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?
+I am due to join my next employer on [new joining date], so an earlier release would help me start on time. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?
 
 I will follow whatever the appointment letter allows. Thank you for considering it.`,
   },
@@ -67,9 +67,9 @@ I will complete the handover either way.`,
     seoDescription: 'A careful decline after you already said yes. Not legal advice.',
     body: `Hi [Recruiter / HR name],
 
-Thank you again for the offer for [role] at [company]. After thinking it through with my family, I need to withdraw my acceptance. This is not a negotiation — I will not be joining.
+Thank you again for the offer for [role] at [company]. After thinking it through with my family, I need to withdraw my acceptance. My decision is made — I will not be joining.
 
-I am sorry for the disruption. I have not signed a delayed joining bond, and I have not collected any joining bonus. Please treat this mail as my formal decline.
+I am sorry for the disruption. I have not collected any joining bonus or pending dues from you. Please treat this mail as my formal decline.
 
 I appreciate the time you spent, and I wish the team well.`,
   },
@@ -83,7 +83,7 @@ I appreciate the time you spent, and I wish the team well.`,
 
 Thank you for the counter-offer and for making time to talk.
 
-I have thought about the rupee gap and about the work itself. I am going to go ahead with the new role. This is not a tactic to raise the counter.
+I have thought about the rupee gap and about the work itself. I am going to go ahead with the new role.
 
 I will keep the handover clean and stick to the notice we agreed. Thank you for the years here — I am leaving on good terms and I hope we stay in touch.`,
   },
