@@ -5,20 +5,16 @@ import { HR_SCRIPTS, type HrScriptSlug } from '../../data/hrScripts'
 import { useT, type Lang } from '../../i18n'
 
 export default function HrScriptTool({ slug, lang = 'en' }: { slug: HrScriptSlug; lang?: Lang }) {
-  const script = HR_SCRIPTS[slug]
   return (
     <IslandRoot lang={lang} current={slug}>
-      {slug === 'expected-ctc' ? (
-        <ExpectedCtcBody />
-      ) : (
-        <Body slug={slug} body={script.body} />
-      )}
+      {slug === 'expected-ctc' ? <ExpectedCtcBody /> : <Body slug={slug} />}
     </IslandRoot>
   )
 }
 
-function Body({ slug, body }: { slug: HrScriptSlug; body: string }) {
+function Body({ slug }: { slug: HrScriptSlug }) {
   const t = useT()
+  const body = t(`hr.${slug}.body`)
   return (
     <div data-tool={slug} className="mx-auto max-w-2xl space-y-4">
       <VerdictFree title={t(HR_SCRIPTS[slug].titleKey)} lead={t('hr.lead')} />
@@ -43,7 +39,7 @@ function ExpectedCtcBody() {
   const [expectedCtc, setExpectedCtc] = useState(0)
   const [role, setRole] = useState('')
 
-  const ready = currentCtc > 0 && expectedCtc > 0
+  const ready = currentCtc > 0 && expectedCtc > 0 && role.trim() !== ''
 
   const body = useMemo(
     () =>

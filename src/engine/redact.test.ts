@@ -30,6 +30,15 @@ describe('redactText', () => {
     expect(r.hits.map((h) => h.kind).sort()).toEqual(['aadhaar', 'uan'])
   })
 
+  it('classifies a labelled 2-prefixed UAN as UAN, not Aadhaar', () => {
+    // Most real UANs start 1–2; the Aadhaar rule must not swallow them first.
+    const r = redactText('UAN: 201234567890 on the payslip')
+    expect(r.redacted).toContain('[UAN]')
+    expect(r.redacted).not.toContain('201234567890')
+    expect(r.redacted).not.toContain('XXXX XXXX XXXX')
+    expect(r.hits.map((h) => h.kind)).toEqual(['uan'])
+  })
+
   it('does not treat a bare 12-digit number as UAN', () => {
     const r = redactText('Member id 101234567890 pending')
     expect(r.hits.some((h) => h.kind === 'uan')).toBe(false)

@@ -38,10 +38,11 @@ describe('gratuity — eligibility vs payable years (PGA s.2A / s.4(2))', () => 
     expect(r.amount).toBe(144_231)
   })
 
-  it('4y + 189d on a 5-day week → not eligible', () => {
+  it('4y + 189d on a 5-day week → not eligible, flip date is the 190th day', () => {
     const r = gratuity({ ...BASE, exitDate: '2024-02-06', workWeekDays: 5 })
     expect(r.eligible).toBe(false)
     expect(r.amount).toBe(0)
+    expect(r.flipDate).toBe('2024-02-07')
   })
 
   it('exactly 5y → eligible, 5 payable years, ₹1,44,231', () => {

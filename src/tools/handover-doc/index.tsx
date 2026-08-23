@@ -46,15 +46,17 @@ function Body() {
       t('handover-doc.md.owner', { owner: draft.owner || '[Name]' }),
       '',
       `## ${t('handover-doc.md.projects')}`,
-      draft.projects || '_Add running work, tickets, and who to ask._',
+      draft.projects || t('handover-doc.md.projectsHint'),
       '',
       `## ${t('handover-doc.md.access')}`,
-      draft.access || '_Repos, dashboards, keys to rotate, docs._',
+      draft.access || t('handover-doc.md.accessHint'),
       '',
       `## ${t('handover-doc.md.risks')}`,
-      draft.risks || '_Dates, customers, audits._',
+      draft.risks || t('handover-doc.md.risksHint'),
     ].join('\n')
   }, [draft, t])
+  /** Blank sections produce placeholder scaffold — never let it reach a paste. */
+  const canCopy = !md.includes('[Role]') && !md.includes('[Name]') && !md.includes('_Add ')
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
@@ -73,7 +75,11 @@ function Body() {
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>
           <div className="mt-4">
-            <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            {canCopy ? (
+              <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            ) : (
+              <p className="text-[13px] font-semibold text-amberflag">{t('handover-doc.copyBlocked')}</p>
+            )}
           </div>
         </Card>
         <Disclaimer>{t('handover-doc.disclaimer')}</Disclaimer>

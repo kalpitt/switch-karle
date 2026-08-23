@@ -41,6 +41,8 @@ export const hi: Record<string, string> = {
 
   'ui.copy': 'कॉपी करें',
   'ui.copied': 'कॉपी हो गया ✓',
+  'ui.exampleChip': 'उदाहरण',
+  'ui.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
   'ui.print': 'प्रिंट',
   'ui.disclaimer':
     'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',

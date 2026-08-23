@@ -38,6 +38,8 @@ export const en: Record<string, string> = {
   'ui.copy': 'Copy',
   'ui.copyText': 'Copy',
   'ui.copied': 'Copied ✓',
+  'ui.exampleChip': 'Example',
+  'ui.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
   'ui.print': 'Print',
   'ui.disclaimer':
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
@@ -67,7 +69,7 @@ export const en: Record<string, string> = {
   'offer-comparison.flag.ceiling': 'One offer computes PF on full basic, the other uses the wage ceiling.',
 
   'real-hike.title': 'Real hike',
-  'real-hike.desc': 'The CTC jump versus what actually lands in the bank each month.',
+  'real-hike.desc': 'The CTC jump versus what actually reaches your account each month.',
   'real-hike.formTitle': 'This job → next job',
   'real-hike.currentCtc': 'Current CTC',
   'real-hike.currentVariable': 'Current variable',
@@ -77,7 +79,7 @@ export const en: Record<string, string> = {
   'real-hike.nextState': 'New state',
   'real-hike.haircut': 'Assume variable pays 70%',
   'real-hike.haircutHint': 'Average-year haircut. Off = treat quoted variable as certain.',
-  'real-hike.verdict': '{paper}% on paper, {bank}% in your bank.',
+  'real-hike.verdict': '{paper}% on paper, {bank}% in hand.',
   'real-hike.row.paper': 'CTC as quoted',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus is a one-off — it is not in this run-rate.',
@@ -360,6 +362,7 @@ export const en: Record<string, string> = {
     'I wanted to tell you first. I have accepted another role. My decision is made. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
   'manager-script.body.counter-risk':
     'I have accepted another offer. I am telling you because I respect the team. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
+  'manager-script.copyBlocked': 'This script fills its last working day from your saved resignation letter — make one first, then copy.',
   'manager-script.body.hostile':
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
@@ -367,6 +370,16 @@ export const en: Record<string, string> = {
   'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'When the recruiter asks for a number before they share the band.',
+  'hr.early-release.body':
+    'Hi [Manager name],\n\nI have shared my resignation dated [date], with last working day [LWD] as per my notice.\n\nI am due to join my next employer on [new joining date], so an earlier release would help me start on time. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?\n\nI will follow whatever the appointment letter allows. Thank you for considering it.',
+  'hr.buyout-ask.body':
+    'Hi [HR name],\n\nCould you confirm how notice buyout works in my letter — is it on basic or on gross, and is the divisor 30 days?\n\nI am hoping to make [proposed last day] my last working day. If buyout is allowed, please share the amount and whether it will be recovered from F&F or paid by me before relieving.\n\nI will complete the handover either way.',
+  'hr.decline-accepted.body':
+    'Hi [Recruiter / HR name],\n\nThank you again for the offer for [role] at [company]. After thinking it through with my family, I need to withdraw my acceptance. My decision is made — I will not be joining.\n\nI am sorry for the disruption. Please treat this mail as my formal decline.\n\nI appreciate the time you spent, and I wish the team well.',
+  'hr.counter-offer-reply.body':
+    'Hi [Manager name],\n\nThank you for the counter-offer and for making time to talk.\n\nI have thought about the rupee gap and about the work itself. I am going to go ahead with the new role.\n\nI will keep the handover clean and stick to the notice we agreed. Thank you for the years here — I am leaving on good terms and I hope we stay in touch.',
+  'hr.recruiter-followup.body':
+    'Hi [Name],\n\nChecking in on [role] at [company], as discussed on [date]. I remain interested and can share any extra document you need.\n\nIf the timeline has moved, a one-line update helps me plan notice with my current employer. Thank you.',
   'hr.expected-ctc.formTitle': 'Your two numbers',
   'hr.expected-ctc.role': 'Role',
   'hr.expected-ctc.roleHint': 'Optional — used in the first line.',
@@ -374,7 +387,7 @@ export const en: Record<string, string> = {
   'hr.expected-ctc.expected': 'Expected CTC (per year)',
   'hr.expected-ctc.body':
     'Thank you for the conversation about the {role} role.\n\nI am looking at this role on total compensation and the work, not one headline number. My current CTC is {current} per year, and for a similar scope I am targeting around {expected}. If you can share the band for this level, I can tell you quickly whether we are in range. Happy to talk structure — fixed vs variable, notice, joining bonus — once the band is on the table.',
-  'hr.expected-ctc.copyBlocked': 'Fill both numbers to unlock copy.',
+  'hr.expected-ctc.copyBlocked': 'Fill the role and both numbers to unlock copy.',
   'hr.early-release.title': 'Early release',
   'hr.early-release.desc': 'Ask current HR/manager to shorten notice.',
   'hr.buyout-ask.title': 'Buyout ask',
@@ -415,6 +428,10 @@ export const en: Record<string, string> = {
   'handover-doc.md.projects': 'Projects / status',
   'handover-doc.md.access': 'Access & artefacts',
   'handover-doc.md.risks': 'Risks if this is dropped',
+  'handover-doc.md.projectsHint': '_Add running work, tickets, and who to ask._',
+  'handover-doc.md.accessHint': '_Repos, dashboards, keys to rotate, docs._',
+  'handover-doc.md.risksHint': '_Dates, customers, audits._',
+  'handover-doc.copyBlocked': 'Fill role and owner above (and any section you want to include) to unlock copy.',
 
   'relieving-chaser.title': 'Relieving chaser',
   'relieving-chaser.desc': 'Day 7, 14 and 30 mails if the relieving letter has not arrived.',
@@ -437,6 +454,7 @@ export const en: Record<string, string> = {
   'relieving-chaser.body.30':
     'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have my relieving letter.\n\nPlease share the current status and an issue-by date this week. This letter is blocking my background verification, so it is time-sensitive. I will send any document still pending from my side.\n\nRegards',
   'relieving-chaser.setLwd': 'Set a past last-working-day first — a chase makes sense only after it.',
+  'relieving-chaser.fillFields': 'Fill company, HR name and role to unlock copy.',
 
   'epf-transfer.title': 'EPF transfer',
   'epf-transfer.desc': 'Form 13 online, unmarked date-of-exit, KYC mismatches, and why withdrawing early is usually the expensive move.',

@@ -26,6 +26,15 @@ interface Draft {
   monthlyGross: number
 }
 
+/** Pure fixture — what first paint shows when neither storage nor Decoder seeds it. */
+const PURE_DEFAULT: Draft = {
+  basis: 'basic',
+  mode: 'pay',
+  unservedDays: 30,
+  monthlyBasic: 80_000,
+  monthlyGross: 150_000,
+}
+
 export default function NoticeBuyoutTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="notice-buyout">
@@ -96,6 +105,9 @@ function Body() {
     () => buyoutQuote({ ...draft, basis: draft.basis === 'basic' ? 'gross' : 'basic' }),
     [draft],
   )
+  /** Fixture on first paint with no Decoder seed = worked example. */
+  const isExample =
+    !seed.fromDecoder && JSON.stringify(draft) === JSON.stringify(PURE_DEFAULT)
   const verdict =
     draft.mode === 'pay'
       ? t('notice-buyout.verdict.pay', { amount: formatINR(result.amount) })
@@ -151,7 +163,16 @@ function Body() {
         />
       </Card>
       <div className="space-y-4">
-        <VerdictBanner>{verdict}</VerdictBanner>
+        {isExample ? (
+          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
+            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+              {t('ui.exampleChip')}
+            </span>
+            {t('ui.exampleNote')}
+          </p>
+        ) : (
+          <VerdictBanner>{verdict}</VerdictBanner>
+        )}
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('notice-buyout.bothBases')}</h3>
           <p className="tnum flex justify-between gap-3 text-[13px]">
@@ -183,7 +204,14 @@ function Body() {
           ))}
         <p className="text-[13px] text-ink-soft">{t('notice-buyout.divisor')}</p>
         <p className="text-[13px] text-amberflag">{t('notice-buyout.gstNote')}</p>
-        <ShareRow copyText={copyText} copyLabel={t('ui.copy')} copiedLabel={t('ui.copied')} printLabel={t('ui.print')} />
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

@@ -80,8 +80,10 @@ function Body() {
   )
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
-  /** A chase only makes sense once the LWD has actually passed. */
+  /** A chase only makes sense once the LWD has passed, and the paste must
+   * never carry leftover [placeholders] (quality bar §3). */
   const lwdReady = /^\d{4}-\d{2}-\d{2}$/.test(draft.lwd) && draft.lwd <= todayISO()
+  const canCopy = lwdReady && !mail.includes('[')
 
   return (
     <div data-tool="relieving-chaser" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -107,10 +109,12 @@ function Body() {
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>
           <div className="mt-4">
-            {lwdReady ? (
+            {canCopy ? (
               <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
             ) : (
-              <p className="text-[13px] font-semibold text-amberflag">{t('relieving-chaser.setLwd')}</p>
+              <p className="text-[13px] font-semibold text-amberflag">
+                {lwdReady ? t('relieving-chaser.fillFields') : t('relieving-chaser.setLwd')}
+              </p>
             )}
           </div>
         </Card>

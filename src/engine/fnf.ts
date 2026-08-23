@@ -103,8 +103,7 @@ export function auditFnF(input: FnFInput): FnFResult {
       })
       continue
     }
-    const label = id === 'unpaid-leave' ? 'Unpaid leave recovery' : id === 'gratuity' ? 'Gratuity' : id
-    lines.push({ id, label, claimed: 0, recomputed, delta: -recomputed })
+    lines.push({ id, label: id, claimed: 0, recomputed, delta: -recomputed })
     if (id === 'unpaid-leave') deductions += recomputed
   }
 
