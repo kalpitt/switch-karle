@@ -178,7 +178,8 @@ export const en: Record<string, string> = {
   'fake-offer.textHint': 'Paste the email or letter. It never leaves this device.',
   'fake-offer.verdict.red': '{n} hard stop(s). Do not pay, and do not share documents until you verify the sender.',
   'fake-offer.verdict.amber': 'Something looks off — often a free-mail recruiter or lookalike domain. Verify before you reply or share documents.',
-  'fake-offer.verdict.clean': 'No deposit ask. Still check EPFO and MCA — clean text is not a guarantee.',
+  'fake-offer.verdict.blank': 'Nothing has been checked yet. Paste the offer email or letter text above.',
+  'fake-offer.verdict.clean': 'No deposit ask found in the text. Clean text is not verification — confirm the sender and the company yourself before relying on it.',
   'fake-offer.verify': 'Verify:',
 
   'notice-buyout.title': 'Notice buyout',
@@ -483,6 +484,7 @@ export const en: Record<string, string> = {
   'bond-scanner.formTitle': 'The clause',
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint': 'Paste the bond or restraint paragraph. It never leaves this device.',
+  'bond-scanner.verdict.blank': 'Nothing has been checked yet. Paste the bond clause or appointment-letter text above.',
   'bond-scanner.verdict.clean': 'No bond, certificate-deposit or post-exit restraint pattern in this paste.',
   'bond-scanner.verdict.flags': '{n} pattern(s) worth a lawyer, not a panic. Case law is fact-specific.',
   'bond-scanner.flag.original-certificates':
