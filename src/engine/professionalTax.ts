@@ -1,11 +1,17 @@
 import type { StateCode } from './types'
 
 /**
- * CANDIDATE: annual professional tax for a salaried employee at each state's
- * published maximum (true for anyone using a CTC decoder). Not independently
- * primary-sourced this session. A few states have month-specific quirks
- * (MH charges ₹300 in February) folded into the annual figure. Tamil Nadu,
- * Kerala and Odisha are local-body levies that can vary by municipality.
+ * Annual professional tax for a salaried employee at each state's published
+ * maximum (true for anyone using a CTC decoder). Not independently
+ * primary-sourced this session except where marked VERIFIED below. A few
+ * states have month-specific quirks (MH charges ₹300 in February) folded into
+ * the annual figure. Tamil Nadu, Kerala and Odisha are local-body levies that
+ * can vary by municipality.
+ *
+ * Punjab's levy is State Development Tax under the Punjab State Development
+ * Tax Act, 2018 — not "professional tax": ₹200/month (₹2,400/year) at the top
+ * slab for salaried employees.
+ * VERIFIED: 2026-08-23 | Source: Punjab State Development Tax Act, 2018 (official reading per master plan §4/D12) | FY: 2026-27
  *
  * Codes in `PT_AMOUNT_UNVERIFIED` levy PT but have no primary-sourced amount
  * in this table — they are 0 and must be labelled approximate. Constitutional
@@ -14,7 +20,6 @@ import type { StateCode } from './types'
 export const PROFESSIONAL_TAX_CEILING = 2_500
 
 export const PT_AMOUNT_UNVERIFIED: readonly StateCode[] = [
-  'PB',
   'BR',
   'AS',
   'JH',
@@ -41,7 +46,7 @@ export const PROFESSIONAL_TAX_ANNUAL: Record<StateCode, number> = {
   HR: 0,
   UP: 0,
   RJ: 0,
-  PB: 0,
+  PB: 2_400, // Punjab State Development Tax Act, 2018 — see header note.
   BR: 0,
   AS: 0,
   JH: 0,
