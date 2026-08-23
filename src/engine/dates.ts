@@ -99,11 +99,19 @@ export interface Tenure {
   completedYears: number
   /** Elapsed days since the last join-anniversary (0 on an exact anniversary). */
   daysIntoCurrentYear: number
-  /** True at 5 completed years, or 4 years plus ≥240 days into the fifth. */
+  /** True at 5 completed years, or 4 years plus ≥`fourYearDaysThreshold` days into the fifth. */
   qualifiesFourYear240Day: boolean
 }
 
-export function completedYearsWithDayCount(joinISO: string, exitISO: string): Tenure {
+/**
+ * `fourYearDaysThreshold` is the s.2A fast-path day count into year five:
+ * 240 for a 6-day week (default), 190 for a 5-day week.
+ */
+export function completedYearsWithDayCount(
+  joinISO: string,
+  exitISO: string,
+  fourYearDaysThreshold = 240,
+): Tenure {
   const join = parts(joinISO)
   const exit = parts(exitISO)
   let completedYears = exit.y - join.y
@@ -114,6 +122,6 @@ export function completedYearsWithDayCount(joinISO: string, exitISO: string): Te
   const lastAnniversary = addMonths(joinISO, completedYears * 12)
   const daysIntoCurrentYear = daysBetween(lastAnniversary, exitISO)
   const qualifiesFourYear240Day =
-    completedYears >= 5 || (completedYears === 4 && daysIntoCurrentYear >= 240)
+    completedYears >= 5 || (completedYears === 4 && daysIntoCurrentYear >= fourYearDaysThreshold)
   return { completedYears, daysIntoCurrentYear, qualifiesFourYear240Day }
 }

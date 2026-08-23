@@ -209,8 +209,10 @@ export const hiSuite: Record<string, string> = {
   'gratuity.exit': 'Last working day',
   'gratuity.covered': 'Establishment में 10+ employees हैं',
   'gratuity.coveredHint': 'Payment of Gratuity Act तभी apply होता है जब establishment covered हो। हम पूछते हैं; मानकर नहीं चलते।',
-  'gratuity.verdict.yes': '{years} completed years के बाद eligible। Estimate {amount} (15/26 × last drawn × years)।',
-  'gratuity.verdict.no': 'अभी तक {years} completed years — 5-year / 4-year-240-day rule के तहत अभी eligible नहीं।',
+  'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
+  'gratuity.week5.hint': '5-day establishment में पांचवें साल के 4 साल + 190 दिन पर qualify होते हैं; 6-day वाले को 240 दिन चाहिए।',
+  'gratuity.verdict.yes': '{years} completed years की service के बाद eligible। Estimate {amount} (15/26 × last drawn × payable years)।',
+  'gratuity.verdict.no': 'अभी तक {years} completed years — 5-year / 4-years-plus-190-or-240-day rule के तहत अभी eligible नहीं।',
   'gratuity.flip': 'यह picture बदलने वाली अगली date: {date}।',
 
   // ---- Leave encashment ----
