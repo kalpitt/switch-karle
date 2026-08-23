@@ -306,6 +306,8 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.line.gratuity': 'Gratuity',
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
+  'fnf-checker.flag.gratuity-missing':
+    'इस sheet में gratuity की line नहीं है। आपकी service पर यह लगभग ₹{amount} बनता है — अगर आप Gratuity Act के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
 
   // ---- Two Form-16 shock ----
   'form16-shock.title': 'दो Form-16 का झटका',

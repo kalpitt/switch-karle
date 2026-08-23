@@ -295,6 +295,8 @@ export const en: Record<string, string> = {
   'fnf-checker.line.gratuity': 'Gratuity',
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
+  'fnf-checker.flag.gratuity-missing':
+    'No gratuity line on this sheet. On your service it works out to about ₹{amount} — if you are eligible under the Gratuity Act, ask HR (in writing) for it to be included in the settlement.',
 
   'form16-shock.title': 'Two Form-16 shock',
   'form16-shock.desc': 'Two employers both gave you the slab benefit. One return has to put them together.',
