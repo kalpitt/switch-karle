@@ -332,6 +332,11 @@ export const en: Record<string, string> = {
   'resignation-letter.tone.grateful': 'Grateful',
   'resignation-letter.tone.firm': 'Firm and short',
   'resignation-letter.verdict': 'Last working day if you serve the full notice: {lwd}.',
+  'resignation-letter.yourName': 'Your name',
+  'resignation-letter.yourNameHint': 'Goes in the signature. Copy stays locked until it is filled.',
+  'resignation-letter.empId': 'Employee ID (optional)',
+  'resignation-letter.empIdHint': 'Stays on this page only.',
+  'resignation-letter.copyBlocked': 'Fill company, role, manager and your name to unlock copy.',
   'resignation-letter.epfo':
     'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
   'resignation-letter.body.professional':
