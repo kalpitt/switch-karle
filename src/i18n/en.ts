@@ -421,13 +421,14 @@ export const en: Record<string, string> = {
   'relieving-chaser.day.30': 'Day 30 — escalation',
   'relieving-chaser.verdict.7': 'A short nudge. Assume they are busy, not hostile.',
   'relieving-chaser.verdict.14': 'Ask for a date. Copy your manager if that is safe.',
-  'relieving-chaser.verdict.30': 'Background checks stall without this letter. Say so plainly.',
+  'relieving-chaser.verdict.30': 'Background checks stall without this letter. Ask for a firm date.',
   'relieving-chaser.body.7':
     'Hi {hr},\n\nI left {company} as {role} on {lwd}. Could you share an update on my relieving letter and F&F? I am happy to send any document still pending.\n\nThank you',
   'relieving-chaser.body.14':
     'Hi {hr},\n\nFollowing up on my relieving letter from {company} ({role}, LWD {lwd}). Please share a date by which it will be issued, or the checklist still open on my side.\n\nThis blocks background verification at my new employer. Thank you',
   'relieving-chaser.body.30':
-    'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have a relieving letter.\n\nPlease treat this as a formal request to issue it this week, and copy me on the F&F status. I will escalate to [labour commissioner / internal grievance] only if I hear nothing — I would rather close this with you.\n\nRegards',
+    'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have my relieving letter.\n\nPlease share the current status and an issue-by date this week. This letter is blocking my background verification, so it is time-sensitive. I will send any document still pending from my side.\n\nRegards',
+  'relieving-chaser.setLwd': 'Set a past last-working-day first — a chase makes sense only after it.',
 
   'epf-transfer.title': 'EPF transfer',
   'epf-transfer.desc': 'Form 13 online, unmarked date-of-exit, KYC mismatches, and why withdrawing early is usually the expensive move.',

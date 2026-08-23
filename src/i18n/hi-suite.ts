@@ -442,14 +442,14 @@ export const hiSuite: Record<string, string> = {
   'relieving-chaser.day.30': 'Day 30 — escalation',
   'relieving-chaser.verdict.7': 'एक छोटा nudge। मानें कि वे busy हैं, hostile नहीं।',
   'relieving-chaser.verdict.14': 'एक date मांगें। अगर safe हो तो अपने manager को copy करें।',
-  'relieving-chaser.verdict.30': 'इस letter के बिना background checks रुक जाते हैं। यह साफ-साफ कह दें।',
+  'relieving-chaser.verdict.30': 'इस letter के बिना background checks रुक जाते हैं। एक firm date मांगें।',
   'relieving-chaser.body.7':
     'Hi {hr},\n\nमैंने {company} को {role} के रूप में {lwd} पर छोड़ा था। क्या relieving letter और F&F पर एक update मिल सकता है? कोई document अभी pending हो तो भेजने को तैयार हूं।\n\nधन्यवाद',
   'relieving-chaser.body.14':
     'Hi {hr},\n\n{company} ({role}, LWD {lwd}) से मेरी relieving letter पर यह एक follow-up है। कृपया वह date share करें जिसतक यह issue होगी, या मेरी तरफ से जो checklist अभी open है वह बताएं।\n\nयह नए employer पर background verification को block कर रहा है। धन्यवाद',
   'relieving-chaser.body.30':
-    'Hi {hr},\n\n{company} में {role} के रूप में मेरे last working day ({lwd}) को 30 दिन हो गए हैं। मुझे अभी तक relieving letter नहीं मिली है।\n\nकृपया इसे इस हफ्ते जारी करने की एक formal request मानें, और F&F status पर मुझे copy करें। कुछ जवाब न मिलने पर ही [labour commissioner / internal grievance] तक escalate किया जाएगा — आपके साथ ही इसे close करना बेहतर होगा।\n\nRegards',
-
+    'Hi {hr},\n\n{company} में {role} के रूप में मेरे last working day ({lwd}) को 30 दिन हो गए हैं। मुझे अभी तक relieving letter नहीं मिली है।\n\nकृपया अभी का status और इस हफ्ते issue होने की एक date share करें। यह letter मेरी background verification block कर रही है, इसलिए यह time-sensitive है। मेरी तरफ से जो document pending है, वह भेज दूंगा।\n\nRegards',
+  'relieving-chaser.setLwd': 'पहले बीत चुकी last working day set करें — LWD के बाद ही chase समझ आता है।',
   // ---- EPF transfer ----
   'epf-transfer.title': 'EPF Transfer',
   'epf-transfer.desc': 'Online Form 13, unmarked date-of-exit, KYC mismatches, और जल्दी withdraw करना आमतौर पर क्यों ज़्यादा costly move है।',
