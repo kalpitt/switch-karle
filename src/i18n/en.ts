@@ -180,6 +180,34 @@ export const en: Record<string, string> = {
   'fake-offer.verdict.amber': 'Something looks off — often a free-mail recruiter or lookalike domain. Verify before you reply or share documents.',
   'fake-offer.verdict.blank': 'Nothing has been checked yet. Paste the offer email or letter text above.',
   'fake-offer.verdict.clean': 'No deposit ask found in the text. Clean text is not verification — confirm the sender and the company yourself before relying on it.',
+  'fake-offer.flag.deposit-ask.title': 'Offer asks you to pay money upfront',
+  'fake-offer.flag.deposit-ask.detail':
+    'Legitimate employers do not ask candidates to pay security deposits, joining fees, training fees, or laptop deposits before joining. Any upfront payment request is a common job-scam pattern.',
+  'fake-offer.flag.deposit-ask.hint':
+    'Do not pay. Ask for a written offer on company letterhead and verify the recruiter through the company’s official careers page or HR contact.',
+  'fake-offer.flag.free-mail.title': 'Recruiter email uses a free mailbox ({domain})',
+  'fake-offer.flag.free-mail.detail':
+    'Corporate hiring teams almost always email from their own company domain. Offers sent from Gmail, Yahoo, Outlook, or similar free providers are a strong impersonation signal.',
+  'fake-offer.flag.free-mail.hint':
+    "Find the company's official careers email or HR contact on their website and confirm this recruiter is listed there.",
+  'fake-offer.flag.lookalike-domain.title': 'Email domain may impersonate {company}',
+  'fake-offer.flag.lookalike-domain.detail':
+    'The sender domain looks like a well-known company name with small changes — digit swaps (o→0), hyphenated “-hr/-careers/-jobs” labels, or unusual TLDs such as .co instead of .com.',
+  'fake-offer.flag.lookalike-domain.hint':
+    "Compare the domain character-by-character with the company's official website domain before replying or sharing documents.",
+  'fake-offer.flag.whatsapp-only.title': 'Offer wants to move the process to WhatsApp or Telegram only',
+  'fake-offer.flag.whatsapp-only.detail':
+    'Scammers often push candidates off email onto messaging apps where conversations are harder to verify and document. Real employers still use formal email for offer letters.',
+  'fake-offer.flag.whatsapp-only.hint':
+    'Insist on continuing over official company email and ask for a verifiable HR contact on the corporate domain.',
+  'fake-offer.flag.epfo-hint.title': 'Check whether the employer is registered with EPFO',
+  'fake-offer.flag.epfo-hint.detail':
+    "Search EPFO's establishment register by company name to see if the employer has an active PF registration.",
+  'fake-offer.flag.epfo-hint.hint': 'EPFO member portal: https://www.epfindia.gov.in/',
+  'fake-offer.flag.mca-hint.title': 'Confirm the company exists on MCA records',
+  'fake-offer.flag.mca-hint.detail':
+    'Look up the company name on the Ministry of Corporate Affairs portal to confirm it is a registered company in India.',
+  'fake-offer.flag.mca-hint.hint': 'MCA company search: https://www.mca.gov.in/',
   'fake-offer.verify': 'Verify:',
 
   'notice-buyout.title': 'Notice buyout',
@@ -212,6 +240,13 @@ export const en: Record<string, string> = {
   'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
   'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-years-plus-190-or-240-day rule.',
   'gratuity.flip': 'The next date that changes this picture: {date}.',
+  'gratuity.note.s42-rounding':
+    'Under PGA s.4(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
+  'gratuity.note.act-may-not-apply':
+    'Payment of Gratuity Act may not apply (employer below 10-employee threshold). Company policy may still pay gratuity.',
+  'gratuity.note.ineligible-service':
+    'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
+  'gratuity.note.cap-applied': 'Capped at the statutory ₹20,00,000 ceiling (PGA s.4(3)).',
 
   'leave-encashment.title': 'Leave encashment',
   'leave-encashment.desc': 'On a resignation, leave encashment is typically fully taxable as salary.',
@@ -247,6 +282,12 @@ export const en: Record<string, string> = {
   'fnf-checker.verdict.pay': 'Recomputed net payable to you: {amount}.',
   'fnf-checker.verdict.owe': 'Recomputed net is negative — you may owe them {amount}.',
   'fnf-checker.audit': 'Claimed vs recomputed',
+  'fnf-checker.line.salary': 'Salary (full month)',
+  'fnf-checker.line.notice': 'Notice recovery',
+  'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
+  'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
+  'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
 
   'form16-shock.title': 'Two Form-16 shock',
   'form16-shock.desc': 'Two employers both gave you the slab benefit. One return has to put them together.',

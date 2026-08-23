@@ -14,7 +14,7 @@ describe('auditFnF', () => {
       gratuityEligible: false,
     })
     expect(r.lines).toEqual([
-      { label: 'Salary', claimed: 50_000, recomputed: 50_000, delta: 0 },
+      { id: 'salary', label: 'Salary', claimed: 50_000, recomputed: 50_000, delta: 0 },
     ])
     expect(r.netPayable).toBe(25_000)
     expect(r.flags.some((f) => f.id === 'notice-recovery')).toBe(true)
@@ -36,8 +36,8 @@ describe('auditFnF', () => {
       gratuityEligible: true,
     })
     const unpaidRecomputed = 2 * (120_000 / 30)
-    const unpaidLine = r.lines.find((l) => l.label === 'Unpaid leave')
+    const unpaidLine = r.lines.find((l) => l.id === 'unpaid-leave')
     expect(unpaidLine?.recomputed).toBeCloseTo(unpaidRecomputed)
-    expect(r.lines.some((l) => l.label === 'Gratuity' && l.recomputed === 288_462)).toBe(true)
+    expect(r.lines.some((l) => l.id === 'gratuity' && l.recomputed === 288_462)).toBe(true)
   })
 })

@@ -125,12 +125,14 @@ function Body() {
                 >
                   {t(`flagChip.${f.severity}`)}
                 </span>
-                {f.title}
+                {t(`fake-offer.flag.${f.id}.title`, f.params)}
               </p>
-              <p className="text-[13px] leading-relaxed text-ink-soft">{f.detail}</p>
+              <p className="text-[13px] leading-relaxed text-ink-soft">
+                {t(`fake-offer.flag.${f.id}.detail`, f.params)}
+              </p>
               <p className="rounded-lg bg-paper p-2.5 text-[13px] leading-relaxed">
                 <span className="font-bold text-saffron">{t('fake-offer.verify')} </span>
-                <HintText text={f.verificationHint} />
+                <HintText text={t(`fake-offer.flag.${f.id}.hint`, f.params)} />
               </p>
             </Card>
           ))}

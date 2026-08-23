@@ -4,12 +4,15 @@ export interface OfferScamInput {
   offerText: string
 }
 
+/**
+ * Engines stay React-free and return IDs (+ interpolation values); the island
+ * renders prose through i18n so EN and HI stay in lockstep.
+ */
 export interface ScamFlag {
   id: string
   severity: 'red' | 'amber' | 'info'
-  title: string
-  detail: string
-  verificationHint: string
+  /** Values interpolated into the i18n strings keyed by this flag's id. */
+  params?: Record<string, string>
 }
 
 interface Rule {
@@ -49,9 +52,6 @@ const WHATSAPP_PATTERNS: RegExp[] = [
 
 const LOOKALIKE_SUFFIXES = ['careers', 'hr', 'jobs', 'recruitment', 'hiring'] as const
 const LEGIT_TLDS = new Set(['com', 'org', 'in', 'net', 'co.in', 'co.uk', 'com.au'])
-
-const EPFO_URL = 'https://www.epfindia.gov.in/'
-const MCA_URL = 'https://www.mca.gov.in/'
 
 function normalizeDomain(domain: string): string {
   return domain.trim().toLowerCase().replace(/^@/, '')
@@ -110,62 +110,32 @@ const RULES: Rule[] = [
   {
     id: 'deposit-ask',
     applies: (input) => DEPOSIT_PATTERNS.some((p) => p.test(input.offerText)),
-    build: () => ({
-      severity: 'red',
-      title: 'Offer asks you to pay money upfront',
-      detail:
-        'Legitimate employers do not ask candidates to pay security deposits, joining fees, training fees, or laptop deposits before joining. Any upfront payment request is a common job-scam pattern.',
-      verificationHint:
-        'Do not pay. Ask for a written offer on company letterhead and verify the recruiter through the company’s official careers page or HR contact.',
-    }),
+    build: () => ({ severity: 'red' }),
   },
   {
     id: 'free-mail',
     applies: (input) => FREE_MAIL_DOMAINS.has(normalizeDomain(input.emailDomain)),
-    build: (input) => ({
-      severity: 'amber',
-      title: `Recruiter email uses a free mailbox (${normalizeDomain(input.emailDomain)})`,
-      detail:
-        'Corporate hiring teams almost always email from their own company domain. Offers sent from Gmail, Yahoo, Outlook, or similar free providers are a strong impersonation signal.',
-      verificationHint:
-        'Find the company’s official careers email or HR contact on their website and confirm this recruiter is listed there.',
-    }),
+    build: (input) => ({ severity: 'amber', params: { domain: normalizeDomain(input.emailDomain) } }),
   },
   {
     id: 'lookalike-domain',
     applies: (input) => isLookalikeDomain(input.company, input.emailDomain),
     build: (input) => ({
       severity: 'amber',
-      title: `Email domain may impersonate ${input.company.trim() || 'the company'}`,
-      detail:
-        'The sender domain looks like a well-known company name with small changes — digit swaps (o→0), hyphenated “-hr/-careers/-jobs” labels, or unusual TLDs such as .co instead of .com.',
-      verificationHint:
-        'Compare the domain character-by-character with the company’s official website domain before replying or sharing documents.',
+      params: { company: input.company.trim() || 'the company' },
     }),
   },
   {
     id: 'whatsapp-only',
     applies: (input) => WHATSAPP_PATTERNS.some((p) => p.test(input.offerText)),
-    build: () => ({
-      severity: 'amber',
-      title: 'Offer wants to move the process to WhatsApp or Telegram only',
-      detail:
-        'Scammers often push candidates off email onto messaging apps where conversations are harder to verify and document. Real employers still use formal email for offer letters.',
-      verificationHint:
-        'Insist on continuing over official company email and ask for a verifiable HR contact on the corporate domain.',
-    }),
+    build: () => ({ severity: 'amber' }),
   },
   {
     id: 'epfo-hint',
     applies: () => true,
     build: (input) => ({
       severity: 'info',
-      title: 'Check whether the employer is registered with EPFO',
-      detail:
-        input.company.trim()
-          ? `Search EPFO’s establishment register for “${input.company.trim()}” to see if the company has an active PF registration.`
-          : 'Search EPFO’s establishment register by company name to see if the employer has an active PF registration.',
-      verificationHint: `EPFO member portal: ${EPFO_URL}`,
+      params: { company: input.company.trim() },
     }),
   },
   {
@@ -173,12 +143,7 @@ const RULES: Rule[] = [
     applies: () => true,
     build: (input) => ({
       severity: 'info',
-      title: 'Confirm the company exists on MCA records',
-      detail:
-        input.company.trim()
-          ? `Look up “${input.company.trim()}” on the Ministry of Corporate Affairs portal to confirm it is a registered company in India.`
-          : 'Look up the company name on the Ministry of Corporate Affairs portal to confirm it is a registered company in India.',
-      verificationHint: `MCA company search: ${MCA_URL}`,
+      params: { company: input.company.trim() },
     }),
   },
 ]
@@ -189,3 +154,5 @@ export function scanOfferScam(input: OfferScamInput): ScamFlag[] {
     .map((r) => ({ id: r.id, ...r.build(input) }))
     .sort((x, y) => severityOrder[x.severity] - severityOrder[y.severity])
 }
+
+export const OFFER_SCAM_RULE_IDS = RULES.map((r) => r.id)

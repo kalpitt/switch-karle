@@ -83,7 +83,7 @@ function Body() {
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField label={t('fnf-checker.basic')} hint={t('ui.money.hint')} value={draft.monthlyBasic} onChange={(v) => set({ monthlyBasic: v })} />
         <MoneyField label={t('fnf-checker.gross')} hint={t('ui.money.hint')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
-        <NumberField label={t('fnf-checker.unpaid')} suffix="days" value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
+        <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
       </Card>
@@ -92,8 +92,8 @@ function Body() {
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
           {result.lines.map((line) => (
-            <p key={line.label} className="tnum flex justify-between gap-3 text-[13px]">
-              <span>{line.label}</span>
+            <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
+              <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
               <span>
                 {formatINR(line.claimed)} → {formatINR(line.recomputed)}
                 {line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''}
@@ -103,7 +103,7 @@ function Body() {
         </Card>
         {result.flags.map((f) => (
           <p key={f.id} className={`text-[13px] ${f.severity === 'red' ? 'text-alarm' : 'text-amberflag'}`}>
-            {f.title} — {f.detail}
+            {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>

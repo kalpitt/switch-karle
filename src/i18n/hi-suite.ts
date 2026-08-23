@@ -184,6 +184,34 @@ export const hiSuite: Record<string, string> = {
     'कुछ ठीक नहीं लगता — अक्सर free-mail recruiter या lookalike domain होता है। Reply करने या documents share करने से पहले verify करें।',
   'fake-offer.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर offer email या letter का text paste करें।',
   'fake-offer.verdict.clean': 'Text में deposit की मांग नहीं मिली। Clean text verification नहीं है — भरोसा करने से पहले sender और company खुद confirm करें।',
+  'fake-offer.flag.deposit-ask.title': 'Offer आपसे पहले पैसे मांगता है',
+  'fake-offer.flag.deposit-ask.detail':
+    'असली employers joining से पहले security deposit, joining fee, training fee या laptop deposit नहीं मांगते। कोई भी upfront payment मांग एक आम job-scam pattern है।',
+  'fake-offer.flag.deposit-ask.hint':
+    'पैसा न दें। Company letterhead पर written offer मांगें और recruiter को company के official careers page या HR contact से verify करें।',
+  'fake-offer.flag.free-mail.title': 'Recruiter email free mailbox से है ({domain})',
+  'fake-offer.flag.free-mail.detail':
+    'Corporate hiring teams लगभग हमेशा अपने company domain से mail करती हैं। Gmail, Yahoo, Outlook जैसे free providers से आया offer impersonation का strong signal है।',
+  'fake-offer.flag.free-mail.hint':
+    "Company की website पर official careers email या HR contact ढूंढें और confirm करें कि यह recruiter वहां listed है।",
+  'fake-offer.flag.lookalike-domain.title': 'Email domain {company} की नकल हो सकता है',
+  'fake-offer.flag.lookalike-domain.detail':
+    'Sender domain किसी जाने-माने company name से मिलता-जुलता है — digit swaps (o→0), "-hr/-careers/-jobs" labels, या .co जैसे unusual TLDs।',
+  'fake-offer.flag.lookalike-domain.hint':
+    'Reply या documents share करने से पहले domain को company की official website domain से character-by-character compare करें।',
+  'fake-offer.flag.whatsapp-only.title': 'Offer process को सिर्फ WhatsApp या Telegram पर ले जाना चाहता है',
+  'fake-offer.flag.whatsapp-only.detail':
+    'Scammers candidates को email से messaging apps पर ले जाते हैं जहां बातचीत verify और document करना मुश्किल है। असली employers formal email use करते हैं।',
+  'fake-offer.flag.whatsapp-only.hint':
+    'Official company email पर बात जारी रखने की ज़िद करें और corporate domain पर verifiable HR contact मांगें।',
+  'fake-offer.flag.epfo-hint.title': 'Check करें कि employer EPFO में registered है या नहीं',
+  'fake-offer.flag.epfo-hint.detail':
+    'EPFO की establishment register में company name search करें और देखें कि employer की active PF registration है या नहीं।',
+  'fake-offer.flag.epfo-hint.hint': 'EPFO member portal: https://www.epfindia.gov.in/',
+  'fake-offer.flag.mca-hint.title': 'Confirm करें कि company MCA records में है',
+  'fake-offer.flag.mca-hint.detail':
+    'Ministry of Corporate Affairs portal पर company name look up करें और confirm करें कि यह India में registered company है।',
+  'fake-offer.flag.mca-hint.hint': 'MCA company search: https://www.mca.gov.in/',
   'fake-offer.verify': 'Verify करें:',
 
   // ---- Notice buyout ----
@@ -220,6 +248,13 @@ export const hiSuite: Record<string, string> = {
   'gratuity.verdict.yes': '{years} completed years की service के बाद eligible। Estimate {amount} (15/26 × last drawn × payable years)।',
   'gratuity.verdict.no': 'अभी तक {years} completed years — 5-year / 4-years-plus-190-or-240-day rule के तहत अभी eligible नहीं।',
   'gratuity.flip': 'यह picture बदलने वाली अगली date: {date}।',
+  'gratuity.note.s42-rounding':
+    'PGA s.4(2) के तहत service के साल का कोई भी हिस्सा छह महीने से ज़्यादा हुआ तो पूरा साल गिना जाता है; ठीक छह महीने नहीं।',
+  'gratuity.note.act-may-not-apply':
+    'Payment of Gratuity Act apply नहीं हो सकता (employer 10-employee से नीचे)। Company policy से फिर भी gratuity मिल सकता है।',
+  'gratuity.note.ineligible-service':
+    'Service 5 completed years से कम है और 4-years-plus fast path से भी कम (5-day week पर 190 दिन, 6-day पर 240 दिन)।',
+  'gratuity.note.cap-applied': 'Statutory ₹20,00,000 ceiling पर capped है (PGA s.4(3))।',
 
   // ---- Leave encashment ----
   'leave-encashment.title': 'Leave Encashment',
@@ -258,6 +293,12 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.verdict.pay': 'फिर से calculate किया net आपको payable: {amount}।',
   'fnf-checker.verdict.owe': 'फिर से calculate किया net negative है — आप उन्हें {amount} owe कर सकते हैं।',
   'fnf-checker.audit': 'Claimed बनाम recomputed',
+  'fnf-checker.line.salary': 'Salary (पूरा महीना)',
+  'fnf-checker.line.notice': 'Notice recovery',
+  'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
+  'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
+  'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
 
   // ---- Two Form-16 shock ----
   'form16-shock.title': 'दो Form-16 का झटका',

@@ -19,6 +19,8 @@ export interface FnFInput {
 }
 
 export interface FnFAuditLine {
+  /** Stable id the island translates (e.g. salary, unpaid-leave, gratuity). */
+  id: string
   label: string
   claimed: number
   recomputed: number
@@ -28,8 +30,8 @@ export interface FnFAuditLine {
 export interface FnFFlag {
   id: string
   severity: 'red' | 'amber'
-  title: string
-  detail: string
+  /** Values interpolated into the i18n strings keyed by this flag's id. */
+  params?: Record<string, string>
 }
 
 export interface FnFResult {
@@ -78,6 +80,7 @@ export function auditFnF(input: FnFInput): FnFResult {
     if (recomputedById.has(line.id)) recomputedById.delete(line.id)
 
     lines.push({
+      id: line.id,
       label: line.label,
       claimed,
       recomputed,
@@ -90,7 +93,7 @@ export function auditFnF(input: FnFInput): FnFResult {
 
   for (const [id, recomputed] of recomputedById) {
     const label = id === 'unpaid-leave' ? 'Unpaid leave recovery' : id === 'gratuity' ? 'Gratuity' : id
-    lines.push({ label, claimed: 0, recomputed, delta: -recomputed })
+    lines.push({ id, label, claimed: 0, recomputed, delta: -recomputed })
     if (id === 'gratuity') earnings += recomputed
     else if (id === 'unpaid-leave') deductions += recomputed
   }
@@ -104,8 +107,7 @@ export function auditFnF(input: FnFInput): FnFResult {
     flags.push({
       id: 'negative-net',
       severity: 'red',
-      title: 'You may owe them',
-      detail: `Recomputed net payable is ₹${netPayable.toLocaleString('en-IN')}; recoveries exceed earnings.`,
+      params: { amount: formatINRPlain(Math.abs(netPayable)) },
     })
   }
 
@@ -114,12 +116,16 @@ export function auditFnF(input: FnFInput): FnFResult {
       flags.push({
         id: 'notice-recovery',
         severity: 'amber',
-        title: 'Notice-period recovery on F&F',
-        detail: `₹${clampNonNeg(recovery.amount).toLocaleString('en-IN')} recovered as notice — verify basis (basic vs gross) and divisor in your appointment letter.`,
+        params: { amount: formatINRPlain(clampNonNeg(recovery.amount)) },
       })
       break
     }
   }
 
   return { lines, netPayable, flags }
+}
+
+/** Plain en-IN grouping without the ₹ glyph — the i18n string owns the currency mark. */
+function formatINRPlain(n: number): string {
+  return n.toLocaleString('en-IN')
 }
