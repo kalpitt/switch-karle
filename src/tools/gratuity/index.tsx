@@ -84,7 +84,7 @@ function Body() {
         {result.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
         {result.notes.map((n) => (
           <p key={n.id} className="text-[13px] text-ink-soft">
-            {n.detail}
+            {t(`gratuity.note.${n.id}`)}
           </p>
         ))}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>

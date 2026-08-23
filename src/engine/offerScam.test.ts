@@ -115,12 +115,15 @@ describe('scanOfferScam', () => {
   })
 
   describe('info hints', () => {
-    it('always includes EPFO and MCA pointers', () => {
+    it('always includes EPFO and MCA pointers, translated from the dictionary', async () => {
+      const { dictionaries } = await import('../i18n')
       const flags = scanOfferScam(cleanInput)
-      const epfo = flags.find((f) => f.id === 'epfo-hint')!
-      const mca = flags.find((f) => f.id === 'mca-hint')!
-      expect(epfo.verificationHint).toContain('https://www.epfindia.gov.in/')
-      expect(mca.verificationHint).toContain('https://www.mca.gov.in/')
+      const ids = flags.map((f) => f.id)
+      expect(ids).toContain('epfo-hint')
+      expect(ids).toContain('mca-hint')
+      // The URLs live in the i18n strings now; the engine only emits the id.
+      expect(dictionaries.en['fake-offer.flag.epfo-hint.hint']).toContain('https://www.epfindia.gov.in/')
+      expect(dictionaries.en['fake-offer.flag.mca-hint.hint']).toContain('https://www.mca.gov.in/')
     })
   })
 
