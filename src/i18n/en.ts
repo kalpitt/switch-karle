@@ -35,7 +35,7 @@ export const en: Record<string, string> = {
   'common.delete': 'Delete',
   'common.cancel': 'Cancel',
 
-  'ui.copy': 'Copy the headline',
+  'ui.copy': 'Copy',
   'ui.copyText': 'Copy',
   'ui.copied': 'Copied ✓',
   'ui.print': 'Print',
