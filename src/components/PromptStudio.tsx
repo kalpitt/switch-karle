@@ -47,18 +47,27 @@ function loadDecoderContext(): { breakdown?: SalaryBreakdown; flags?: RedFlag[] 
 export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) {
   const t = useT()
   const CATEGORY_LABEL = useCategoryLabel()
-  const [list, setList] = useState<Application[]>(() => load())
+  const [list, setList] = useState<Application[]>([])
+  const [hydrated, setHydrated] = useState(false)
   // Default to the first tracked application when one exists — a candidate
   // with applications in flight almost always wants prompts personalized,
   // not the generic version. They can still switch to "generic" manually.
-  const [selectedAppId, setSelectedAppId] = useState<string>(() => list[0]?.id ?? NO_APP)
+  const [selectedAppId, setSelectedAppId] = useState<string>(NO_APP)
   const [insightTemplateId, setInsightTemplateId] = useState<string>(TEMPLATES[0].id)
   const [insightContent, setInsightContent] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
   useEffect(() => {
+    const apps = load()
+    setList(apps)
+    setSelectedAppId((id) => (id === NO_APP && apps[0] ? apps[0].id : id))
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
     save(list)
-  }, [list])
+  }, [list, hydrated])
 
   // Decoder's saved offer never changes while this tab is mounted (the Decoder tab is unmounted whenever
   // this one is visible), so a one-time read on mount is enough — re-computed fresh each time the user

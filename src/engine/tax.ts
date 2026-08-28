@@ -1,14 +1,22 @@
 import type { Regime, TaxBreakdown } from './types'
 
 /**
- * Income-tax computation for FY 2026-27 (AY 2027-28).
+ * Income-tax computation for FY 2026-27 (AY 2027-28) under the Income-tax
+ * Act, 2025 (the Act in force).
  *
- * Sources (verified 2026-07-20):
+ * Citations (checked against the official Act PDF, not secondary blogs):
+ * - VERIFIED: 2026-08-23 | Source: ITA 2025 PDF https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf §156 | FY: 2026-27
+ *   New-regime rebate (the renumbered old s.87A): max ₹60,000, zero tax up to
+ *   ₹12L taxable income, with marginal relief just above ₹12L.
+ * - VERIFIED: 2026-08-23 | Source: ITA 2025 PDF https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf §19 | FY: 2026-27
+ *   Deductions from salary: standard deduction and professional tax.
+ * - VERIFIED: 2026-08-23 | Source: ITA 2025 PDF https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf §123 | FY: 2026-27
+ *   The 80C-style deduction cap (₹1.5L).
+ * - VERIFIED: 2026-08-23 | Source: ITA 2025 PDF https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf §202 | FY: 2026-27
+ *   The new personal-income-tax regime scheme.
+ * - s.157 of the Act is arrears relief only — it is NOT this rebate.
  * - Budget 2026 made NO changes to slab rates, rebate, surcharge or cess;
  *   FY 2025-26 structure carries forward.
- * - New regime rebate is now s.157 of the Income-tax Act 2026 (the renumbered
- *   s.87A): max ₹60,000, zero tax up to ₹12L taxable income, with marginal
- *   relief just above ₹12L.
  * - Standard deduction on salary: ₹75,000 (new) / ₹50,000 (old).
  */
 
@@ -70,11 +78,13 @@ function surchargeWithMarginalRelief(taxable: number, tax: number, regime: Regim
   return Math.max(0, Math.min(uncapped, capped))
 }
 
-/**
- * Full tax on a taxable income (i.e. AFTER standard deduction and all
- * applicable deductions/exemptions have been subtracted by the caller).
- */
-export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
+function rawTax(taxable: number, regime: Regime): {
+  gross: number
+  rebate: number
+  surcharge: number
+  cess: number
+  total: number
+} {
   const slabs = regime === 'new' ? NEW_REGIME_SLABS : OLD_REGIME_SLABS
   const gross = slabTax(taxable, slabs)
 
@@ -82,7 +92,7 @@ export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
   if (regime === 'new' && taxable <= 1_200_000) {
     rebate = Math.min(gross, 60_000)
   } else if (regime === 'new' && taxable > 1_200_000) {
-    // Marginal relief u/s 157: pay no more than the income above ₹12L.
+    // Marginal relief within s.156: pay no more than the income above ₹12L.
     const excess = taxable - 1_200_000
     if (gross > excess) rebate = gross - excess
   } else if (regime === 'old' && taxable <= 500_000) {
@@ -92,15 +102,30 @@ export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
   const afterRebate = gross - rebate
   const surcharge = surchargeWithMarginalRelief(taxable, afterRebate, regime)
   const cess = (afterRebate + surcharge) * 0.04
-  const totalTax = Math.round(afterRebate + surcharge + cess)
+  return { gross, rebate, surcharge, cess, total: afterRebate + surcharge + cess }
+}
 
+/**
+ * Unrounded total tax. `computeTax` rounds this; `marginalRate` differences
+ * it so the +₹1 derivative is not lost to `Math.round`.
+ */
+export function taxTotalUnrounded(taxable: number, regime: Regime): number {
+  return rawTax(taxable, regime).total
+}
+
+/**
+ * Full tax on a taxable income (i.e. AFTER standard deduction and all
+ * applicable deductions/exemptions have been subtracted by the caller).
+ */
+export function computeTax(taxable: number, regime: Regime): TaxBreakdown {
+  const r = rawTax(taxable, regime)
   return {
     regime,
     taxableIncome: taxable,
-    slabTax: Math.round(gross),
-    rebate: Math.round(rebate),
-    surcharge: Math.round(surcharge),
-    cess: Math.round(cess),
-    totalTax,
+    slabTax: Math.round(r.gross),
+    rebate: Math.round(r.rebate),
+    surcharge: Math.round(r.surcharge),
+    cess: Math.round(r.cess),
+    totalTax: Math.round(r.total),
   }
 }

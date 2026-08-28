@@ -33,3 +33,23 @@ html {
 .tnum {
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+
+html.stealth {
+  --color-saffron: #57534e;
+  --color-saffron-soft: #f4f1ec;
+  --color-leaf: #57534e;
+  --color-leaf-soft: #f4f1ec;
+}
+
+html.stealth .stealth-hide {
+  display: none !important;
+}

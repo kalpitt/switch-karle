@@ -20,9 +20,16 @@ export const hi: Record<string, string> = {
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
+  'app.footer.verified': 'नियम last verified {date}',
   'app.footer.feedback': 'कोई number गलत लगा या bug मिला? बताएं:',
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',
+
+  'nav.home': 'होम',
+  'home.kicker': 'भारतीय job switch के हर पैसे वाले पल को decode करने वाले instant micro-tools — पूरी तरह इसी device पर।',
+  'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
+  'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
+  'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता.',
 
   'tab.decoder': 'डिकोडर',
   'tab.tracker': 'ट्रैकर',
@@ -31,6 +38,15 @@ export const hi: Record<string, string> = {
   // ---- Common ----
   'common.delete': 'हटाएं',
   'common.cancel': 'रद्द करें',
+
+  'ui.copy': 'कॉपी करें',
+  'ui.copied': 'कॉपी हो गया ✓',
+  'ui.exampleChip': 'उदाहरण',
+  'ui.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
+  'ui.print': 'प्रिंट',
+  'ui.disclaimer':
+    'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
+  'ui.money.hint': '12L, 12,00,000 या 1200000',
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
@@ -85,6 +101,9 @@ export const hi: Record<string, string> = {
 
   // ---- Results ----
   'results.headline': 'आपका {ctc} CTC असल में देता है',
+  'results.exampleChip': 'उदाहरण',
+  'results.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
+  'decoder.fixedPayNote': 'In-hand सिर्फ fixed pay पर count होता है। Tax सिर्फ fixed pay पर, variable पर नहीं। Old-regime तुलना age 60 से कम मानकर है।',
   'results.headlineSub': 'उतना नहीं जितना CTC नंबर से {amount}/month लगता है।',
   'results.reaches': 'आपके bank तक पहुंचता है · सालाना {amount} in-hand',
   'regime.new': 'New regime',
@@ -101,6 +120,7 @@ export const hi: Record<string, string> = {
   'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'आपका PF योगदान',
   'results.row.professionalTax': 'Professional tax',
+  'results.row.professionalTax.pb': 'State Development Tax (पंजाब)',
   'results.row.inHand': 'सालाना आपके bank में',
   'results.offerCheck': 'Offer जांच',
   'results.flagsBadge': '{n} flag',
@@ -111,7 +131,7 @@ export const hi: Record<string, string> = {
   'flagChip.info': 'यह जान लें',
   'results.howComputed': 'यह कैसे calculate किया (हर नंबर, बिना किसी जादू के)',
   'results.howComputed.bullet1':
-    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 157 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
+    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 156 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
   'results.howComputed.bullet2':
     'In-hand में सिर्फ fixed pay गिना जाता है। Variable और ESOPs जोखिम वाला पैसा हैं — इन्हें अलग दिखाया जाता है, monthly figure में कभी नहीं। इन पर tax तभी लगता है जब असल में payout मिलता है।',
   'results.howComputed.bullet3': 'PF: Basic का 12%, दोनों तरफ से। Gratuity accrual: CTC में होने पर Basic का 4.81%।',
