@@ -18,9 +18,12 @@ ask Kalpit.** Do not invent direction from what you find in this repo.
 
 Three earlier strategy documents (`docs/AGENT-HANDOFF.md`, `docs/BLUEPRINT.md`,
 `docs/HUNT_OS_STRATEGY_BLUEPRINT.md`) were superseded and deleted from git in
-August 2026. **Any document claiming to be the plan is stale unless it is §A.**
-All three also referenced paths and npm scripts that never existed — verify
-against the code before believing any document, including this one.
+August 2026. **Any document claiming to be product direction is stale unless it
+is §A.** What lives in this repo instead: `docs/ARCHITECTURE.md` (living
+technical truth) and `docs/MASTER_IMPROVEMENT_PLAN.md` on the
+`docs/master-implementation-plan` branch (executed quality-cycle record —
+history and parked items, not direction). All docs are subordinate to the code:
+verify against the repo before believing any of them, including this one.
 
 ## Never do these five things
 
@@ -35,26 +38,34 @@ against the code before believing any document, including this one.
    analytics, no SEO submission. Building *so distribution is easy later* is
    required; *doing* it is not authorised.
 
-**Live landmine.** `src/engine/tax.ts` and `src/i18n/en.ts` cite the new-regime
-rebate as "s.157 of the Income-tax Act 2026". It is probably wrong — five
-secondary sources say Section 156 of the Act 2025. The computed values are
-correct and golden-tested, so this is a citation defect, not a math defect.
-**Do not fix it.** It is waiting on a chartered accountant's review, not on an
-AI's opinion. The same holds for every other statutory constant in the engine.
+**Statutory citations (synced 2026-08-23).** The old s.157/"Act 2026" rebate
+defect is fixed on `quality/suite-pass` against the official Income-tax Act,
+2025 PDF — see the `VERIFIED:` markers in `src/engine/tax.ts`. Standing rule
+unchanged: never touch a statutory number, citation, or legal claim without a
+primary source (Act / notification / circular), never a blog or another AI.
+Unresolved constants stay marked `CANDIDATE` and wait for a human chartered
+accountant. Living status table: `docs/ARCHITECTURE.md`.
 
 ## Commands
 
 ```bash
 npm install
-npm run dev        # local dev server
-npm test           # vitest — engine golden cases + i18n parity
+npm run dev        # Astro dev server
+npm test           # vitest — engine goldens, i18n freeze, purity
 npm run typecheck  # tsc -b --noEmit
 npm run lint       # oxlint
-npm run build      # tsc -b && vite build
+npm run build      # astro build
+npm run check:base # asset URLs under the configured base
+npm run check:seo  # canonical + OG; no analytics in dist/
 ```
 
-All four of `test`, `typecheck`, `lint` and `build` must pass before you open a
-PR. CI runs the same four and blocks the deploy on any of them.
+`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must pass
+before you push to `build/suite`. Merging to `main` deploys — only Kalpit does
+that.
+
+Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not
+delete or blank keys in `hi.ts`. `/hi/<slug>/` twins are first-class; do not
+occupy the `hi` slug.
 
 ## The one architectural rule
 

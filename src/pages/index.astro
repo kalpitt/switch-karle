@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro'
+import HomeTool from '../tools/home/index'
+
+const title = 'Switch Karle — Decode your CTC. Know your real salary.'
+const description =
+  'Switch Karle — decode your Indian job offer. CTC to real in-hand salary, red-flag scanner for notice periods, bonds and variable pay. Free, open source, 100% in your browser.'
+const site = (import.meta.env.SITE || 'https://kalpit.me').replace(/\/$/, '')
+const base = (import.meta.env.BASE_URL || '/').endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`
+const url = `${site}${base}`
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Switch Karle',
+  url,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+  description,
+}
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} lang="en">
+  <HomeTool client:load lang="en" />
+</Base>

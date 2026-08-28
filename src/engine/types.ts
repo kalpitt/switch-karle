@@ -2,9 +2,32 @@
 
 export type Regime = 'new' | 'old'
 
-/** States we have professional-tax data for; 'other' uses 0 and is flagged approximate. */
+/** States we have a PT slot for; unverified-levy codes are ₹0 and flagged approximate. */
 export type StateCode =
-  | 'KA' | 'MH' | 'TN' | 'TG' | 'AP' | 'WB' | 'GJ' | 'MP' | 'KL' | 'OD' | 'DL' | 'HR' | 'UP' | 'RJ' | 'other'
+  | 'KA'
+  | 'MH'
+  | 'TN'
+  | 'TG'
+  | 'AP'
+  | 'WB'
+  | 'GJ'
+  | 'MP'
+  | 'KL'
+  | 'OD'
+  | 'DL'
+  | 'HR'
+  | 'UP'
+  | 'RJ'
+  | 'PB'
+  | 'BR'
+  | 'AS'
+  | 'JH'
+  | 'CG'
+  | 'SK'
+  | 'ML'
+  | 'TR'
+  | 'PY'
+  | 'other'
 
 export interface EsopGrant {
   /** Annualized grant value as quoted in the CTC. */
@@ -81,6 +104,8 @@ export interface SalaryBreakdown {
   /** Annual cash gross salary (excludes employer PF and gratuity). */
   grossSalary: number
   professionalTaxAnnual: number
+  /** Old-regime HRA exemption baked into oldRegime.taxableIncome. 0 if no rent. */
+  hraExemptionAnnual: number
   newRegime: TaxBreakdown
   oldRegime: TaxBreakdown
   /** The cheaper of the two regimes. */

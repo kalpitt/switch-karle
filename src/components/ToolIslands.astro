@@ -1,0 +1,70 @@
+---
+import DecoderTool from '../tools/decoder/index'
+import TrackerTool from '../tools/tracker/index'
+import PromptsTool from '../tools/prompts/index'
+import OfferComparisonTool from '../tools/offer-comparison/index'
+import RealHikeTool from '../tools/real-hike/index'
+import VariableRealityTool from '../tools/variable-reality/index'
+import BonusClawbackTool from '../tools/bonus-clawback/index'
+import EsopRealityTool from '../tools/esop-reality/index'
+import RelocationTool from '../tools/relocation/index'
+import FakeOfferTool from '../tools/fake-offer/index'
+import NoticeBuyoutTool from '../tools/notice-buyout/index'
+import GratuityTool from '../tools/gratuity/index'
+import LeaveEncashmentTool from '../tools/leave-encashment/index'
+import FnfCheckerTool from '../tools/fnf-checker/index'
+import Form16ShockTool from '../tools/form16-shock/index'
+import ResignationLetterTool from '../tools/resignation-letter/index'
+import ManagerScriptTool from '../tools/manager-script/index'
+import HrScriptTool from '../tools/hr-script/index'
+import CounterOfferTool from '../tools/counter-offer/index'
+import HandoverDocTool from '../tools/handover-doc/index'
+import RelievingChaserTool from '../tools/relieving-chaser/index'
+import EpfTransferTool from '../tools/epf-transfer/index'
+import BgvPrepTool from '../tools/bgv-prep/index'
+import InsuranceGapTool from '../tools/insurance-gap/index'
+import TaxDeclarationTool from '../tools/tax-declaration/index'
+import NoticeTrackerTool from '../tools/notice-tracker/index'
+import BondScannerTool from '../tools/bond-scanner/index'
+import RedactorTool from '../tools/redactor/index'
+import ClauseLibraryTool from '../tools/clause-library/index'
+import { isHrScriptSlug } from '../data/hrScripts'
+import type { Lang } from '../i18n'
+
+interface Props {
+  slug: string
+  lang: Lang
+}
+
+const { slug, lang } = Astro.props
+---
+
+{slug === 'decoder' && <DecoderTool client:load lang={lang} />}
+{slug === 'tracker' && <TrackerTool client:load lang={lang} />}
+{slug === 'prompts' && <PromptsTool client:load lang={lang} />}
+{slug === 'offer-comparison' && <OfferComparisonTool client:load lang={lang} />}
+{slug === 'real-hike' && <RealHikeTool client:load lang={lang} />}
+{slug === 'variable-reality' && <VariableRealityTool client:load lang={lang} />}
+{slug === 'bonus-clawback' && <BonusClawbackTool client:load lang={lang} />}
+{slug === 'esop-reality' && <EsopRealityTool client:load lang={lang} />}
+{slug === 'relocation' && <RelocationTool client:load lang={lang} />}
+{slug === 'fake-offer' && <FakeOfferTool client:load lang={lang} />}
+{slug === 'notice-buyout' && <NoticeBuyoutTool client:load lang={lang} />}
+{slug === 'gratuity' && <GratuityTool client:load lang={lang} />}
+{slug === 'leave-encashment' && <LeaveEncashmentTool client:load lang={lang} />}
+{slug === 'fnf-checker' && <FnfCheckerTool client:load lang={lang} />}
+{slug === 'form16-shock' && <Form16ShockTool client:load lang={lang} />}
+{slug === 'resignation-letter' && <ResignationLetterTool client:load lang={lang} />}
+{slug === 'manager-script' && <ManagerScriptTool client:load lang={lang} />}
+{isHrScriptSlug(slug) && <HrScriptTool client:load slug={slug} lang={lang} />}
+{slug === 'counter-offer' && <CounterOfferTool client:load lang={lang} />}
+{slug === 'handover-doc' && <HandoverDocTool client:load lang={lang} />}
+{slug === 'relieving-chaser' && <RelievingChaserTool client:load lang={lang} />}
+{slug === 'epf-transfer' && <EpfTransferTool client:load lang={lang} />}
+{slug === 'bgv-prep' && <BgvPrepTool client:load lang={lang} />}
+{slug === 'insurance-gap' && <InsuranceGapTool client:load lang={lang} />}
+{slug === 'tax-declaration' && <TaxDeclarationTool client:load lang={lang} />}
+{slug === 'notice-tracker' && <NoticeTrackerTool client:load lang={lang} />}
+{slug === 'bond-scanner' && <BondScannerTool client:load lang={lang} />}
+{slug === 'redactor' && <RedactorTool client:load lang={lang} />}
+{slug === 'clause-library' && <ClauseLibraryTool client:load lang={lang} />}
