@@ -10,6 +10,7 @@ import {
   ExampleNote,
   InheritNote,
   MoneyField,
+  NumberField,
   Select,
   ShareRow,
   Toggle,
@@ -29,6 +30,12 @@ interface Draft {
   nextCtc: number
   nextVariable: number
   nextState: StateCode
+  /**
+   * The new offer's basic as a percent of CTC. Without it the new CTC gets
+   * modelled with the current employer's stuffing, which is the thing this
+   * tool exists to expose.
+   */
+  nextBasicPercent: number
   haircut: boolean
 }
 
@@ -41,6 +48,7 @@ function fromDecoder(): Draft {
     nextCtc: Math.round(o.ctcAnnual * 1.3),
     nextVariable: o.variableAnnual,
     nextState: o.state,
+    nextBasicPercent: o.basicPercent,
     haircut: false,
   }
 }
@@ -53,6 +61,7 @@ function skeleton(): Draft {
     nextCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.3),
     nextVariable: DEFAULT_OFFER.variableAnnual,
     nextState: DEFAULT_OFFER.state,
+    nextBasicPercent: DEFAULT_OFFER.basicPercent,
     haircut: false,
   }
 }
@@ -63,11 +72,13 @@ function asOffer(
   state: StateCode,
   template: OfferInput,
   kind: 'current' | 'next',
+  basicPercent?: number,
 ): OfferInput {
   const offer: OfferInput = { ...template, ctcAnnual: ctc, variableAnnual: variable, state }
   if (kind === 'next') {
     return {
       ...offer,
+      basicPercent: basicPercent ?? offer.basicPercent,
       joiningBonus: undefined,
       old: {
         rentPaidMonthly: 0,
@@ -112,7 +123,7 @@ function Body() {
     () =>
       realHike({
         current: asOffer(draft.currentCtc, draft.currentVariable, draft.currentState, template, 'current'),
-        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template, 'next'),
+        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template, 'next', draft.nextBasicPercent),
         variablePayout: draft.haircut ? 0.7 : 1,
       }),
     [draft, template],
@@ -156,6 +167,14 @@ function Body() {
           onChange={(v) => set({ nextVariable: v })}
         />
         <Select label={t('real-hike.nextState')} value={draft.nextState} onChange={(v) => set({ nextState: v })} options={states} />
+        <NumberField
+          label={t('real-hike.nextBasic')}
+          hint={t('real-hike.nextBasicHint')}
+          suffix="%"
+          max={100}
+          value={draft.nextBasicPercent}
+          onChange={(v) => set({ nextBasicPercent: Math.min(100, v) })}
+        />
         <Toggle
           label={t('real-hike.haircut')}
           hint={t('real-hike.haircutHint')}

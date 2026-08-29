@@ -67,6 +67,8 @@ export const hiSuite: Record<string, string> = {
   'real-hike.currentState': 'मौजूदा राज्य',
   'real-hike.nextCtc': 'नया CTC',
   'real-hike.nextVariable': 'नया variable',
+  'real-hike.nextBasic': 'नया offer: CTC का कितना % basic',
+  'real-hike.nextBasicHint': 'उसी CTC पर basic कम है तो PF भी कम और gratuity भी कम। नए offer letter से देख लें।',
   'real-hike.nextState': 'नया राज्य',
   'real-hike.haircut': 'मानें कि variable 70% pay होगा',
   'real-hike.haircutHint': 'Average-year haircut। Off करने पर quoted variable को पक्का मान लिया जाता है।',
@@ -254,6 +256,10 @@ export const hiSuite: Record<string, string> = {
   'notice-buyout.verdict.pay': 'बाकी notice buyout करने में लगभग {amount} लगेगा। यह letter तय करती है, कोई कानून नहीं।',
   'notice-buyout.verdict.recover':
     'वे unserved notice के लिए F&F से लगभग {amount} recover करने की कोशिश कर सकते हैं। Appointment letter check करें।',
+  'notice-buyout.leaveDays': 'Notice के बदले लगाए गए leave days',
+  'notice-buyout.leaveDaysHint': 'अगर offset करने नहीं देंगे तो 0 रखें। Unserved days से ज़्यादा कभी नहीं।',
+  'notice-buyout.leaveApplied': '{days} leave days लगाए गए — {net} unserved days बचे। इनके बिना quote {before} है।',
+  'notice-buyout.leaveCandidate': 'Leave को notice के बदले लगाया जा सकता है या नहीं, यह आपके appointment letter और company policy से तय होता है, किसी statute से नहीं। भरोसा करने से पहले लिखित में ले लें।',
   'notice-buyout.divisor':
     'ज़्यादातर letters monthly figure को 30 से divide करती हैं, 26 से नहीं और actual calendar month से भी नहीं। यह contractual practice है, कानून नहीं।',
   'notice-buyout.bothBases': 'दोनों bases, side by side',
@@ -398,6 +404,7 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'सिर्फ इसी page पर रहता है।',
   'resignation-letter.copyBlocked': 'Copy unlock करने के लिए company, role, manager और अपना नाम भरें।',
+  'resignation-letter.earliestJoin': 'EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी last working day के अगले दिन।',
   'resignation-letter.epfo':
     'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
   'resignation-letter.body.professional':

@@ -83,6 +83,8 @@ export const en: Record<string, string> = {
   'real-hike.currentState': 'Current state',
   'real-hike.nextCtc': 'New CTC',
   'real-hike.nextVariable': 'New variable',
+  'real-hike.nextBasic': 'New offer: basic as % of CTC',
+  'real-hike.nextBasicHint': 'A lower basic on the same CTC means less PF and less gratuity. Read it off the new offer letter.',
   'real-hike.nextState': 'New state',
   'real-hike.haircut': 'Assume variable pays 70%',
   'real-hike.haircutHint': 'Average-year haircut. Off = treat quoted variable as certain.',
@@ -245,6 +247,10 @@ export const en: Record<string, string> = {
   'notice-buyout.gross': 'Monthly gross',
   'notice-buyout.verdict.pay': 'Buying out the rest of the notice is about {amount}. The letter, not a statute, sets this.',
   'notice-buyout.verdict.recover': 'They can try to recover about {amount} from F&F for unserved notice. Check the appointment letter.',
+  'notice-buyout.leaveDays': 'Leave days set against notice',
+  'notice-buyout.leaveDaysHint': '0 if they will not let you offset. Never more than the unserved days.',
+  'notice-buyout.leaveApplied': '{days} leave days applied — {net} unserved days left. Without them the quote is {before}.',
+  'notice-buyout.leaveCandidate': 'Whether leave may be set against notice at all is your appointment letter and company policy, not a statute. Get it in writing before you count on it.',
   'notice-buyout.divisor': 'Most letters divide the monthly figure by 30, not 26 and not the actual calendar month. That is contractual practice, not a law.',
   'notice-buyout.bothBases': 'Both bases, side by side',
   'notice-buyout.row.basic': 'On monthly basic',
@@ -381,6 +387,7 @@ export const en: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'Stays on this page only.',
   'resignation-letter.copyBlocked': 'Fill company, role, manager and your name to unlock copy.',
+  'resignation-letter.earliestJoin': 'Earliest join date with no EPFO overlap: {date} — the day after your last working day.',
   'resignation-letter.epfo':
     'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
   'resignation-letter.body.professional':
