@@ -8,8 +8,8 @@ import {
   Card,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
-  NumberField,
   Select,
   ShareRow,
   Toggle,
@@ -17,10 +17,10 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.hike.v1' as const
-const L = 100_000
 
 interface Draft {
   currentCtc: number
@@ -90,6 +90,7 @@ export default function RealHikeTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(skeleton)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
@@ -140,21 +141,19 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('real-hike.formTitle')}</h2>
         <MoneyField label={t('real-hike.currentCtc')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
-        <NumberField
+        <MoneyField
           label={t('real-hike.currentVariable')}
-          suffix="LPA"
-          step={0.5}
-          value={draft.currentVariable / L}
-          onChange={(v) => set({ currentVariable: v * L })}
+          hint={t('ui.money.hint')}
+          value={draft.currentVariable}
+          onChange={(v) => set({ currentVariable: v })}
         />
         <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
         <MoneyField label={t('real-hike.nextCtc')} hint={t('ui.money.hint')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
-        <NumberField
+        <MoneyField
           label={t('real-hike.nextVariable')}
-          suffix="LPA"
-          step={0.5}
-          value={draft.nextVariable / L}
-          onChange={(v) => set({ nextVariable: v * L })}
+          hint={t('ui.money.hint')}
+          value={draft.nextVariable}
+          onChange={(v) => set({ nextVariable: v })}
         />
         <Select label={t('real-hike.nextState')} value={draft.nextState} onChange={(v) => set({ nextState: v })} options={states} />
         <Toggle
@@ -163,6 +162,7 @@ function Body() {
           checked={draft.haircut}
           onChange={(v) => set({ haircut: v })}
         />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">

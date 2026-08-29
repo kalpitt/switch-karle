@@ -22,6 +22,8 @@ export const en: Record<string, string> = {
   'app.stealth': 'Notes mode',
   'app.stealthHint': 'Looks like notes. Same tools.',
   'app.stealthTitle': 'Notes',
+  'ui.inherit': 'Basic, HRA and the PF split come from your saved Decoder offer — this tool only changes what it asks for.',
+  'ui.inheritLink': 'Open Decoder',
   'home.pinned': 'Start here',
   'home.cat.offer': 'The offer on the table',
   'home.cat.exit': 'The money on the way out',

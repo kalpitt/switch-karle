@@ -9,6 +9,7 @@ import {
   Card,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
   Select,
   ShareRow,
@@ -17,7 +18,8 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.relocation.v1' as const
 
@@ -82,6 +84,7 @@ export default function RelocationTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
@@ -159,6 +162,7 @@ function Body() {
         <Select label={t('relocation.toState')} value={draft.toState} onChange={(v) => set({ toState: v })} options={states} />
         <Toggle label={t('relocation.toMetro')} hint={t('relocation.metroHint')} checked={draft.toMetro} onChange={(v) => set({ toMetro: v })} />
         <MoneyField label={t('relocation.toRent')} hint={t('relocation.rentHint')} value={draft.toRent} onChange={(v) => set({ toRent: v })} />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">

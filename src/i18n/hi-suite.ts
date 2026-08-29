@@ -14,6 +14,10 @@
  * surrounding sentence is Devanagari.
  */
 export const hiSuite: Record<string, string> = {
+  // ---- Decoder inheritance disclosure ----
+  'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
+  'ui.inheritLink': 'Decoder खोलें',
+
   // ---- Home: the journey ----
   'home.pinned': 'यहाँ से शुरू करें',
   'home.cat.offer': 'सामने रखा offer',

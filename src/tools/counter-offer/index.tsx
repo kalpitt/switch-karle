@@ -6,6 +6,7 @@ import {
   Card,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
   ShareRow,
   Toggle,
@@ -13,7 +14,8 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.counter.v1' as const
 
@@ -44,6 +46,7 @@ export default function CounterOfferTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [hydrated, setHydrated] = useState(false)
   const [template, setTemplate] = useState(DEFAULT_OFFER)
@@ -92,6 +95,7 @@ function Body() {
         <MoneyField label={t('counter-offer.outside')} hint={t('ui.money.hint')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />
         <Toggle label={t('counter-offer.promo')} checked={draft.promisedPromo} onChange={(v) => set({ promisedPromo: v })} />
         <Toggle label={t('counter-offer.team')} checked={draft.teamStay} onChange={(v) => set({ teamStay: v })} />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (

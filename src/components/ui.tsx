@@ -360,3 +360,18 @@ export function ExampleNote({
     </p>
   )
 }
+
+/**
+ * Says out loud that a tool is standing on the Decoder's saved offer for the
+ * fields it never asks for — the basic/HRA split, the PF settings.
+ */
+export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel: string; href: string }) {
+  return (
+    <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-xs leading-relaxed text-ink-faint">
+      {text}{' '}
+      <a href={href} className="font-semibold text-saffron underline">
+        {linkLabel}
+      </a>
+    </p>
+  )
+}
