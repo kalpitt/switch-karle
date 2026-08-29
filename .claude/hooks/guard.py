@@ -188,27 +188,18 @@ def handle_bash(ti):
     # so it is disabled here, exactly as the template comment instructs.
     cross_repo = False
 
-    # The main/commit rules are THIS repo's write policy: a git command whose
-    # effective dir (`cd <path> &&` or `git -C <path>`) is another repo is out
-    # of scope for them (2026-07-20 false positives).
-    in_repo = cmd_targets_this_repo(cmd)
-
-    if not cross_repo and in_repo:
-        if re.search(r"\bgit\s+push\b", cmd) and re.search(r"\bmain\b|\bmaster\b", cmd):
-            deny("Never push raw git to main. Pushing main deploys this public "
-             "site via .github/workflows/pages.yml. Branch + PR; Kalpit merges.")
-        branch_dir = git_effective_dir(cmd) \
-            or os.environ.get("CLAUDE_PROJECT_DIR") or "."
-        if re.search(r"\bgit\s+commit\b", cmd) \
-                and current_branch(branch_dir) in ("main", "master"):
-            deny("Never commit directly to main. This repo has no record lane "
-             "and no record_commit.py: everything is branch + PR.")
-        if re.search(r"\bgit\s+push\b", cmd) and re.search(r"\s(--force|-f)\b", cmd):
-            deny("Force-push is blocked. Ask Kalpit explicitly.")
-        if re.search(r"\bgit\s+branch\s+-D\b", cmd) \
-                or (re.search(r"\bgit\s+push\b", cmd) and "--delete" in cmd):
-            deny("Branch deletion is gated — ask Kalpit before deleting "
-                 "branches (deletions are one of the four approval gates).")
+    # No trunk rules here. A GitHub ruleset on this repo enforces them
+    # server-side (deletion, non_fast_forward, pull_request) — verified
+    # 2026-08-29: a direct push to the default branch is rejected with GH013.
+    # That rule holds for every tool, from any directory, however the command
+    # is spelled. This hook could only ever pattern-match raw command text: it
+    # false-positived three times on prose in one session, and missed a
+    # force-push run from a clone in /tmp on the same day. Duplicating it here
+    # would add false alarms and no protection.
+    #
+    # What remains above IS still load-bearing: handle_edit blocks writing
+    # secret material and touching the governance symlink, at write time,
+    # before anything reaches git. A ruleset cannot do that.
     allow()
 
 
