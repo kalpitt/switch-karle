@@ -1,8 +1,9 @@
 # AGENTS.md — Switch Karle
 
-A free, open-source, on-device toolkit for the Indian job switch. React 19 +
-TypeScript, a pure-TypeScript tax engine, PWA, no backend and no analytics by
-design. Owner: **Kalpit** — he owns product decisions, you own technical
+A free, open-source toolkit for the Indian job switch. React 19 + TypeScript, a
+pure-TypeScript tax engine, PWA. Local-first: as of 2026-08-30 there is still no
+backend and no analytics, but that is now a default rather than a boundary — see
+`PRIVACY.md`. Owner: **Kalpit** — he owns product decisions, you own technical
 execution. He is a non-developer, so lead with one plain-English line before any
 technical block.
 
@@ -29,8 +30,11 @@ verify against the repo before believing any of them, including this one.
 
 1. **Never merge to `main`.** Branch → PR → Kalpit merges. Merging deploys to
    production. No force-push, no branch deletion without his say-so.
-2. **Never let user data leave the device except by the user's own action.**
-   See `PRIVACY.md`. This is the product, not a preference.
+2. **Never move user data without the user having turned on a named feature
+   that needs it, and never sell or share it with anyone.** See `PRIVACY.md`
+   for the full test. The absolutist version of this rule — nothing leaves the
+   device, ever — was retired 2026-08-30; local-first is now the default rather
+   than the boundary.
 3. **Never ship a statutory number or legal claim untraced to a primary
    source.** Not from memory, not from another AI, not from a tax blog.
 4. **Never ship a tool in English only.** EN and HI both, or it does not ship.
