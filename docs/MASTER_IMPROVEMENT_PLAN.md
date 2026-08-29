@@ -29,7 +29,7 @@ Five independent agents audited the branch after implementation: money-math re-d
 ## 3. Standing requirements (always binding)
 
 1. Never merge to `main`; `build/suite` → `main` only when Kalpit says deploy.
-2. User data never leaves the device except by the user's own action (`PRIVACY.md`).
+2. User data moves only to deliver a named feature the user turned on, and is never sold or shared (`PRIVACY.md`). The absolutist "never leaves the device" version was retired 2026-08-30.
 3. No statutory number or legal claim without a primary source named in a repo doc. `VERIFIED:` markers come only from Acts / notifications / official PDFs — never TaxGuru / Greythr / another AI.
 4. English and Hindi, or it does not ship. Domain words stay Latin: CTC, PF, HRA, ESOP, F&F, LWD.
 5. No distribution activity (Search Console, analytics, SEO submission, promotion).
