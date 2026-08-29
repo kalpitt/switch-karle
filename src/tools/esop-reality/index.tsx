@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
-import { esopReality } from '../../engine/esop'
+import { esopReality, type VestCadence } from '../../engine/esop'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
@@ -9,6 +9,7 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  Select,
   ShareRow,
   Toggle,
   VerdictBanner,
@@ -25,11 +26,13 @@ interface Draft {
   fmv: number
   cliffMonths: number
   vestMonths: number
+  vestCadence: VestCadence
   liquid: boolean
 }
 
 const DEFAULT_DRAFT: Draft = {
   shares: 1_000,
+  vestCadence: 'monthly',
   strike: 10,
   fmv: 110,
   cliffMonths: 12,
@@ -100,6 +103,15 @@ function Body() {
         <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
         <NumberField label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
         <NumberField label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
+        <Select
+          label={t('esop-reality.cadence')}
+          value={draft.vestCadence}
+          onChange={(v) => set({ vestCadence: v })}
+          options={[
+            { value: 'monthly', label: t('esop-reality.cadence.monthly') },
+            { value: 'annual', label: t('esop-reality.cadence.annual') },
+          ]}
+        />
         <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
       </Card>
 
@@ -123,7 +135,10 @@ function Body() {
           ))}
         </Card>
         {result.postExitWindowNote && <p className="text-[13px] text-amberflag">{t('esop-reality.illiquid')}</p>}
-        <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLinear')}</p>
+        <p className="text-[13px] text-ink-soft">
+          {t(draft.vestCadence === 'annual' ? 'esop-reality.vestAnnual' : 'esop-reality.vestLinear')}
+        </p>
+        <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLetter')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.saleNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.provisional')}</p>
         {!isExample && (

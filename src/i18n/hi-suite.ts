@@ -146,8 +146,14 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.verdict':
     'Exercise करने में {cost} plus लगभग {tax} tax लगता है — कुछ भी बेचने से पहले उस दिन {cash} cash में चाहिए। Perquisite {perq}।',
   'esop-reality.underwater': 'Strike FMV से ऊपर है — perquisite ₹0 है। Exercise करने में फिर भी {cost} cash लगेगा।',
+  'esop-reality.cadence': 'Vest कैसे होता है',
+  'esop-reality.cadence.monthly': 'हर महीने',
+  'esop-reality.cadence.annual': 'हर साल',
   'esop-reality.vestLinear':
-    'Vest को monthly model किया गया है (shares × month / vest period)। Annual-vest वाले letters अगली anniversary तक 0 पर रहते हैं।',
+    'Monthly vest मानकर बनाया गया है: cliff निकलने के बाद shares × महीना ÷ vest period।',
+  'esop-reality.vestAnnual':
+    'बराबर सालाना tranches मानकर बनाया गया है — एक cliff पर, फिर हर anniversary पर। बीच में कुछ नहीं जुड़ता, चाहे आप कितना भी रुकें।',
+  'esop-reality.vestLetter': 'आपका grant letter तय करता है कि इनमें से क्या सही है। कोई भी reading उसे पढ़ती नहीं है।',
   'esop-reality.saleNote': 'Sale एक अलग capital-gains event है। यह tool exercise तक ही जाता है।',
   'esop-reality.vestTitle': 'Vest Schedule',
   'esop-reality.vestRow': 'महीना {month}',
