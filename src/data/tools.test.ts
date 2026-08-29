@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { TOOLS } from './tools'
 import { NAV_SLUGS, homeSections, pinnedTools } from './home'
+import { NOTICE_TOOL } from './noticeLinks'
+import { noticeTracker } from '../engine/noticeTracker'
 
 describe('tool registry', () => {
   it('has unique kebab-case English slugs', () => {
@@ -30,5 +32,22 @@ describe('home layout', () => {
 
   it('orders the sections offer → exit → documents → landing', () => {
     expect(homeSections().map((s) => s.category)).toEqual(['offer', 'exit', 'documents', 'landing'])
+  })
+})
+
+describe('notice-tracker cockpit links', () => {
+  it('points every linked milestone at a tool that exists', () => {
+    for (const slug of Object.values(NOTICE_TOOL)) {
+      expect(TOOLS.some((tool) => tool.slug === slug)).toBe(true)
+    }
+  })
+
+  it('links every milestone the engine emits except the physical hand-back', () => {
+    const ids = noticeTracker({ resignDate: '2026-08-01', noticePeriodDays: 90, asOf: '2026-08-01' }).milestones.map(
+      (m) => m.id,
+    )
+    const linked = ids.filter((id) => NOTICE_TOOL[id])
+    expect(ids.filter((id) => !NOTICE_TOOL[id])).toEqual(['asset-return'])
+    expect(linked.length).toBe(5)
   })
 })

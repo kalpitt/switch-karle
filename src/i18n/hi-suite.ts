@@ -645,6 +645,7 @@ export const hiSuite: Record<string, string> = {
   'notice-tracker.item.insurance-end': 'Group mediclaim खत्म होता है',
   'notice-tracker.item.pf-doe': 'HR से PF date of exit mark करने को कहें',
   'notice-tracker.item.relieving-chase': 'अगर relieving letter नहीं है, तो day-7 वाला chase शुरू करें',
+  'notice-tracker.open': '{tool} खोलें',
   'notice-tracker.due': '{date} तक due',
 
   // ---- Bond scanner ----

@@ -607,6 +607,7 @@ export const en: Record<string, string> = {
   'notice-tracker.item.insurance-end': 'Group mediclaim ends',
   'notice-tracker.item.pf-doe': 'Ask HR to mark PF date of exit',
   'notice-tracker.item.relieving-chase': 'If no relieving letter, start the day-7 chase',
+  'notice-tracker.open': 'Open {tool}',
   'notice-tracker.due': 'Due {date}',
 
   'bond-scanner.title': 'Bond scanner',
