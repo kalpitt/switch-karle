@@ -14,20 +14,10 @@ nobody re-opens them.
 1. **Home is a grid, not a journey.** No `tool.category` grouping anywhere in
    `src/tools/home/`. Audit wanted four category headings, Decoder / Offer
    comparison / Resignation pinned, nav twins dropped from the grid.
-2. **Verdict is below the form on mobile.** `order-first` appears nowhere in
-   `src/`. The results column of every island should lead on a phone.
-3. **No demo chip.** Nothing detects `DEFAULT_OFFER` or fixture dates, so a
-   visitor cannot tell example numbers from their own.
-4. **Empty is not clean.** No blank-input guard (`allBlank` / `isPristine`),
-   so fake-offer and bond-scanner render a verdict banner over empty inputs.
-5. **`ShareRow` is on 2 tools, not every money verdict.** Present in
-   `notice-buyout` and `offer-comparison` only. The primitive already exists.
 6. **No inherit disclosure.** Tools that reuse Decoder structure (hike,
    variable, compare, relocation, counter) never say so.
 7. **No CTC unit lock.** Nothing prevents a `₹` CTC and an LPA variable sitting
    in the same card.
-8. **Tagline and privacy pill still clip at 390px.** The only `break-words` in
-   `src/` is the redactor's output box.
 9. **Two Scripts tools, not one** (`hr-script`, `manager-script`). Down from six,
    so this is half-done.
 
@@ -51,6 +41,36 @@ differently-stuffed new CTC; resignation→EPF earliest safe join date;
 relieving-chaser send-on dates from LWD; leave-encashment retirement path
 scoping. The markers exist in the code; whether they behave as the audit
 describes was not confirmed here.
+
+## Closed 2026-08-29 — the mobile pass
+
+Numbering above is the audit's; the five items below keep their original
+numbers so older notes still resolve.
+
+- **2 — done.** Every two-column island's results column carries
+  `-order-1 lg:order-none`, so the verdict leads on a phone and desktop is
+  unchanged. Measured on notice-buyout at 375px: results moved from y=906
+  (below an 812px fold) to y=359.
+- **3 — done.** The example chip went from 6 tools to 16 — every tool that
+  boots on fixture numbers. The markup five tools had copied is now
+  `ExampleNote` in `ui.tsx`. Two defects fixed on the way: `form16-shock`
+  decided example-ness once at mount, so the note outlived the user's own
+  numbers, and its first paint showed a verdict on a figure hydration then
+  replaced.
+- **4 — was never open.** `fake-offer` and `bond-scanner` have guarded blank
+  input since before the audit; the guard is named `isBlank`, which the audit's
+  grep for `allBlank` / `isPristine` missed. Both render a dedicated blank
+  string, not a verdict.
+- **5 — done.** `ShareRow` went from 2 tools to 13 — Copy and Print after every
+  money verdict, gated on the example state. EPF, insurance gap, tracker, BGV
+  and the scanners were left alone: their verdicts are guidance, not a number
+  anyone pastes.
+- **8 — does not reproduce.** Checked at 320px and 375px, EN and HI, on home,
+  notice-buyout and offer-comparison: `documentElement.scrollWidth` equals the
+  viewport and no element overflows its box. The tagline and privacy pill wrap
+  normally. The only overflow found anywhere was a native `<select>` clipping
+  its own option text at 320px, which is browser behaviour. Absent
+  `break-words` was not causing a clip.
 
 ## Already fixed — do not re-open
 

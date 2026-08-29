@@ -2,7 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { leaveEncash } from '../../engine/leaveEncash'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, Select, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  Select,
+  ShareRow,
+  VerdictBanner,
+} from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -49,10 +58,20 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => leaveEncash(draft), [draft])
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
   const verdict = result.resignationFullyTaxable
     ? t('leave-encashment.verdict.resign', { amount: formatINR(result.gross) })
     : t('leave-encashment.verdict.retire', { amount: formatINR(result.gross) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+
+  const copyText = [
+    verdict,
+    `${t('leave-encashment.gross')}: ${formatINR(result.gross)}`,
+    `${t('leave-encashment.exempt')}: ${formatINR(result.exempt)}`,
+    `${t('leave-encashment.taxable')}: ${formatINR(result.taxable)}`,
+    t('ui.disclaimer'),
+  ].join('\n')
 
   return (
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -70,8 +89,12 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="space-y-4">
-        <VerdictBanner tone={result.resignationFullyTaxable ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result.resignationFullyTaxable ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card className="space-y-1 tnum text-[13px]">
           <p>
             {t('leave-encashment.gross')}: {formatINR(result.gross)}
@@ -84,6 +107,14 @@ function Body() {
           </p>
         </Card>
         <p className="text-[13px] text-ink-soft">{t('leave-encashment.note')}</p>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

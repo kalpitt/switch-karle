@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, Toggle, VerdictBanner } from '../../components/ui'
 import { todayUTC, addDays } from '../../engine/dates'
 import { insuranceGap } from '../../engine/insurance'
 import { readJson, writeJson } from '../../lib/storage'
@@ -50,6 +50,8 @@ function Body() {
     }
   }, [draft])
 
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(skeleton())
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const verdict =
     !result
@@ -68,8 +70,12 @@ function Body() {
         <DateField label={t('insurance-gap.join')} value={draft.newJoinDate} onChange={(v) => set({ newJoinDate: v })} />
         <Toggle label={t('insurance-gap.personal')} checked={draft.hasPersonalCover} onChange={(v) => set({ hasPersonalCover: v })} />
       </Card>
-      <div className="space-y-4">
-        <VerdictBanner tone={result?.uncovered ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result?.uncovered ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         {result?.joinOverlapsLwd && <p className="text-[13px] text-amberflag">{t('insurance-gap.overlap')}</p>}
         <Card className="space-y-2">
           <h3 className="text-sm font-bold">{t('insurance-gap.factors')}</h3>

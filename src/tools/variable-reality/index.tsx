@@ -3,7 +3,15 @@ import type { OfferInput } from '../../engine/types'
 import { variableReality } from '../../engine/variable'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  ShareRow,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -15,6 +23,13 @@ interface Draft {
   ctc: number
   variable: number
   monthsInFy: number
+}
+
+/** What first paint shows when the Decoder has not seeded anything. */
+const FIXTURE: Draft = {
+  ctc: DEFAULT_OFFER.ctcAnnual,
+  variable: DEFAULT_OFFER.variableAnnual,
+  monthsInFy: 12,
 }
 
 function fromDecoder(): Draft {
@@ -32,11 +47,7 @@ export default function VariableRealityTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    ctc: DEFAULT_OFFER.ctcAnnual,
-    variable: DEFAULT_OFFER.variableAnnual,
-    monthsInFy: 12,
-  })
+  const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
 
@@ -59,12 +70,20 @@ function Body() {
   )
   const result = useMemo(() => variableReality({ offer, monthsInFy: draft.monthsInFy }), [offer, draft.monthsInFy])
   const atRiskPct = result.quotedVariable <= 0 || draft.ctc <= 0 ? 0 : Math.round((result.quotedVariable / draft.ctc) * 100)
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(FIXTURE)
   const verdict = t('variable-reality.verdict', {
     pct: atRiskPct,
     fixed: formatINR(result.inHandMonthlyFixed),
     full: formatINR(result.rows[2]!.inHandMonthlyIfSpread),
   })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+
+  const copyText = [
+    verdict,
+    t('variable-reality.split', { fixed: formatLPA(result.fixedCtc), risk: formatLPA(result.proratedVariable) }),
+    t('ui.disclaimer'),
+  ].join('\n')
 
   return (
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -88,8 +107,12 @@ function Body() {
         />
       </Card>
 
-      <div className="space-y-4">
-        <VerdictBanner tone={atRiskPct > 15 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={atRiskPct > 15 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card>
           <h3 className="mb-3 text-sm font-bold">{t('variable-reality.table')}</h3>
           <div className="space-y-2">
@@ -119,6 +142,14 @@ function Body() {
           )}
           <p className="text-[13px] text-ink-soft">{t('variable-reality.fullYearTax')}</p>
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

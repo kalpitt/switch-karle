@@ -3,7 +3,16 @@ import { decodeOffer } from '../../engine/salary'
 import { esopReality } from '../../engine/esop'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -68,6 +77,8 @@ function Body() {
     [draft, taxable, regime],
   )
 
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
   const verdict = result.underwater
     ? t('esop-reality.underwater', { cost: formatINR(result.exerciseCost) })
     : t('esop-reality.verdict', {
@@ -77,6 +88,8 @@ function Body() {
         cash: formatINR(result.cashNeeded),
       })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+
+  const copyText = [verdict, t('esop-reality.provisional'), t('ui.disclaimer')].join('\n')
 
   return (
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -90,8 +103,12 @@ function Body() {
         <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
       </Card>
 
-      <div className="space-y-4">
-        <VerdictBanner tone={result.postExitWindowNote ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result.postExitWindowNote ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('esop-reality.vestTitle')}</h3>
           {result.vestTable.map((row, i) => (
@@ -109,6 +126,14 @@ function Body() {
         <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLinear')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.saleNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.provisional')}</p>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

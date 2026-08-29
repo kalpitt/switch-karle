@@ -2,9 +2,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { form16Shock } from '../../engine/form16'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, CopyButton, Disclaimer, MoneyField, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  CopyButton,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  ShareRow,
+  VerdictBanner,
+} from '../../components/ui'
 import { decodeOffer } from '../../engine/salary'
-import { DECODER_STORAGE_KEY, loadOffer } from '../../data/defaults'
+import { DECODER_STORAGE_KEY, DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -17,6 +25,14 @@ interface Draft {
   employer2Tds: number
 }
 
+/** What first paint shows when neither storage nor the Decoder seeds the fields. */
+const FIXTURE: Draft = {
+  employer1Gross: decodeOffer(DEFAULT_OFFER).grossSalary,
+  employer1Tds: 0,
+  employer2Gross: 0,
+  employer2Tds: 0,
+}
+
 export default function Form16ShockTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="form16-shock">
@@ -27,12 +43,7 @@ export default function Form16ShockTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    employer1Gross: 1_200_000,
-    employer1Tds: 0,
-    employer2Gross: 0,
-    employer2Tds: 0,
-  })
+  const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [regime, setRegime] = useState<'new' | 'old'>('new')
   const [hydrated, setHydrated] = useState(false)
   /** Where the numbers came from: fixture (example) vs decoder seed vs saved draft. */
@@ -60,6 +71,8 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => form16Shock({ ...draft, regime }), [draft, regime])
+  /** Recomputed every render so the first edit turns the example note into a verdict. */
+  const isExample = origin === 'example' && JSON.stringify(draft) === JSON.stringify(FIXTURE)
   const verdict =
     result.shock > 0
       ? t('form16-shock.verdict.owe', { amount: formatINR(result.shock) })
@@ -70,6 +83,14 @@ function Body() {
     tds: formatINR(draft.employer1Tds),
   })
 
+  const copyText = [
+    verdict,
+    `${t('form16-shock.taxable')}: ${formatINR(result.combinedTaxableApprox)}`,
+    `${t('form16-shock.tax')}: ${formatINR(result.taxIfSingleEmployer)}`,
+    `${t('form16-shock.tds')}: ${formatINR(result.tdsTotal)}`,
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -79,14 +100,9 @@ function Body() {
         <MoneyField label={t('form16-shock.e2gross')} hint={t('ui.money.hint')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
         <MoneyField label={t('form16-shock.e2tds')} hint={t('ui.money.hint')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
       </Card>
-      <div className="space-y-4">
-        {origin === 'example' ? (
-          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
-            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-              {t('ui.exampleChip')}
-            </span>
-            {t('ui.exampleNote')}
-          </p>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
         ) : (
           <VerdictBanner tone={result.shock > 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
         )}
@@ -103,13 +119,21 @@ function Body() {
         </Card>
         <p className="text-[13px] text-ink-soft">{t('form16-shock.stdNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('form16-shock.omit234')}</p>
-        {origin !== 'example' && (
+        {!isExample && (
           <Card className="space-y-2">
             <h3 className="text-sm font-bold">{t('form16-shock.form12bTitle')}</h3>
             <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-ink-soft">{form12b}</p>
             <CopyButton text={form12b} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
             <p className="text-xs leading-relaxed text-ink-faint">{t('form16-shock.form12bNote')}</p>
           </Card>
+        )}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

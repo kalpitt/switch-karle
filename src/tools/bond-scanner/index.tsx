@@ -40,7 +40,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('bond-scanner.formTitle')}</h2>
         <TextArea label={t('bond-scanner.text')} hint={t('bond-scanner.textHint')} value={text} onChange={setText} rows={12} />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         {isBlank ? (
           <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] font-semibold leading-snug text-ink-soft">
             {t('bond-scanner.verdict.blank')}

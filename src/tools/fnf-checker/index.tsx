@@ -2,7 +2,17 @@ import { useEffect, useMemo, useState } from 'react'
 import { auditFnF } from '../../engine/fnf'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  DateField,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -78,6 +88,17 @@ function Body() {
       : t('fnf-checker.verdict.pay', { amount: formatINR(result.netPayable) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [
+    verdict,
+    ...result.lines.map(
+      (line) =>
+        `${t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}: ${formatINR(line.claimed)} → ${formatINR(line.recomputed)}${
+          line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''
+        }`,
+    ),
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -90,14 +111,9 @@ function Body() {
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
-          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
-            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-              {t('ui.exampleChip')}
-            </span>
-            {t('ui.exampleNote')}
-          </p>
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
         ) : (
           <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
         )}
@@ -118,6 +134,14 @@ function Body() {
             {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

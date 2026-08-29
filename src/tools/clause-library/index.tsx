@@ -19,7 +19,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('clause-library.title')}</h2>
         <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">{t('clause-library.desc')}</p>
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('clause-library.verdict')}</VerdictBanner>
         {CLAUSES.map((c) => {
           const body = t(`clause-library.${c.id}.body`)

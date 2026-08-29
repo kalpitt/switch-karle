@@ -2,7 +2,7 @@ import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
-import { Card, Details, Disclaimer, ShareRow } from './ui'
+import { Card, Details, Disclaimer, ExampleNote, ShareRow } from './ui'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -13,15 +13,10 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
   const isExample = JSON.stringify(b.input) === JSON.stringify(DEFAULT_OFFER)
 
   return (
-    <div className="space-y-4">
+    <div className="-order-1 space-y-4 lg:order-none">
       <Card>
         {isExample && (
-          <p className="mb-3 rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2 text-[13px] font-semibold leading-snug text-amberflag">
-            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-              {t('results.exampleChip')}
-            </span>
-            {t('results.exampleNote')}
-          </p>
+          <ExampleNote chip={t('results.exampleChip')} note={t('results.exampleNote')} className="mb-3" />
         )}
         <p className="text-[13px] font-semibold text-ink-soft">
           {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}

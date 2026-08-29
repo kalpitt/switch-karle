@@ -2,7 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -17,6 +25,15 @@ interface Draft {
   teamStay: boolean
 }
 
+/** What first paint shows when the Decoder has not seeded anything. */
+const FIXTURE: Draft = {
+  currentCtc: DEFAULT_OFFER.ctcAnnual,
+  counterCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.15),
+  outsideCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.3),
+  promisedPromo: false,
+  teamStay: false,
+}
+
 export default function CounterOfferTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="counter-offer">
@@ -27,13 +44,7 @@ export default function CounterOfferTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    currentCtc: DEFAULT_OFFER.ctcAnnual,
-    counterCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.15),
-    outsideCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.3),
-    promisedPromo: false,
-    teamStay: false,
-  })
+  const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [hydrated, setHydrated] = useState(false)
   const [template, setTemplate] = useState(DEFAULT_OFFER)
 
@@ -60,6 +71,8 @@ function Body() {
 
   const counter = useMemo(() => decodeOffer({ ...template, ctcAnnual: draft.counterCtc }), [template, draft.counterCtc])
   const outside = useMemo(() => decodeOffer({ ...template, ctcAnnual: draft.outsideCtc }), [template, draft.outsideCtc])
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(FIXTURE)
   const paperGap = draft.outsideCtc - draft.counterCtc
   const bankGap = outside.inHandMonthly - counter.inHandMonthly
   const verdict =
@@ -67,6 +80,8 @@ function Body() {
       ? t('counter-offer.verdict.out', { paper: formatLPA(paperGap), bank: formatINR(bankGap) })
       : t('counter-offer.verdict.in')
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+
+  const copyText = [verdict, t('counter-offer.honest'), t('ui.disclaimer')].join('\n')
 
   return (
     <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -78,11 +93,23 @@ function Body() {
         <Toggle label={t('counter-offer.promo')} checked={draft.promisedPromo} onChange={(v) => set({ promisedPromo: v })} />
         <Toggle label={t('counter-offer.team')} checked={draft.teamStay} onChange={(v) => set({ teamStay: v })} />
       </Card>
-      <div className="space-y-4">
-        <VerdictBanner tone={paperGap > 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={paperGap > 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <p className="text-[13px] leading-relaxed text-ink-soft">{t('counter-offer.honest')}</p>
         {(draft.promisedPromo || draft.teamStay) && (
           <p className="text-[13px] text-ink-soft">{t('counter-offer.nonRupee')}</p>
+        )}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

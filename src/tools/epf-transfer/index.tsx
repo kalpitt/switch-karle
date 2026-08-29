@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, Select, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -55,6 +55,8 @@ function Body() {
     }
   }, [draft])
 
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT)
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const verdictKey = result
     ? result.prematureWithdrawalTrap
@@ -88,10 +90,14 @@ function Body() {
         <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
         <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
       </Card>
-      <div className="space-y-4">
-        <VerdictBanner tone={result?.prematureWithdrawalTrap ? 'alarm' : result && result.flags.length > 0 ? 'amber' : 'leaf'}>
-          {t(verdictKey, { years: result?.completedYears ?? 0 })}
-        </VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result?.prematureWithdrawalTrap ? 'alarm' : result && result.flags.length > 0 ? 'amber' : 'leaf'}>
+            {t(verdictKey, { years: result?.completedYears ?? 0 })}
+          </VerdictBanner>
+        )}
         {result && (
           <Card className="space-y-2">
             {result.flags.map((f) => (

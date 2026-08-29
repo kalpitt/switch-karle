@@ -70,7 +70,7 @@ function Body() {
         <TextArea label={t('handover-doc.access')} value={draft.access} onChange={(v) => set({ access: v })} rows={4} />
         <TextArea label={t('handover-doc.risks')} value={draft.risks} onChange={(v) => set({ risks: v })} rows={3} />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('handover-doc.verdict')}</VerdictBanner>
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>

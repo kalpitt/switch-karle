@@ -3,7 +3,16 @@ import { decodeOffer } from '../../engine/salary'
 import { bonusClawback } from '../../engine/clawback'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -29,6 +38,15 @@ function fromDecoder(): Draft {
   }
 }
 
+/** What first paint shows when the Decoder has not seeded anything. */
+const FIXTURE: Draft = {
+  amount: 200_000,
+  clawbackMonths: 12,
+  plannedTenureMonths: 6,
+  noticePeriodDays: DEFAULT_OFFER.noticePeriodDays,
+  netWording: true,
+}
+
 export default function BonusClawbackTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="bonus-clawback">
@@ -39,13 +57,7 @@ export default function BonusClawbackTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    amount: 200_000,
-    clawbackMonths: 12,
-    plannedTenureMonths: 6,
-    noticePeriodDays: DEFAULT_OFFER.noticePeriodDays,
-    netWording: true,
-  })
+  const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [taxableIncome, setTaxableIncome] = useState(1_800_000)
   const [regime, setRegime] = useState<'new' | 'old'>('new')
   const [hydrated, setHydrated] = useState(false)
@@ -78,6 +90,8 @@ function Body() {
     [draft, taxableIncome, regime],
   )
 
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(FIXTURE)
   const tone = result.effectiveValueAtPlanned < 0 ? 'alarm' : result.repaymentIfLeaveAtPlanned > 0 ? 'amber' : 'leaf'
   const verdict = draft.netWording
     ? t('bonus-clawback.verdict.net', {
@@ -93,6 +107,13 @@ function Body() {
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const wanted = new Set([0, Math.min(draft.plannedTenureMonths, draft.clawbackMonths), draft.clawbackMonths])
   const sample = result.curve.filter((p) => wanted.has(p.exitMonth))
+
+  const copyText = [
+    verdict,
+    t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) }),
+    t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) }),
+    t('ui.disclaimer'),
+  ].join('\n')
 
   return (
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -120,8 +141,12 @@ function Body() {
         <Toggle label={t('bonus-clawback.netMode')} hint={t('bonus-clawback.netModeHint')} checked={draft.netWording} onChange={(v) => set({ netWording: v })} />
       </Card>
 
-      <div className="space-y-4">
-        <VerdictBanner tone={tone}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={tone}>{verdict}</VerdictBanner>
+        )}
         <Card className="space-y-2">
           <p className="tnum text-[13px]">{t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) })}</p>
           <p className="tnum text-[13px]">{t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) })}</p>
@@ -140,6 +165,14 @@ function Body() {
             </p>
           ))}
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>
