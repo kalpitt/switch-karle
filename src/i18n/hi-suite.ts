@@ -14,6 +14,13 @@
  * surrounding sentence is Devanagari.
  */
 export const hiSuite: Record<string, string> = {
+  // ---- Home: the journey ----
+  'home.pinned': 'यहाँ से शुरू करें',
+  'home.cat.offer': 'सामने रखा offer',
+  'home.cat.exit': 'निकलते वक़्त का पैसा',
+  'home.cat.documents': 'जो आपको लिखना है',
+  'home.cat.landing': 'नई job में पहुँचने पर',
+
   // ---- Nav / app shell / common ----
   'nav.search': 'टूल खोजें',
   'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
