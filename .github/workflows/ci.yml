@@ -30,3 +30,16 @@ jobs:
       - run: npm run build
       - run: npm run check:base
       - run: npm run check:seo
+      - name: No private machine paths in tracked files
+        # This repo is public. A home-directory path discloses the macOS
+        # username, the machine layout, and the names of private repos.
+        # AGENTS.md carried one for months before an audit caught it on
+        # 2026-08-29. Voice has the same gate in its publish script; this
+        # repo had nothing.
+        run: |
+          if git grep -nE '(^|[[:space:]"'"'"'`(=])/(Users|home)/[A-Za-z0-9._-]+/' \
+               -- . ':(exclude).github/workflows/ci.yml'; then
+            echo "::error::Private machine path in a tracked file. Remove it."
+            exit 1
+          fi
+          echo "No private machine paths found."
