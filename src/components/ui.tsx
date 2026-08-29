@@ -335,3 +335,28 @@ export function ShareRow(props: {
     </div>
   )
 }
+
+/**
+ * Stands in for the verdict while the numbers on screen are still the built-in
+ * fixture. Callers pass the chip and note text so a tool can use its own copy.
+ */
+export function ExampleNote({
+  chip,
+  note,
+  className = '',
+}: {
+  chip: string
+  note: string
+  className?: string
+}) {
+  return (
+    <p
+      className={`rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag ${className}`}
+    >
+      <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+        {chip}
+      </span>
+      {note}
+    </p>
+  )
+}

@@ -104,7 +104,7 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t(`relieving-chaser.verdict.${draft.day}`)}</VerdictBanner>
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>

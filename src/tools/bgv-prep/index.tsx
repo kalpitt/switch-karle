@@ -60,7 +60,7 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={result.highRisk ? 'alarm' : 'leaf'}>
           {t(result.highRisk ? 'bgv-prep.verdict.risk' : 'bgv-prep.verdict.ok')}
         </VerdictBanner>

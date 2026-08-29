@@ -55,7 +55,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('redactor.formTitle')}</h2>
         <TextArea label={t('redactor.text')} hint={t('redactor.textHint')} value={text} onChange={setText} rows={14} />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={hitCount === 0 ? 'amber' : 'leaf'}>
           {hitCount === 0 ? t('redactor.verdict.none') : t('redactor.verdict.hits', { n: hitCount })}
         </VerdictBanner>

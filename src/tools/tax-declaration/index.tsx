@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  Select,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { taxDeclaration } from '../../engine/taxDeclaration'
 import { formatINR } from '../../engine/format'
 import { STATE_NAMES } from '../../engine/professionalTax'
@@ -47,6 +56,11 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => taxDeclaration({ offer, ...draft }), [offer, draft])
+  /** Untouched fixture on first paint = worked example. The money comes from
+   *  the Decoder's offer, so both it and the toggles have to be untouched. */
+  const isExample =
+    JSON.stringify(draft) === JSON.stringify(DEFAULT) &&
+    JSON.stringify(offer) === JSON.stringify(DEFAULT_OFFER)
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const old = offer.old ?? EMPTY_OLD
   const states = (Object.keys(STATE_NAMES) as StateCode[]).map((s) => ({ value: s, label: t(`state.${s}`) }))
@@ -92,10 +106,14 @@ function Body() {
         />
         <Toggle label={t('tax-declaration.80c')} checked={draft.extra80C} onChange={(v) => set({ extra80C: v })} />
       </Card>
-      <div className="space-y-4">
-        <VerdictBanner tone={result.recommendedRegime === 'new' ? 'leaf' : 'amber'}>
-          {t(result.recommendedRegime === 'new' ? 'tax-declaration.verdict.new' : 'tax-declaration.verdict.old')}
-        </VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result.recommendedRegime === 'new' ? 'leaf' : 'amber'}>
+            {t(result.recommendedRegime === 'new' ? 'tax-declaration.verdict.new' : 'tax-declaration.verdict.old')}
+          </VerdictBanner>
+        )}
         <Card className="space-y-2">
           <p className="tnum text-[13px]">{t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) })}</p>
           {result.recommendedRegime === 'new' && <p className="text-[13px] text-ink-soft">{t('tax-declaration.hraUseless')}</p>}

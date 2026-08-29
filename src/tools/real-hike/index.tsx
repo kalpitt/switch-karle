@@ -4,7 +4,16 @@ import { STATE_NAMES } from '../../engine/professionalTax'
 import { realHike } from '../../engine/hike'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  Select,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -107,6 +116,8 @@ function Body() {
     [draft, template],
   )
 
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(skeleton())
   const paper = Math.round(result.ctcHikePct)
   const bank = Math.round(result.inHandHikePct)
   const verdict = t('real-hike.verdict', { paper, bank })
@@ -146,8 +157,12 @@ function Body() {
         />
       </Card>
 
-      <div className="space-y-4">
-        <VerdictBanner tone={bank < paper ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={bank < paper ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card className="space-y-2">
           <p className="tnum text-[13px]">
             {t('real-hike.row.paper')}: {formatLPA(result.currentCtc)} → {formatLPA(result.nextCtc)} ({paper}%)

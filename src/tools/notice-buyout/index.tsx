@@ -6,6 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
   Disclaimer,
+  ExampleNote,
   MoneyField,
   NumberField,
   Select,
@@ -162,14 +163,9 @@ function Body() {
           onChange={(v) => set({ monthlyGross: v })}
         />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
-          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
-            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-              {t('ui.exampleChip')}
-            </span>
-            {t('ui.exampleNote')}
-          </p>
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
         ) : (
           <VerdictBanner>{verdict}</VerdictBanner>
         )}

@@ -5,7 +5,7 @@ import { stateHasHraMetroCity } from '../../engine/salary'
 import { relocationDelta } from '../../engine/relocation'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, MoneyField, Select, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, Disclaimer, ExampleNote, MoneyField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -20,6 +20,17 @@ interface Draft {
   toState: StateCode
   toMetro: boolean
   toRent: number
+}
+
+/** What first paint shows when the Decoder has not seeded anything. */
+const FIXTURE: Draft = {
+  ctc: DEFAULT_OFFER.ctcAnnual,
+  fromState: 'KA',
+  fromMetro: false,
+  fromRent: 40_000,
+  toState: 'MH',
+  toMetro: false,
+  toRent: 40_000,
 }
 
 function fromDecoder(): Draft {
@@ -62,15 +73,7 @@ export default function RelocationTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    ctc: DEFAULT_OFFER.ctcAnnual,
-    fromState: 'KA',
-    fromMetro: false,
-    fromRent: 40_000,
-    toState: 'MH',
-    toMetro: false,
-    toRent: 40_000,
-  })
+  const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
 
@@ -113,6 +116,8 @@ function Body() {
   )
 
   const delta = result.inHandDeltaMonthly
+/** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(FIXTURE)
   const verdict =
     delta === 0
       ? t('relocation.verdict.nil')
@@ -139,8 +144,12 @@ function Body() {
         <MoneyField label={t('relocation.toRent')} hint={t('relocation.rentHint')} value={draft.toRent} onChange={(v) => set({ toRent: v })} />
       </Card>
 
-      <div className="space-y-4">
-        <VerdictBanner tone={delta < 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+      <div className="-order-1 space-y-4 lg:order-none">
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={delta < 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+        )}
         <Card className="space-y-2">
           <p className="tnum text-[13px]">
             {t('relocation.row.inHand')}: {formatINR(result.from.inHandMonthly)} → {formatINR(result.to.inHandMonthly)}/mo

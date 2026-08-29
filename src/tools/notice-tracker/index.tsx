@@ -64,7 +64,7 @@ function Body() {
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField label={t('notice-tracker.notice')} suffix={t('unit.days')} value={draft.noticePeriodDays} onChange={(v) => set({ noticePeriodDays: v })} />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
           {result
             ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {

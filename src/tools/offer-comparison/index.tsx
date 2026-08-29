@@ -8,6 +8,7 @@ import {
   Card,
   DeltaTable,
   Disclaimer,
+  ExampleNote,
   MoneyField,
   NumberField,
   Select,
@@ -160,14 +161,9 @@ function CompareBody() {
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
-          <p className="rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag">
-            <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-              {t('offer-comparison.exampleChip')}
-            </span>
-            {t('offer-comparison.exampleNote')}
-          </p>
+          <ExampleNote chip={t('offer-comparison.exampleChip')} note={t('offer-comparison.exampleNote')} />
         ) : (
           <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}

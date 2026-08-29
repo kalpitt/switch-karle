@@ -146,7 +146,7 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="space-y-4">
+      <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('resignation-letter.verdict', { lwd })}</VerdictBanner>
         {overlap && <p className="text-[13px] text-amberflag">{t('resignation-letter.epfo')}</p>}
         <Card>
