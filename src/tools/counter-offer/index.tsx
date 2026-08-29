@@ -2,7 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, ExampleNote, MoneyField, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -73,6 +81,8 @@ function Body() {
       : t('counter-offer.verdict.in')
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [verdict, t('counter-offer.honest'), t('ui.disclaimer')].join('\n')
+
   return (
     <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -92,6 +102,14 @@ function Body() {
         <p className="text-[13px] leading-relaxed text-ink-soft">{t('counter-offer.honest')}</p>
         {(draft.promisedPromo || draft.teamStay) && (
           <p className="text-[13px] text-ink-soft">{t('counter-offer.nonRupee')}</p>
+        )}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

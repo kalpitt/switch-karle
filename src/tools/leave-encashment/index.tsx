@@ -9,6 +9,7 @@ import {
   MoneyField,
   NumberField,
   Select,
+  ShareRow,
   VerdictBanner,
 } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
@@ -64,6 +65,14 @@ function Body() {
     : t('leave-encashment.verdict.retire', { amount: formatINR(result.gross) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [
+    verdict,
+    `${t('leave-encashment.gross')}: ${formatINR(result.gross)}`,
+    `${t('leave-encashment.exempt')}: ${formatINR(result.exempt)}`,
+    `${t('leave-encashment.taxable')}: ${formatINR(result.taxable)}`,
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -98,6 +107,14 @@ function Body() {
           </p>
         </Card>
         <p className="text-[13px] text-ink-soft">{t('leave-encashment.note')}</p>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

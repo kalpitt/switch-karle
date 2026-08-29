@@ -11,6 +11,7 @@ import {
   MoneyField,
   NumberField,
   Select,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -127,6 +128,13 @@ function Body() {
     label: t(`state.${s}`),
   }))
 
+  const copyText = [
+    verdict,
+    `${t('real-hike.row.paper')}: ${formatLPA(result.currentCtc)} → ${formatLPA(result.nextCtc)} (${paper}%)`,
+    `${t('real-hike.row.bank')}: ${formatINR(result.currentRunRateMonthly)} → ${formatINR(result.nextRunRateMonthly)}/mo (${bank}%)`,
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -174,6 +182,14 @@ function Body() {
           {result.regimeFlip && <p className="text-[13px] text-amberflag">{t('real-hike.regimeFlip')}</p>}
           {result.haircutApplied && <p className="text-[13px] text-ink-soft">{t('real-hike.haircutNote')}</p>}
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

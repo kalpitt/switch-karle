@@ -9,6 +9,7 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -88,6 +89,8 @@ function Body() {
       })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [verdict, t('esop-reality.provisional'), t('ui.disclaimer')].join('\n')
+
   return (
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -123,6 +126,14 @@ function Body() {
         <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLinear')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.saleNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('esop-reality.provisional')}</p>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

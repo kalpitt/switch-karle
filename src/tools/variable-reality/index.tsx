@@ -3,7 +3,15 @@ import type { OfferInput } from '../../engine/types'
 import { variableReality } from '../../engine/variable'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, ExampleNote, MoneyField, NumberField, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  NumberField,
+  ShareRow,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -71,6 +79,12 @@ function Body() {
   })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [
+    verdict,
+    t('variable-reality.split', { fixed: formatLPA(result.fixedCtc), risk: formatLPA(result.proratedVariable) }),
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -128,6 +142,14 @@ function Body() {
           )}
           <p className="text-[13px] text-ink-soft">{t('variable-reality.fullYearTax')}</p>
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

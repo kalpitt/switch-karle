@@ -7,6 +7,7 @@ import {
   MoneyField,
   NumberField,
   Select,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -61,9 +62,17 @@ function Body() {
   const isExample =
     JSON.stringify(draft) === JSON.stringify(DEFAULT) &&
     JSON.stringify(offer) === JSON.stringify(DEFAULT_OFFER)
+  const verdict = t(result.recommendedRegime === 'new' ? 'tax-declaration.verdict.new' : 'tax-declaration.verdict.old')
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const old = offer.old ?? EMPTY_OLD
   const states = (Object.keys(STATE_NAMES) as StateCode[]).map((s) => ({ value: s, label: t(`state.${s}`) }))
+
+  const copyText = [
+    verdict,
+    t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) }),
+    ...result.proofIds.map((id) => t(`tax-declaration.proof.${id}`)),
+    t('ui.disclaimer'),
+  ].join('\n')
 
   return (
     <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -124,6 +133,14 @@ function Body() {
             </p>
           ))}
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

@@ -8,6 +8,7 @@ import {
   Disclaimer,
   ExampleNote,
   MoneyField,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -66,6 +67,10 @@ function Body() {
     : t('gratuity.verdict.no', { years: result.completedYears })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [verdict, result.flipDate ? t('gratuity.flip', { date: result.flipDate }) : '', t('ui.disclaimer')]
+    .filter(Boolean)
+    .join('\n')
+
   return (
     <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -103,6 +108,14 @@ function Body() {
             {t(`gratuity.note.${n.id}`)}
           </p>
         ))}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

@@ -9,6 +9,7 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -87,6 +88,17 @@ function Body() {
       : t('fnf-checker.verdict.pay', { amount: formatINR(result.netPayable) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
+  const copyText = [
+    verdict,
+    ...result.lines.map(
+      (line) =>
+        `${t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}: ${formatINR(line.claimed)} → ${formatINR(line.recomputed)}${
+          line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''
+        }`,
+    ),
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -122,6 +134,14 @@ function Body() {
             {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

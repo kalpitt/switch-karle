@@ -2,7 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { form16Shock } from '../../engine/form16'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, CopyButton, Disclaimer, ExampleNote, MoneyField, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  CopyButton,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  ShareRow,
+  VerdictBanner,
+} from '../../components/ui'
 import { decodeOffer } from '../../engine/salary'
 import { DECODER_STORAGE_KEY, DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
@@ -75,6 +83,14 @@ function Body() {
     tds: formatINR(draft.employer1Tds),
   })
 
+  const copyText = [
+    verdict,
+    `${t('form16-shock.taxable')}: ${formatINR(result.combinedTaxableApprox)}`,
+    `${t('form16-shock.tax')}: ${formatINR(result.taxIfSingleEmployer)}`,
+    `${t('form16-shock.tds')}: ${formatINR(result.tdsTotal)}`,
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -110,6 +126,14 @@ function Body() {
             <CopyButton text={form12b} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
             <p className="text-xs leading-relaxed text-ink-faint">{t('form16-shock.form12bNote')}</p>
           </Card>
+        )}
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>

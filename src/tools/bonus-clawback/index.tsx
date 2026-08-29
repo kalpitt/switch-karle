@@ -9,6 +9,7 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -107,6 +108,13 @@ function Body() {
   const wanted = new Set([0, Math.min(draft.plannedTenureMonths, draft.clawbackMonths), draft.clawbackMonths])
   const sample = result.curve.filter((p) => wanted.has(p.exitMonth))
 
+  const copyText = [
+    verdict,
+    t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) }),
+    t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) }),
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -157,6 +165,14 @@ function Body() {
             </p>
           ))}
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

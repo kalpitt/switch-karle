@@ -5,7 +5,16 @@ import { stateHasHraMetroCity } from '../../engine/salary'
 import { relocationDelta } from '../../engine/relocation'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, Disclaimer, ExampleNote, MoneyField, Select, Toggle, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  Disclaimer,
+  ExampleNote,
+  MoneyField,
+  Select,
+  ShareRow,
+  Toggle,
+  VerdictBanner,
+} from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -131,6 +140,14 @@ function Body() {
   const toMetroWarn = draft.toMetro && !stateHasHraMetroCity(draft.toState)
   const hraIsDisplayOnly = result.from.recommendedRegime === 'new' && result.to.recommendedRegime === 'new'
 
+  const copyText = [
+    verdict,
+    `${t('relocation.row.inHand')}: ${formatINR(result.from.inHandMonthly)} → ${formatINR(result.to.inHandMonthly)}/mo`,
+    `${t('relocation.row.pt')}: ${formatINR(result.from.professionalTaxAnnual)} → ${formatINR(result.to.professionalTaxAnnual)}/${t('relocation.year')}`,
+    `${t('relocation.row.hra')}: ${formatINR(result.hraExemptionFrom)} → ${formatINR(result.hraExemptionTo)}`,
+    t('ui.disclaimer'),
+  ].join('\n')
+
   return (
     <div data-tool="relocation" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -172,6 +189,14 @@ function Body() {
           <p className="text-[13px] text-ink-soft">{t('relocation.slabsNil')}</p>
           <p className="text-[13px] text-ink-soft">{t('relocation.noCol')}</p>
         </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copy')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>
