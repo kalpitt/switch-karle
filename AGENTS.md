@@ -10,8 +10,8 @@ technical block.
 
 **Canonical plan: §A of**
 `personal-os/context/handoffs/2026-08-22-switch-karle-master-roadmap-v2.md`
-— on Kalpit's machine at `/Users/kalpit/Documents/GitHub/personal-os/`. Raw
-source material sits beside it in `2026-08-22-switch-karle-source-doc-salvage.md`.
+in the private `personal-os` repo. Raw source
+material sits beside it in `2026-08-22-switch-karle-source-doc-salvage.md`.
 
 `personal-os` is a **separate private repo**. If you cannot read it, **stop and
 ask Kalpit.** Do not invent direction from what you find in this repo.
