@@ -314,6 +314,29 @@ export const en: Record<string, string> = {
   'fnf-checker.line.notice': 'Notice recovery',
   'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
   'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.mailTitle': 'Dispute mail draft',
+  'fnf-checker.mailHr': "HR contact's name",
+  'fnf-checker.mailHrHint': 'Left blank, the mail opens with "Dear HR team".',
+  'fnf-checker.mailYou': 'Your name',
+  'fnf-checker.mailBlocked': 'Add your name to unlock the copy button.',
+  'fnf-checker.mailNothing': 'Every line on the sheet matches the recomputation, so there is nothing to dispute. No mail is drafted.',
+  'fnf-checker.mailNote': 'Read it before you send it. It asks for a basis; it does not accuse anyone of anything.',
+  'fnf-checker.mail.subject': 'Subject: Full and final settlement — request to reconcile {n} line(s)',
+  'fnf-checker.mail.greeting': 'Dear {hr},',
+  'fnf-checker.mail.hrTeam': 'HR team',
+  'fnf-checker.mail.intro':
+    'Thank you for the full and final settlement statement for my employment ending {lwd}. Before I close it out, I would like to reconcile the lines below against my own working.',
+  'fnf-checker.mail.short':
+    '{n}. {label} — the statement shows {claimed}. My working gives {recomputed}, a difference of {delta} in my favour. Could you share the basis used?',
+  'fnf-checker.mail.over':
+    '{n}. {label} — the statement shows {claimed}, where my working gives {recomputed}. Flagging it so it does not come back as a recovery later.',
+  'fnf-checker.mail.missing':
+    '{n}. {label} — I do not see this line on the statement. My working gives {recomputed}. Could you confirm whether it has been excluded, and on what basis?',
+  'fnf-checker.mail.notice-recovery':
+    '{n}. Notice recovery — {claimed} has been deducted. Could you confirm the clause it is drawn from, whether it is computed on basic or on gross, and the divisor used?',
+  'fnf-checker.mail.close':
+    'If any of the above reflects a clause I have read wrongly, I am happy to stand corrected — a revised statement or the calculation basis would settle it either way.',
+  'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
   'fnf-checker.flag.gratuity-missing':

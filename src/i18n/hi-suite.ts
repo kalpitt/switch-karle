@@ -328,6 +328,29 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.line.notice': 'Notice recovery',
   'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
   'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.mailTitle': 'Dispute mail का draft',
+  'fnf-checker.mailHr': 'HR contact का नाम',
+  'fnf-checker.mailHrHint': 'खाली छोड़ेंगे तो mail "Dear HR team" से शुरू होगी।',
+  'fnf-checker.mailYou': 'आपका नाम',
+  'fnf-checker.mailBlocked': 'Copy button खोलने के लिए अपना नाम भरें।',
+  'fnf-checker.mailNothing': 'Sheet की हर line recomputation से मिल रही है, तो dispute करने को कुछ नहीं है। कोई mail draft नहीं हुई।',
+  'fnf-checker.mailNote': 'भेजने से पहले पढ़ लें। यह basis पूछती है, किसी पर इलज़ाम नहीं लगाती।',
+  'fnf-checker.mail.subject': 'Subject: Full and final settlement — {n} line(s) पर reconciliation की request',
+  'fnf-checker.mail.greeting': 'Dear {hr},',
+  'fnf-checker.mail.hrTeam': 'HR team',
+  'fnf-checker.mail.intro':
+    '{lwd} को खत्म हुई मेरी employment का full and final settlement statement भेजने के लिए धन्यवाद। इसे close करने से पहले मैं नीचे दी गई lines अपनी calculation से मिलाना चाहता/चाहती हूँ।',
+  'fnf-checker.mail.short':
+    '{n}. {label} — statement में {claimed} दिख रहा है। मेरी calculation {recomputed} देती है, यानी {delta} का फ़र्क़ मेरे हक़ में। क्या आप इस्तेमाल किया गया basis बता सकते हैं?',
+  'fnf-checker.mail.over':
+    '{n}. {label} — statement में {claimed} है, जबकि मेरी calculation {recomputed} देती है। इसे इसलिए बता रहा/रही हूँ ताकि बाद में यह recovery बनकर वापस न आए।',
+  'fnf-checker.mail.missing':
+    '{n}. {label} — यह line मुझे statement पर नहीं दिख रही। मेरी calculation {recomputed} देती है। क्या आप बता सकते हैं कि इसे किस basis पर छोड़ा गया है?',
+  'fnf-checker.mail.notice-recovery':
+    '{n}. Notice recovery — {claimed} काटा गया है। क्या आप बता सकते हैं कि यह किस clause से है, basic पर है या gross पर, और divisor क्या लिया गया है?',
+  'fnf-checker.mail.close':
+    'अगर ऊपर में से कुछ भी किसी clause को मेरे ग़लत पढ़ने की वजह से है, तो मुझे सुधार स्वीकार है — revised statement या calculation basis से दोनों तरह बात साफ़ हो जाएगी।',
+  'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
   'fnf-checker.flag.gratuity-missing':
