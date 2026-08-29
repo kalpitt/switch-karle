@@ -79,6 +79,25 @@ export function addDays(iso: string, days: number): string {
 }
 
 /**
+ * Elapsed months from `from` to `to` as a fraction, so a window that ends
+ * eleven and a half months in is not rounded up into a twelfth month. Whole
+ * months count by calendar anniversary — 15 Jan to 15 Feb is exactly 1 — and
+ * the tail is the leftover days over the length of the month they fall in.
+ * Negative when `to` is before `from`.
+ */
+export function monthsBetween(from: string, to: string): number {
+  const f = parts(from)
+  const t = parts(to)
+  if (toUtcMs(t) < toUtcMs(f)) return -monthsBetween(to, from)
+  let whole = (t.y - f.y) * 12 + (t.m - f.m)
+  if (t.d < f.d) whole -= 1
+  const anchor = addMonths(from, whole)
+  const span = daysBetween(anchor, addMonths(from, whole + 1))
+  const tail = daysBetween(anchor, to)
+  return span > 0 ? whole + tail / span : whole
+}
+
+/**
  * Last working day if the full notice is served.
  * CANDIDATE: LWD = resignation date + notice days − 1 (calendar). The letter can count differently.
  */

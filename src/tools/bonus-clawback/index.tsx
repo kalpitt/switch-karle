@@ -1,14 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
+import type { OfferInput } from '../../engine/types'
 import { decodeOffer } from '../../engine/salary'
 import { bonusClawback } from '../../engine/clawback'
+import { addMonths, monthsBetween, todayUTC } from '../../engine/dates'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  DateField,
   Disclaimer,
   ExampleNote,
   MoneyField,
   NumberField,
+  Select,
   ShareRow,
   Toggle,
   VerdictBanner,
@@ -22,29 +26,57 @@ const STORAGE_KEY = 'switchkarle.clawback.v1' as const
 interface Draft {
   amount: number
   clawbackMonths: number
-  plannedTenureMonths: number
+  /** The day the bonus actually hit the account — the window runs from here. */
+  creditDate: string
+  /** Planned last working day. Months served is the gap, not a whole-month count. */
+  plannedLwd: string
   noticePeriodDays: number
   netWording: boolean
+  /** Taxable income without the bonus. Seeded from the Decoder, editable here. */
+  taxableIncome: number
+  regime: 'new' | 'old'
 }
 
-function fromDecoder(): Draft {
-  const o = loadOffer()
+/** A v1 draft, before the tool asked for dates. */
+type LegacyDraft = Partial<Draft> & { plannedTenureMonths?: number }
+
+function draftFrom(offer: OfferInput): Draft {
+  const b = decodeOffer(offer)
+  const today = todayUTC()
   return {
-    amount: o.joiningBonus?.amount ?? 200_000,
-    clawbackMonths: o.joiningBonus?.clawbackMonths ?? 12,
-    plannedTenureMonths: 6,
-    noticePeriodDays: o.noticePeriodDays,
+    amount: offer.joiningBonus?.amount ?? 200_000,
+    clawbackMonths: offer.joiningBonus?.clawbackMonths ?? 12,
+    creditDate: today,
+    plannedLwd: addMonths(today, 6),
+    noticePeriodDays: offer.noticePeriodDays,
     netWording: true,
+    taxableIncome: b.recommendedRegime === 'new' ? b.newRegime.taxableIncome : b.oldRegime.taxableIncome,
+    regime: b.recommendedRegime,
   }
 }
 
-/** What first paint shows when the Decoder has not seeded anything. */
-const FIXTURE: Draft = {
-  amount: 200_000,
-  clawbackMonths: 12,
-  plannedTenureMonths: 6,
-  noticePeriodDays: DEFAULT_OFFER.noticePeriodDays,
-  netWording: true,
+/** v1 stored whole months. Re-express that as a last working day and keep the draft. */
+function migrate(saved: LegacyDraft | null, base: Draft): Draft | null {
+  if (!saved) return null
+  if (typeof saved.creditDate === 'string' && typeof saved.plannedLwd === 'string') {
+    return { ...base, ...saved } as Draft
+  }
+  if (typeof saved.plannedTenureMonths !== 'number') return null
+  const { plannedTenureMonths, ...rest } = saved
+  return {
+    ...base,
+    ...rest,
+    plannedLwd: addMonths(base.creditDate, Math.max(0, Math.round(plannedTenureMonths))),
+  }
+}
+
+/** Months served between the two dates; a half-filled pair reads as zero. */
+function monthsServed(draft: Draft): number {
+  try {
+    return Math.max(0, monthsBetween(draft.creditDate, draft.plannedLwd))
+  } catch {
+    return 0
+  }
 }
 
 export default function BonusClawbackTool({ lang = 'en' }: { lang?: Lang }) {
@@ -57,18 +89,12 @@ export default function BonusClawbackTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>(FIXTURE)
-  const [taxableIncome, setTaxableIncome] = useState(1_800_000)
-  const [regime, setRegime] = useState<'new' | 'old'>('new')
+  const [draft, setDraft] = useState<Draft>(() => draftFrom(DEFAULT_OFFER))
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const offer = loadOffer()
-    const b = decodeOffer(offer)
-    setTaxableIncome(b.recommendedRegime === 'new' ? b.newRegime.taxableIncome : b.oldRegime.taxableIncome)
-    setRegime(b.recommendedRegime)
-    const saved = readJson<Draft | null>(STORAGE_KEY, null)
-    setDraft(saved ?? fromDecoder())
+    const base = draftFrom(loadOffer())
+    setDraft(migrate(readJson<LegacyDraft | null>(STORAGE_KEY, null), base) ?? base)
     setHydrated(true)
   }, [])
 
@@ -77,21 +103,22 @@ function Body() {
     writeJson(STORAGE_KEY, draft)
   }, [draft, hydrated])
 
+  const served = monthsServed(draft)
   const result = useMemo(
     () =>
       bonusClawback({
         amount: draft.amount,
         clawbackMonths: draft.clawbackMonths,
-        plannedTenureMonths: draft.plannedTenureMonths,
-        taxableIncome,
-        regime,
+        plannedTenureMonths: monthsServed(draft),
+        taxableIncome: draft.taxableIncome,
+        regime: draft.regime,
         noticePeriodDays: draft.noticePeriodDays,
       }),
-    [draft, taxableIncome, regime],
+    [draft],
   )
 
-/** Untouched fixture on first paint = worked example, not the user's data. */
-  const isExample = JSON.stringify(draft) === JSON.stringify(FIXTURE)
+  /** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(draftFrom(DEFAULT_OFFER))
   const tone = result.effectiveValueAtPlanned < 0 ? 'alarm' : result.repaymentIfLeaveAtPlanned > 0 ? 'amber' : 'leaf'
   const verdict = draft.netWording
     ? t('bonus-clawback.verdict.net', {
@@ -103,17 +130,22 @@ function Body() {
         gross: formatINR(draft.amount),
         repay: formatINR(result.repaymentIfLeaveAtPlanned),
       })
-
-  const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
-  const wanted = new Set([0, Math.min(draft.plannedTenureMonths, draft.clawbackMonths), draft.clawbackMonths])
-  const sample = result.curve.filter((p) => wanted.has(p.exitMonth))
+  const servedLine = t('bonus-clawback.served', {
+    months: served.toFixed(1),
+    window: draft.clawbackMonths,
+  })
 
   const copyText = [
     verdict,
+    servedLine,
     t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) }),
     t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) }),
     t('ui.disclaimer'),
   ].join('\n')
+
+  const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const wanted = new Set([0, Math.min(Math.floor(served), draft.clawbackMonths), draft.clawbackMonths])
+  const sample = result.curve.filter((p) => wanted.has(p.exitMonth))
 
   return (
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -126,17 +158,38 @@ function Body() {
           value={draft.clawbackMonths}
           onChange={(v) => set({ clawbackMonths: v })}
         />
-        <NumberField
-          label={t('bonus-clawback.tenure')}
-          suffix={t('unit.months')}
-          value={draft.plannedTenureMonths}
-          onChange={(v) => set({ plannedTenureMonths: v })}
+        <DateField
+          label={t('bonus-clawback.creditDate')}
+          hint={t('bonus-clawback.creditDateHint')}
+          value={draft.creditDate}
+          onChange={(v) => set({ creditDate: v })}
+        />
+        <DateField
+          label={t('bonus-clawback.plannedLwd')}
+          hint={t('bonus-clawback.plannedLwdHint')}
+          value={draft.plannedLwd}
+          onChange={(v) => set({ plannedLwd: v })}
         />
         <NumberField
           label={t('bonus-clawback.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}
           onChange={(v) => set({ noticePeriodDays: v })}
+        />
+        <MoneyField
+          label={t('bonus-clawback.taxableIncome')}
+          hint={t('bonus-clawback.taxableIncomeHint')}
+          value={draft.taxableIncome}
+          onChange={(v) => set({ taxableIncome: v })}
+        />
+        <Select
+          label={t('bonus-clawback.regime')}
+          value={draft.regime}
+          onChange={(v) => set({ regime: v })}
+          options={[
+            { value: 'new', label: t('regime.new') },
+            { value: 'old', label: t('regime.old') },
+          ]}
         />
         <Toggle label={t('bonus-clawback.netMode')} hint={t('bonus-clawback.netModeHint')} checked={draft.netWording} onChange={(v) => set({ netWording: v })} />
       </Card>
@@ -148,6 +201,7 @@ function Body() {
           <VerdictBanner tone={tone}>{verdict}</VerdictBanner>
         )}
         <Card className="space-y-2">
+          <p className="tnum text-[13px] font-semibold">{servedLine}</p>
           <p className="tnum text-[13px]">{t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) })}</p>
           <p className="tnum text-[13px]">{t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) })}</p>
           {result.noticeWouldCoverClawback && <p className="text-[13px] text-amberflag">{t('bonus-clawback.noticeOverlap')}</p>}
