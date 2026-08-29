@@ -22,6 +22,8 @@ export interface FnFAuditLine {
   /** Stable id the island translates (e.g. salary, unpaid-leave, gratuity). */
   id: string
   label: string
+  /** Which side of the sheet the line sits on. Decides who a gap favours. */
+  kind: 'earning' | 'deduction'
   claimed: number
   recomputed: number
   delta: number
@@ -38,6 +40,29 @@ export interface FnFResult {
   lines: FnFAuditLine[]
   netPayable: number
   flags: FnFFlag[]
+  /** Gratuity the recomputation found that the sheet never listed. 0 when none. */
+  gratuityNotOnSheet: number
+}
+
+/**
+ * One thing a settlement mail should ask about.
+ * `short` — the sheet leaves you worse off: an earning paid under the
+ *   recomputation, or a deduction taken over it.
+ * `over` — an earning paid above the recomputation; worth naming in writing so
+ *   it cannot come back as a recovery later.
+ * `missing` — an earning the sheet does not show at all.
+ * `notice-recovery` — money taken back, whose basis is worth pinning down.
+ */
+export type DisputeKind = 'short' | 'over' | 'missing' | 'notice-recovery'
+
+export interface DisputeItem {
+  /** Audit-line id, or the flag id for items that are not lines. */
+  id: string
+  kind: DisputeKind
+  claimed: number
+  recomputed: number
+  /** claimed − recomputed. Negative means the sheet is short. */
+  delta: number
 }
 
 // CANDIDATE: unpaid-leave recovery = (monthly gross / 30) × unpaid days. Contract may differ.
@@ -73,6 +98,7 @@ export function auditFnF(input: FnFInput): FnFResult {
   const lines: FnFAuditLine[] = []
   let earnings = 0
   let deductions = 0
+  let gratuityNotOnSheet = 0
   const flags: FnFFlag[] = []
 
   for (const line of input.payslipLines) {
@@ -83,6 +109,7 @@ export function auditFnF(input: FnFInput): FnFResult {
     lines.push({
       id: line.id,
       label: line.label,
+      kind: line.kind,
       claimed,
       recomputed,
       delta: claimed - recomputed,
@@ -96,6 +123,7 @@ export function auditFnF(input: FnFInput): FnFResult {
     // A gratuity the sheet never claimed is money NOT on the sheet: surface it
     // as a flag, never append it into the net (master plan §9.3).
     if (id === 'gratuity') {
+      gratuityNotOnSheet = recomputed
       flags.push({
         id: 'gratuity-missing',
         severity: 'amber',
@@ -103,7 +131,7 @@ export function auditFnF(input: FnFInput): FnFResult {
       })
       continue
     }
-    lines.push({ id, label: id, claimed: 0, recomputed, delta: -recomputed })
+    lines.push({ id, label: id, kind: 'deduction', claimed: 0, recomputed, delta: -recomputed })
     if (id === 'unpaid-leave') deductions += recomputed
   }
 
@@ -129,7 +157,54 @@ export function auditFnF(input: FnFInput): FnFResult {
     }
   }
 
-  return { lines, netPayable, flags }
+  return { lines, netPayable, flags, gratuityNotOnSheet }
+}
+
+/**
+ * What a settlement mail should ask about, in the order it should ask.
+ * Every gap between claimed and recomputed, then gratuity the sheet omitted,
+ * then any notice recovery. Empty when the sheet reconciles — there is no
+ * dispute to draft, and the tool says so rather than inventing one.
+ */
+export function disputeItems(input: FnFInput, result: FnFResult): DisputeItem[] {
+  const items: DisputeItem[] = []
+
+  for (const line of result.lines) {
+    const delta = Math.round(line.delta)
+    if (delta === 0) continue
+    const item = { id: line.id, claimed: line.claimed, recomputed: line.recomputed, delta: line.delta }
+    if (line.kind === 'earning') {
+      if (line.claimed === 0) items.push({ ...item, kind: 'missing' })
+      else if (delta < 0) items.push({ ...item, kind: 'short' })
+      else items.push({ ...item, kind: 'over' })
+      continue
+    }
+    // A deduction bigger than the recomputation leaves you short and is worth
+    // asking about. One the sheet did not take is money you were not charged:
+    // it shows in the audit table, but a mail asking to be charged for it is
+    // not a draft this tool will write for you.
+    if (delta > 0) items.push({ ...item, kind: 'short' })
+  }
+
+  if (result.gratuityNotOnSheet > 0) {
+    items.push({
+      id: 'gratuity',
+      kind: 'missing',
+      claimed: 0,
+      recomputed: result.gratuityNotOnSheet,
+      delta: -result.gratuityNotOnSheet,
+    })
+  }
+
+  for (const recovery of input.recoveries) {
+    const amount = clampNonNeg(recovery.amount)
+    if (amount > 0 && (/notice/i.test(recovery.id) || /notice/i.test(recovery.label))) {
+      items.push({ id: recovery.id, kind: 'notice-recovery', claimed: amount, recomputed: amount, delta: 0 })
+      break
+    }
+  }
+
+  return items
 }
 
 /** Plain en-IN grouping without the ₹ glyph — the i18n string owns the currency mark. */

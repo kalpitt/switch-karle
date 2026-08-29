@@ -19,6 +19,7 @@ import { computeTax } from './tax'
 export interface ClawbackInput {
   amount: number
   clawbackMonths: number
+  /** May be fractional: 11.6 months served does not clear a 12-month window. */
   plannedTenureMonths: number
   /** Taxable income *without* the bonus, recommended regime. */
   taxableIncome: number
@@ -57,7 +58,7 @@ function clampNonNeg(n: number): number {
 export function bonusClawback(input: ClawbackInput): ClawbackResult {
   const amount = clampNonNeg(input.amount)
   const clawbackMonths = Math.round(clampNonNeg(input.clawbackMonths))
-  const plannedTenureMonths = Math.round(clampNonNeg(input.plannedTenureMonths))
+  const plannedTenureMonths = clampNonNeg(input.plannedTenureMonths)
   const taxableIncome = clampNonNeg(input.taxableIncome)
   const taxOnBonus =
     amount <= 0

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { bonusClawback } from './clawback'
 import { computeTax } from './tax'
+import { monthsBetween } from './dates'
 
 describe('bonusClawback', () => {
   it('₹2L bonus on ₹18L taxable (new): tax ₹41,600, net ₹1,58,400; leave at month 6 repays gross', () => {
@@ -68,5 +69,31 @@ describe('bonusClawback', () => {
     expect(r.taxOnBonus).toBeGreaterThan(0)
     expect(r.effectiveRate).toBeCloseTo(expectedTax / amount, 10)
     expect(r.effectiveRate).not.toBe(0)
+  })
+})
+
+describe('bonusClawback — fractional tenure', () => {
+  it('a window missed by three weeks still demands the gross back', () => {
+    const r = bonusClawback({
+      amount: 200_000,
+      clawbackMonths: 12,
+      plannedTenureMonths: monthsBetween('2026-01-15', '2027-01-10'),
+      taxableIncome: 1_800_000,
+      regime: 'new',
+      noticePeriodDays: 90,
+    })
+    expect(r.repaymentIfLeaveAtPlanned).toBe(200_000)
+  })
+
+  it('clears the window on the anniversary itself', () => {
+    const r = bonusClawback({
+      amount: 200_000,
+      clawbackMonths: 12,
+      plannedTenureMonths: monthsBetween('2026-01-15', '2027-01-15'),
+      taxableIncome: 1_800_000,
+      regime: 'new',
+      noticePeriodDays: 90,
+    })
+    expect(r.repaymentIfLeaveAtPlanned).toBe(0)
   })
 })

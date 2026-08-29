@@ -14,10 +14,19 @@ export interface EsopRealityInput {
   cliffMonths: number
   /** Total vest period from grant (months). */
   vestMonths: number
+  /**
+   * How the grant letter actually vests. `monthly` is straight-line; `annual`
+   * releases one equal tranche at the cliff and one on each anniversary after
+   * it, which is what most Indian letters say. Defaults to `monthly` — the
+   * reading this model had before the option existed.
+   */
+  vestCadence?: VestCadence
   liquid: boolean
   taxableIncomeWithoutPerq: number
   regime: Regime
 }
+
+export type VestCadence = 'monthly' | 'annual'
 
 export interface VestRow {
   month: number
@@ -44,24 +53,38 @@ function clampNonNeg(n: number): number {
   return Math.max(0, n)
 }
 
+/** Equal annual tranches over the vest period; at least one. */
+function trancheCount(vestMonths: number): number {
+  return Math.max(1, Math.round(vestMonths / 12))
+}
+
 /**
- * Linear monthly vest: `shares × month / vestMonths` once the cliff has passed.
- * Common Indian letters vest annually (0 until the next anniversary). This
- * model is the monthly-vest reading; it is not a grant-letter parser.
+ * Shares vested at `month`. `monthly` is straight-line `shares × month /
+ * vestMonths` once the cliff passes. `annual` steps: the first tranche lands on
+ * the cliff and one more on each anniversary of it, so nothing accrues between
+ * two anniversaries however long you stayed. Neither reading parses your grant
+ * letter — it is the letter that decides.
  */
 function vestedAtMonth(
   shares: number,
   cliffMonths: number,
   vestMonths: number,
   month: number,
+  cadence: VestCadence,
 ): { vestedShares: number; stillCliffed: boolean } {
-  const vestedShares =
-    month < cliffMonths
-      ? 0
-      : vestMonths <= 0
-        ? shares
-        : Math.min(shares, shares * (month / vestMonths))
-  return { vestedShares, stillCliffed: month < cliffMonths }
+  const stillCliffed = month < cliffMonths
+  if (stillCliffed) return { vestedShares: 0, stillCliffed }
+  if (vestMonths <= 0) return { vestedShares: shares, stillCliffed }
+  if (cadence === 'annual') {
+    const tranches = trancheCount(vestMonths)
+    const landed =
+      cliffMonths > 0
+        ? 1 + Math.floor((month - cliffMonths) / 12)
+        : Math.floor(month / 12)
+    const vested = Math.min(tranches, Math.max(0, landed))
+    return { vestedShares: Math.min(shares, (shares * vested) / tranches), stillCliffed }
+  }
+  return { vestedShares: Math.min(shares, shares * (month / vestMonths)), stillCliffed }
 }
 
 /**
@@ -88,10 +111,15 @@ export function esopReality(input: EsopRealityInput): EsopRealityResult {
   const taxAfter = computeTax(taxableIncomeWithoutPerq + perquisiteTotal, input.regime).totalTax
   const taxOnPerq = taxAfter - taxBefore
 
-  const boundaryMonths = [...new Set([0, cliffMonths, vestMonths])]
+  const cadence: VestCadence = input.vestCadence ?? 'monthly'
+  const anniversaries: number[] = []
+  if (cadence === 'annual') {
+    for (let m = Math.max(cliffMonths, 12); m < vestMonths; m += 12) anniversaries.push(m)
+  }
+  const boundaryMonths = [...new Set([0, cliffMonths, ...anniversaries, vestMonths])].sort((a, b) => a - b)
   const vestTable = boundaryMonths.map((month) => ({
     month,
-    ...vestedAtMonth(shares, cliffMonths, vestMonths, month),
+    ...vestedAtMonth(shares, cliffMonths, vestMonths, month, cadence),
   }))
 
   return {

@@ -23,6 +23,8 @@ interface Draft {
   basis: 'basic' | 'gross'
   mode: 'pay' | 'recover'
   unservedDays: number
+  /** Accrued leave the employer agrees to set against the unserved days. */
+  leaveDaysApplied: number
   monthlyBasic: number
   monthlyGross: number
 }
@@ -32,6 +34,7 @@ const PURE_DEFAULT: Draft = {
   basis: 'basic',
   mode: 'pay',
   unservedDays: 30,
+  leaveDaysApplied: 0,
   monthlyBasic: 80_000,
   monthlyGross: 150_000,
 }
@@ -46,13 +49,7 @@ export default function NoticeBuyoutTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
-  const [draft, setDraft] = useState<Draft>({
-    basis: 'basic',
-    mode: 'pay',
-    unservedDays: 30,
-    monthlyBasic: 80_000,
-    monthlyGross: 150_000,
-  })
+  const [draft, setDraft] = useState<Draft>(PURE_DEFAULT)
   const [hydrated, setHydrated] = useState(false)
   /** Set once at mount from whatever seeded the fields; never persisted. */
   const [seed, setSeed] = useState<{ fromDecoder: boolean; grossWasCtc12: boolean }>({
@@ -61,9 +58,11 @@ function Body() {
   })
 
   useEffect(() => {
-    const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
     if (saved) {
-      setDraft(saved)
+      // Spread over the fixture so a draft saved before leave netting existed
+      // hydrates with zero leave rather than undefined.
+      setDraft({ ...PURE_DEFAULT, ...saved })
       setHydrated(true)
       return
     }
@@ -73,13 +72,7 @@ function Body() {
     } catch {
       /* storage unavailable */
     }
-    const next: Draft = {
-      basis: 'basic',
-      mode: 'pay',
-      unservedDays: 30,
-      monthlyBasic: 80_000,
-      monthlyGross: 150_000,
-    }
+    const next: Draft = { ...PURE_DEFAULT }
     if (decoderHasData) {
       // Cash-gross seed per master plan §5.2: grossSalary/12, not CTC/12.
       const offer = loadOffer()
@@ -150,6 +143,14 @@ function Body() {
           value={draft.unservedDays}
           onChange={(v) => set({ unservedDays: v })}
         />
+        <NumberField
+          label={t('notice-buyout.leaveDays')}
+          hint={t('notice-buyout.leaveDaysHint')}
+          suffix={t('unit.days')}
+          max={draft.unservedDays}
+          value={draft.leaveDaysApplied}
+          onChange={(v) => set({ leaveDaysApplied: Math.min(draft.unservedDays, v) })}
+        />
         <MoneyField
           label={t('notice-buyout.basic')}
           hint={t('ui.money.hint')}
@@ -198,6 +199,16 @@ function Body() {
           ) : (
             <p className="text-[13px] text-ink-soft">{t('notice-buyout.seed.decoder')}</p>
           ))}
+        {result.leaveDaysApplied > 0 && (
+          <p className="tnum text-[13px] text-ink-soft">
+            {t('notice-buyout.leaveApplied', {
+              days: result.leaveDaysApplied,
+              net: result.unservedDaysNet,
+              before: formatINR(result.amountBeforeLeave),
+            })}
+          </p>
+        )}
+        <p className="text-[13px] text-ink-soft">{t('notice-buyout.leaveCandidate')}</p>
         <p className="text-[13px] text-ink-soft">{t('notice-buyout.divisor')}</p>
         <p className="text-[13px] text-amberflag">{t('notice-buyout.gstNote')}</p>
         {!isExample && (

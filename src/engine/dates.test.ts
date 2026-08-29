@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, lastWorkingDay } from './dates'
+import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, lastWorkingDay, monthsBetween } from './dates'
 
 describe('daysBetween', () => {
   it('is 0 for the same day', () => {
@@ -100,5 +100,33 @@ describe('completedYearsWithDayCount — 4 years 240 days', () => {
     expect(completedYearsWithDayCount('2020-01-01', '2024-07-08', 190).qualifiesFourYear240Day).toBe(false)
     // Same tenure stays ineligible at the default 240-day threshold.
     expect(completedYearsWithDayCount('2020-01-01', '2024-07-09').qualifiesFourYear240Day).toBe(false)
+  })
+})
+
+describe('monthsBetween', () => {
+  it('counts a calendar anniversary as exactly one month', () => {
+    expect(monthsBetween('2026-01-15', '2026-02-15')).toBe(1)
+    expect(monthsBetween('2026-01-15', '2027-01-15')).toBe(12)
+  })
+
+  it('does not round a short twelfth month up into a full year', () => {
+    // Bonus credited 15 Jan, planned last working day 10 Jan the next year:
+    // eleven months and 26 of 31 days. A 12-month clawback still bites.
+    const m = monthsBetween('2026-01-15', '2027-01-10')
+    expect(m).toBeGreaterThan(11.8)
+    expect(m).toBeLessThan(12)
+  })
+
+  it('is zero on the same day and negative when the dates are reversed', () => {
+    expect(monthsBetween('2026-03-01', '2026-03-01')).toBe(0)
+    expect(monthsBetween('2026-02-15', '2026-01-15')).toBe(-1)
+  })
+
+  it('treats a clamped month-end as a whole month', () => {
+    expect(monthsBetween('2026-01-31', '2026-02-28')).toBe(1)
+  })
+
+  it('crosses a leap day without drifting', () => {
+    expect(monthsBetween('2028-01-29', '2028-02-29')).toBe(1)
   })
 })

@@ -14,6 +14,17 @@
  * surrounding sentence is Devanagari.
  */
 export const hiSuite: Record<string, string> = {
+  // ---- Decoder inheritance disclosure ----
+  'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
+  'ui.inheritLink': 'Decoder खोलें',
+
+  // ---- Home: the journey ----
+  'home.pinned': 'यहाँ से शुरू करें',
+  'home.cat.offer': 'सामने रखा offer',
+  'home.cat.exit': 'निकलते वक़्त का पैसा',
+  'home.cat.documents': 'जो आपको लिखना है',
+  'home.cat.landing': 'नई job में पहुँचने पर',
+
   // ---- Nav / app shell / common ----
   'nav.search': 'टूल खोजें',
   'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
@@ -56,6 +67,8 @@ export const hiSuite: Record<string, string> = {
   'real-hike.currentState': 'मौजूदा राज्य',
   'real-hike.nextCtc': 'नया CTC',
   'real-hike.nextVariable': 'नया variable',
+  'real-hike.nextBasic': 'नया offer: CTC का कितना % basic',
+  'real-hike.nextBasicHint': 'उसी CTC पर basic कम है तो PF भी कम और gratuity भी कम। नए offer letter से देख लें।',
   'real-hike.nextState': 'नया राज्य',
   'real-hike.haircut': 'मानें कि variable 70% pay होगा',
   'real-hike.haircutHint': 'Average-year haircut। Off करने पर quoted variable को पक्का मान लिया जाता है।',
@@ -92,8 +105,15 @@ export const hiSuite: Record<string, string> = {
   'bonus-clawback.formTitle': 'Clawback की अवधि',
   'bonus-clawback.amount': 'Joining bonus (gross)',
   'bonus-clawback.window': 'इतना रुकना ज़रूरी',
-  'bonus-clawback.tenure': 'आप छोड़ने की योजना बना रहे हैं',
   'bonus-clawback.notice': 'Notice period',
+  'bonus-clawback.creditDate': 'Bonus कब credit हुआ',
+  'bonus-clawback.creditDateHint': 'जिस दिन पैसा account में आया। Window यहीं से चलती है, join date से नहीं।',
+  'bonus-clawback.plannedLwd': 'सोचा हुआ last working day',
+  'bonus-clawback.plannedLwdHint': 'Anniversary से तीन हफ़्ते पहले निकलना भी कम ही गिना जाता है।',
+  'bonus-clawback.taxableIncome': 'Bonus के बिना taxable income',
+  'bonus-clawback.taxableIncomeHint': 'आपके Decoder offer से लिया गया है। असली income अलग हो तो बदल दें।',
+  'bonus-clawback.regime': 'Tax regime',
+  'bonus-clawback.served': '{window} महीने की window में से {months} महीने पूरे हुए।',
   'bonus-clawback.netMode': 'Net-vs-gross trap दिखाएं',
   'bonus-clawback.netModeHint': 'On: आपको net मिला था, आप gross चुकाते हैं। Off: सिर्फ headline gross।',
   'bonus-clawback.verdict.net': 'Tax के बाद आपके पास {net} रहता है। अभी छोड़ने पर {repay} चुकाना होगा — असली value {keep}।',
@@ -128,8 +148,14 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.verdict':
     'Exercise करने में {cost} plus लगभग {tax} tax लगता है — कुछ भी बेचने से पहले उस दिन {cash} cash में चाहिए। Perquisite {perq}।',
   'esop-reality.underwater': 'Strike FMV से ऊपर है — perquisite ₹0 है। Exercise करने में फिर भी {cost} cash लगेगा।',
+  'esop-reality.cadence': 'Vest कैसे होता है',
+  'esop-reality.cadence.monthly': 'हर महीने',
+  'esop-reality.cadence.annual': 'हर साल',
   'esop-reality.vestLinear':
-    'Vest को monthly model किया गया है (shares × month / vest period)। Annual-vest वाले letters अगली anniversary तक 0 पर रहते हैं।',
+    'Monthly vest मानकर बनाया गया है: cliff निकलने के बाद shares × महीना ÷ vest period।',
+  'esop-reality.vestAnnual':
+    'बराबर सालाना tranches मानकर बनाया गया है — एक cliff पर, फिर हर anniversary पर। बीच में कुछ नहीं जुड़ता, चाहे आप कितना भी रुकें।',
+  'esop-reality.vestLetter': 'आपका grant letter तय करता है कि इनमें से क्या सही है। कोई भी reading उसे पढ़ती नहीं है।',
   'esop-reality.saleNote': 'Sale एक अलग capital-gains event है। यह tool exercise तक ही जाता है।',
   'esop-reality.vestTitle': 'Vest Schedule',
   'esop-reality.vestRow': 'महीना {month}',
@@ -230,6 +256,10 @@ export const hiSuite: Record<string, string> = {
   'notice-buyout.verdict.pay': 'बाकी notice buyout करने में लगभग {amount} लगेगा। यह letter तय करती है, कोई कानून नहीं।',
   'notice-buyout.verdict.recover':
     'वे unserved notice के लिए F&F से लगभग {amount} recover करने की कोशिश कर सकते हैं। Appointment letter check करें।',
+  'notice-buyout.leaveDays': 'Notice के बदले लगाए गए leave days',
+  'notice-buyout.leaveDaysHint': 'अगर offset करने नहीं देंगे तो 0 रखें। Unserved days से ज़्यादा कभी नहीं।',
+  'notice-buyout.leaveApplied': '{days} leave days लगाए गए — {net} unserved days बचे। इनके बिना quote {before} है।',
+  'notice-buyout.leaveCandidate': 'Leave को notice के बदले लगाया जा सकता है या नहीं, यह आपके appointment letter और company policy से तय होता है, किसी statute से नहीं। भरोसा करने से पहले लिखित में ले लें।',
   'notice-buyout.divisor':
     'ज़्यादातर letters monthly figure को 30 से divide करती हैं, 26 से नहीं और actual calendar month से भी नहीं। यह contractual practice है, कानून नहीं।',
   'notice-buyout.bothBases': 'दोनों bases, side by side',
@@ -304,6 +334,29 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.line.notice': 'Notice recovery',
   'fnf-checker.line.unpaid-leave': 'Unpaid leave recovery',
   'fnf-checker.line.gratuity': 'Gratuity',
+  'fnf-checker.mailTitle': 'Dispute mail का draft',
+  'fnf-checker.mailHr': 'HR contact का नाम',
+  'fnf-checker.mailHrHint': 'खाली छोड़ेंगे तो mail "Dear HR team" से शुरू होगी।',
+  'fnf-checker.mailYou': 'आपका नाम',
+  'fnf-checker.mailBlocked': 'Copy button खोलने के लिए अपना नाम भरें।',
+  'fnf-checker.mailNothing': 'Sheet की हर line recomputation से मिल रही है, तो dispute करने को कुछ नहीं है। कोई mail draft नहीं हुई।',
+  'fnf-checker.mailNote': 'भेजने से पहले पढ़ लें। यह basis पूछती है, किसी पर इलज़ाम नहीं लगाती।',
+  'fnf-checker.mail.subject': 'Subject: Full and final settlement — {n} line(s) पर reconciliation की request',
+  'fnf-checker.mail.greeting': 'Dear {hr},',
+  'fnf-checker.mail.hrTeam': 'HR team',
+  'fnf-checker.mail.intro':
+    '{lwd} को खत्म हुई मेरी employment का full and final settlement statement भेजने के लिए धन्यवाद। इसे close करने से पहले मैं नीचे दी गई lines अपनी calculation से मिलाना चाहता/चाहती हूँ।',
+  'fnf-checker.mail.short':
+    '{n}. {label} — statement में {claimed} दिख रहा है। मेरी calculation {recomputed} देती है, यानी {delta} का फ़र्क़ मेरे हक़ में। क्या आप इस्तेमाल किया गया basis बता सकते हैं?',
+  'fnf-checker.mail.over':
+    '{n}. {label} — statement में {claimed} है, जबकि मेरी calculation {recomputed} देती है। इसे इसलिए बता रहा/रही हूँ ताकि बाद में यह recovery बनकर वापस न आए।',
+  'fnf-checker.mail.missing':
+    '{n}. {label} — यह line मुझे statement पर नहीं दिख रही। मेरी calculation {recomputed} देती है। क्या आप बता सकते हैं कि इसे किस basis पर छोड़ा गया है?',
+  'fnf-checker.mail.notice-recovery':
+    '{n}. Notice recovery — {claimed} काटा गया है। क्या आप बता सकते हैं कि यह किस clause से है, basic पर है या gross पर, और divisor क्या लिया गया है?',
+  'fnf-checker.mail.close':
+    'अगर ऊपर में से कुछ भी किसी clause को मेरे ग़लत पढ़ने की वजह से है, तो मुझे सुधार स्वीकार है — revised statement या calculation basis से दोनों तरह बात साफ़ हो जाएगी।',
+  'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
   'fnf-checker.flag.gratuity-missing':
@@ -351,6 +404,7 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'सिर्फ इसी page पर रहता है।',
   'resignation-letter.copyBlocked': 'Copy unlock करने के लिए company, role, manager और अपना नाम भरें।',
+  'resignation-letter.earliestJoin': 'EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी last working day के अगले दिन।',
   'resignation-letter.epfo':
     'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
   'resignation-letter.body.professional':
@@ -598,6 +652,7 @@ export const hiSuite: Record<string, string> = {
   'notice-tracker.item.insurance-end': 'Group mediclaim खत्म होता है',
   'notice-tracker.item.pf-doe': 'HR से PF date of exit mark करने को कहें',
   'notice-tracker.item.relieving-chase': 'अगर relieving letter नहीं है, तो day-7 वाला chase शुरू करें',
+  'notice-tracker.open': '{tool} खोलें',
   'notice-tracker.due': '{date} तक due',
 
   // ---- Bond scanner ----

@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
-import { auditFnF } from '../../engine/fnf'
+import { auditFnF, disputeItems } from '../../engine/fnf'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  CopyButton,
   DateField,
   Disclaimer,
   ExampleNote,
   MoneyField,
   NumberField,
   ShareRow,
+  TextField,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
@@ -26,6 +28,9 @@ interface Draft {
   unpaidLeaveDays: number
   noticeRecovery: number
   gratuityEligible: boolean
+  /** Only used to address the dispute mail. Never leaves the device. */
+  hrName: string
+  yourName: string
 }
 
 const DEFAULT_DRAFT: Draft = {
@@ -36,6 +41,8 @@ const DEFAULT_DRAFT: Draft = {
   unpaidLeaveDays: 0,
   noticeRecovery: 0,
   gratuityEligible: true,
+  hrName: '',
+  yourName: '',
 }
 
 export default function FnfCheckerTool({ lang = 'en' }: { lang?: Lang }) {
@@ -52,7 +59,9 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    setDraft(readJson<Draft>(STORAGE_KEY, DEFAULT_DRAFT))
+    // Spread over the default so a draft saved before the mail fields existed
+    // hydrates with empty names instead of undefined.
+    setDraft({ ...DEFAULT_DRAFT, ...readJson<Partial<Draft>>(STORAGE_KEY, DEFAULT_DRAFT) })
     setHydrated(true)
   }, [])
 
@@ -61,23 +70,26 @@ function Body() {
     writeJson(STORAGE_KEY, draft)
   }, [draft, hydrated])
 
-  const result = useMemo(
-    () =>
-      auditFnF({
-        joinDate: draft.joinDate,
-        lastWorkingDay: draft.lastWorkingDay,
-        monthlyBasic: draft.monthlyBasic,
-        monthlyGross: draft.monthlyGross,
-        unpaidLeaveDays: draft.unpaidLeaveDays,
-        payslipLines: [{ id: 'salary', label: t('fnf-checker.salary'), amount: draft.monthlyGross, kind: 'earning' }],
-        recoveries:
-          draft.noticeRecovery > 0
-            ? [{ id: 'notice', label: t('fnf-checker.notice'), amount: draft.noticeRecovery, kind: 'deduction' }]
-            : [],
-        gratuityEligible: draft.gratuityEligible,
-      }),
+  const input = useMemo(
+    () => ({
+      joinDate: draft.joinDate,
+      lastWorkingDay: draft.lastWorkingDay,
+      monthlyBasic: draft.monthlyBasic,
+      monthlyGross: draft.monthlyGross,
+      unpaidLeaveDays: draft.unpaidLeaveDays,
+      payslipLines: [
+        { id: 'salary', label: t('fnf-checker.salary'), amount: draft.monthlyGross, kind: 'earning' as const },
+      ],
+      recoveries:
+        draft.noticeRecovery > 0
+          ? [{ id: 'notice', label: t('fnf-checker.notice'), amount: draft.noticeRecovery, kind: 'deduction' as const }]
+          : [],
+      gratuityEligible: draft.gratuityEligible,
+    }),
     [draft, t],
   )
+  const result = useMemo(() => auditFnF(input), [input])
+  const disputes = useMemo(() => disputeItems(input, result), [input, result])
 
   /** Untouched fixture on first paint = worked example, not the user's sheet. */
   const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
@@ -99,6 +111,30 @@ function Body() {
     t('ui.disclaimer'),
   ].join('\n')
 
+  const label = (id: string) => t(`fnf-checker.line.${id}`, { fallbackLabel: id })
+  const mail = [
+    t('fnf-checker.mail.subject', { n: disputes.length }),
+    '',
+    t('fnf-checker.mail.greeting', { hr: draft.hrName.trim() || t('fnf-checker.mail.hrTeam') }),
+    '',
+    t('fnf-checker.mail.intro', { lwd: draft.lastWorkingDay }),
+    '',
+    ...disputes.map((item, i) =>
+      t(`fnf-checker.mail.${item.kind}`, {
+        n: i + 1,
+        label: label(item.id),
+        claimed: formatINR(item.claimed),
+        recomputed: formatINR(item.recomputed),
+        delta: formatINR(Math.abs(item.delta)),
+      }),
+    ),
+    '',
+    t('fnf-checker.mail.close'),
+    '',
+    t('fnf-checker.mail.signoff', { name: draft.yourName.trim() }),
+  ].join('\n')
+  const canSend = disputes.length > 0 && draft.yourName.trim() !== ''
+
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
@@ -110,6 +146,13 @@ function Body() {
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
+        <TextField
+          label={t('fnf-checker.mailHr')}
+          hint={t('fnf-checker.mailHrHint')}
+          value={draft.hrName}
+          onChange={(v) => set({ hrName: v })}
+        />
+        <TextField label={t('fnf-checker.mailYou')} value={draft.yourName} onChange={(v) => set({ yourName: v })} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
@@ -134,6 +177,24 @@ function Body() {
             {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
+        {!isExample && (
+          <Card className="space-y-3">
+            <h3 className="text-sm font-bold">{t('fnf-checker.mailTitle')}</h3>
+            {disputes.length === 0 ? (
+              <p className="text-[13px] leading-relaxed text-ink-soft">{t('fnf-checker.mailNothing')}</p>
+            ) : (
+              <>
+                <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{mail}</pre>
+                {canSend ? (
+                  <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+                ) : (
+                  <p className="text-[13px] font-semibold text-amberflag">{t('fnf-checker.mailBlocked')}</p>
+                )}
+                <p className="text-xs leading-relaxed text-ink-faint">{t('fnf-checker.mailNote')}</p>
+              </>
+            )}
+          </Card>
+        )}
         {!isExample && (
           <ShareRow
             copyText={copyText}

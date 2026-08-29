@@ -9,8 +9,8 @@ import {
   DeltaTable,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
-  NumberField,
   Select,
   ShareRow,
   Toggle,
@@ -18,10 +18,10 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.compare.v1' as const
-const L = 100_000
 
 type Slot = { label: string; offer: OfferInput }
 
@@ -49,6 +49,7 @@ export default function OfferComparisonTool({ lang = 'en' }: { lang?: Lang }) {
 
 function CompareBody() {
   const t = useT()
+  const { lang } = useLang()
   const [slots, setSlots] = useState<Slot[]>(() => [
     { label: 'A', offer: DEFAULT_OFFER },
     {
@@ -159,6 +160,7 @@ function CompareBody() {
             {t('offer-comparison.removeThird')}
           </button>
         )}
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </div>
 
       <div className="-order-1 space-y-4 lg:order-none">
@@ -229,12 +231,11 @@ function MiniOffer({
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
-      <NumberField
+      <MoneyField
         label={t('decoder.field.variable.label')}
-        suffix="LPA"
-        step={0.5}
-        value={offer.variableAnnual / L}
-        onChange={(v) => set({ variableAnnual: v * L })}
+        hint={t('ui.money.hint')}
+        value={offer.variableAnnual}
+        onChange={(v) => set({ variableAnnual: v })}
       />
       <Select
         label={t('decoder.field.state.label')}

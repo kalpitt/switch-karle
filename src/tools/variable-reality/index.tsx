@@ -7,6 +7,7 @@ import {
   Card,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
   NumberField,
   ShareRow,
@@ -14,10 +15,10 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.variable.v1' as const
-const L = 100_000
 
 interface Draft {
   ctc: number
@@ -47,6 +48,7 @@ export default function VariableRealityTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(FIXTURE)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
@@ -90,12 +92,11 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('variable-reality.formTitle')}</h2>
         <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
-        <NumberField
+        <MoneyField
           label={t('decoder.field.variable.label')}
-          suffix="LPA"
-          step={0.5}
-          value={draft.variable / L}
-          onChange={(v) => set({ variable: v * L })}
+          hint={t('ui.money.hint')}
+          value={draft.variable}
+          onChange={(v) => set({ variable: v })}
         />
         <NumberField
           label={t('variable-reality.months')}
@@ -105,6 +106,7 @@ function Body() {
           value={draft.monthsInFy}
           onChange={(v) => set({ monthsInFy: v })}
         />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">

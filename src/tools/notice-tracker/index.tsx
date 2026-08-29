@@ -4,8 +4,11 @@ import { Card, DateField, Disclaimer, NumberField, VerdictBanner } from '../../c
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayUTC } from '../../engine/dates'
 import { loadOffer } from '../../data/defaults'
+import { NOTICE_TOOL } from '../../data/noticeLinks'
+import { TOOLS } from '../../data/tools'
+import { withLang } from '../../lib/langPath'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.notice.v1' as const
 
@@ -19,6 +22,23 @@ function emptyDraft(): Draft {
   return { resignDate: todayUTC(), noticePeriodDays: 90, done: [] }
 }
 
+/** A milestone row is a doorway: the tool that does the thing sits beside it. */
+function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done: boolean }) {
+  const t = useT()
+  const slug = NOTICE_TOOL[id]
+  if (!slug || done) return null
+  const tool = TOOLS.find((entry) => entry.slug === slug)
+  if (!tool) return null
+  return (
+    <a
+      href={withLang(lang, slug)}
+      className="no-print shrink-0 rounded-full border border-line px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron"
+    >
+      {t('notice-tracker.open', { tool: t(tool.titleKey) })}
+    </a>
+  )
+}
+
 export default function NoticeTrackerTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="notice-tracker">
@@ -29,6 +49,7 @@ export default function NoticeTrackerTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(emptyDraft)
   const [asOf, setAsOf] = useState(() => todayUTC())
   const [hydrated, setHydrated] = useState(false)
@@ -77,18 +98,18 @@ function Body() {
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)
             return (
-              <label key={m.id} className="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed">
-                <input
-                  type="checkbox"
-                  className="mt-0.5"
-                  checked={checked}
-                  onChange={() => toggle(m.id)}
-                />
-                <span className={checked ? 'text-ink-faint line-through' : ''}>
-                  {t(`notice-tracker.item.${m.id}`)}
-                  <span className="mt-0.5 block tnum text-ink-soft">{t('notice-tracker.due', { date: m.dueDate })}</span>
-                </span>
-              </label>
+              <div key={m.id} className="flex items-start justify-between gap-3">
+                <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed">
+                  <input type="checkbox" className="mt-0.5" checked={checked} onChange={() => toggle(m.id)} />
+                  <span className={checked ? 'text-ink-faint line-through' : ''}>
+                    {t(`notice-tracker.item.${m.id}`)}
+                    <span className="mt-0.5 block tnum text-ink-soft">
+                      {t('notice-tracker.due', { date: m.dueDate })}
+                    </span>
+                  </span>
+                </label>
+                <MilestoneLink id={m.id} lang={lang} done={checked} />
+              </div>
             )
           })}
         </Card>

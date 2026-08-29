@@ -8,6 +8,7 @@ import {
   Card,
   Disclaimer,
   ExampleNote,
+  InheritNote,
   MoneyField,
   NumberField,
   Select,
@@ -17,10 +18,10 @@ import {
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useT, useLang, type Lang } from '../../i18n'
+import { withLang } from '../../lib/langPath'
 
 const STORAGE_KEY = 'switchkarle.hike.v1' as const
-const L = 100_000
 
 interface Draft {
   currentCtc: number
@@ -29,6 +30,12 @@ interface Draft {
   nextCtc: number
   nextVariable: number
   nextState: StateCode
+  /**
+   * The new offer's basic as a percent of CTC. Without it the new CTC gets
+   * modelled with the current employer's stuffing, which is the thing this
+   * tool exists to expose.
+   */
+  nextBasicPercent: number
   haircut: boolean
 }
 
@@ -41,6 +48,7 @@ function fromDecoder(): Draft {
     nextCtc: Math.round(o.ctcAnnual * 1.3),
     nextVariable: o.variableAnnual,
     nextState: o.state,
+    nextBasicPercent: o.basicPercent,
     haircut: false,
   }
 }
@@ -53,6 +61,7 @@ function skeleton(): Draft {
     nextCtc: Math.round(DEFAULT_OFFER.ctcAnnual * 1.3),
     nextVariable: DEFAULT_OFFER.variableAnnual,
     nextState: DEFAULT_OFFER.state,
+    nextBasicPercent: DEFAULT_OFFER.basicPercent,
     haircut: false,
   }
 }
@@ -63,11 +72,13 @@ function asOffer(
   state: StateCode,
   template: OfferInput,
   kind: 'current' | 'next',
+  basicPercent?: number,
 ): OfferInput {
   const offer: OfferInput = { ...template, ctcAnnual: ctc, variableAnnual: variable, state }
   if (kind === 'next') {
     return {
       ...offer,
+      basicPercent: basicPercent ?? offer.basicPercent,
       joiningBonus: undefined,
       old: {
         rentPaidMonthly: 0,
@@ -90,6 +101,7 @@ export default function RealHikeTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(skeleton)
   const [template, setTemplate] = useState<OfferInput>(DEFAULT_OFFER)
   const [hydrated, setHydrated] = useState(false)
@@ -111,7 +123,7 @@ function Body() {
     () =>
       realHike({
         current: asOffer(draft.currentCtc, draft.currentVariable, draft.currentState, template, 'current'),
-        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template, 'next'),
+        next: asOffer(draft.nextCtc, draft.nextVariable, draft.nextState, template, 'next', draft.nextBasicPercent),
         variablePayout: draft.haircut ? 0.7 : 1,
       }),
     [draft, template],
@@ -140,29 +152,36 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('real-hike.formTitle')}</h2>
         <MoneyField label={t('real-hike.currentCtc')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
-        <NumberField
+        <MoneyField
           label={t('real-hike.currentVariable')}
-          suffix="LPA"
-          step={0.5}
-          value={draft.currentVariable / L}
-          onChange={(v) => set({ currentVariable: v * L })}
+          hint={t('ui.money.hint')}
+          value={draft.currentVariable}
+          onChange={(v) => set({ currentVariable: v })}
         />
         <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
         <MoneyField label={t('real-hike.nextCtc')} hint={t('ui.money.hint')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
-        <NumberField
+        <MoneyField
           label={t('real-hike.nextVariable')}
-          suffix="LPA"
-          step={0.5}
-          value={draft.nextVariable / L}
-          onChange={(v) => set({ nextVariable: v * L })}
+          hint={t('ui.money.hint')}
+          value={draft.nextVariable}
+          onChange={(v) => set({ nextVariable: v })}
         />
         <Select label={t('real-hike.nextState')} value={draft.nextState} onChange={(v) => set({ nextState: v })} options={states} />
+        <NumberField
+          label={t('real-hike.nextBasic')}
+          hint={t('real-hike.nextBasicHint')}
+          suffix="%"
+          max={100}
+          value={draft.nextBasicPercent}
+          onChange={(v) => set({ nextBasicPercent: Math.min(100, v) })}
+        />
         <Toggle
           label={t('real-hike.haircut')}
           hint={t('real-hike.haircutHint')}
           checked={draft.haircut}
           onChange={(v) => set({ haircut: v })}
         />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">

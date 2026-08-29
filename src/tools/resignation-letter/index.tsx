@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { epfoDateOverlap, lastWorkingDay } from '../../engine/dates'
+import { addDays, epfoDateOverlap, lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, NumberField, Select, TextField, VerdictBanner } from '../../components/ui'
 import { loadOffer } from '../../data/defaults'
@@ -94,6 +94,16 @@ function Body() {
       }
     })()
 
+  /** EPFO's portal balks at two employers on overlapping days, so the first
+   *  date that cannot overlap is the day after the last working day. */
+  const earliestSafeJoin = useMemo(() => {
+    try {
+      return addDays(lwd, 1)
+    } catch {
+      return ''
+    }
+  }, [lwd])
+
   const letter = useMemo(() => buildLetter(draft, lwd, t), [draft, lwd, t])
   const canCopy =
     draft.yourName.trim() !== '' &&
@@ -149,6 +159,11 @@ function Body() {
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('resignation-letter.verdict', { lwd })}</VerdictBanner>
         {overlap && <p className="text-[13px] text-amberflag">{t('resignation-letter.epfo')}</p>}
+        {earliestSafeJoin !== '' && (
+          <p className="tnum text-[13px] text-ink-soft">
+            {t('resignation-letter.earliestJoin', { date: earliestSafeJoin })}
+          </p>
+        )}
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
           <div className="mt-4">
