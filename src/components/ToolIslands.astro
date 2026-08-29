@@ -15,8 +15,7 @@ import LeaveEncashmentTool from '../tools/leave-encashment/index'
 import FnfCheckerTool from '../tools/fnf-checker/index'
 import Form16ShockTool from '../tools/form16-shock/index'
 import ResignationLetterTool from '../tools/resignation-letter/index'
-import ManagerScriptTool from '../tools/manager-script/index'
-import HrScriptTool from '../tools/hr-script/index'
+import ScriptsTool from '../tools/scripts/index'
 import CounterOfferTool from '../tools/counter-offer/index'
 import HandoverDocTool from '../tools/handover-doc/index'
 import RelievingChaserTool from '../tools/relieving-chaser/index'
@@ -28,7 +27,7 @@ import NoticeTrackerTool from '../tools/notice-tracker/index'
 import BondScannerTool from '../tools/bond-scanner/index'
 import RedactorTool from '../tools/redactor/index'
 import ClauseLibraryTool from '../tools/clause-library/index'
-import { isHrScriptSlug } from '../data/hrScripts'
+import { isScriptSlug } from '../data/hrScripts'
 import type { Lang } from '../i18n'
 
 interface Props {
@@ -55,8 +54,7 @@ const { slug, lang } = Astro.props
 {slug === 'fnf-checker' && <FnfCheckerTool client:load lang={lang} />}
 {slug === 'form16-shock' && <Form16ShockTool client:load lang={lang} />}
 {slug === 'resignation-letter' && <ResignationLetterTool client:load lang={lang} />}
-{slug === 'manager-script' && <ManagerScriptTool client:load lang={lang} />}
-{isHrScriptSlug(slug) && <HrScriptTool client:load slug={slug} lang={lang} />}
+{isScriptSlug(slug) && <ScriptsTool client:load slug={slug} lang={lang} />}
 {slug === 'counter-offer' && <CounterOfferTool client:load lang={lang} />}
 {slug === 'handover-doc' && <HandoverDocTool client:load lang={lang} />}
 {slug === 'relieving-chaser' && <RelievingChaserTool client:load lang={lang} />}

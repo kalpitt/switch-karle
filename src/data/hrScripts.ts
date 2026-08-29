@@ -74,6 +74,15 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
   },
 }
 
-export function isHrScriptSlug(slug: string): slug is HrScriptSlug {
-  return (HR_SCRIPT_SLUGS as readonly string[]).includes(slug)
+/**
+ * Every slug the one Scripts tool serves. `manager-script` is the spoken one —
+ * it takes a tone instead of a template — but it is the same tool: pick the
+ * situation, get words you can use. Its own URL is kept.
+ */
+export const SCRIPT_SLUGS = [...HR_SCRIPT_SLUGS, 'manager-script'] as const
+
+export type ScriptSlug = (typeof SCRIPT_SLUGS)[number]
+
+export function isScriptSlug(slug: string): slug is ScriptSlug {
+  return (SCRIPT_SLUGS as readonly string[]).includes(slug)
 }
