@@ -186,7 +186,13 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         </button>
       </Card>
 
-      <div className="rounded-2xl border border-dashed border-line p-4">
+      {/*
+        stealth-hide: Notes mode exists so someone job-hunting at work can open
+        this at their desk. An empty tracker used to have nothing to give away.
+        The example board manufactures six company names and three LPA chips on
+        the most visible page in the app, so it has to go with the disguise.
+      */}
+      <div className="stealth-hide rounded-2xl border border-dashed border-line p-4">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
             {t('ui.exampleChip')}
