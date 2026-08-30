@@ -26,7 +26,9 @@ export const hi: Record<string, string> = {
   'app.langToggle.label': 'भाषा',
 
   'nav.home': 'होम',
-  'home.kicker': 'भारतीय job switch के हर पैसे वाले पल को decode करने वाले instant micro-tools — पूरी तरह इसी device पर।',
+  'home.kicker':
+    'आपके switch की हर application एक ही board पर, और हर card से सही calculator सिर्फ़ एक tap दूर। पूरी तरह इसी device पर।',
+  'home.allTools': 'सभी {n} tools',
   'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
   'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
   'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता.',
@@ -172,6 +174,11 @@ export const hi: Record<string, string> = {
   'tracker.openAdd': '+ Application जोड़ें',
   'tracker.empty.title': 'अभी कोई application नहीं — अपनी job search track करना शुरू करें।',
   'tracker.empty.cta': 'अपनी पहली application जोड़ें',
+  'tracker.example.title': 'कुछ applications जोड़ने के बाद आपका board ऐसा दिखेगा',
+  'tracker.example.action.referral': 'कोई ऐसा ढूंढें जो refer कर सके',
+  'tracker.example.action.chase': '30 दिन से कोई reply नहीं — chase करें या close करें',
+  'tracker.example.action.round2': 'Hiring manager के साथ round 2',
+  'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.confirmImport': 'Import करने से आपका मौजूदा tracker और decoder data overwrite हो जाएगा। जारी रखें?',
   'tracker.importSuccess': 'Backup restore हो गया।',

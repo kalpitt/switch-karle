@@ -12,6 +12,7 @@ import {
   STAGE_ORDER,
   updateApplication,
 } from '../tracker/store'
+import { exampleApplications } from '../data/exampleBoard'
 import { formatLPA } from '../engine/format'
 import { useT } from '../i18n'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
@@ -152,19 +153,54 @@ export function Tracker() {
   )
 }
 
+/**
+ * An empty board is now the first thing a visitor sees, so it shows a worked
+ * example instead of an invitation. Read-only: the cards carry no handlers, so
+ * ApplicationCard drops its action row.
+ */
 function EmptyState({ onAdd }: { onAdd: () => void }) {
   const t = useT()
+  const examples = useMemo(() => exampleApplications(todayIso(), (key) => t(key)), [t])
+  const grouped = useMemo(() => {
+    const g: Record<Stage, Application[]> = {
+      researching: [],
+      applied: [],
+      interviewing: [],
+      offer: [],
+      decided: [],
+    }
+    for (const app of examples) g[app.stage].push(app)
+    return g
+  }, [examples])
+
   return (
-    <Card className="flex flex-col items-center gap-3 py-10 text-center">
-      <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
-      <button
-        type="button"
-        onClick={onAdd}
-        className="rounded-xl bg-saffron px-5 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
-      >
-        {t('tracker.empty.cta')}
-      </button>
-    </Card>
+    <div className="space-y-4">
+      <Card className="flex flex-col items-center gap-3 py-8 text-center">
+        <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
+        <button
+          type="button"
+          onClick={onAdd}
+          className="rounded-xl bg-saffron px-5 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+        >
+          {t('tracker.empty.cta')}
+        </button>
+      </Card>
+
+      <div className="rounded-2xl border border-dashed border-line p-4">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
+            {t('ui.exampleChip')}
+          </span>
+          <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
+        </div>
+        <p className="mb-4 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+          {STAGE_ORDER.map((stage) => (
+            <StageColumn key={stage} stage={stage} apps={grouped[stage]} />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -339,9 +375,9 @@ function StageColumn({
 }: {
   stage: Stage
   apps: Application[]
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
-  onMove: (id: string, dir: -1 | 1) => void
+  onEdit?: (id: string) => void
+  onDelete?: (id: string) => void
+  onMove?: (id: string, dir: -1 | 1) => void
 }) {
   const t = useT()
   const STAGE_LABEL = useStageLabel()
@@ -364,9 +400,9 @@ function StageColumn({
             <ApplicationCard
               key={app.id}
               app={app}
-              onEdit={() => onEdit(app.id)}
-              onDelete={() => onDelete(app.id)}
-              onMove={(dir) => onMove(app.id, dir)}
+              onEdit={onEdit && (() => onEdit(app.id))}
+              onDelete={onDelete && (() => onDelete(app.id))}
+              onMove={onMove && ((dir) => onMove(app.id, dir))}
             />
           ))
         )}
@@ -375,6 +411,7 @@ function StageColumn({
   )
 }
 
+/** Handlers are omitted on the read-only example board; the action row goes with them. */
 function ApplicationCard({
   app,
   onEdit,
@@ -382,9 +419,9 @@ function ApplicationCard({
   onMove,
 }: {
   app: Application
-  onEdit: () => void
-  onDelete: () => void
-  onMove: (dir: -1 | 1) => void
+  onEdit?: () => void
+  onDelete?: () => void
+  onMove?: (dir: -1 | 1) => void
 }) {
   const t = useT()
   const STAGE_LABEL = useStageLabel()
@@ -425,6 +462,7 @@ function ApplicationCard({
         </p>
       )}
 
+      {onMove && onEdit && onDelete && (
       <div className="flex items-center justify-between pt-1">
         <div className="flex gap-1">
           <button
@@ -455,6 +493,7 @@ function ApplicationCard({
           </button>
         </div>
       </div>
+      )}
     </Card>
   )
 }
