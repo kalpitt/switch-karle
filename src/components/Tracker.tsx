@@ -13,8 +13,12 @@ import {
   updateApplication,
 } from '../tracker/store'
 import { exampleApplications } from '../data/exampleBoard'
+import { STAGE_ACTIONS } from '../data/stageActions'
+import { writeHandoff } from '../data/defaults'
+import { TOOLS } from '../data/tools'
 import { formatLPA } from '../engine/format'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
+import { withLang } from '../lib/langPath'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
 
 const L = 100_000
@@ -420,10 +424,12 @@ function ApplicationCard({
   onMove?: (dir: -1 | 1) => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
   const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
+  const actions = STAGE_ACTIONS[app.stage] ?? []
 
   return (
     <Card className="space-y-2 p-3.5">
@@ -456,6 +462,32 @@ function ApplicationCard({
             </span>
           )}
         </p>
+      )}
+
+      {actions.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[11px]">
+          <span className="font-semibold text-ink-faint">{t('tracker.doorway.label')}</span>
+          {actions.map((slug) => {
+            const tool = TOOLS.find((entry) => entry.slug === slug)
+            if (!tool) return null
+            const isPrefilledDecoder = app.stage === 'offer' && slug === 'decoder' && !!app.ctcDiscussedAnnual
+            return (
+              <a
+                key={slug}
+                href={withLang(lang, slug)}
+                onClick={
+                  isPrefilledDecoder
+                    ? () => writeHandoff({ ctcAnnual: app.ctcDiscussedAnnual })
+                    : undefined
+                }
+                title={isPrefilledDecoder ? t('tracker.doorway.prefilled') : undefined}
+                className="rounded-full border border-line bg-paper px-2 py-0.5 font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              >
+                {t(tool.titleKey)}
+              </a>
+            )
+          })}
+        </div>
       )}
 
       {onMove && onEdit && onDelete && (

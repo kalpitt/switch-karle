@@ -29,7 +29,8 @@ export const en: Record<string, string> = {
   'home.cat.exit': 'The money on the way out',
   'home.cat.documents': 'What you have to write',
   'home.cat.landing': 'Landing at the new job',
-  'home.kicker': 'Every application in your switch on one board. Entirely on this device.',
+  'home.kicker':
+    'Every application in your switch on one board, with the right calculator one tap from each card. Entirely on this device.',
   'home.allTools': 'All {n} tools',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
   'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
@@ -814,6 +815,8 @@ export const en: Record<string, string> = {
   'tracker.example.action.chase': 'No reply in 30 days — chase or close it',
   'tracker.example.action.round2': 'Round 2 with the hiring manager',
   'tracker.example.action.decode': 'Decode this offer before you reply',
+  'tracker.doorway.label': 'Next step:',
+  'tracker.doorway.prefilled': 'opens with this CTC',
   'tracker.confirmDelete': 'Delete this application? This cannot be undone.',
   'tracker.confirmImport': 'Import will overwrite your current tracker and decoder data. Continue?',
   'tracker.importSuccess': 'Backup restored.',

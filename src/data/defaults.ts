@@ -1,6 +1,11 @@
 import type { OfferInput } from '../engine/types'
 
 export const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
+export const HANDOFF_STORAGE_KEY = 'switchkarle.handoff.v1'
+
+export interface HandoffPayload {
+  ctcAnnual?: number
+}
 
 export const DEFAULT_OFFER: OfferInput = {
   ctcAnnual: 2_400_000,
@@ -14,14 +19,38 @@ export const DEFAULT_OFFER: OfferInput = {
   state: 'KA',
 }
 
+export function writeHandoff(payload: HandoffPayload): void {
+  try {
+    localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify(payload))
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+export function consumeHandoff(): HandoffPayload | null {
+  try {
+    const raw = localStorage.getItem(HANDOFF_STORAGE_KEY)
+    if (!raw) return null
+    localStorage.removeItem(HANDOFF_STORAGE_KEY)
+    return JSON.parse(raw) as HandoffPayload
+  } catch {
+    return null
+  }
+}
+
 export function loadOffer(): OfferInput {
+  let offer = DEFAULT_OFFER
   try {
     const raw = localStorage.getItem(DECODER_STORAGE_KEY)
-    if (raw) return { ...DEFAULT_OFFER, ...JSON.parse(raw) }
+    if (raw) offer = { ...DEFAULT_OFFER, ...JSON.parse(raw) }
   } catch {
     /* corrupted storage → fall through to defaults */
   }
-  return DEFAULT_OFFER
+  const handoff = consumeHandoff()
+  if (handoff?.ctcAnnual) {
+    return { ...offer, ctcAnnual: handoff.ctcAnnual }
+  }
+  return offer
 }
 
 export function saveOffer(offer: OfferInput): void {
