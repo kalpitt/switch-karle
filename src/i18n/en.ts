@@ -679,6 +679,8 @@ export const en: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
+  'decoder.seeded':
+    'CTC and notice period carried from a tracker card. Everything else is from the offer you last saved here, so check it before you trust the result.',
   'decoder.field.ctc.label': 'Total CTC',
   'decoder.field.variable.label': 'Variable in CTC',
   'decoder.field.basic.label': 'Basic',
@@ -816,7 +818,7 @@ export const en: Record<string, string> = {
   'tracker.example.action.round2': 'Round 2 with the hiring manager',
   'tracker.example.action.decode': 'Decode this offer before you reply',
   'tracker.doorway.label': 'Next step:',
-  'tracker.doorway.prefilled': 'opens with this CTC',
+  'tracker.doorway.prefilled': 'Decoder opens with this CTC.',
   'tracker.confirmDelete': 'Delete this application? This cannot be undone.',
   'tracker.confirmImport': 'Import will overwrite your current tracker and decoder data. Continue?',
   'tracker.importSuccess': 'Backup restored.',

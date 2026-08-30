@@ -430,6 +430,7 @@ function ApplicationCard({
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
   const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
   const actions = STAGE_ACTIONS[app.stage] ?? []
+  const isPrefilledDecoder = app.stage === 'offer' && actions.includes('decoder') && !!app.ctcDiscussedAnnual
 
   return (
     <Card className="space-y-2 p-3.5">
@@ -465,28 +466,40 @@ function ApplicationCard({
       )}
 
       {actions.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[11px]">
-          <span className="font-semibold text-ink-faint">{t('tracker.doorway.label')}</span>
-          {actions.map((slug) => {
-            const tool = TOOLS.find((entry) => entry.slug === slug)
-            if (!tool) return null
-            const isPrefilledDecoder = app.stage === 'offer' && slug === 'decoder' && !!app.ctcDiscussedAnnual
-            return (
-              <a
-                key={slug}
-                href={withLang(lang, slug)}
-                onClick={
-                  isPrefilledDecoder
-                    ? () => writeHandoff({ ctcAnnual: app.ctcDiscussedAnnual })
-                    : undefined
-                }
-                title={isPrefilledDecoder ? t('tracker.doorway.prefilled') : undefined}
-                className="rounded-full border border-line bg-paper px-2 py-0.5 font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
-              >
-                {t(tool.titleKey)}
-              </a>
-            )
-          })}
+        <div className="space-y-1.5 pt-1 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-ink-faint">{t('tracker.doorway.label')}</span>
+            {actions.map((slug) => {
+              const tool = TOOLS.find((entry) => entry.slug === slug)
+              if (!tool) return null
+              const isPrefilledThis = slug === 'decoder' && isPrefilledDecoder
+              return (
+                <a
+                  key={slug}
+                  href={withLang(lang, slug)}
+                  onClick={
+                    isPrefilledThis
+                      ? () =>
+                          writeHandoff({
+                            to: 'decoder',
+                            at: Date.now(),
+                            ctcAnnual: app.ctcDiscussedAnnual,
+                            noticePeriodDays: app.noticePeriodDays,
+                          })
+                      : undefined
+                  }
+                  className={`inline-flex min-h-[28px] items-center rounded-full border bg-paper px-2.5 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
+                    isPrefilledThis ? 'border-saffron/50 text-saffron' : 'border-line text-ink-soft'
+                  }`}
+                >
+                  {t(tool.titleKey)}
+                </a>
+              )
+            })}
+          </div>
+          {isPrefilledDecoder && (
+            <p className="text-[11px] leading-relaxed text-ink-faint">{t('tracker.doorway.prefilled')}</p>
+          )}
         </div>
       )}
 

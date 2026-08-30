@@ -44,22 +44,46 @@ describe('defaults and handoff', () => {
     expect(loadOffer()).toEqual(DEFAULT_OFFER)
   })
 
-  it('consumes handoff and overrides ctcAnnual in loadOffer', () => {
+  it('preserves saved offer in loadOffer', () => {
     install()
-    writeHandoff({ ctcAnnual: 3_800_000 })
-    expect(loadOffer().ctcAnnual).toBe(3_800_000)
-    // Read-once: handoff key is cleared
-    expect(mem.getItem(HANDOFF_STORAGE_KEY)).toBeNull()
-    expect(consumeHandoff()).toBeNull()
-  })
-
-  it('preserves saved offer and overrides only ctcAnnual with handoff', () => {
-    install()
-    saveOffer({ ...DEFAULT_OFFER, noticePeriodDays: 90, state: 'MH' })
-    writeHandoff({ ctcAnnual: 4_200_000 })
+    saveOffer({ ...DEFAULT_OFFER, ctcAnnual: 1_800_000, noticePeriodDays: 90, state: 'MH' })
     const loaded = loadOffer()
-    expect(loaded.ctcAnnual).toBe(4_200_000)
+    expect(loaded.ctcAnnual).toBe(1_800_000)
     expect(loaded.noticePeriodDays).toBe(90)
     expect(loaded.state).toBe('MH')
+  })
+
+  it('loadOffer does not consume a handoff and does not change its result when one is present', () => {
+    install()
+    saveOffer({ ...DEFAULT_OFFER, ctcAnnual: 1_800_000 })
+    writeHandoff({ to: 'decoder', at: Date.now(), ctcAnnual: 4_200_000 })
+    expect(loadOffer().ctcAnnual).toBe(1_800_000)
+    expect(mem.getItem(HANDOFF_STORAGE_KEY)).not.toBeNull()
+  })
+
+  it('consumeHandoff("decoder") returns a payload addressed to decoder and clears the key', () => {
+    install()
+    const now = Date.now()
+    writeHandoff({ to: 'decoder', at: now, ctcAnnual: 4_200_000, noticePeriodDays: 60 })
+    const consumed = consumeHandoff('decoder')
+    expect(consumed).toEqual({ to: 'decoder', at: now, ctcAnnual: 4_200_000, noticePeriodDays: 60 })
+    expect(mem.getItem(HANDOFF_STORAGE_KEY)).toBeNull()
+    expect(consumeHandoff('decoder')).toBeNull()
+  })
+
+  it('consumeHandoff("real-hike") on a payload addressed to decoder returns null and leaves the key in place', () => {
+    install()
+    const now = Date.now()
+    writeHandoff({ to: 'decoder', at: now, ctcAnnual: 4_200_000 })
+    expect(consumeHandoff('real-hike')).toBeNull()
+    expect(mem.getItem(HANDOFF_STORAGE_KEY)).not.toBeNull()
+  })
+
+  it('a payload older than the TTL returns null and the key is cleared', () => {
+    install()
+    const fiveMinOneSecAgo = Date.now() - (5 * 60 * 1000 + 1000)
+    writeHandoff({ to: 'decoder', at: fiveMinOneSecAgo, ctcAnnual: 4_200_000 })
+    expect(consumeHandoff('decoder')).toBeNull()
+    expect(mem.getItem(HANDOFF_STORAGE_KEY)).toBeNull()
   })
 })

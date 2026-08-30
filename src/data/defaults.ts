@@ -4,8 +4,15 @@ export const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
 export const HANDOFF_STORAGE_KEY = 'switchkarle.handoff.v1'
 
 export interface HandoffPayload {
+  /** Tool slug this payload is for. Only that tool may consume it. */
+  to: string
+  /** Epoch ms. A handoff is meant to survive one navigation, nothing longer. */
+  at: number
   ctcAnnual?: number
+  noticePeriodDays?: number
 }
+
+const HANDOFF_TTL_MS = 5 * 60 * 1000
 
 export const DEFAULT_OFFER: OfferInput = {
   ctcAnnual: 2_400_000,
@@ -27,30 +34,36 @@ export function writeHandoff(payload: HandoffPayload): void {
   }
 }
 
-export function consumeHandoff(): HandoffPayload | null {
+export function consumeHandoff(to: string): HandoffPayload | null {
   try {
     const raw = localStorage.getItem(HANDOFF_STORAGE_KEY)
     if (!raw) return null
+    const payload = JSON.parse(raw) as HandoffPayload
+    if (typeof payload !== 'object' || payload === null) {
+      localStorage.removeItem(HANDOFF_STORAGE_KEY)
+      return null
+    }
+    if (payload.to !== to) {
+      return null
+    }
     localStorage.removeItem(HANDOFF_STORAGE_KEY)
-    return JSON.parse(raw) as HandoffPayload
+    if (Date.now() - payload.at > HANDOFF_TTL_MS) {
+      return null
+    }
+    return payload
   } catch {
     return null
   }
 }
 
 export function loadOffer(): OfferInput {
-  let offer = DEFAULT_OFFER
   try {
     const raw = localStorage.getItem(DECODER_STORAGE_KEY)
-    if (raw) offer = { ...DEFAULT_OFFER, ...JSON.parse(raw) }
+    if (raw) return { ...DEFAULT_OFFER, ...JSON.parse(raw) }
   } catch {
     /* corrupted storage → fall through to defaults */
   }
-  const handoff = consumeHandoff()
-  if (handoff?.ctcAnnual) {
-    return { ...offer, ctcAnnual: handoff.ctcAnnual }
-  }
-  return offer
+  return DEFAULT_OFFER
 }
 
 export function saveOffer(offer: OfferInput): void {

@@ -52,6 +52,8 @@ export const hi: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
+  'decoder.seeded':
+    'CTC और notice period एक tracker card से आए हैं। बाकी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
   'decoder.field.ctc.label': 'Total CTC',
   'decoder.field.variable.label': 'CTC में Variable',
   'decoder.field.basic.label': 'Basic',
@@ -180,7 +182,7 @@ export const hi: Record<string, string> = {
   'tracker.example.action.round2': 'Hiring manager के साथ round 2',
   'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
   'tracker.doorway.label': 'अगला कदम:',
-  'tracker.doorway.prefilled': 'इसी CTC के साथ खुलेगा',
+  'tracker.doorway.prefilled': 'Decoder इसी CTC के साथ खुलेगा।',
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.confirmImport': 'Import करने से आपका मौजूदा tracker और decoder data overwrite हो जाएगा। जारी रखें?',
   'tracker.importSuccess': 'Backup restore हो गया।',
