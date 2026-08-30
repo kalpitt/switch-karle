@@ -165,10 +165,9 @@ export function Tracker() {
  * Read-only by construction: the cards carry no handlers, so ApplicationCard
  * drops its action row. No "example mode" branch to keep in sync.
  *
- * stealth-hide: Notes mode exists so someone job-hunting at work can open this
- * at their desk. An empty tracker used to have nothing to give away; this board
- * manufactures six company names and three LPA chips, so it goes with the
- * disguise.
+ * The board manufactures six company names and three LPA chips. Nothing hides
+ * them: Notes mode was removed as a disguise that did not disguise. See
+ * `docs/ARCHITECTURE.md` for the replacement this is waiting on.
  */
 function EmptyState() {
   const t = useT()
@@ -186,7 +185,7 @@ function EmptyState() {
   }, [examples])
 
   return (
-    <div className="stealth-hide rounded-2xl border border-dashed border-line p-4">
+    <div className="rounded-2xl border border-dashed border-line p-4">
       <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
