@@ -1,53 +1,29 @@
 import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
 import { RULES_LAST_VERIFIED } from '../data/rules'
 import { withLang } from '../lib/langPath'
-import { readJson, writeJson } from '../lib/storage'
 import { CommandPalette } from './CommandPalette'
-
-const STEALTH_KEY = 'switchkarle.stealth.v1' as const
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
   const t = useT()
   const { lang, setLang } = useLang()
-  const [stealth, setStealth] = useState(false)
-  const [stealthHydrated, setStealthHydrated] = useState(false)
 
   useEffect(() => {
     document.documentElement.lang = lang === 'hi' ? 'hi' : 'en'
   }, [lang])
-
-  useEffect(() => {
-    setStealth(readJson<boolean>(STEALTH_KEY, false))
-    setStealthHydrated(true)
-  }, [])
-
-  useEffect(() => {
-    if (!stealthHydrated) return
-    writeJson(STEALTH_KEY, stealth)
-    document.documentElement.classList.toggle('stealth', stealth)
-    // Stealth stays a naming trick: only the tab title changes, nothing else.
-    if (stealth) document.title = t('app.stealthTitle')
-  }, [stealth, stealthHydrated, t])
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
       <header className="no-print mb-6">
         <a href={withLang(lang)} className="inline-block">
           <h1 className="text-2xl font-extrabold tracking-tight">
-            {stealth ? (
-              t('app.stealthTitle')
-            ) : (
-              <>
-                Switch <span className="font-semibold text-ink-soft">Karle</span>
-              </>
-            )}
+            Switch <span className="font-semibold text-ink-soft">Karle</span>
           </h1>
         </a>
-        <p className="stealth-hide mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>
-        <p className="stealth-hide mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">
+        <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">
           <span aria-hidden>●</span> {t('app.privacyBadge')}
         </p>
 
@@ -77,10 +53,6 @@ export function Shell({ current, children }: { current: string; children: ReactN
               हिं
             </NavButton>
           </div>
-
-          <NavButton active={stealth} onClick={() => setStealth((v) => !v)}>
-            {t('app.stealth')}
-          </NavButton>
         </div>
       </header>
 

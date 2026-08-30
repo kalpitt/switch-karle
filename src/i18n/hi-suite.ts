@@ -9,7 +9,7 @@
  * Register: professional Indian-workplace Hindi, not shuddh-Hindi purism —
  * domain terms (CTC, PF, HRA, ESOP, notice period, in-hand, variable, regime,
  * bond, offer, LPA, Form 13, Form 16, Form 12B, UAN, EPFO, MCA, F&F, BGV, PAN,
- * Aadhaar, TDS, FMV, cliff, vest, metro, decoder, tracker, Stealth, etc.) stay
+ * Aadhaar, TDS, FMV, cliff, vest, metro, decoder, tracker, etc.) stay
  * in English/Latin script exactly as Indian professionals say them; the
  * surrounding sentence is Devanagari.
  */
@@ -29,9 +29,6 @@ export const hiSuite: Record<string, string> = {
   'nav.search': 'टूल खोजें',
   'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
   'nav.searchEmpty': 'कोई tool match नहीं हुआ।',
-  'app.stealth': 'नोट्स मोड',
-  'app.stealthHint': 'दिखने में notes जैसा। Tools वही हैं।',
-  'app.stealthTitle': 'Notes',
   'ui.copyText': 'कॉपी करें',
 
   // ---- Offer comparison ----

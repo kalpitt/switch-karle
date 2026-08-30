@@ -42,15 +42,11 @@ function HomeGrid() {
 
   // The board is the page. Research killed the tool-menu home: visitors bounced
   // off the grid within seconds, and the tracker was the one part they wanted.
-  // The tools are not gone, they are one tap down. Linking them from the cards
-  // by stage is the next increment, so nothing here promises it yet.
+  // The tools are not gone: they are one tap down here, and one tap from the
+  // stage doorways on each card, which is what the kicker promises.
   return (
     <div data-tool="home" className="space-y-8">
-      {/* stealth-hide: this line names the job switch outright, and it is new to
-          the home page. The tracker's own chrome above it is pre-existing and
-          also visible in Notes mode — how thin that disguise should stay is a
-          separate product call, not this change's to make. */}
-      <p className="stealth-hide max-w-2xl text-[15px] leading-relaxed text-ink-soft">{t('home.kicker')}</p>
+      <p className="max-w-2xl text-[15px] leading-relaxed text-ink-soft">{t('home.kicker')}</p>
 
       <Tracker />
 

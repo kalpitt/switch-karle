@@ -19,9 +19,6 @@ export const en: Record<string, string> = {
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',
   'nav.searchEmpty': 'No tool matches.',
-  'app.stealth': 'Notes mode',
-  'app.stealthHint': 'Looks like notes. Same tools.',
-  'app.stealthTitle': 'Notes',
   'ui.inherit': 'Basic, HRA and the PF split come from your saved Decoder offer — this tool only changes what it asks for.',
   'ui.inheritLink': 'Open Decoder',
   'home.pinned': 'Start here',
@@ -29,7 +26,8 @@ export const en: Record<string, string> = {
   'home.cat.exit': 'The money on the way out',
   'home.cat.documents': 'What you have to write',
   'home.cat.landing': 'Landing at the new job',
-  'home.kicker': 'Every application in your switch on one board. Entirely on this device.',
+  'home.kicker':
+    'Every application in your switch on one board, with the right calculator one tap from each card. Entirely on this device.',
   'home.allTools': 'All {n} tools',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
   'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
@@ -678,6 +676,8 @@ export const en: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
+  'decoder.seeded':
+    'CTC and notice period carried from a tracker card. Everything else is from the offer you last saved here, so check it before you trust the result.',
   'decoder.field.ctc.label': 'Total CTC',
   'decoder.field.variable.label': 'Variable in CTC',
   'decoder.field.basic.label': 'Basic',
@@ -814,6 +814,8 @@ export const en: Record<string, string> = {
   'tracker.example.action.chase': 'No reply in 30 days — chase or close it',
   'tracker.example.action.round2': 'Round 2 with the hiring manager',
   'tracker.example.action.decode': 'Decode this offer before you reply',
+  'tracker.doorway.label': 'Next step:',
+  'tracker.doorway.prefilled': 'Decoder opens with this CTC.',
   'tracker.confirmDelete': 'Delete this application? This cannot be undone.',
   'tracker.confirmImport': 'Import will overwrite your current tracker and decoder data. Continue?',
   'tracker.importSuccess': 'Backup restored.',

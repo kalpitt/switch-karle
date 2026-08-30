@@ -13,8 +13,12 @@ import {
   updateApplication,
 } from '../tracker/store'
 import { exampleApplications } from '../data/exampleBoard'
+import { STAGE_ACTIONS } from '../data/stageActions'
+import { writeHandoff } from '../data/defaults'
+import { TOOLS } from '../data/tools'
 import { formatLPA } from '../engine/format'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
+import { withLang } from '../lib/langPath'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
 
 const L = 100_000
@@ -161,10 +165,9 @@ export function Tracker() {
  * Read-only by construction: the cards carry no handlers, so ApplicationCard
  * drops its action row. No "example mode" branch to keep in sync.
  *
- * stealth-hide: Notes mode exists so someone job-hunting at work can open this
- * at their desk. An empty tracker used to have nothing to give away; this board
- * manufactures six company names and three LPA chips, so it goes with the
- * disguise.
+ * The board manufactures six company names and three LPA chips. Nothing hides
+ * them: Notes mode was removed as a disguise that did not disguise. See
+ * `docs/ARCHITECTURE.md` for the replacement this is waiting on.
  */
 function EmptyState() {
   const t = useT()
@@ -182,7 +185,7 @@ function EmptyState() {
   }, [examples])
 
   return (
-    <div className="stealth-hide rounded-2xl border border-dashed border-line p-4">
+    <div className="rounded-2xl border border-dashed border-line p-4">
       <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
@@ -420,10 +423,13 @@ function ApplicationCard({
   onMove?: (dir: -1 | 1) => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
   const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
+  const actions = STAGE_ACTIONS[app.stage] ?? []
+  const isPrefilledDecoder = app.stage === 'offer' && actions.includes('decoder') && !!app.ctcDiscussedAnnual
 
   return (
     <Card className="space-y-2 p-3.5">
@@ -456,6 +462,44 @@ function ApplicationCard({
             </span>
           )}
         </p>
+      )}
+
+      {actions.length > 0 && (
+        <div className="space-y-1.5 pt-1 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-ink-faint">{t('tracker.doorway.label')}</span>
+            {actions.map((slug) => {
+              const tool = TOOLS.find((entry) => entry.slug === slug)
+              if (!tool) return null
+              const isPrefilledThis = slug === 'decoder' && isPrefilledDecoder
+              return (
+                <a
+                  key={slug}
+                  href={withLang(lang, slug)}
+                  onClick={
+                    isPrefilledThis
+                      ? () =>
+                          writeHandoff({
+                            to: 'decoder',
+                            at: Date.now(),
+                            ctcAnnual: app.ctcDiscussedAnnual,
+                            noticePeriodDays: app.noticePeriodDays,
+                          })
+                      : undefined
+                  }
+                  className={`inline-flex min-h-[28px] items-center rounded-full border bg-paper px-2.5 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
+                    isPrefilledThis ? 'border-saffron/50 text-saffron' : 'border-line text-ink-soft'
+                  }`}
+                >
+                  {t(tool.titleKey)}
+                </a>
+              )
+            })}
+          </div>
+          {isPrefilledDecoder && (
+            <p className="text-[11px] leading-relaxed text-ink-faint">{t('tracker.doorway.prefilled')}</p>
+          )}
+        </div>
       )}
 
       {onMove && onEdit && onDelete && (

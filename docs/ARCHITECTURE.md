@@ -67,6 +67,42 @@ See `PRIVACY.md`. Sanctioned data leaving the device: user pastes a prompt into
 their own AI tab; user exports JSON; user downloads a share image. App-initiated
 network calls carrying user data are prohibited. No IndexedDB. No salary in URLs.
 
+## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
+
+Notes mode was a nav toggle that renamed the site to "Notes", set the tab title
+to "Notes", greyed the accent colours, and hid four elements marked
+`stealth-hide`: the tagline, the privacy badge, the home kicker, and the
+example board.
+
+It was removed because it did not do the job it implied. The tracker itself
+stayed fully visible: real company names, LPA chips, stage words like "Offer"
+and "Decided", and after the stage doorways shipped, tool names including
+"Resignation letter". The URL still read `switch-karle`, and the nav still read
+"Decoder". A disguise that leaves the incriminating half on screen is worse than
+none, because someone may rely on it.
+
+The four elements that were marked, i.e. the ones that name the job switch
+outright in chrome rather than in user data, are recorded above in case that
+list is useful again. It is not the list a real version would need.
+
+**What a real version looks like, when it is built.** The requirement Kalpit set
+is a browser-level panic switch: one keypress or one browser button, no
+in-page menu, screen clear immediately. Design notes for whoever picks it up:
+
+- The trigger must not be a control on the page. Reaching for a nav button is
+  the tell. A global key handler, or a browser extension or bookmarklet, keeps
+  the hand movement ambiguous.
+- Cover the data, not the branding. Company names, salary figures, and stage
+  labels are what gives it away; the site name is the least of it.
+- Restoring must need a deliberate act, so a glance at a covered screen cannot
+  uncover it.
+- The tab title, the favicon, and the URL are all part of the surface. A
+  same-origin static site cannot change its own URL, which is the honest ceiling
+  on how far an in-page version can go and part of why the extension route is
+  the real answer.
+
+Until that ships, the site makes no shoulder-surfing claim anywhere in copy.
+
 ## Statutory constants
 
 Ship with goldens. A constant's status lives beside its code:

@@ -26,7 +26,8 @@ export const hi: Record<string, string> = {
   'app.langToggle.label': 'भाषा',
 
   'nav.home': 'होम',
-  'home.kicker': 'आपके switch की हर application एक ही board पर। पूरी तरह इसी device पर।',
+  'home.kicker':
+    'आपके switch की हर application एक ही board पर, और हर card से सही calculator सिर्फ़ एक tap दूर। पूरी तरह इसी device पर।',
   'home.allTools': 'सभी {n} tools',
   'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
   'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
@@ -51,6 +52,8 @@ export const hi: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
+  'decoder.seeded':
+    'CTC और notice period एक tracker card से आए हैं। बाकी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
   'decoder.field.ctc.label': 'Total CTC',
   'decoder.field.variable.label': 'CTC में Variable',
   'decoder.field.basic.label': 'Basic',
@@ -178,6 +181,8 @@ export const hi: Record<string, string> = {
   'tracker.example.action.chase': '30 दिन से कोई reply नहीं — chase करें या close करें',
   'tracker.example.action.round2': 'Hiring manager के साथ round 2',
   'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
+  'tracker.doorway.label': 'अगला कदम:',
+  'tracker.doorway.prefilled': 'Decoder इसी CTC के साथ खुलेगा।',
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.confirmImport': 'Import करने से आपका मौजूदा tracker और decoder data overwrite हो जाएगा। जारी रखें?',
   'tracker.importSuccess': 'Backup restore हो गया।',

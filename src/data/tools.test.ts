@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { TOOLS } from './tools'
 import { NAV_SLUGS, homeSections, pinnedTools } from './home'
 import { NOTICE_TOOL } from './noticeLinks'
+import { STAGE_ACTIONS } from './stageActions'
+import { STAGE_ORDER } from '../tracker/store'
 import { noticeTracker } from '../engine/noticeTracker'
 
 describe('tool registry', () => {
@@ -49,5 +51,22 @@ describe('notice-tracker cockpit links', () => {
     const linked = ids.filter((id) => NOTICE_TOOL[id])
     expect(ids.filter((id) => !NOTICE_TOOL[id])).toEqual(['asset-return'])
     expect(linked.length).toBe(5)
+  })
+})
+
+describe('tracker stage doorways', () => {
+  it('points every stage action at a tool that exists', () => {
+    for (const slugs of Object.values(STAGE_ACTIONS)) {
+      for (const slug of slugs) {
+        expect(TOOLS.some((tool) => tool.slug === slug)).toBe(true)
+      }
+    }
+  })
+
+  it('has an entry for every stage in STAGE_ORDER', () => {
+    for (const stage of STAGE_ORDER) {
+      expect(STAGE_ACTIONS[stage]).toBeDefined()
+      expect(STAGE_ACTIONS[stage].length).toBeGreaterThan(0)
+    }
   })
 })
