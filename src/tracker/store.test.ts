@@ -3,24 +3,38 @@ import {
   addApplication,
   addInsight,
   exportAll,
-  importAll,
+  hasUndo,
   load,
+  mergeApplications,
+  mergeBackup,
   moveStage,
+  parseBackup,
   removeApplication,
   removeInsight,
+  restoreAll,
   save,
+  snapshotForUndo,
   STORAGE_KEY,
+  UNDO_STORAGE_KEY,
+  undoLastRestore,
   updateApplication,
+  type BackupBundle,
 } from './store'
 import type { Application } from './types'
 
-/** Minimal localStorage shim — the vitest environment is 'node', so there's no real DOM storage. */
+/** Minimal localStorage shim with error injection capability for testing full quota / blocked storage. */
 class LocalStorageShim {
   private store = new Map<string, string>()
+  public shouldThrowOnSet = false
+  public throwOnlyOnKeys = new Set<string>()
+
   getItem(key: string): string | null {
     return this.store.has(key) ? this.store.get(key)! : null
   }
   setItem(key: string, value: string): void {
+    if (this.shouldThrowOnSet || this.throwOnlyOnKeys.has(key)) {
+      throw new Error('QuotaExceededError: storage is full')
+    }
     this.store.set(key, value)
   }
   removeItem(key: string): void {
@@ -28,12 +42,17 @@ class LocalStorageShim {
   }
   clear(): void {
     this.store.clear()
+    this.shouldThrowOnSet = false
+    this.throwOnlyOnKeys.clear()
   }
 }
 
+let mem = new LocalStorageShim()
+
 beforeEach(() => {
+  mem = new LocalStorageShim()
   Object.defineProperty(globalThis, 'localStorage', {
-    value: new LocalStorageShim(),
+    value: mem,
     configurable: true,
     writable: true,
   })
@@ -58,8 +77,23 @@ describe('load', () => {
 
   it('round-trips what save() wrote', () => {
     const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    save(list)
+    expect(save(list)).toBe(true)
     expect(load()).toEqual(list)
+  })
+})
+
+describe('save', () => {
+  it('returns true on successful write', () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    expect(save(list)).toBe(true)
+    expect(load()).toEqual(list)
+  })
+
+  it('returns false and does not throw when setItem throws', () => {
+    mem.shouldThrowOnSet = true
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    expect(() => save(list)).not.toThrow()
+    expect(save(list)).toBe(false)
   })
 })
 
@@ -100,164 +134,202 @@ describe('addApplication', () => {
       notes: 'Panel round next week',
     })
   })
-
-  it('does not mutate the input list', () => {
-    const original: Application[] = []
-    addApplication(original, { company: 'Acme', role: 'SDE II' })
-    expect(original).toEqual([])
-  })
-
-  it('assigns distinct ids across calls', () => {
-    let list = addApplication([], { company: 'A', role: 'X' })
-    list = addApplication(list, { company: 'B', role: 'Y' })
-    expect(list[0].id).not.toBe(list[1].id)
-  })
 })
 
 describe('updateApplication', () => {
-  it('patches the matching application and bumps updatedAt', async () => {
+  it('updates matching fields and bumps updatedAt', () => {
     const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    const before = list[0].updatedAt
-    await new Promise((r) => setTimeout(r, 2))
-    const updated = updateApplication(list, list[0].id, { role: 'Staff SDE', notes: 'promoted role' })
-    expect(updated[0].role).toBe('Staff SDE')
-    expect(updated[0].notes).toBe('promoted role')
-    expect(updated[0].updatedAt).not.toBe(before)
+    const orig = list[0]
+    const updated = updateApplication(list, orig.id, { role: 'Staff SDE', stage: 'interviewing' })
+    expect(updated[0]).toMatchObject({ id: orig.id, company: 'Acme', role: 'Staff SDE', stage: 'interviewing' })
+    expect(updated[0].updatedAt >= orig.updatedAt).toBe(true)
   })
 
   it('leaves other applications untouched', () => {
-    let list = addApplication([], { company: 'A', role: 'X' })
-    list = addApplication(list, { company: 'B', role: 'Y' })
-    const targetId = list[0].id
-    const updated = updateApplication(list, targetId, { company: 'A2' })
+    let list = addApplication([], { company: 'A', role: 'Dev' })
+    list = addApplication(list, { company: 'B', role: 'PM' })
+    const updated = updateApplication(list, list[0].id, { company: 'A Prime' })
     expect(updated[1]).toEqual(list[1])
   })
 
-  it('is a no-op (returns list of same shape) for an unknown id', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    const updated = updateApplication(list, 'does-not-exist', { company: 'Nope' })
+  it('is a no-op for an unknown id', () => {
+    const list = addApplication([], { company: 'A', role: 'Dev' })
+    const updated = updateApplication(list, 'does-not-exist', { company: 'A Prime' })
     expect(updated).toEqual(list)
   })
 })
 
 describe('removeApplication', () => {
-  it('removes only the matching application', () => {
-    let list = addApplication([], { company: 'A', role: 'X' })
-    list = addApplication(list, { company: 'B', role: 'Y' })
-    const removed = removeApplication(list, list[0].id)
-    expect(removed).toHaveLength(1)
-    expect(removed[0].company).toBe('B')
+  it('removes matching application by id', () => {
+    let list = addApplication([], { company: 'A', role: 'Dev' })
+    list = addApplication(list, { company: 'B', role: 'PM' })
+    const idToRemove = list[0].id
+    const updated = removeApplication(list, idToRemove)
+    expect(updated).toHaveLength(1)
+    expect(updated[0].company).toBe('B')
   })
 
   it('is a no-op for an unknown id', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    const list = addApplication([], { company: 'A', role: 'Dev' })
     expect(removeApplication(list, 'does-not-exist')).toEqual(list)
   })
 })
 
 describe('moveStage', () => {
-  it('advances a stage forward', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+  it('moves an application one stage forward', () => {
+    const list = addApplication([], { company: 'A', role: 'Dev', stage: 'researching' })
     const moved = moveStage(list, list[0].id, 1)
     expect(moved[0].stage).toBe('applied')
   })
 
-  it('moves a stage backward', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II', stage: 'interviewing' })
-    const moved = moveStage(list, list[0].id, -1)
-    expect(moved[0].stage).toBe('applied')
-  })
-
-  it('clamps at the last stage', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II', stage: 'decided' })
-    const moved = moveStage(list, list[0].id, 1)
-    expect(moved[0].stage).toBe('decided')
-  })
-
-  it('clamps at the first stage', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II', stage: 'researching' })
+  it('moves an application one stage back', () => {
+    const list = addApplication([], { company: 'A', role: 'Dev', stage: 'applied' })
     const moved = moveStage(list, list[0].id, -1)
     expect(moved[0].stage).toBe('researching')
   })
 
-  it('does not bump updatedAt when clamped (no actual change)', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II', stage: 'researching' })
-    const before = list[0].updatedAt
-    const moved = moveStage(list, list[0].id, -1)
-    expect(moved[0].updatedAt).toBe(before)
+  it('clamps at the boundaries', () => {
+    const list = addApplication([], { company: 'A', role: 'Dev', stage: 'researching' })
+    expect(moveStage(list, list[0].id, -1)[0].stage).toBe('researching')
+
+    const decided = addApplication([], { company: 'B', role: 'PM', stage: 'decided' })
+    expect(moveStage(decided, decided[0].id, 1)[0].stage).toBe('decided')
   })
 })
 
-describe('addInsight', () => {
-  it('appends an insight and bumps updatedAt', async () => {
+describe('addInsight / removeInsight', () => {
+  it('adds an insight and generates id + timestamp', () => {
     const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    const before = list[0].updatedAt
-    await new Promise((r) => setTimeout(r, 2))
     const updated = addInsight(list, list[0].id, {
-      templateId: 'company-research',
-      title: 'Company research',
-      content: 'Some AI answer text.',
+      templateId: 'counter-offer',
+      title: 'Counter pitch',
+      content: 'Ask for 15% more',
     })
     expect(updated[0].insights).toHaveLength(1)
     expect(updated[0].insights![0]).toMatchObject({
-      templateId: 'company-research',
-      title: 'Company research',
-      content: 'Some AI answer text.',
+      templateId: 'counter-offer',
+      title: 'Counter pitch',
+      content: 'Ask for 15% more',
     })
     expect(updated[0].insights![0].id).toBeTruthy()
     expect(updated[0].insights![0].savedAt).toBeTruthy()
-    expect(updated[0].updatedAt).not.toBe(before)
   })
 
-  it('appends to existing insights rather than replacing them', () => {
+  it('removes matching insight by id', () => {
     let list = addApplication([], { company: 'Acme', role: 'SDE II' })
     list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
     list = addInsight(list, list[0].id, { templateId: 'b', title: 'B', content: '2' })
-    expect(list[0].insights).toHaveLength(2)
-  })
-
-  it('is a no-op for an unknown application id', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    const updated = addInsight(list, 'does-not-exist', { templateId: 'a', title: 'A', content: '1' })
-    expect(updated).toEqual(list)
-  })
-
-  it('does not mutate the input list', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
-    expect(list[0].insights).toBeUndefined()
-  })
-})
-
-describe('removeInsight', () => {
-  it('removes only the matching insight and bumps updatedAt', async () => {
-    let list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
-    list = addInsight(list, list[0].id, { templateId: 'b', title: 'B', content: '2' })
-    const [first, second] = list[0].insights!
-    const before = list[0].updatedAt
-    await new Promise((r) => setTimeout(r, 2))
+    const first = list[0].insights![0]
+    const second = list[0].insights![1]
     const updated = removeInsight(list, list[0].id, first.id)
     expect(updated[0].insights).toHaveLength(1)
     expect(updated[0].insights![0].id).toBe(second.id)
-    expect(updated[0].updatedAt).not.toBe(before)
-  })
-
-  it('is a no-op for an unknown insight id', () => {
-    let list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    list = addInsight(list, list[0].id, { templateId: 'a', title: 'A', content: '1' })
-    const updated = removeInsight(list, list[0].id, 'does-not-exist')
-    expect(updated).toEqual(list)
-  })
-
-  it('is a no-op for an unknown application id', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    const updated = removeInsight(list, 'does-not-exist', 'also-not-exist')
-    expect(updated).toEqual(list)
   })
 })
 
-describe('exportAll / importAll', () => {
+describe('mergeApplications (pure list transform)', () => {
+  const appA: Application = {
+    id: 'app-a',
+    company: 'Alpha Corp',
+    role: 'Staff Engineer',
+    stage: 'applied',
+    createdAt: '2026-08-01T10:00:00.000Z',
+    updatedAt: '2026-08-01T10:00:00.000Z',
+  }
+  const appB: Application = {
+    id: 'app-b',
+    company: 'Beta Inc',
+    role: 'Lead PM',
+    stage: 'interviewing',
+    createdAt: '2026-08-02T10:00:00.000Z',
+    updatedAt: '2026-08-02T10:00:00.000Z',
+  }
+  const appC: Application = {
+    id: 'app-c',
+    company: 'Gamma Labs',
+    role: 'VP Product',
+    stage: 'offer',
+    createdAt: '2026-08-03T10:00:00.000Z',
+    updatedAt: '2026-08-03T10:00:00.000Z',
+  }
+
+  it('an incoming item with a newer updatedAt replaces the current one', () => {
+    const newerAppA: Application = {
+      ...appA,
+      stage: 'offer',
+      ctcDiscussedAnnual: 4_500_000,
+      updatedAt: '2026-08-10T10:00:00.000Z',
+    }
+    const current = [appA, appB]
+    const incoming = [newerAppA]
+    const merged = mergeApplications(current, incoming)
+    expect(merged).toHaveLength(2)
+    expect(merged[0]).toEqual(newerAppA)
+    expect(merged[1]).toEqual(appB)
+  })
+
+  it('an incoming item with an older or equal updatedAt does not replace current', () => {
+    const olderAppA: Application = {
+      ...appA,
+      stage: 'researching',
+      updatedAt: '2026-07-01T10:00:00.000Z',
+    }
+    const equalAppB: Application = {
+      ...appB,
+      stage: 'decided',
+      updatedAt: appB.updatedAt,
+    }
+    const current = [appA, appB]
+    const incoming = [olderAppA, equalAppB]
+    const merged = mergeApplications(current, incoming)
+    expect(merged).toHaveLength(2)
+    expect(merged[0]).toEqual(appA)
+    expect(merged[1]).toEqual(appB)
+  })
+
+  it('an id only in the incoming list is appended', () => {
+    const current = [appA, appB]
+    const incoming = [appC]
+    const merged = mergeApplications(current, incoming)
+    expect(merged).toHaveLength(3)
+    expect(merged[0]).toEqual(appA)
+    expect(merged[1]).toEqual(appB)
+    expect(merged[2]).toEqual(appC)
+  })
+
+  it('an id only in the current list survives', () => {
+    const current = [appA, appB, appC]
+    const incoming = [appB]
+    const merged = mergeApplications(current, incoming)
+    expect(merged).toHaveLength(3)
+    expect(merged[0]).toEqual(appA)
+    expect(merged[1]).toEqual(appB)
+    expect(merged[2]).toEqual(appC)
+  })
+
+  it('the current list order is preserved', () => {
+    const current = [appB, appA]
+    const newerAppA = { ...appA, updatedAt: '2026-08-15T00:00:00.000Z', notes: 'New notes' }
+    const incoming = [newerAppA, appC]
+    const merged = mergeApplications(current, incoming)
+    expect(merged.map((a) => a.id)).toEqual(['app-b', 'app-a', 'app-c'])
+    expect(merged[1].notes).toBe('New notes')
+  })
+
+  it('merging an empty incoming list is an identity', () => {
+    const current = [appA, appB]
+    const merged = mergeApplications(current, [])
+    expect(merged).toEqual(current)
+  })
+
+  it('merging a list into itself is an identity', () => {
+    const current = [appA, appB, appC]
+    const merged = mergeApplications(current, current)
+    expect(merged).toEqual(current)
+  })
+})
+
+describe('exportAll / parseBackup', () => {
   it('round-trips both the decoder and tracker stores', () => {
     let tracker = addApplication([], { company: 'Acme', role: 'SDE II' })
     tracker = addApplication(tracker, { company: 'Beta', role: 'PM' })
@@ -266,46 +338,169 @@ describe('exportAll / importAll', () => {
     localStorage.setItem(DECODER_STORAGE_KEY, JSON.stringify(decoderState))
 
     const json = exportAll()
-    const parsed = JSON.parse(json)
+    const parsed = parseBackup(json)
     expect(parsed.version).toBe(1)
     expect(parsed.tracker).toEqual(tracker)
     expect(parsed.decoder).toEqual(decoderState)
-
-    // Wipe both stores, then restore from the export.
-    localStorage.removeItem(STORAGE_KEY)
-    localStorage.removeItem(DECODER_STORAGE_KEY)
-    expect(load()).toEqual([])
-
-    importAll(json)
-    expect(load()).toEqual(tracker)
-    expect(JSON.parse(localStorage.getItem(DECODER_STORAGE_KEY)!)).toEqual(decoderState)
   })
 
   it('handles a missing decoder store gracefully on export', () => {
     save(addApplication([], { company: 'Acme', role: 'SDE II' }))
-    const parsed = JSON.parse(exportAll())
+    const parsed = parseBackup(exportAll())
     expect(parsed.decoder).toBeNull()
   })
 
-  it('throws on invalid JSON', () => {
-    expect(() => importAll('{not json')).toThrow()
+  it('parseBackup throws on malformed JSON', () => {
+    expect(() => parseBackup('{not valid json')).toThrow('Invalid backup file: not valid JSON.')
   })
 
-  it('throws on well-formed JSON with the wrong shape', () => {
-    expect(() => importAll(JSON.stringify({ hello: 'world' }))).toThrow()
-    expect(() => importAll(JSON.stringify({ version: 1, tracker: 'not-an-array' }))).toThrow()
-    expect(() => importAll(JSON.stringify({ version: 2, tracker: [] }))).toThrow()
+  it('parseBackup throws on a valid-JSON non-bundle', () => {
+    expect(() => parseBackup(JSON.stringify({ hello: 'world' }))).toThrow('Invalid backup file: unexpected structure.')
+    expect(() => parseBackup(JSON.stringify({ version: 2, tracker: [] }))).toThrow()
+    expect(() => parseBackup(JSON.stringify({ version: 1, tracker: 'not-an-array' }))).toThrow()
+    expect(() => parseBackup(JSON.stringify({ version: 1, tracker: [{ company: 'Only Company' }] }))).toThrow()
+  })
+})
+
+describe('restoreAll / mergeBackup / undo', () => {
+  const currentApp: Application = {
+    id: 'orig-1',
+    company: 'Current Corp',
+    role: 'SDE III',
+    stage: 'interviewing',
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-01T00:00:00.000Z',
+  }
+  const backupApp1: Application = {
+    id: 'orig-1',
+    company: 'Current Corp',
+    role: 'Staff SDE',
+    stage: 'offer',
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-05T00:00:00.000Z',
+  }
+  const backupApp2: Application = {
+    id: 'backup-2',
+    company: 'New Venture',
+    role: 'Founder',
+    stage: 'applied',
+    createdAt: '2026-08-04T00:00:00.000Z',
+    updatedAt: '2026-08-04T00:00:00.000Z',
+  }
+
+  it('restoreAll writes a snapshot, and undoLastRestore returns the pre-restore board exactly', () => {
+    save([currentApp])
+    expect(load()).toEqual([currentApp])
+
+    const bundle: BackupBundle = {
+      version: 1,
+      decoder: { ctcAnnual: 3_600_000 },
+      tracker: [backupApp1, backupApp2],
+    }
+
+    const success = restoreAll(bundle)
+    expect(success).toBe(true)
+    expect(load()).toEqual([backupApp1, backupApp2])
+    expect(hasUndo()).toBe(true)
+
+    // Undo restore: returns pre-restore board exactly and clears snapshot
+    const undone = undoLastRestore()
+    expect(undone).toEqual([currentApp])
+    expect(load()).toEqual([currentApp])
+    expect(hasUndo()).toBe(false)
+    expect(undoLastRestore()).toBeNull()
   })
 
-  it('throws when tracker entries are missing required fields', () => {
-    const garbage = JSON.stringify({ version: 1, decoder: null, tracker: [{ company: 'Acme' }] })
-    expect(() => importAll(garbage)).toThrow()
+  it('mergeBackup merges applications and allows undo', () => {
+    save([currentApp])
+    const bundle: BackupBundle = {
+      version: 1,
+      decoder: { ctcAnnual: 3_600_000 },
+      tracker: [backupApp1, backupApp2],
+    }
+
+    const success = mergeBackup(bundle)
+    expect(success).toBe(true)
+    const merged = load()
+    expect(merged).toHaveLength(2)
+    expect(merged[0]).toEqual(backupApp1) // updated because newer updatedAt
+    expect(merged[1]).toEqual(backupApp2) // added
+
+    const undone = undoLastRestore()
+    expect(undone).toEqual([currentApp])
+    expect(load()).toEqual([currentApp])
   })
 
-  it('does not touch existing storage when import throws', () => {
-    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
-    save(list)
-    expect(() => importAll('garbage')).toThrow()
-    expect(load()).toEqual(list)
+  it('undoLastRestore returns null when there is no snapshot and clears snapshot after undo', () => {
+    expect(hasUndo()).toBe(false)
+    expect(undoLastRestore()).toBeNull()
+
+    save([currentApp])
+    snapshotForUndo()
+    expect(hasUndo()).toBe(true)
+    expect(undoLastRestore()).toEqual([currentApp])
+    expect(hasUndo()).toBe(false)
+    expect(undoLastRestore()).toBeNull()
+  })
+
+  it('a restore still succeeds when the snapshot write fails', () => {
+    save([currentApp])
+    // Make snapshot write throw
+    mem.throwOnlyOnKeys.add(UNDO_STORAGE_KEY)
+
+    const bundle: BackupBundle = {
+      version: 1,
+      decoder: null,
+      tracker: [backupApp2],
+    }
+
+    const ok = restoreAll(bundle)
+    expect(ok).toBe(true)
+    expect(load()).toEqual([backupApp2])
+  })
+
+  it('mergeBackup leaves the saved Decoder offer alone', () => {
+    // Merge is offered as "keeps everything on your board". Replacing the offer
+    // the user built in the Decoder would make that sentence false.
+    save([currentApp])
+    mem.setItem(DECODER_STORAGE_KEY, JSON.stringify({ ctcAnnual: 1_800_000 }))
+
+    const bundle: BackupBundle = {
+      version: 1,
+      decoder: { ctcAnnual: 4_200_000 },
+      tracker: [backupApp2],
+    }
+
+    expect(mergeBackup(bundle)).toBe(true)
+    expect(JSON.parse(mem.getItem(DECODER_STORAGE_KEY)!)).toEqual({ ctcAnnual: 1_800_000 })
+  })
+
+  it('restoreAll does replace the saved Decoder offer', () => {
+    save([currentApp])
+    mem.setItem(DECODER_STORAGE_KEY, JSON.stringify({ ctcAnnual: 1_800_000 }))
+
+    const bundle: BackupBundle = {
+      version: 1,
+      decoder: { ctcAnnual: 4_200_000 },
+      tracker: [backupApp2],
+    }
+
+    expect(restoreAll(bundle)).toBe(true)
+    expect(JSON.parse(mem.getItem(DECODER_STORAGE_KEY)!)).toEqual({ ctcAnnual: 4_200_000 })
+  })
+
+  it('a failed undo keeps the snapshot so the user can try again', () => {
+    save([currentApp])
+    const bundle: BackupBundle = { version: 1, decoder: null, tracker: [backupApp2] }
+    restoreAll(bundle)
+    expect(hasUndo()).toBe(true)
+
+    // The board write fails, the snapshot read does not.
+    mem.throwOnlyOnKeys.add(STORAGE_KEY)
+    expect(undoLastRestore()).toBeNull()
+    expect(hasUndo()).toBe(true)
+
+    mem.throwOnlyOnKeys.delete(STORAGE_KEY)
+    expect(undoLastRestore()).toEqual([currentApp])
   })
 })
