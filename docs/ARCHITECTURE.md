@@ -1,7 +1,7 @@
 # Architecture — Switch Karle (as migrated)
 
 This describes the **repo as it is on `build/suite`**, not a product roadmap.
-Direction lives in personal-os (`context/handoffs/2026-08-22-switch-karle-master-roadmap-v2.md` §A, plus the 2026-08-23 owner amendments). Do not add a second strategy document here.
+Direction lives in `ROADMAP.md`. Do not add a second strategy document here.
 
 ## Shape
 
@@ -11,8 +11,11 @@ Astro static site, React islands, Tailwind 4 tokens in `src/index.css`. One
 - `site`: `https://kalpit.me`
 - `base`: `/switch-karle`
 
-Cutover to `https://switchkarle.fyi` with `base: '/'` is a later commit, after
-the domain serves. No 301 from the old URL.
+Cutover to `https://switchkarle.fyi` with `base: '/'` is a later commit. The
+domain is bought and its DNS points at Cloudflare; Kalpit is holding the final
+connection until the site is complete and users are still zero, so the base
+change costs nothing. No 301 from the old URL. See `ROADMAP.md` — the domain
+question is settled and must not be re-opened.
 
 ```
 src/
