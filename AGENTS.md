@@ -7,24 +7,31 @@ backend and no analytics, but that is now a default rather than a boundary — s
 execution. He is a non-developer, so lead with one plain-English line before any
 technical block.
 
-## The plan is not in this repo
+## Where direction lives
 
-**Canonical plan: §A of**
-`personal-os/context/handoffs/2026-08-22-switch-karle-master-roadmap-v2.md`
-in the private `personal-os` repo. Raw source
-material sits beside it in `2026-08-22-switch-karle-source-doc-salvage.md`.
+**`ROADMAP.md` in this repo.** Now, Next, Later, and what is settled. Read it
+before you start and answer "what's next" from it. Kalpit owns it: agents never
+edit it, they propose changes in a handoff and he applies them.
 
-`personal-os` is a **separate private repo**. If you cannot read it, **stop and
-ask Kalpit.** Do not invent direction from what you find in this repo.
+Its **Settled** section is not advisory. Those questions were decided, and some
+have already been re-raised more than once. Re-opening one wastes his time.
+
+The *reasoning* behind the roadmap is Kalpit's own and not all of it is public.
+This repo is public; his notes are not. So when the roadmap does not answer a
+question, **ask him rather than inventing direction** from what you find here.
 
 Three earlier strategy documents (`docs/AGENT-HANDOFF.md`, `docs/BLUEPRINT.md`,
 `docs/HUNT_OS_STRATEGY_BLUEPRINT.md`) were superseded and deleted from git in
 August 2026. **Any document claiming to be product direction is stale unless it
-is §A.** What lives in this repo instead: `docs/ARCHITECTURE.md` (living
+is `ROADMAP.md`.** What lives here instead: `docs/ARCHITECTURE.md` (living
 technical truth) and `docs/MASTER_IMPROVEMENT_PLAN.md` on the
 `docs/master-implementation-plan` branch (executed quality-cycle record —
-history and parked items, not direction). All docs are subordinate to the code:
-verify against the repo before believing any of them, including this one.
+history and parked items, not direction). Do not add a second strategy
+document. Partial restatements drift, and drifting duplicates once produced
+three contradicting roadmaps in a single day.
+
+All docs are subordinate to the code: verify against the repo before believing
+any of them, including this one.
 
 ## Never do these five things
 
