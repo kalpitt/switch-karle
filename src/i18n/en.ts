@@ -29,8 +29,7 @@ export const en: Record<string, string> = {
   'home.cat.exit': 'The money on the way out',
   'home.cat.documents': 'What you have to write',
   'home.cat.landing': 'Landing at the new job',
-  'home.kicker':
-    'Every application in your switch on one board, with the right calculator one tap from each card. Entirely on this device.',
+  'home.kicker': 'Every application in your switch on one board. Entirely on this device.',
   'home.allTools': 'All {n} tools',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
   'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',

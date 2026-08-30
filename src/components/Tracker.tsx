@@ -134,7 +134,7 @@ export function Tracker() {
       )}
 
       {list.length === 0 && formMode === 'closed' ? (
-        <EmptyState onAdd={() => setFormMode('add')} />
+        <EmptyState />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
           {STAGE_ORDER.map((stage) => (
@@ -154,11 +154,19 @@ export function Tracker() {
 }
 
 /**
- * An empty board is now the first thing a visitor sees, so it shows a worked
- * example instead of an invitation. Read-only: the cards carry no handlers, so
- * ApplicationCard drops its action row.
+ * An empty board is the first thing a new visitor sees now that the tracker is
+ * the home page, so it shows a worked example rather than an invitation. The
+ * "add" call to action lives in the header above and is not repeated here.
+ *
+ * Read-only by construction: the cards carry no handlers, so ApplicationCard
+ * drops its action row. No "example mode" branch to keep in sync.
+ *
+ * stealth-hide: Notes mode exists so someone job-hunting at work can open this
+ * at their desk. An empty tracker used to have nothing to give away; this board
+ * manufactures six company names and three LPA chips, so it goes with the
+ * disguise.
  */
-function EmptyState({ onAdd }: { onAdd: () => void }) {
+function EmptyState() {
   const t = useT()
   const examples = useMemo(() => exampleApplications(todayIso(), (key) => t(key)), [t])
   const grouped = useMemo(() => {
@@ -174,37 +182,19 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
   }, [examples])
 
   return (
-    <div className="space-y-4">
-      <Card className="flex flex-col items-center gap-3 py-8 text-center">
-        <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
-        <button
-          type="button"
-          onClick={onAdd}
-          className="rounded-xl bg-saffron px-5 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
-        >
-          {t('tracker.empty.cta')}
-        </button>
-      </Card>
-
-      {/*
-        stealth-hide: Notes mode exists so someone job-hunting at work can open
-        this at their desk. An empty tracker used to have nothing to give away.
-        The example board manufactures six company names and three LPA chips on
-        the most visible page in the app, so it has to go with the disguise.
-      */}
-      <div className="stealth-hide rounded-2xl border border-dashed border-line p-4">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
-            {t('ui.exampleChip')}
-          </span>
-          <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
-        </div>
-        <p className="mb-4 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-          {STAGE_ORDER.map((stage) => (
-            <StageColumn key={stage} stage={stage} apps={grouped[stage]} />
-          ))}
-        </div>
+    <div className="stealth-hide rounded-2xl border border-dashed border-line p-4">
+      <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
+          {t('ui.exampleChip')}
+        </span>
+        <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
+      </div>
+      <p className="mb-4 mt-1 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+        {STAGE_ORDER.map((stage) => (
+          <StageColumn key={stage} stage={stage} apps={grouped[stage]} />
+        ))}
       </div>
     </div>
   )

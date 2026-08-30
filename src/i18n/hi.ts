@@ -26,8 +26,7 @@ export const hi: Record<string, string> = {
   'app.langToggle.label': 'भाषा',
 
   'nav.home': 'होम',
-  'home.kicker':
-    'आपके switch की हर application एक ही board पर, और हर card से सही calculator सिर्फ़ एक tap दूर। पूरी तरह इसी device पर।',
+  'home.kicker': 'आपके switch की हर application एक ही board पर। पूरी तरह इसी device पर।',
   'home.allTools': 'सभी {n} tools',
   'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
   'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
