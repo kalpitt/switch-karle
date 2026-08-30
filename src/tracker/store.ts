@@ -1,6 +1,7 @@
 import type { Application, Insight, Stage } from './types'
 
 export const STORAGE_KEY = 'switchkarle.tracker.v1'
+export const UNDO_STORAGE_KEY = 'switchkarle.tracker.undo.v1'
 
 /** Same key App.tsx uses for the CTC Decoder's saved offer — kept in sync here for export/import. */
 const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
@@ -23,9 +24,18 @@ export function load(): Application[] {
   }
 }
 
-/** Persist the application list to localStorage. */
-export function save(list: Application[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+/**
+ * Persist the application list. Returns false when the write did not land —
+ * a full quota, or a browser blocking storage. The caller must surface that:
+ * a board that shows unsaved work as saved is the worst failure this app has.
+ */
+export function save(list: Application[]): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+    return true
+  } catch {
+    return false
+  }
 }
 
 export type NewApplication = Pick<Application, 'company' | 'role'> &
@@ -99,7 +109,47 @@ export function removeInsight(list: Application[], appId: string, insightId: str
   })
 }
 
-interface BackupBundle {
+/**
+ * Pure: merges an incoming list into the current one, without losing anything.
+ *
+ * Matched by id. An incoming application replaces the current one only when its
+ * `updatedAt` is strictly newer. Ids only in the backup are added. Ids only on
+ * the board are kept.
+ *
+ * Consequence worth knowing: restoring a backup taken before a deletion brings
+ * the deleted application back. That is the deliberate trade — this function
+ * never removes anything, and a surprise reappearance is recoverable while a
+ * silent deletion is not.
+ */
+export function mergeApplications(
+  current: Application[],
+  incoming: Application[],
+): Application[] {
+  const incomingMap = new Map(incoming.map((app) => [app.id, app]))
+  const merged: Application[] = []
+
+  for (const curr of current) {
+    const inc = incomingMap.get(curr.id)
+    if (inc) {
+      if (inc.updatedAt > curr.updatedAt) {
+        merged.push(inc)
+      } else {
+        merged.push(curr)
+      }
+      incomingMap.delete(curr.id)
+    } else {
+      merged.push(curr)
+    }
+  }
+
+  for (const inc of incomingMap.values()) {
+    merged.push(inc)
+  }
+
+  return merged
+}
+
+export interface BackupBundle {
   version: 1
   /** Whatever is stored under the decoder's localStorage key — opaque to the tracker. */
   decoder: unknown
@@ -119,8 +169,8 @@ export function exportAll(): string {
   return JSON.stringify(bundle, null, 2)
 }
 
-/** Restores both stores from a backup JSON string. Throws on anything that isn't a valid bundle. */
-export function importAll(json: string): void {
+/** Parses and validates a backup JSON string. Throws on anything that is not a valid bundle. */
+export function parseBackup(json: string): BackupBundle {
   let parsed: unknown
   try {
     parsed = JSON.parse(json)
@@ -130,10 +180,90 @@ export function importAll(json: string): void {
   if (!isBackupBundle(parsed)) {
     throw new Error('Invalid backup file: unexpected structure.')
   }
-  if (parsed.decoder !== null && parsed.decoder !== undefined) {
-    localStorage.setItem(DECODER_STORAGE_KEY, JSON.stringify(parsed.decoder))
+  return parsed
+}
+
+/** Snapshots the current board so the next restore or merge can be undone once. */
+export function snapshotForUndo(): void {
+  try {
+    const current = localStorage.getItem(STORAGE_KEY)
+    if (current) {
+      localStorage.setItem(UNDO_STORAGE_KEY, current)
+    } else {
+      localStorage.setItem(UNDO_STORAGE_KEY, JSON.stringify([]))
+    }
+  } catch {
+    /* an undo snapshot that cannot be written must not block the restore */
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed.tracker))
+}
+
+/**
+ * Restores the snapshot and clears it. Returns null when there is nothing to
+ * undo, and also when the write back failed — in that case the snapshot is
+ * left in place so the user can try again. An undo that reports success
+ * without landing is the same lie this increment exists to remove.
+ */
+export function undoLastRestore(): Application[] | null {
+  try {
+    const raw = localStorage.getItem(UNDO_STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    const list = Array.isArray(parsed) ? (parsed as Application[]) : []
+    if (!save(list)) return null
+    localStorage.removeItem(UNDO_STORAGE_KEY)
+    return list
+  } catch {
+    try {
+      localStorage.removeItem(UNDO_STORAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+    return null
+  }
+}
+
+/** True when an undo snapshot is available. */
+export function hasUndo(): boolean {
+  try {
+    return localStorage.getItem(UNDO_STORAGE_KEY) !== null
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Replaces both stores from an already-parsed bundle. Destructive by name now,
+ * not by surprise. Returns false if either write failed.
+ */
+export function restoreAll(bundle: BackupBundle): boolean {
+  snapshotForUndo()
+  let ok = true
+  if (bundle.decoder !== null && bundle.decoder !== undefined) {
+    try {
+      localStorage.setItem(DECODER_STORAGE_KEY, JSON.stringify(bundle.decoder))
+    } catch {
+      ok = false
+    }
+  }
+  if (!save(bundle.tracker)) {
+    ok = false
+  }
+  return ok
+}
+
+/**
+ * Merges a parsed bundle's applications into the current board.
+ *
+ * Deliberately leaves the saved Decoder offer alone. Merge is offered to the
+ * user as "keeps everything on your board"; silently replacing the offer they
+ * built in the Decoder would make that sentence false. Only `restoreAll` — the
+ * button that says it discards — touches it.
+ *
+ * Returns false if the write failed.
+ */
+export function mergeBackup(bundle: BackupBundle): boolean {
+  snapshotForUndo()
+  return save(mergeApplications(load(), bundle.tracker))
 }
 
 function isBackupBundle(v: unknown): v is BackupBundle {

@@ -4,13 +4,18 @@ import type { Application, Stage } from '../tracker/types'
 import {
   addApplication,
   exportAll,
-  importAll,
+  hasUndo,
   load,
+  mergeBackup,
   moveStage,
+  parseBackup,
   removeApplication,
+  restoreAll,
   save,
   STAGE_ORDER,
+  undoLastRestore,
   updateApplication,
+  type BackupBundle,
 } from '../tracker/store'
 import { exampleApplications } from '../data/exampleBoard'
 import { STAGE_ACTIONS } from '../data/stageActions'
@@ -45,6 +50,11 @@ export function Tracker() {
   const [list, setList] = useState<Application[]>([])
   const [hydrated, setHydrated] = useState(false)
   const [formMode, setFormMode] = useState<FormMode>('closed')
+  const [saveFailed, setSaveFailed] = useState(false)
+  const [pendingBackup, setPendingBackup] = useState<BackupBundle | null>(null)
+  const [restoreFeedback, setRestoreFeedback] = useState<string | null>(null)
+  const [restoreError, setRestoreError] = useState<string | null>(null)
+  const [undoAvailable, setUndoAvailable] = useState(false)
 
   useEffect(() => {
     setList(load())
@@ -53,7 +63,9 @@ export function Tracker() {
 
   useEffect(() => {
     if (!hydrated) return
-    save(list)
+    // A board that shows unsaved work as saved is the worst failure this app
+    // has, so a refused write has to reach the user, not just the console.
+    setSaveFailed(!save(list))
   }, [list, hydrated])
 
   const grouped = useMemo(() => {
@@ -98,18 +110,42 @@ export function Tracker() {
   }
 
   const handleImportFile = (file: File) => {
-    if (!confirm(t('tracker.confirmImport'))) return
+    setRestoreError(null)
+    setRestoreFeedback(null)
+    setPendingBackup(null)
     const reader = new FileReader()
     reader.onload = () => {
       try {
-        importAll(String(reader.result))
-        setList(load())
-        alert(t('tracker.importSuccess'))
-      } catch (err) {
-        alert(err instanceof Error ? err.message : t('tracker.importError'))
+        // Parse and describe before touching anything. The user chooses merge
+        // or replace knowing what is in the file and what it overlaps.
+        setPendingBackup(parseBackup(String(reader.result)))
+      } catch {
+        setRestoreError(t('tracker.restore.invalid'))
       }
     }
     reader.readAsText(file)
+  }
+
+  const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
+    if (!pendingBackup) return
+    const ok = apply(pendingBackup)
+    setPendingBackup(null)
+    setList(load())
+    if (!ok) setSaveFailed(true)
+    setUndoAvailable(hasUndo())
+    setRestoreFeedback(t(messageKey))
+  }
+
+  const handleUndo = () => {
+    const previous = undoLastRestore()
+    if (!previous) {
+      // The snapshot is still there; the write is what failed.
+      setSaveFailed(true)
+      return
+    }
+    setList(previous)
+    setUndoAvailable(false)
+    setRestoreFeedback(null)
   }
 
   return (
@@ -132,6 +168,93 @@ export function Tracker() {
           )}
         </div>
       </div>
+
+      {saveFailed && (
+        <div role="alert" className="rounded-2xl border border-alarm/30 bg-alarm/10 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-[14px] font-bold text-alarm">{t('tracker.saveFailed.title')}</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{t('tracker.saveFailed.body')}</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleExport}
+              className="rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
+            >
+              {t('tracker.export')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {pendingBackup && (
+        <Card className="space-y-3 p-4">
+          <div>
+            <h3 className="text-base font-bold">{t('tracker.import')}</h3>
+            <p className="mt-1 text-[13px] text-ink-soft">
+              {t('tracker.restore.found', { n: pendingBackup.tracker.length })}{' '}
+              {t('tracker.restore.overlap', {
+                n: pendingBackup.tracker.filter((b) => list.some((a) => a.id === b.id)).length,
+              })}
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => applyBackup(mergeBackup, 'tracker.restore.merged')}
+              className="flex flex-col items-start rounded-xl border-2 border-saffron bg-saffron-soft/30 p-3.5 text-left transition-colors hover:bg-saffron-soft"
+            >
+              <span className="text-[14px] font-bold text-saffron">{t('tracker.restore.merge')}</span>
+              <span className="mt-1 text-[12px] leading-relaxed text-ink-soft">{t('tracker.restore.mergeHint')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => applyBackup(restoreAll, 'tracker.restore.replaced')}
+              className="flex flex-col items-start rounded-xl border border-alarm/40 bg-alarm/5 p-3.5 text-left transition-colors hover:bg-alarm/10"
+            >
+              <span className="text-[14px] font-bold text-alarm">{t('tracker.restore.replace')}</span>
+              <span className="mt-1 text-[12px] leading-relaxed text-ink-soft">{t('tracker.restore.replaceHint')}</span>
+            </button>
+          </div>
+          <div className="flex justify-end pt-1">
+            <button
+              type="button"
+              onClick={() => setPendingBackup(null)}
+              className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+            >
+              {t('tracker.restore.cancel')}
+            </button>
+          </div>
+        </Card>
+      )}
+
+      {restoreFeedback && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-line bg-card p-3 text-[13px]">
+          <p className="font-medium text-ink-soft">{restoreFeedback}</p>
+          {undoAvailable && (
+            <button
+              type="button"
+              onClick={handleUndo}
+              className="rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+            >
+              {t('tracker.restore.undo')}
+            </button>
+          )}
+        </div>
+      )}
+
+      {restoreError && (
+        <div role="alert" className="flex items-center justify-between gap-2 rounded-xl border border-alarm/30 bg-alarm/10 p-3 text-[13px] text-alarm">
+          <span>{restoreError}</span>
+          <button
+            type="button"
+            onClick={() => setRestoreError(null)}
+            className="text-xs font-semibold underline"
+          >
+            {t('tracker.restore.cancel')}
+          </button>
+        </div>
+      )}
 
       {formMode !== 'closed' && (
         <ApplicationFormPanel initial={editingApp} onSave={handleSave} onCancel={() => setFormMode('closed')} />
