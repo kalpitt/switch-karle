@@ -92,7 +92,11 @@ export function gratuity(input: GratuityInput): GratuityResult {
       eligible: false,
       payableYears: 0,
       amount: 0,
-      flipDate: flipDateWhenIneligible(input.joinDate, tenure, fastPathDays),
+      // No date changes this. The Act does not cover this employer, so more
+      // tenure grants no statutory gratuity — and the ineligible-path helper
+      // was returning the five-year anniversary, which for a long-serving
+      // employee is a date already in the past.
+      flipDate: null,
       notes,
     }
   }

@@ -60,10 +60,20 @@ function trancheCount(vestMonths: number): number {
 
 /**
  * Shares vested at `month`. `monthly` is straight-line `shares × month /
- * vestMonths` once the cliff passes. `annual` steps: the first tranche lands on
- * the cliff and one more on each anniversary of it, so nothing accrues between
- * two anniversaries however long you stayed. Neither reading parses your grant
- * letter — it is the letter that decides.
+ * vestMonths` once the cliff passes.
+ *
+ * `annual` steps: equal tranches land on each anniversary of the grant, and
+ * nothing is released until the cliff passes, at which point everything accrued
+ * so far is released at once. Nothing accrues between two anniversaries however
+ * long you stayed.
+ *
+ * The tranches count from the grant, not from the cliff. Counting from the
+ * cliff silently lost one tranche on any cliff other than twelve months: a
+ * 24-month cliff on a 48-month grant finished at 750 of 1000 shares, and a
+ * 6-month cliff skipped the real anniversaries entirely. It was right for the
+ * common one-year cliff, which is why nothing caught it.
+ *
+ * Neither reading parses your grant letter — it is the letter that decides.
  */
 function vestedAtMonth(
   shares: number,
@@ -77,10 +87,7 @@ function vestedAtMonth(
   if (vestMonths <= 0) return { vestedShares: shares, stillCliffed }
   if (cadence === 'annual') {
     const tranches = trancheCount(vestMonths)
-    const landed =
-      cliffMonths > 0
-        ? 1 + Math.floor((month - cliffMonths) / 12)
-        : Math.floor(month / 12)
+    const landed = Math.floor(month / 12)
     const vested = Math.min(tranches, Math.max(0, landed))
     return { vestedShares: Math.min(shares, (shares * vested) / tranches), stillCliffed }
   }

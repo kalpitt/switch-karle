@@ -89,7 +89,11 @@ const RULES: Rule[] = [
   },
   {
     id: 'joining-bonus-clawback',
-    applies: (b) => !!b.input.joiningBonus && b.input.joiningBonus.clawbackMonths > 0,
+    // A clawback on a bonus of zero is not a risk, it is arithmetic.
+    applies: (b) =>
+      !!b.input.joiningBonus &&
+      b.input.joiningBonus.clawbackMonths > 0 &&
+      b.input.joiningBonus.amount > 0,
     build: (b) => ({
       severity: 'amber',
       title: `Joining bonus with ${b.input.joiningBonus!.clawbackMonths}-month clawback`,
