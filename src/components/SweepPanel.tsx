@@ -11,7 +11,7 @@ import { SWEEP_PROMPT } from '../prompts/sweep'
 import { useT } from '../i18n'
 import { Card, TextArea } from './ui'
 import { todayIso } from '../lib/today'
-import { stripFences } from '../lib/stripFences'
+import { extractJsonObject } from '../lib/extractJsonObject'
 import { formatDate } from '../lib/formatDate'
 
 const SKIPPED_REASONS: { reason: RejectedRow['reason']; key: string }[] = [
@@ -51,7 +51,7 @@ export function SweepPanel({
   const handleRead = () => {
     setError(null)
     try {
-      const payload = parseIngestPayload(stripFences(text))
+      const payload = parseIngestPayload(extractJsonObject(text))
       const res = ingest(payload, list, { today: todayIso() })
       setResult(res)
       const closedSet = new Set(res.likelyClosed)
