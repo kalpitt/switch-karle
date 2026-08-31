@@ -86,8 +86,12 @@ export function decodeOffer(input: OfferInput): SalaryBreakdown {
 
   const recommendedRegime: Regime = newRegime.totalTax <= oldRegime.totalTax ? 'new' : 'old'
 
-  const inHand = (tax: number) =>
-    (grossSalary - tax - employeePfAnnual - professionalTaxAnnual) / 12
+  // Professional tax is levied on salary earned. With no salary there is none
+  // to levy, and deducting it anyway produced an in-hand of -₹200 a month on a
+  // CTC of zero — which is what the Decoder shows the moment a user clears the
+  // CTC field.
+  const ptDue = grossSalary > 0 ? professionalTaxAnnual : 0
+  const inHand = (tax: number) => (grossSalary - tax - employeePfAnnual - ptDue) / 12
   const inHandMonthlyNew = Math.round(inHand(newRegime.totalTax))
   const inHandMonthlyOld = Math.round(inHand(oldRegime.totalTax))
   const inHandMonthly = recommendedRegime === 'new' ? inHandMonthlyNew : inHandMonthlyOld

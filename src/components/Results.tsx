@@ -56,7 +56,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
 
         <div className="mt-4 space-y-3">
           <ShareRow
-            copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}/month`}
+            copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
             copyLabel={t('ui.copy')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
