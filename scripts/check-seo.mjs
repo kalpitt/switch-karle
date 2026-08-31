@@ -122,7 +122,10 @@ if (!existsSync(robotsPath)) {
   failed = true
 } else {
   const robots = readFileSync(robotsPath, 'utf8')
-  if (!/User-agent:\s*\*/i.test(robots) || !/Allow:\s*\//i.test(robots)) {
+  // Anchored to the start of a line on purpose: `Disallow: /` contains the
+  // substring `allow: /`, so an unanchored test passed a robots.txt that
+  // blocked the entire site — the one thing this check exists to catch.
+  if (!/^\s*User-agent:\s*\*/im.test(robots) || !/^\s*Allow:\s*\//im.test(robots)) {
     console.error('check-seo: FAIL — robots.txt must allow all')
     failed = true
   }

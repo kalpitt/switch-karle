@@ -2,7 +2,10 @@ const inr = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 })
 
 /** ₹12,34,567 — Indian lakh/crore digit grouping, no decimals. */
 export function formatINR(amount: number): string {
-  return `₹${inr.format(Math.round(amount))}`
+  // The sign belongs outside the symbol. `₹-5,000` reads as a typo; `-₹5,000`
+  // reads as money owed.
+  const rounded = Math.round(amount)
+  return rounded < 0 ? `-₹${inr.format(Math.abs(rounded))}` : `₹${inr.format(rounded)}`
 }
 
 /** Compact Indian units: ₹1.2Cr, ₹24L, ₹80k. */
