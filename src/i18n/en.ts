@@ -848,6 +848,7 @@ export const en: Record<string, string> = {
   'tracker.field.source.hint': 'Referral, LinkedIn, Naukri…',
   'tracker.field.nextAction.label': 'Next action',
   'tracker.field.nextActionDate.label': 'Next action date',
+  'tracker.field.appliedOn.label': 'Applied on',
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'Save changes',
   'tracker.submitAdd': 'Add application',
@@ -857,6 +858,7 @@ export const en: Record<string, string> = {
   'tracker.edit': 'Edit',
   'tracker.nextLabel': 'Next:',
   'tracker.noticeChip': '{n}d notice',
+  'tracker.chip.appliedOn': 'Applied {date}',
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',

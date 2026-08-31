@@ -30,7 +30,7 @@ export interface RejectedRow {
 
 export type IngestCandidate = Pick<
   Application,
-  'company' | 'role' | 'stage' | 'ctcDiscussedAnnual' | 'source'
+  'company' | 'role' | 'stage' | 'ctcDiscussedAnnual' | 'source' | 'appliedOn'
 >
 
 export interface IngestResult {
@@ -376,6 +376,7 @@ export function ingest(
       stage,
       ...(ctcDiscussedAnnual !== undefined ? { ctcDiscussedAnnual } : {}),
       ...(source !== undefined ? { source } : {}),
+      ...(row.parsedDate.status === 'valid' ? { appliedOn: row.parsedDate.dateIso } : {}),
     }
 
     if (isLikelyClosed(raw.status)) {

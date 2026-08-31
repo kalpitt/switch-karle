@@ -105,6 +105,7 @@ describe('addApplication', () => {
     expect(app.company).toBe('Acme')
     expect(app.role).toBe('SDE II')
     expect(app.stage).toBe('researching')
+    expect(app.appliedOn).toBeUndefined()
     expect(app.id).toBeTruthy()
     expect(app.createdAt).toBeTruthy()
     expect(app.updatedAt).toBe(app.createdAt)
@@ -120,6 +121,7 @@ describe('addApplication', () => {
       source: 'referral',
       nextAction: 'Follow up with recruiter',
       nextActionDate: '2026-08-01',
+      appliedOn: '2026-07-20',
       notes: 'Panel round next week',
     })
     expect(list[0]).toMatchObject({
@@ -131,6 +133,7 @@ describe('addApplication', () => {
       source: 'referral',
       nextAction: 'Follow up with recruiter',
       nextActionDate: '2026-08-01',
+      appliedOn: '2026-07-20',
       notes: 'Panel round next week',
     })
   })
