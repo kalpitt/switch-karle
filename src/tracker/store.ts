@@ -12,13 +12,22 @@ function nowIso(): string {
   return new Date().toISOString()
 }
 
-/** Read the application list from localStorage. Never throws — corrupted storage → empty list. */
+/**
+ * Read the application list from localStorage. Never throws — corrupted storage
+ * → empty list.
+ *
+ * Every entry is validated, not just the array shape. An application carrying a
+ * stage the board cannot render used to crash the whole tracker on load, and
+ * because the bad entry was already persisted, every refresh crashed again:
+ * a blank screen with no way back in. Filtering here means a board that has
+ * already been poisoned recovers on the next load instead of staying dead.
+ */
 export function load(): Application[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? (parsed as Application[]) : []
+    return Array.isArray(parsed) ? parsed.filter(isApplication) : []
   } catch {
     return []
   }
@@ -275,6 +284,8 @@ function isBackupBundle(v: unknown): v is BackupBundle {
   return o.tracker.every(isApplication)
 }
 
+const KNOWN_STAGES: ReadonlySet<string> = new Set(STAGE_ORDER)
+
 function isApplication(v: unknown): v is Application {
   if (typeof v !== 'object' || v === null) return false
   const o = v as Record<string, unknown>
@@ -282,7 +293,11 @@ function isApplication(v: unknown): v is Application {
     typeof o.id === 'string' &&
     typeof o.company === 'string' &&
     typeof o.role === 'string' &&
+    // The stage must be one the board can render. `typeof === 'string'` was not
+    // enough: the tracker groups by stage into a fixed five-key object, so an
+    // unknown stage threw on an undefined bucket and took the page with it.
     typeof o.stage === 'string' &&
+    KNOWN_STAGES.has(o.stage) &&
     typeof o.createdAt === 'string' &&
     typeof o.updatedAt === 'string'
   )
