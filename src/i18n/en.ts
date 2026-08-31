@@ -872,7 +872,7 @@ export const en: Record<string, string> = {
   'sweep.looksClosed': 'reads as closed',
   'sweep.skipped.alreadyOnBoard': 'Already on your board: {n}',
   'sweep.skipped.outOfScope': 'Outside the last 60 days: {n}',
-  'sweep.skipped.duplicateInPayload': 'Listed twice in the answer: {n}',
+  'sweep.skipped.duplicateInPayload': 'Repeated in the answer: {n}',
   'sweep.skipped.unreadableDate': 'Date could not be read: {n}',
   'sweep.skipped.noCompany': 'No company name: {n}',
   'sweep.incomplete': 'This will not find everything. Job boards cap what they put in a confirmation email, and older mail is harder to search. Treat it as a head start, not a full record.',

@@ -239,7 +239,7 @@ export const hi: Record<string, string> = {
   'sweep.looksClosed': 'बंद लगती है',
   'sweep.skipped.alreadyOnBoard': 'पहले से board पर: {n}',
   'sweep.skipped.outOfScope': 'पिछले 60 दिनों से बाहर: {n}',
-  'sweep.skipped.duplicateInPayload': 'जवाब में दो बार आईं: {n}',
+  'sweep.skipped.duplicateInPayload': 'जवाब में दोहराई गईं: {n}',
   'sweep.skipped.unreadableDate': 'Date पढ़ी नहीं जा सकी: {n}',
   'sweep.skipped.noCompany': 'Company का नाम नहीं: {n}',
   'sweep.incomplete': 'यह सब कुछ नहीं ढूँढ पाएगा। Job boards confirmation email में सीमित roles ही डालते हैं, और पुराने mail खोजना मुश्किल है। इसे पूरी record नहीं, शुरुआत मानें।',
