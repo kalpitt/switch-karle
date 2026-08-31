@@ -214,6 +214,7 @@ export const hi: Record<string, string> = {
   'tracker.field.source.hint': 'Referral, LinkedIn, Naukri…',
   'tracker.field.nextAction.label': 'अगला कदम',
   'tracker.field.nextActionDate.label': 'अगले कदम की तारीख',
+  'tracker.field.appliedOn.label': 'कब apply किया',
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'बदलाव save करें',
   'tracker.submitAdd': 'Application जोड़ें',
@@ -223,6 +224,7 @@ export const hi: Record<string, string> = {
   'tracker.edit': 'एडिट करें',
   'tracker.nextLabel': 'अगला:',
   'tracker.noticeChip': '{n} दिन notice',
+  'tracker.chip.appliedOn': '{date} को apply',
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',

@@ -54,6 +54,7 @@ export function addApplication(list: Application[], partial: NewApplication): Ap
     source: partial.source,
     nextAction: partial.nextAction,
     nextActionDate: partial.nextActionDate,
+    appliedOn: partial.appliedOn,
     notes: partial.notes,
     createdAt: ts,
     updatedAt: ts,
