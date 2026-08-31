@@ -6,17 +6,22 @@ import {
   exportAll,
   hasUndo,
   load,
+  loadSweeps,
   mergeBackup,
   moveStage,
   parseBackup,
+  recordSweep,
   removeApplication,
   restoreAll,
   save,
+  snapshotForUndo,
   STAGE_ORDER,
   undoLastRestore,
   updateApplication,
   type BackupBundle,
 } from '../tracker/store'
+import { coverageState, type SweepRecord } from '../engine/coverage'
+import type { IngestCandidate } from '../engine/ingest'
 import { exampleApplications } from '../data/exampleBoard'
 import { STAGE_ACTIONS } from '../data/stageActions'
 import { writeHandoff } from '../data/defaults'
@@ -24,7 +29,10 @@ import { TOOLS } from '../data/tools'
 import { formatLPA } from '../engine/format'
 import { useLang, useT } from '../i18n'
 import { withLang } from '../lib/langPath'
+import { todayIso } from '../lib/today'
+import { formatDate } from '../lib/formatDate'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
+import { SweepPanel } from './SweepPanel'
 
 const L = 100_000
 
@@ -48,16 +56,19 @@ export function Tracker() {
   // Empty until mount so SSR HTML matches the first client render. Do not
   // save until hydrated — a save of [] would wipe real tracker data.
   const [list, setList] = useState<Application[]>([])
+  const [sweeps, setSweeps] = useState<SweepRecord[]>([])
   const [hydrated, setHydrated] = useState(false)
   const [formMode, setFormMode] = useState<FormMode>('closed')
   const [saveFailed, setSaveFailed] = useState(false)
   const [pendingBackup, setPendingBackup] = useState<BackupBundle | null>(null)
+  const [sweepOpen, setSweepOpen] = useState(false)
   const [restoreFeedback, setRestoreFeedback] = useState<string | null>(null)
   const [restoreError, setRestoreError] = useState<string | null>(null)
   const [undoAvailable, setUndoAvailable] = useState(false)
 
   useEffect(() => {
     setList(load())
+    setSweeps(loadSweeps())
     setHydrated(true)
   }, [])
 
@@ -110,6 +121,7 @@ export function Tracker() {
   }
 
   const handleImportFile = (file: File) => {
+    setSweepOpen(false)
     setRestoreError(null)
     setRestoreFeedback(null)
     setPendingBackup(null)
@@ -125,6 +137,51 @@ export function Tracker() {
     }
     reader.readAsText(file)
   }
+
+  const handleSweepToggle = () => {
+    setPendingBackup(null)
+    setSweepOpen((v) => !v)
+  }
+
+  const handleSweepAdd = (candidates: IngestCandidate[]) => {
+    snapshotForUndo()
+    let nextList = list
+    for (const c of candidates) {
+      nextList = addApplication(nextList, c)
+    }
+    const ok = save(nextList)
+    // Only a sweep that actually landed goes in the ledger. Recording a failed
+    // one would have the board say "filled from email today" beside a banner
+    // saying nothing was saved, and would hide the gap the ledger exists to show.
+    if (ok) {
+      recordSweep({ sweptAt: todayIso(), windowDays: 60, added: candidates.length })
+      setSweeps(loadSweeps())
+    }
+    setSweepOpen(false)
+    setList(nextList)
+    if (!ok) setSaveFailed(true)
+    setUndoAvailable(hasUndo())
+    setRestoreFeedback(t('sweep.added', { n: candidates.length }))
+  }
+
+  const coverage = useMemo(() => coverageState(sweeps, { today: todayIso() }), [sweeps])
+
+  const coverageText = useMemo(() => {
+    if (coverage.status === 'never') {
+      return t('coverage.never')
+    }
+    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom) : ''
+    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt) : ''
+    const limits = t('coverage.limits')
+
+    if (coverage.gapDays === 0) {
+      return `${t('coverage.sweptToday', { from })} ${limits}`
+    }
+    if (coverage.gapDays === 1) {
+      return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gapOne')} ${limits}`
+    }
+    return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gap', { n: coverage.gapDays })} ${limits}`
+  }, [coverage, t])
 
   const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
     if (!pendingBackup) return
@@ -159,9 +216,28 @@ export function Tracker() {
         <div>
           <h2 className="text-lg font-bold">{t('tracker.title')}</h2>
           <p className="text-[13px] text-ink-soft">{t('tracker.trackedCount', { n: list.length })}</p>
+          <p className="mt-1 text-[12px] leading-relaxed text-ink-faint">
+            {coverageText}
+            {coverage.stale && (
+              <>
+                {' '}
+                <button
+                  type="button"
+                  onClick={handleSweepToggle}
+                  className="font-semibold text-saffron underline hover:text-saffron"
+                >
+                  {t('coverage.sweepAgain')}
+                </button>
+              </>
+            )}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <ExportImportButtons onExport={handleExport} onImportFile={handleImportFile} />
+          <ExportImportButtons
+            onExport={handleExport}
+            onImportFile={handleImportFile}
+            onSweepToggle={handleSweepToggle}
+          />
           {formMode === 'closed' && (
             <button
               type="button"
@@ -231,6 +307,14 @@ export function Tracker() {
             </button>
           </div>
         </Card>
+      )}
+
+      {sweepOpen && !pendingBackup && (
+        <SweepPanel
+          list={list}
+          onAdd={handleSweepAdd}
+          onCancel={() => setSweepOpen(false)}
+        />
       )}
 
       {restoreFeedback && (
@@ -345,9 +429,11 @@ function EmptyState() {
 function ExportImportButtons({
   onExport,
   onImportFile,
+  onSweepToggle,
 }: {
   onExport: () => void
   onImportFile: (file: File) => void
+  onSweepToggle: () => void
 }) {
   const t = useT()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -366,6 +452,13 @@ function ExportImportButtons({
         className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.import')}
+      </button>
+      <button
+        type="button"
+        onClick={onSweepToggle}
+        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+      >
+        {t('tracker.sweep')}
       </button>
       <input
         ref={inputRef}
@@ -695,16 +788,4 @@ function Chip({ children }: { children: ReactNode }) {
       {children}
     </span>
   )
-}
-
-function todayIso(): string {
-  // Local date, not UTC — an IST user's "overdue" must flip at their midnight.
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
 }

@@ -1,7 +1,44 @@
 import type { Application, Insight, Stage } from './types'
+import type { SweepRecord } from '../engine/coverage'
 
 export const STORAGE_KEY = 'switchkarle.tracker.v1'
 export const UNDO_STORAGE_KEY = 'switchkarle.tracker.undo.v1'
+export const SWEEPS_STORAGE_KEY = 'switchkarle.sweeps.v1'
+
+function isSweepRecord(v: unknown): v is SweepRecord {
+  if (typeof v !== 'object' || v === null) return false
+  const o = v as Record<string, unknown>
+  return (
+    typeof o.sweptAt === 'string' &&
+    typeof o.windowDays === 'number' &&
+    typeof o.added === 'number'
+  )
+}
+
+/** Every sweep the user has run, oldest first. Corrupted storage reads as none. */
+export function loadSweeps(): SweepRecord[] {
+  try {
+    const raw = localStorage.getItem(SWEEPS_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(isSweepRecord)
+  } catch {
+    return []
+  }
+}
+
+/** Appends one sweep. Returns false when the write did not land. */
+export function recordSweep(record: SweepRecord): boolean {
+  try {
+    const current = loadSweeps()
+    const updated = [...current, record]
+    localStorage.setItem(SWEEPS_STORAGE_KEY, JSON.stringify(updated))
+    return true
+  } catch {
+    return false
+  }
+}
 
 /** Same key App.tsx uses for the CTC Decoder's saved offer — kept in sync here for export/import. */
 const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'

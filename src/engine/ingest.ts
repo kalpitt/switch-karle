@@ -66,8 +66,22 @@ const LEGAL_SUFFIX_SINGLES = new Set([
 // A wrong merge destroys an application the user really made; a missed merge
 // leaves two cards they can delete. Same trade as mergeApplications.
 
+/**
+ * Keeps letters and numbers in ANY script, not just Latin.
+ *
+ * The first version stripped `[^a-z0-9]`, which turned every Devanagari name
+ * into the empty string. Two different companies then shared the key `::` and
+ * the second was dropped as a duplicate. In an app for the Indian job market
+ * that is not an edge case.
+ *
+ * `\p{M}` is not optional here. Indic scripts carry vowels as combining marks,
+ * so letters alone turn मोटर्स into "म टर स" — still lossy, and still enough to
+ * collide two names that differ only in their matras.
+ */
+const NON_ALNUM = /[^\p{L}\p{N}\p{M}]+/gu
+
 export function normaliseCompany(company: string): string {
-  const cleaned = company.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+  const cleaned = company.toLowerCase().replace(NON_ALNUM, ' ').trim()
   const words = cleaned.split(' ').filter(Boolean)
   while (words.length > 1) {
     const len = words.length
@@ -90,12 +104,15 @@ export function normaliseCompany(company: string): string {
 
 export function normaliseRole(role: unknown): string {
   if (typeof role !== 'string') return ''
-  return role.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ')
+  return role.toLowerCase().replace(NON_ALNUM, ' ').trim().replace(/\s+/g, ' ')
 }
 
 const YMD_REGEX = /^(\d{4})-(\d{2})-(\d{2})$/
+// The offset is optional: `2026-08-15T10:30:00` is valid ISO 8601 and is what
+// an assistant emits when the source email carried no timezone. Rejecting it
+// threw away a date the row really had.
 const ISO_TIMESTAMP_REGEX =
-  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})$/i
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$/i
 
 function isLeap(y: number): boolean {
   return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0
@@ -111,10 +128,17 @@ type ParsedDate =
   | { status: 'valid'; dateIso: string }
 
 function parseAppliedOn(val: unknown): ParsedDate {
-  if (val === undefined) {
+  if (val === undefined || val === null) {
     return { status: 'absent' }
   }
-  if (typeof val !== 'string' || val.trim() === '') {
+  // An empty string is a field the assistant left blank, not a date it got
+  // wrong. The prompt's own schema example showed `"appliedOn":""`, so a model
+  // copying that shape had every dateless row rejected as unreadable and the
+  // application silently dropped.
+  if (typeof val === 'string' && val.trim() === '') {
+    return { status: 'absent' }
+  }
+  if (typeof val !== 'string') {
     return { status: 'invalid' }
   }
   const str = val.trim()
@@ -240,7 +264,14 @@ export function ingest(
   for (let i = 0; i < payload.applications.length; i++) {
     const raw = payload.applications[i]!
 
-    // 1. Company is required
+    // 1. Company is required. A null or non-object row counts as no company
+    //    rather than throwing: an assistant that emits a stray null in the
+    //    array would otherwise take the whole paste down, and the user would
+    //    be told their answer was invalid JSON when it was not.
+    if (typeof raw !== 'object' || raw === null) {
+      rejectRow(i, null, 'no-company')
+      continue
+    }
     if (typeof raw.company !== 'string' || raw.company.trim().length === 0) {
       rejectRow(i, null, 'no-company')
       continue
