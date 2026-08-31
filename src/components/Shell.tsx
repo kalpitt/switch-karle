@@ -22,13 +22,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
             Switch <span className="font-semibold text-ink-soft">Karle</span>
           </h1>
         </a>
-        <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">
-          <span aria-hidden>●</span> {t('app.privacyBadge')}
-        </p>
+        {current !== 'home' && <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>}
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <nav className="inline-flex flex-wrap gap-1 rounded-full border border-line bg-card p-1">
+          <nav className="inline-flex max-w-full flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]{display:none} gap-1 rounded-full border border-line bg-card p-1">
             <NavLink href={withLang(lang)} active={current === 'home'}>
               {t('nav.home')}
             </NavLink>
@@ -59,6 +56,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
       <main>{children}</main>
 
       <footer className="no-print mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">
+          <span aria-hidden>●</span> {t('app.privacyBadge')}
+        </p>
+        <br />
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
         <br />
         <span className="mt-1 inline-flex items-center rounded-full border border-line bg-card px-2.5 py-0.5 font-semibold text-ink-soft">
@@ -87,7 +88,7 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
   return (
     <a
       href={href}
-      className={`rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
+      className={`shrink-0 rounded-full px-4 py-1.5 text-[13px] font-bold transition-colors ${
         active ? 'bg-saffron text-white' : 'text-ink-soft'
       }`}
     >

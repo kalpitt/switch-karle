@@ -308,15 +308,15 @@ function EmptyState() {
   }, [examples])
 
   return (
-    <div className="rounded-2xl border border-dashed border-line p-4">
+    <div className="rounded-2xl border border-dashed border-line p-3">
       <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
           {t('ui.exampleChip')}
         </span>
         <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
       </div>
-      <p className="mb-4 mt-1 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
+      <p className="mb-3 mt-1 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
         {STAGE_ORDER.map((stage) => (
           <StageColumn key={stage} stage={stage} apps={grouped[stage]} />
