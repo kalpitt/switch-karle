@@ -11,6 +11,7 @@
     "lint": "oxlint",
     "check:base": "node scripts/check-base-build.mjs",
     "check:seo": "node scripts/check-seo.mjs",
+    "check:csp": "node scripts/check-csp.mjs",
     "new-tool": "node scripts/new-tool.mjs",
     "preview": "astro preview"
   },

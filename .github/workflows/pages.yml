@@ -37,6 +37,7 @@ jobs:
       # subpath deploy cannot break silently. Cutover flips base to `/`.
       - run: npm run check:base
       - run: npm run check:seo
+      - run: npm run check:csp
       - name: No private machine paths in tracked files
         # Mirrors ci.yml. That one gates the pull request, this one gates
         # production — and a merge whose CI ran before a later push would
