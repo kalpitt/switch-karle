@@ -68,11 +68,12 @@ npm run lint       # oxlint
 npm run build      # astro build
 npm run check:base # asset URLs under the configured base
 npm run check:seo  # canonical + OG; no analytics in dist/
+npm run check:csp  # CSP meta + hashes; no off-origin subresources
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must pass
-before you push to `build/suite`. Merging to `main` deploys — only Kalpit does
-that.
+`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, and `check:csp`
+must pass before you push to `build/suite`. Merging to `main` deploys — only
+Kalpit does that.
 
 Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not
 delete or blank keys in `hi.ts`. `/hi/<slug>/` twins are first-class; do not
