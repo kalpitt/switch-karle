@@ -110,3 +110,30 @@ describe("coverageState", () => {
     expect(records).toEqual(snapshot)
   })
 })
+
+describe('the ledger never overstates what it covered', () => {
+  it('a sweep recorded in the future cannot report a negative gap', () => {
+    const state = coverageState(
+      [{ sweptAt: '2026-09-10', windowDays: 60, added: 3 }],
+      { today: '2026-08-31' },
+    )
+    expect(state.gapDays).toBe(0)
+    expect(state.stale).toBe(false)
+  })
+
+  it('reports the widest reach-back of the latest sweep, not the largest window seen', () => {
+    // An older sweep with a wider window must not make the board look better
+    // covered than the most recent one actually managed.
+    const state = coverageState(
+      [
+        { sweptAt: '2026-06-01', windowDays: 365, added: 40 },
+        { sweptAt: '2026-08-30', windowDays: 60, added: 2 },
+      ],
+      { today: '2026-08-31' },
+    )
+    expect(state.lastSweptAt).toBe('2026-08-30')
+    expect(state.coveredFrom).toBe('2026-07-01')
+    expect(state.totalAdded).toBe(42)
+    expect(state.sweepCount).toBe(2)
+  })
+})

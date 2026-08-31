@@ -150,8 +150,13 @@ export function Tracker() {
       nextList = addApplication(nextList, c)
     }
     const ok = save(nextList)
-    recordSweep({ sweptAt: todayIso(), windowDays: 60, added: candidates.length })
-    setSweeps(loadSweeps())
+    // Only a sweep that actually landed goes in the ledger. Recording a failed
+    // one would have the board say "filled from email today" beside a banner
+    // saying nothing was saved, and would hide the gap the ledger exists to show.
+    if (ok) {
+      recordSweep({ sweptAt: todayIso(), windowDays: 60, added: candidates.length })
+      setSweeps(loadSweeps())
+    }
     setSweepOpen(false)
     setList(nextList)
     if (!ok) setSaveFailed(true)
