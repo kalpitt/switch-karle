@@ -25,7 +25,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
         {current !== 'home' && <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>}
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <nav className="inline-flex max-w-full flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]{display:none} gap-1 rounded-full border border-line bg-card p-1">
+          <nav className="inline-flex max-w-full flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden gap-1 rounded-full border border-line bg-card p-1">
             <NavLink href={withLang(lang)} active={current === 'home'}>
               {t('nav.home')}
             </NavLink>
