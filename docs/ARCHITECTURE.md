@@ -141,5 +141,5 @@ Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should lo
 
 ## Gates
 
-Local and CI: `test` · `typecheck` · `lint` · `build` · `check:base` · `check:seo`.
+Local and CI: `test` · `typecheck` · `lint` · `build` · `check:base` · `check:seo` · `check:csp`.
 Never merge to `main` without Kalpit — `main` is production.

@@ -37,6 +37,7 @@ jobs:
       # subpath deploy cannot break silently. Cutover flips base to `/`.
       - run: npm run check:base
       - run: npm run check:seo
+      - run: npm run check:csp
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
