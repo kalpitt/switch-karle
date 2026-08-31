@@ -26,6 +26,8 @@ import { TOOLS } from '../data/tools'
 import { formatLPA } from '../engine/format'
 import { useLang, useT } from '../i18n'
 import { withLang } from '../lib/langPath'
+import { todayIso } from '../lib/today'
+import { formatDate } from '../lib/formatDate'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
 import { SweepPanel } from './SweepPanel'
 
@@ -147,7 +149,7 @@ export function Tracker() {
     setList(nextList)
     if (!ok) setSaveFailed(true)
     setUndoAvailable(hasUndo())
-    setRestoreFeedback(t('tracker.restore.merged'))
+    setRestoreFeedback(t('sweep.added', { n: candidates.length }))
   }
 
   const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
@@ -724,16 +726,4 @@ function Chip({ children }: { children: ReactNode }) {
       {children}
     </span>
   )
-}
-
-export function todayIso(): string {
-  // Local date, not UTC — an IST user's "overdue" must flip at their midnight.
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
 }

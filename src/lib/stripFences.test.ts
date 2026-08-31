@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { stripFences } from './SweepPanel'
+import { stripFences } from '../lib/stripFences'
 
 describe('stripFences', () => {
   it('handles a bare JSON string without fences', () => {
