@@ -26,8 +26,7 @@ export const en: Record<string, string> = {
   'home.cat.exit': 'The money on the way out',
   'home.cat.documents': 'What you have to write',
   'home.cat.landing': 'Landing at the new job',
-  'home.kicker':
-    'Every application in your switch on one board, with the right calculator one tap from each card. Entirely on this device.',
+  'home.kicker': 'One board for every application. One tap to the right calculator.',
   'home.allTools': 'All {n} tools',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
   'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
@@ -848,6 +847,7 @@ export const en: Record<string, string> = {
   'tracker.field.source.hint': 'Referral, LinkedIn, Naukri…',
   'tracker.field.nextAction.label': 'Next action',
   'tracker.field.nextActionDate.label': 'Next action date',
+  'tracker.field.appliedOn.label': 'Applied on',
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'Save changes',
   'tracker.submitAdd': 'Add application',
@@ -857,6 +857,7 @@ export const en: Record<string, string> = {
   'tracker.edit': 'Edit',
   'tracker.nextLabel': 'Next:',
   'tracker.noticeChip': '{n}d notice',
+  'tracker.chip.appliedOn': 'Applied {date}',
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
