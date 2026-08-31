@@ -36,6 +36,21 @@ export default defineConfig({
       },
     }),
   ],
+  experimental: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "connect-src 'self'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "base-uri 'self'",
+        "form-action 'none'",
+        "object-src 'none'",
+        // frame-ancestors is ignored when delivered in a <meta> element, and
+        // GitHub Pages cannot set headers. Listing it only logs a console error.
+      ],
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },
