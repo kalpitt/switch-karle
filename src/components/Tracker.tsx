@@ -131,8 +131,13 @@ export function Tracker() {
     const ok = apply(pendingBackup)
     setPendingBackup(null)
     setList(load())
-    if (!ok) setSaveFailed(true)
     setUndoAvailable(hasUndo())
+    if (!ok) {
+      // Never both. Reporting "Merged" beside "This board did not save" tells
+      // the user their import worked when nothing was written.
+      setSaveFailed(true)
+      return
+    }
     setRestoreFeedback(t(messageKey))
   }
 
@@ -257,7 +262,18 @@ export function Tracker() {
       )}
 
       {formMode !== 'closed' && (
-        <ApplicationFormPanel initial={editingApp} onSave={handleSave} onCancel={() => setFormMode('closed')} />
+        // The key is load-bearing. The board stays visible behind this panel and
+        // its Edit buttons stay live, so a user can switch from editing one card
+        // to another without closing. The panel seeds its form state in a
+        // useState initialiser, which runs only on mount — without a key it kept
+        // the first card's values and saved them onto the second card's id,
+        // overwriting a company name with no way back.
+        <ApplicationFormPanel
+          key={editingApp?.id ?? 'add'}
+          initial={editingApp}
+          onSave={handleSave}
+          onCancel={() => setFormMode('closed')}
+        />
       )}
 
       {list.length === 0 && formMode === 'closed' ? (
@@ -308,15 +324,15 @@ function EmptyState() {
   }, [examples])
 
   return (
-    <div className="rounded-2xl border border-dashed border-line p-4">
+    <div className="rounded-2xl border border-dashed border-line p-3">
       <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
           {t('ui.exampleChip')}
         </span>
         <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
       </div>
-      <p className="mb-4 mt-1 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
+      <p className="mb-3 mt-1 text-[12px] leading-relaxed text-ink-faint">{t('ui.exampleNote')}</p>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
         {STAGE_ORDER.map((stage) => (
           <StageColumn key={stage} stage={stage} apps={grouped[stage]} />
@@ -375,6 +391,7 @@ interface FormState {
   source: string
   nextAction: string
   nextActionDate: string
+  appliedOn: string
   notes: string
 }
 
@@ -388,6 +405,7 @@ function toFormState(app?: Application): FormState {
     source: app?.source ?? '',
     nextAction: app?.nextAction ?? '',
     nextActionDate: app?.nextActionDate ?? '',
+    appliedOn: app?.appliedOn ?? '',
     notes: app?.notes ?? '',
   }
 }
@@ -420,6 +438,7 @@ function ApplicationFormPanel({
       source: form.source.trim() || undefined,
       nextAction: form.nextAction.trim() || undefined,
       nextActionDate: form.nextActionDate || undefined,
+      appliedOn: form.appliedOn || undefined,
       notes: form.notes.trim() || undefined,
     })
   }
@@ -464,6 +483,12 @@ function ApplicationFormPanel({
             type="date"
             value={form.nextActionDate}
             onChange={(v) => set({ nextActionDate: v })}
+          />
+          <TextField
+            label={t('tracker.field.appliedOn.label')}
+            type="date"
+            value={form.appliedOn}
+            onChange={(v) => set({ appliedOn: v })}
           />
         </div>
         <TextArea label={t('tracker.field.notes.label')} value={form.notes} onChange={(v) => set({ notes: v })} />
@@ -550,7 +575,8 @@ function ApplicationCard({
   const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
-  const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
+  const hasChips =
+    !!app.appliedOn || !!app.ctcDiscussedAnnual || !!app.noticePeriodDays || !!app.source || !!app.insights?.length
   const actions = STAGE_ACTIONS[app.stage] ?? []
   const isPrefilledDecoder = app.stage === 'offer' && actions.includes('decoder') && !!app.ctcDiscussedAnnual
 
@@ -571,6 +597,8 @@ function ApplicationCard({
           {!!app.ctcDiscussedAnnual && <Chip>{formatLPA(app.ctcDiscussedAnnual)}</Chip>}
           {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
+          {/* Last: money and terms are what the eye scans a card for; the date is context. */}
+          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
           {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
       )}
