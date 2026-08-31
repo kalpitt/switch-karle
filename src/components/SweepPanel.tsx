@@ -10,20 +10,9 @@ import {
 import { SWEEP_PROMPT } from '../prompts/sweep'
 import { useT } from '../i18n'
 import { Card, TextArea } from './ui'
-import { todayIso } from './Tracker'
-
-export function stripFences(text: string): string {
-  const trimmed = text.trim()
-  if (!trimmed.startsWith('```')) {
-    return trimmed
-  }
-  const lines = trimmed.split('\n')
-  lines.shift()
-  if (lines.length > 0 && lines[lines.length - 1]!.trim().startsWith('```')) {
-    lines.pop()
-  }
-  return lines.join('\n').trim()
-}
+import { todayIso } from '../lib/today'
+import { stripFences } from '../lib/stripFences'
+import { formatDate } from '../lib/formatDate'
 
 const SKIPPED_REASONS: { reason: RejectedRow['reason']; key: string }[] = [
   { reason: 'already-on-board', key: 'sweep.skipped.alreadyOnBoard' },
@@ -180,7 +169,7 @@ export function SweepPanel({
                           )}
                           {candidate.appliedOn && (
                             <span className="ml-1.5 text-xs text-ink-faint">
-                              ({candidate.appliedOn})
+                              ({formatDate(candidate.appliedOn)})
                             </span>
                           )}
                         </div>
