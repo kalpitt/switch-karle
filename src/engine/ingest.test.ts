@@ -78,8 +78,11 @@ describe('normalisation', () => {
     expect(normaliseCompany('Finlytix Technologies')).toBe('finlytix')
     expect(normaliseCompany('Finlytix Technology')).toBe('finlytix')
     expect(normaliseCompany('Finlytix Labs')).toBe('finlytix')
-    expect(normaliseCompany('Finlytix India')).toBe('finlytix')
-    expect(normaliseCompany('Finlytix India Pvt Ltd')).toBe('finlytix')
+    // 'india' is deliberately not a suffix: it is part of real company names.
+    expect(normaliseCompany('Finlytix India')).toBe('finlytix india')
+    expect(normaliseCompany('Finlytix India Pvt Ltd')).toBe('finlytix india')
+    expect(normaliseCompany('Bank of India')).toBe('bank of india')
+    expect(normaliseCompany('Air India')).toBe('air india')
     expect(normaliseCompany('  Finlytix   Technologies  ')).toBe('finlytix')
   })
 
@@ -624,5 +627,28 @@ describe('ingest core rules', () => {
     expect(res3.rejected).toEqual([
       { index: 1, company: 'Nivaan Retail', reason: 'out-of-scope' },
     ])
+  })
+})
+
+describe('scope rejects a future date', () => {
+  // An appliedOn after `today` is not real data: an LLM filling a gap, or a
+  // year typo. Outside the window in either direction is out of scope.
+  it('rejects an application dated after today', () => {
+    const result = ingest(
+      { version: 1, applications: [{ company: 'Finlytix', appliedOn: '2027-12-25' }] },
+      [],
+      { today: '2026-08-31' },
+    )
+    expect(result.accepted).toHaveLength(0)
+    expect(result.counts['out-of-scope']).toBe(1)
+  })
+
+  it('accepts an application dated today', () => {
+    const result = ingest(
+      { version: 1, applications: [{ company: 'Finlytix', appliedOn: '2026-08-31' }] },
+      [],
+      { today: '2026-08-31' },
+    )
+    expect(result.accepted).toHaveLength(1)
   })
 })

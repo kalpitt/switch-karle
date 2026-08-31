@@ -59,8 +59,12 @@ const LEGAL_SUFFIX_SINGLES = new Set([
   'technologies',
   'technology',
   'labs',
-  'india',
 ])
+// 'india' is deliberately NOT stripped. It merges "Siemens India" into
+// "Siemens", which is usually right, but it also turns "Bank of India" into
+// "bank of" and "Air India" into "air", where the word is part of the name.
+// A wrong merge destroys an application the user really made; a missed merge
+// leaves two cards they can delete. Same trade as mergeApplications.
 
 export function normaliseCompany(company: string): string {
   const cleaned = company.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
@@ -250,10 +254,12 @@ export function ingest(
       continue
     }
 
-    // 3. Scope
+    // 3. Scope. Negative elapsed means the row claims a future application
+    // date, which is not real data — an LLM filling a gap, or a year typo.
+    // Outside the window in either direction is out of scope.
     if (parsedDate.status === 'valid') {
       const elapsed = daysBetween(parsedDate.dateIso, options.today)
-      if (elapsed > withinDays) {
+      if (elapsed > withinDays || elapsed < 0) {
         rejectRow(i, company, 'out-of-scope')
         continue
       }
