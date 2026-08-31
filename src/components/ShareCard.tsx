@@ -50,7 +50,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
           <p className="mt-3 text-[13px] font-semibold text-white/50">{t('shareCard.butBank')}</p>
           <p className="tnum text-[40px] font-extrabold leading-tight text-[#ffb84d]">
             {formatINR(b.inHandMonthly)}
-            <span className="text-lg font-bold text-white/60">/mo</span>
+            <span className="text-lg font-bold text-white/60">{t('unit.perMonthShort')}</span>
           </p>
           <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
             <div className="h-full rounded-full bg-[#ffb84d]" style={{ width: `${Math.min(100, pct)}%` }} />
