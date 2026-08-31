@@ -230,17 +230,27 @@ describe('ingest core rules', () => {
     }
 
     const res = ingest(payload, [], { today: defaultToday })
-    expect(res.accepted).toHaveLength(2)
-    expect(res.accepted.map((a) => a.company)).toEqual(['Finlytix', 'Nivaan Retail'])
+
+    // An empty string and a null are a field the assistant left blank, not a
+    // date it got wrong, so the application still arrives — without a date.
+    // Rejecting them dropped the whole row, and the prompt's own schema example
+    // showed `"appliedOn":""`, so a model copying that shape lost every
+    // dateless application silently. `0` is still unreadable: it is a value,
+    // not an absence.
+    expect(res.accepted.map((a) => a.company)).toEqual([
+      'Finlytix',
+      'Nivaan Retail',
+      'Corevance',
+      'Zentraco',
+    ])
+    expect(res.accepted.find((a) => a.company === 'Corevance')?.appliedOn).toBeUndefined()
     expect(res.rejected).toEqual([
       { index: 2, company: 'Skydeck Logistics', reason: 'unreadable-date' },
       { index: 3, company: 'Arka Health', reason: 'unreadable-date' },
-      { index: 4, company: 'Corevance', reason: 'unreadable-date' },
       { index: 5, company: 'Tarkash Labs', reason: 'unreadable-date' },
-      { index: 6, company: 'Zentraco', reason: 'unreadable-date' },
       { index: 7, company: 'Vortexia', reason: 'unreadable-date' },
     ])
-    expect(res.counts['unreadable-date']).toBe(6)
+    expect(res.counts['unreadable-date']).toBe(4)
   })
 
   it('accepts a row with no appliedOn at all (undated application)', () => {
@@ -733,5 +743,33 @@ describe('an ISO timestamp with no offset is still a date', () => {
       { today: '2026-08-31' },
     )
     expect(result.counts['unreadable-date']).toBe(1)
+  })
+})
+
+describe('an assistant answer that is nearly right must not be thrown away', () => {
+  const today = '2026-08-31'
+
+  it('a null row rejects cleanly instead of throwing', () => {
+    const res = ingest(
+      { version: 1, applications: [null as never, { company: 'Finlytix' }, undefined as never] },
+      [],
+      { today },
+    )
+    expect(res.accepted.map((a) => a.company)).toEqual(['Finlytix'])
+    expect(res.counts['no-company']).toBe(2)
+  })
+
+  it('a row of blank strings still becomes an application', () => {
+    // This is the shape the prompt's own schema example invites.
+    const res = ingest(
+      {
+        version: 1,
+        applications: [{ company: 'Finlytix', role: '', appliedOn: '', source: '', status: '' }],
+      },
+      [],
+      { today },
+    )
+    expect(res.accepted).toHaveLength(1)
+    expect(res.counts['unreadable-date']).toBe(0)
   })
 })

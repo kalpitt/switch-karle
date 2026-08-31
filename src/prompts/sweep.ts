@@ -26,8 +26,8 @@ Rules:
 - Two different roles at the same company are two entries. Do not collapse them.
 - Do not tell me how many you found, do not summarise, and do not add commentary. Return the JSON and nothing else.
 
-Return exactly this shape:
+Return exactly this shape, where the first entry shows every field and the second shows an entry that only knew the company and the role:
 
-{"version":1,"applications":[{"company":"","role":"","appliedOn":"","source":"","status":"","ctcDiscussedLPA":0}]}
+{"version":1,"applications":[{"company":"Finlytix","role":"Senior Backend Engineer","appliedOn":"2026-07-14","source":"Naukri","status":"Application received","ctcDiscussedLPA":32},{"company":"Nivaan Retail","role":"Product Manager"}]}
 
-Omit any field you do not have rather than filling it with a guess or an empty string. "source" is where I applied from, such as Naukri, LinkedIn, a referral, or the company site. "status" is a short phrase taken from the email, such as "Application received" or "Interview scheduled". Include "ctcDiscussedLPA" only when the email states a number in lakhs per annum.`
+Leave a field out entirely when you do not have it. Do not include it as an empty string, a zero, or null. "source" is where I applied from, such as Naukri, LinkedIn, a referral, or the company site. "status" is a short phrase taken from the email, such as "Application received" or "Interview scheduled". Include "ctcDiscussedLPA" only when the email states a number in lakhs per annum.`

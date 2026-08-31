@@ -137,3 +137,20 @@ describe('the ledger never overstates what it covered', () => {
     expect(state.sweepCount).toBe(2)
   })
 })
+
+describe('two sweeps on one day', () => {
+  it('the later record wins, so the ledger never claims the wider reach-back', () => {
+    // A strict `>` kept the first record, leaving the board claiming 60 days of
+    // reach when the most recent sweep only asked for 30.
+    const state = coverageState(
+      [
+        { sweptAt: '2026-08-31', windowDays: 60, added: 2 },
+        { sweptAt: '2026-08-31', windowDays: 30, added: 5 },
+      ],
+      { today: '2026-08-31' },
+    )
+    expect(state.coveredFrom).toBe('2026-08-01')
+    expect(state.sweepCount).toBe(2)
+    expect(state.totalAdded).toBe(7)
+  })
+})

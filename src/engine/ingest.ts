@@ -128,10 +128,17 @@ type ParsedDate =
   | { status: 'valid'; dateIso: string }
 
 function parseAppliedOn(val: unknown): ParsedDate {
-  if (val === undefined) {
+  if (val === undefined || val === null) {
     return { status: 'absent' }
   }
-  if (typeof val !== 'string' || val.trim() === '') {
+  // An empty string is a field the assistant left blank, not a date it got
+  // wrong. The prompt's own schema example showed `"appliedOn":""`, so a model
+  // copying that shape had every dateless row rejected as unreadable and the
+  // application silently dropped.
+  if (typeof val === 'string' && val.trim() === '') {
+    return { status: 'absent' }
+  }
+  if (typeof val !== 'string') {
     return { status: 'invalid' }
   }
   const str = val.trim()
@@ -257,7 +264,14 @@ export function ingest(
   for (let i = 0; i < payload.applications.length; i++) {
     const raw = payload.applications[i]!
 
-    // 1. Company is required
+    // 1. Company is required. A null or non-object row counts as no company
+    //    rather than throwing: an assistant that emits a stray null in the
+    //    array would otherwise take the whole paste down, and the user would
+    //    be told their answer was invalid JSON when it was not.
+    if (typeof raw !== 'object' || raw === null) {
+      rejectRow(i, null, 'no-company')
+      continue
+    }
     if (typeof raw.company !== 'string' || raw.company.trim().length === 0) {
       rejectRow(i, null, 'no-company')
       continue

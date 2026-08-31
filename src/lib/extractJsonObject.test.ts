@@ -57,3 +57,20 @@ describe('extractJsonObject', () => {
     expect(extractJsonObject(withTick)).toBe(withTick)
   })
 })
+
+describe('braces in the assistant commentary around the answer', () => {
+  it('prefers the fenced block over prose braces on either side', () => {
+    const answer =
+      'Here is the result {see below}:\n```json\n{"version":1,"applications":[]}\n```\nDone {ok}'
+    expect(extractJsonObject(answer)).toBe('{"version":1,"applications":[]}')
+  })
+
+  // Without a fence there is nothing to disambiguate on, so first-to-last still
+  // applies. Documented rather than pretended away: the parse then fails and
+  // the panel reports it, which is the honest outcome.
+  it('has no way to separate prose braces when there is no fence', () => {
+    expect(extractJsonObject('Result {see below}: {"version":1}')).toBe(
+      '{see below}: {"version":1}',
+    )
+  })
+})

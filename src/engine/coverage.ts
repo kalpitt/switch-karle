@@ -51,7 +51,10 @@ export function coverageState(records: SweepRecord[], options: CoverageOptions):
 
   for (const record of records) {
     totalAdded += record.added
-    if (record.sweptAt > latest.sweptAt) {
+    // `>=`, not `>`. Two sweeps on one day and a strict comparison keeps the
+    // first, so a second, narrower sweep would leave the board claiming the
+    // wider reach-back of the earlier one. The ledger must never overstate.
+    if (record.sweptAt >= latest.sweptAt) {
       latest = record
     }
   }
