@@ -103,6 +103,54 @@ in-page menu, screen clear immediately. Design notes for whoever picks it up:
 
 Until that ships, the site makes no shoulder-surfing claim anywhere in copy.
 
+## The board, and filling it from a mailbox
+
+The application tracker is the home page and the spine of the product. Three
+pieces, in dependency order.
+
+**`src/tracker/store.ts`** owns everything that persists. `save()` returns a
+boolean rather than throwing, because a board that shows unsaved work as saved
+is the worst failure this app has. `load()` validates every entry it reads, not
+just the array shape — an application carrying a stage the board cannot render
+used to crash the page on load, and because the entry was already persisted,
+every refresh crashed again. Restore splits into `parseBackup` (validate),
+`restoreAll` (replace) and `mergeBackup` (add without removing), so the UI can
+describe a backup before acting on it. Both snapshot first and one undo restores
+the exact prior board. Merge deliberately leaves the saved Decoder offer alone:
+the button says it keeps everything, and silently replacing that offer would
+make the sentence false.
+
+**`src/engine/ingest.ts`** turns a pasted payload into candidate cards. Pure,
+so `today` is a parameter. Deduplication keys on normalised company **plus**
+role — company alone merged three genuinely different jobs at one consultancy.
+Normalisation keeps letters, numbers and combining marks in any script; letters
+alone turned every Devanagari name into the empty string and dropped real
+applications as duplicates. Dates are parsed strictly and never guessed:
+`14/07/2026` is refused, because day-first and month-first are
+indistinguishable and a wrong guess writes a wrong date into someone's record.
+An empty string or a null means absent, not unreadable. Rows reading as closed
+are flagged, never dropped — there is no rejected stage and inventing one is a
+product decision.
+
+**`src/prompts/sweep.ts`** is the prompt the user runs in their own
+Gmail-connected AI. English literal, not i18n keys, matching
+`src/prompts/templates.ts`: it is content handed to a third party, not UI
+chrome. Its shape is set by measurement, not taste — a 60-day window because
+recall was about 66% at one month and 26% at a year, five separate searches
+because one sender filter missed roughly a quarter of real applications, and an
+explicit instruction not to count, because these assistants cannot count items
+in a mailbox and will confidently guess.
+
+**`src/engine/coverage.ts`** answers how far behind the board is. It reports
+when the last sweep ran and how far back it reached, and nothing more. **No
+percentage, no score, no progress bar** — the app does not know what it missed,
+and claiming a number here would be worse than saying nothing. The UI shows the
+gap in days and, always, the sentence saying job boards cap what they put in a
+confirmation email.
+
+Nothing in any of this makes a network call. The user pastes, and that is the
+whole transfer.
+
 ## Statutory constants
 
 Ship with goldens. A constant's status lives beside its code:
