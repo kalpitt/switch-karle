@@ -17,7 +17,7 @@ The Workers root-URL mirror will 404 assets until the domain cutover flips
 Owner steps to activate (already done for this repo):
 1. Make this repo public (required for free-plan Pages).
 2. GitHub → switch-karle → Settings → Pages → Source: **GitHub Actions**.
-3. Push to main (or Actions → "Deploy to GitHub Pages" → Run workflow).
+3. Push to main (or Actions → "Deploy to GitHub Pages (kalpit.me/switch-karle)" → Run workflow).
    `.github/workflows/pages.yml` builds, tests, and deploys.
 4. Verify https://kalpit.me/switch-karle/ loads.
 
