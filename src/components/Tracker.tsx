@@ -6,9 +6,11 @@ import {
   exportAll,
   hasUndo,
   load,
+  loadSweeps,
   mergeBackup,
   moveStage,
   parseBackup,
+  recordSweep,
   removeApplication,
   restoreAll,
   save,
@@ -18,6 +20,7 @@ import {
   updateApplication,
   type BackupBundle,
 } from '../tracker/store'
+import { coverageState, type SweepRecord } from '../engine/coverage'
 import type { IngestCandidate } from '../engine/ingest'
 import { exampleApplications } from '../data/exampleBoard'
 import { STAGE_ACTIONS } from '../data/stageActions'
@@ -53,6 +56,7 @@ export function Tracker() {
   // Empty until mount so SSR HTML matches the first client render. Do not
   // save until hydrated — a save of [] would wipe real tracker data.
   const [list, setList] = useState<Application[]>([])
+  const [sweeps, setSweeps] = useState<SweepRecord[]>([])
   const [hydrated, setHydrated] = useState(false)
   const [formMode, setFormMode] = useState<FormMode>('closed')
   const [saveFailed, setSaveFailed] = useState(false)
@@ -64,6 +68,7 @@ export function Tracker() {
 
   useEffect(() => {
     setList(load())
+    setSweeps(loadSweeps())
     setHydrated(true)
   }, [])
 
@@ -145,12 +150,33 @@ export function Tracker() {
       nextList = addApplication(nextList, c)
     }
     const ok = save(nextList)
+    recordSweep({ sweptAt: todayIso(), windowDays: 60, added: candidates.length })
+    setSweeps(loadSweeps())
     setSweepOpen(false)
     setList(nextList)
     if (!ok) setSaveFailed(true)
     setUndoAvailable(hasUndo())
     setRestoreFeedback(t('sweep.added', { n: candidates.length }))
   }
+
+  const coverage = useMemo(() => coverageState(sweeps, { today: todayIso() }), [sweeps])
+
+  const coverageText = useMemo(() => {
+    if (coverage.status === 'never') {
+      return t('coverage.never')
+    }
+    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom) : ''
+    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt) : ''
+    const limits = t('coverage.limits')
+
+    if (coverage.gapDays === 0) {
+      return `${t('coverage.sweptToday', { from })} ${limits}`
+    }
+    if (coverage.gapDays === 1) {
+      return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gapOne')} ${limits}`
+    }
+    return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gap', { n: coverage.gapDays })} ${limits}`
+  }, [coverage, t])
 
   const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
     if (!pendingBackup) return
@@ -180,6 +206,21 @@ export function Tracker() {
         <div>
           <h2 className="text-lg font-bold">{t('tracker.title')}</h2>
           <p className="text-[13px] text-ink-soft">{t('tracker.trackedCount', { n: list.length })}</p>
+          <p className="mt-1 text-[12px] leading-relaxed text-ink-faint">
+            {coverageText}
+            {coverage.stale && (
+              <>
+                {' '}
+                <button
+                  type="button"
+                  onClick={handleSweepToggle}
+                  className="font-semibold text-saffron underline hover:text-saffron"
+                >
+                  {t('coverage.sweepAgain')}
+                </button>
+              </>
+            )}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <ExportImportButtons

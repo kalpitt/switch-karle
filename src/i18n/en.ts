@@ -879,6 +879,16 @@ export const en: Record<string, string> = {
   'sweep.add': 'Add the ticked ones',
   'sweep.added': '{n} added from your mailbox.',
   'sweep.nothing': 'Nothing here to add.',
+  'coverage.never': 'This board holds only what you have added yourself.',
+  'coverage.sweptToday': 'Filled from email today, reaching back to {from}.',
+  'coverage.lastSwept': 'Filled from email on {date}, reaching back to {from}.',
+  'coverage.gapOne':
+    'That was yesterday. Anything you applied to since is not here unless you added it yourself.',
+  'coverage.gap':
+    'That was {n} days ago. Anything you applied to since is not here unless you added it yourself.',
+  'coverage.limits':
+    'Even inside that stretch it will have missed some. Job boards put only the first few roles into a confirmation email, and older mail is harder to search.',
+  'coverage.sweepAgain': 'Fill from email again',
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',

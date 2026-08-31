@@ -246,6 +246,16 @@ export const hi: Record<string, string> = {
   'sweep.add': 'चुनी हुई जोड़ें',
   'sweep.added': '{n} आपके mailbox से जोड़ी गईं।',
   'sweep.nothing': 'यहाँ जोड़ने को कुछ नहीं है।',
+  'coverage.never': 'इस board पर वही है जो आपने खुद जोड़ा है।',
+  'coverage.sweptToday': 'आज email से भरा गया, {from} तक पीछे जाकर।',
+  'coverage.lastSwept': '{date} को email से भरा गया, {from} तक पीछे जाकर।',
+  'coverage.gapOne':
+    'यह कल की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने खुद न जोड़ा हो।',
+  'coverage.gap':
+    'यह {n} दिन पहले की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने खुद न जोड़ा हो।',
+  'coverage.limits':
+    'उस दायरे में भी कुछ छूटा होगा। Job boards confirmation email में शुरू के कुछ roles ही डालते हैं, और पुराने mail खोजना मुश्किल है।',
+  'coverage.sweepAgain': 'फिर से email से भरें',
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
