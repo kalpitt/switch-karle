@@ -578,10 +578,11 @@ function ApplicationCard({
 
       {hasChips && (
         <div className="flex flex-wrap gap-1.5">
-          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
           {!!app.ctcDiscussedAnnual && <Chip>{formatLPA(app.ctcDiscussedAnnual)}</Chip>}
           {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
+          {/* Last: money and terms are what the eye scans a card for; the date is context. */}
+          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
           {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
       )}
