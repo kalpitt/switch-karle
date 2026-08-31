@@ -23,7 +23,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         </p>
         <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
           {formatINR(b.inHandMonthly)}
-          <span className="text-lg font-semibold text-ink-faint">/month</span>
+          <span className="text-lg font-semibold text-ink-faint">{t('unit.perMonth')}</span>
         </p>
         <p className="mt-1 text-[13px] text-ink-soft">
           {t('results.headlineSub', { amount: formatINR(ctcMonthlyIllusion) })}

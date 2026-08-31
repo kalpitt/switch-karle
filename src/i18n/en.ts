@@ -708,6 +708,8 @@ export const en: Record<string, string> = {
   'decoder.field.hra.label': 'HRA (% of basic)',
   'decoder.field.hra.value': '{percent}% of basic',
   'unit.days': 'days',
+  'unit.perMonth': '/month',
+  'unit.perMonthShort': '/mo',
   'unit.months': 'months',
 
   // ---- States ----
@@ -820,8 +822,8 @@ export const en: Record<string, string> = {
   'tracker.saveFailed.title': 'This board did not save.',
   'tracker.saveFailed.body':
     'Your browser refused the write, usually because storage is full. What you see here is still correct, but it will be gone when you close the tab. Export it now.',
-  'tracker.restore.found': '{n} applications in this backup.',
-  'tracker.restore.overlap': '{n} of them are already on your board.',
+  'tracker.restore.found': 'Applications in this backup: {n}',
+  'tracker.restore.overlap': 'Already on your board: {n}',
   'tracker.restore.merge': 'Merge',
   'tracker.restore.mergeHint':
     'Keeps everything on your board. Adds what is missing and updates what is older.',

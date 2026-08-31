@@ -84,6 +84,8 @@ export const hi: Record<string, string> = {
   'decoder.field.hra.label': 'HRA (Basic का %)',
   'decoder.field.hra.value': 'Basic का {percent}%',
   'unit.days': 'दिन',
+  'unit.perMonth': '/महीना',
+  'unit.perMonthShort': '/माह',
   'unit.months': 'महीने',
 
   // ---- States ----
@@ -187,8 +189,8 @@ export const hi: Record<string, string> = {
   'tracker.saveFailed.title': 'यह board save नहीं हुआ।',
   'tracker.saveFailed.body':
     'आपके browser ने write मना कर दिया, आमतौर पर storage भर जाने पर ऐसा होता है। यहाँ जो दिख रहा है वह सही है, लेकिन tab बंद करते ही चला जाएगा। इसे अभी export कर लें।',
-  'tracker.restore.found': 'इस backup में {n} applications हैं।',
-  'tracker.restore.overlap': 'इनमें से {n} पहले से आपके board पर हैं।',
+  'tracker.restore.found': 'इस backup में applications: {n}',
+  'tracker.restore.overlap': 'पहले से board पर: {n}',
   'tracker.restore.merge': 'Merge करें',
   'tracker.restore.mergeHint':
     'आपके board का सब कुछ रहेगा। जो नहीं है वह जुड़ेगा, जो पुराना है वह update होगा।',
