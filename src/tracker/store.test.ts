@@ -14,6 +14,7 @@ import {
   restoreAll,
   save,
   snapshotForUndo,
+  STAGE_ORDER,
   STORAGE_KEY,
   UNDO_STORAGE_KEY,
   undoLastRestore,
@@ -502,5 +503,45 @@ describe('restoreAll / mergeBackup / undo', () => {
 
     mem.throwOnlyOnKeys.delete(STORAGE_KEY)
     expect(undoLastRestore()).toEqual([currentApp])
+  })
+})
+
+describe('a stage the board cannot render never reaches the board', () => {
+  // Regression: `typeof stage === 'string'` let an unknown stage through, the
+  // tracker grouped into a fixed five-key object, and `g[stage].push` threw on
+  // an undefined bucket. The entry was already persisted, so every refresh
+  // crashed again — a blank screen the user could not get out of.
+  const poisoned = {
+    id: 'p1',
+    company: 'Acme',
+    role: 'Dev',
+    stage: 'rejected',
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-01T00:00:00.000Z',
+  }
+  const good: Application = {
+    id: 'g1',
+    company: 'Finlytix',
+    role: 'SDE',
+    stage: 'applied',
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-01T00:00:00.000Z',
+  }
+
+  it('parseBackup rejects a bundle carrying an unknown stage', () => {
+    const json = JSON.stringify({ version: 1, decoder: null, tracker: [poisoned] })
+    expect(() => parseBackup(json)).toThrow()
+  })
+
+  it('load() drops an already-persisted bad entry instead of returning it', () => {
+    mem.setItem(STORAGE_KEY, JSON.stringify([good, poisoned]))
+    expect(load()).toEqual([good])
+  })
+
+  it('every stage the board renders is accepted', () => {
+    for (const stage of STAGE_ORDER) {
+      const json = JSON.stringify({ version: 1, decoder: null, tracker: [{ ...good, stage }] })
+      expect(() => parseBackup(json)).not.toThrow()
+    }
   })
 })

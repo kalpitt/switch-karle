@@ -131,8 +131,13 @@ export function Tracker() {
     const ok = apply(pendingBackup)
     setPendingBackup(null)
     setList(load())
-    if (!ok) setSaveFailed(true)
     setUndoAvailable(hasUndo())
+    if (!ok) {
+      // Never both. Reporting "Merged" beside "This board did not save" tells
+      // the user their import worked when nothing was written.
+      setSaveFailed(true)
+      return
+    }
     setRestoreFeedback(t(messageKey))
   }
 
