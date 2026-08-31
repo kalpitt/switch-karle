@@ -30,6 +30,7 @@ jobs:
       - run: npm run build
       - run: npm run check:base
       - run: npm run check:seo
+      - run: npm run check:csp
       - name: No private machine paths in tracked files
         # This repo is public. A home-directory path discloses the macOS
         # username, the machine layout, and the names of private repos.
