@@ -26,6 +26,8 @@ export interface Application {
   nextAction?: string
   /** ISO yyyy-mm-dd */
   nextActionDate?: string
+  /** ISO yyyy-mm-dd. When the application was actually sent, which is not when this card was created. */
+  appliedOn?: string
   notes?: string
   /** Saved AI answers from Prompt Studio, most-recent-last. */
   insights?: Insight[]

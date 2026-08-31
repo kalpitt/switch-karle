@@ -146,6 +146,7 @@ describe('ingest core rules', () => {
       company: 'Finlytix',
       role: 'Senior Backend Engineer',
       stage: 'interviewing',
+      appliedOn: '2026-07-14',
       source: 'Naukri',
       ctcDiscussedAnnual: 3200000,
     })
@@ -153,6 +154,7 @@ describe('ingest core rules', () => {
       company: 'Nivaan Retail',
       role: 'Product Manager',
       stage: 'applied',
+      appliedOn: '2026-07-10',
       source: 'LinkedIn',
       ctcDiscussedAnnual: 2850000,
     })
@@ -160,6 +162,7 @@ describe('ingest core rules', () => {
       company: 'Corevance',
       role: 'Engineering Lead',
       stage: 'offer',
+      appliedOn: '2026-07-01',
       source: 'Referral',
       ctcDiscussedAnnual: 4500000,
     })
@@ -258,7 +261,22 @@ describe('ingest core rules', () => {
       role: 'Backend Engineer',
       stage: 'applied',
     })
+    expect('appliedOn' in res.accepted[0]!).toBe(false)
     expect(res.rejected).toHaveLength(0)
+  })
+
+  it('carries exact ISO date for valid appliedOn and omits key when absent', () => {
+    const payload: IngestPayload = {
+      version: 1,
+      applications: [
+        { company: 'Finlytix', role: 'Dev', appliedOn: '2026-08-20' },
+        { company: 'Acme Corp', role: 'PM' },
+      ],
+    }
+    const res = ingest(payload, [], { today: '2026-08-31' })
+    expect(res.accepted).toHaveLength(2)
+    expect(res.accepted[0]?.appliedOn).toBe('2026-08-20')
+    expect('appliedOn' in res.accepted[1]!).toBe(false)
   })
 
   it('rejects a row 61 days before today as out-of-scope, accepts 60 days, and never rejects undated', () => {
@@ -325,6 +343,7 @@ describe('ingest core rules', () => {
       company: 'Finlytix Technologies Pvt Ltd',
       role: 'Senior Backend Engineer',
       stage: 'interviewing',
+      appliedOn: '2026-07-14',
       source: 'Naukri',
       ctcDiscussedAnnual: 3200000,
     })

@@ -375,6 +375,7 @@ interface FormState {
   source: string
   nextAction: string
   nextActionDate: string
+  appliedOn: string
   notes: string
 }
 
@@ -388,6 +389,7 @@ function toFormState(app?: Application): FormState {
     source: app?.source ?? '',
     nextAction: app?.nextAction ?? '',
     nextActionDate: app?.nextActionDate ?? '',
+    appliedOn: app?.appliedOn ?? '',
     notes: app?.notes ?? '',
   }
 }
@@ -420,6 +422,7 @@ function ApplicationFormPanel({
       source: form.source.trim() || undefined,
       nextAction: form.nextAction.trim() || undefined,
       nextActionDate: form.nextActionDate || undefined,
+      appliedOn: form.appliedOn || undefined,
       notes: form.notes.trim() || undefined,
     })
   }
@@ -464,6 +467,12 @@ function ApplicationFormPanel({
             type="date"
             value={form.nextActionDate}
             onChange={(v) => set({ nextActionDate: v })}
+          />
+          <TextField
+            label={t('tracker.field.appliedOn.label')}
+            type="date"
+            value={form.appliedOn}
+            onChange={(v) => set({ appliedOn: v })}
           />
         </div>
         <TextArea label={t('tracker.field.notes.label')} value={form.notes} onChange={(v) => set({ notes: v })} />
@@ -550,7 +559,8 @@ function ApplicationCard({
   const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
-  const hasChips = app.ctcDiscussedAnnual || app.noticePeriodDays || app.source || app.insights?.length
+  const hasChips =
+    !!app.appliedOn || !!app.ctcDiscussedAnnual || !!app.noticePeriodDays || !!app.source || !!app.insights?.length
   const actions = STAGE_ACTIONS[app.stage] ?? []
   const isPrefilledDecoder = app.stage === 'offer' && actions.includes('decoder') && !!app.ctcDiscussedAnnual
 
@@ -568,6 +578,7 @@ function ApplicationCard({
 
       {hasChips && (
         <div className="flex flex-wrap gap-1.5">
+          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
           {!!app.ctcDiscussedAnnual && <Chip>{formatLPA(app.ctcDiscussedAnnual)}</Chip>}
           {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
