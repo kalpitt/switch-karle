@@ -50,7 +50,7 @@ number runs in your browser. Nothing is uploaded. No accounts, no analytics.
 
 Every English URL has a Hindi twin at `/hi/<same-slug>/`. Language follows the URL.
 
-## Privacy is the architecture
+## Privacy is a promise, not an architecture
 
 - **100% client-side.** No server, no accounts, no analytics. Your offer never leaves this device.
 - **No AI calls.** Bring your own AI: the app generates prompts you paste into ChatGPT/Claude/Gemini.
@@ -66,7 +66,7 @@ Pure TypeScript, golden-tested against hand-computed cases (`src/engine/engine.t
 - Old regime: ₹50,000 standard deduction, HRA exemption, 80C/80D, professional-tax deduction.
 - EPF 12% of basic (statutory-ceiling option), gratuity accrual 4.81%, state professional tax (approximate).
 
-**Estimates, not tax or legal advice.** Footer chip shows when the rules were last verified. A practising CA is reviewing the constants; until then statutory tools on `build/suite` ship as `provisional-pending-CA`.
+**Estimates, not tax or legal advice.** Footer chip shows when the rules were last verified. A practising CA is reviewing the constants; until then statutory tools ship as `provisional-pending-CA`.
 
 How the repo is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -84,6 +84,6 @@ npm run check:seo    # canonical + OG on every route; no analytics in dist/
 npm run new-tool     # node scripts/new-tool.mjs <slug>
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must all pass before a push to `build/suite`.
+`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must all pass before you open a pull request.
 
 MIT licensed. Built by a job-switcher, for job-switchers.

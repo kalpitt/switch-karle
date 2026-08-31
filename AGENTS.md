@@ -24,9 +24,8 @@ Three earlier strategy documents (`docs/AGENT-HANDOFF.md`, `docs/BLUEPRINT.md`,
 `docs/HUNT_OS_STRATEGY_BLUEPRINT.md`) were superseded and deleted from git in
 August 2026. **Any document claiming to be product direction is stale unless it
 is `ROADMAP.md`.** What lives here instead: `docs/ARCHITECTURE.md` (living
-technical truth) and `docs/MASTER_IMPROVEMENT_PLAN.md` on the
-`docs/master-implementation-plan` branch (executed quality-cycle record —
-history and parked items, not direction). Do not add a second strategy
+technical truth) and `docs/MASTER_IMPROVEMENT_PLAN.md` (executed quality-cycle
+record — history and parked items, not direction). Do not add a second strategy
 document. Partial restatements drift, and drifting duplicates once produced
 three contradicting roadmaps in a single day.
 
@@ -72,7 +71,7 @@ npm run check:csp  # CSP meta + hashes; no off-origin subresources
 ```
 
 `test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, and `check:csp`
-must pass before you push to `build/suite`. Merging to `main` deploys — only
+must pass before you open a pull request. Merging to `main` deploys — only
 Kalpit does that.
 
 Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not

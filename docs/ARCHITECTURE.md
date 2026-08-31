@@ -1,6 +1,6 @@
-# Architecture — Switch Karle (as migrated)
+# Architecture — Switch Karle
 
-This describes the **repo as it is on `build/suite`**, not a product roadmap.
+This describes the **repo as it is on `main`**, not a product roadmap.
 Direction lives in `ROADMAP.md`. Do not add a second strategy document here.
 
 ## Shape
@@ -21,9 +21,14 @@ question is settled and must not be re-opened.
 src/
   engine/          pure TS — never imports react (purity.test.ts)
   tools/<slug>/    one island per tool (form + result)
+  tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
+  prompts/         text the user hands to their own AI — English literals,
+                   not i18n keys, because they are content and not UI chrome
   lib/storage.ts   switchkarle.<tool>.v<N>
+  lib/             also: today, formatDate, langPath — anything that reads the
+                   clock or the URL and so cannot live in engine/
   i18n/            en.ts canonical; hi.ts + hi-suite.ts full EN→HI parity
   layouts/Base.astro  head contract, hreflang en/hi/x-default, PWA register
   pages/[tool].astro + pages/hi/[tool].astro  EN and Hindi twins
@@ -64,8 +69,12 @@ Hindi must be 1:1 with English. Language follows the URL: `/hi/<slug>/` vs
 ## Privacy
 
 See `PRIVACY.md`. Sanctioned data leaving the device: user pastes a prompt into
-their own AI tab; user exports JSON; user downloads a share image. App-initiated
-network calls carrying user data are prohibited. No IndexedDB. No salary in URLs.
+their own AI tab; user exports JSON; user downloads a share image.
+
+Local-first is the **default**, not the boundary — that changed on 2026-08-30.
+User data may leave the device only to deliver a feature the user explicitly
+turned on, only to a destination Kalpit controls, and only while it stays on.
+Nothing today does. No third-party analytics. No IndexedDB. No salary in URLs.
 
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 
@@ -115,7 +124,7 @@ Ship with goldens. A constant's status lives beside its code:
 | Item | Where | Status |
 | --- | --- | --- |
 | Rebate citation s.156 ITA 2025 (was s.157/"Act 2026"); s.157 = arrears only | `src/engine/tax.ts`, i18n how-computed strings | **VERIFIED 2026-08-23** (ITA 2025 PDF) |
-| SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
+| SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `src/engine/salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
 | FY 2026-27 slabs, rebate amounts, cess, surcharge | `src/engine/tax.ts` | Golden-tested; last verified 2026-07-20 |
 | Gratuity: eligibility §2A, payable years §4(2), ₹20L cap §4(3), 190/240-day rule | `src/engine/gratuity.ts` | VERIFIED 2026-08-23 (PGA 1972 PDF + S.O. 1420(E)) |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
@@ -125,7 +134,7 @@ Ship with goldens. A constant's status lives beside its code:
 | Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
 | ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |
 | PF premature withdrawal TDS (s.192A / s.392(7)) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap flagged, transfer recommended |
-| Relocation PT table | `professionalTax.ts`, `relocation.ts` | Incomplete by design (unverified states → ₹0) |
+| Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0) |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.
@@ -133,4 +142,4 @@ Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should lo
 ## Gates
 
 Local and CI: `test` · `typecheck` · `lint` · `build` · `check:base` · `check:seo` · `check:csp`.
-Never merge `build/suite` to `main` without Kalpit — `main` is production.
+Never merge to `main` without Kalpit — `main` is production.
