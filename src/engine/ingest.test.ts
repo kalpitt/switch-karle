@@ -671,3 +671,67 @@ describe('scope rejects a future date', () => {
     expect(result.accepted).toHaveLength(1)
   })
 })
+
+describe('names outside the Latin alphabet', () => {
+  // Regression: normalisation stripped [^a-z0-9], so every Devanagari name
+  // became the empty string, two different companies shared the key `::`, and
+  // the second was dropped as a duplicate. In an app for the Indian job market
+  // that is not an edge case.
+  it('keeps two different Devanagari companies apart', () => {
+    const result = ingest(
+      {
+        version: 1,
+        applications: [
+          { company: 'टाटा मोटर्स', role: 'अभियंता' },
+          { company: 'रिलायंस इंडस्ट्रीज', role: 'अभियंता' },
+        ],
+      },
+      [],
+      { today: '2026-08-31' },
+    )
+    expect(result.accepted).toHaveLength(2)
+    expect(result.counts['duplicate-in-payload']).toBe(0)
+  })
+
+  it('still collapses the same Devanagari company written twice', () => {
+    const result = ingest(
+      {
+        version: 1,
+        applications: [
+          { company: 'टाटा मोटर्स', role: 'अभियंता' },
+          { company: '  टाटा  मोटर्स ', role: 'अभियंता' },
+        ],
+      },
+      [],
+      { today: '2026-08-31' },
+    )
+    expect(result.accepted).toHaveLength(1)
+  })
+
+  it('normalises a mixed-script name without emptying it', () => {
+    expect(normaliseCompany('Tata मोटर्स Pvt Ltd')).toBe('tata मोटर्स')
+  })
+})
+
+describe('an ISO timestamp with no offset is still a date', () => {
+  it('reads 2026-08-15T10:30:00 as 15 August', () => {
+    const result = ingest(
+      { version: 1, applications: [{ company: 'Finlytix', appliedOn: '2026-08-15T10:30:00' }] },
+      [],
+      { today: '2026-08-31' },
+    )
+    // appliedOn reaches the candidate only once feat/applied-on lands; here the
+    // point is that the row is accepted rather than rejected as unreadable.
+    expect(result.accepted).toHaveLength(1)
+    expect(result.counts['unreadable-date']).toBe(0)
+  })
+
+  it('still rejects a day-first date', () => {
+    const result = ingest(
+      { version: 1, applications: [{ company: 'Finlytix', appliedOn: '15/08/2026' }] },
+      [],
+      { today: '2026-08-31' },
+    )
+    expect(result.counts['unreadable-date']).toBe(1)
+  })
+})
