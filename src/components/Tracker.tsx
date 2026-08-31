@@ -262,7 +262,18 @@ export function Tracker() {
       )}
 
       {formMode !== 'closed' && (
-        <ApplicationFormPanel initial={editingApp} onSave={handleSave} onCancel={() => setFormMode('closed')} />
+        // The key is load-bearing. The board stays visible behind this panel and
+        // its Edit buttons stay live, so a user can switch from editing one card
+        // to another without closing. The panel seeds its form state in a
+        // useState initialiser, which runs only on mount — without a key it kept
+        // the first card's values and saved them onto the second card's id,
+        // overwriting a company name with no way back.
+        <ApplicationFormPanel
+          key={editingApp?.id ?? 'add'}
+          initial={editingApp}
+          onSave={handleSave}
+          onCancel={() => setFormMode('closed')}
+        />
       )}
 
       {list.length === 0 && formMode === 'closed' ? (
