@@ -31,6 +31,19 @@ change for this decision to be true in the product rather than only in a documen
 `leave-encashment`, `notice-buyout` — take only current-job inputs and no offer
 field. Someone at this stage can already price what leaving costs them.
 
+## 2026-09-05 — Raw-text persistence: keep the default, disclose it
+
+`redactor`, `bond-scanner` and `resignation-letter` save the raw pasted text —
+un-redacted payslip, bond clause, resignation draft — to plaintext `localStorage`
+indefinitely, with nothing on screen saying so. Flagged the same day in
+`docs/ARCHITECTURE.md` with three options: keep the default and disclose it,
+make the three tools in-memory only, or add a session-only mode.
+
+**Decided: keep the default, disclose it.** No storage behaviour changed. Each
+tool's existing hint now says the text saves on this device only and is never
+uploaded — `redactor.textHint`, `bond-scanner.textHint`, and a new
+`resignation-letter.formHint`. One line, three tools, EN + HI.
+
 ## 2026-09-05 — `PRODUCT.md` created; two unbidden strategy docs deleted
 
 `docs/STRATEGIC_SYNTHESIS_AND_TIERED_ROADMAP.md` and

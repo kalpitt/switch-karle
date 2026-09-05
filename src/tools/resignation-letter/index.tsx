@@ -117,6 +117,7 @@ function Body() {
     <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('resignation-letter.formTitle')}</h2>
+        <p className="text-xs leading-snug text-ink-faint">{t('resignation-letter.formHint')}</p>
         <TextField label={t('resignation-letter.company')} value={draft.company} onChange={(v) => set({ company: v })} />
         <TextField label={t('resignation-letter.manager')} value={draft.manager} onChange={(v) => set({ manager: v })} />
         <TextField label={t('resignation-letter.role')} value={draft.role} onChange={(v) => set({ role: v })} />

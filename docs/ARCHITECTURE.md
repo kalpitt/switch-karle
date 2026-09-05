@@ -78,8 +78,7 @@ Nothing today does. No third-party analytics. No IndexedDB. No salary in URLs.
 
 ### Three tools persist raw sensitive text, indefinitely, in plaintext
 
-Recorded 2026-09-05. This is a fact, not a prescription — what the default should
-be is Kalpit's call, and no change has been made.
+Recorded 2026-09-05. Decided 2026-09-05: keep the default, say so in copy.
 
 | Tool | Key | What is written |
 |---|---|---|
@@ -87,20 +86,20 @@ be is Kalpit's call, and no change has been made.
 | `bond-scanner` | `switchkarle.bond.v1` | the pasted bond / non-compete clause |
 | `resignation-letter` | `switchkarle.resignation.v1` | the resignation draft |
 
-All three persist by the same default as every other tool, with no deliberate
-exception — `writeJson` on every keystroke, no expiry, no erase control anywhere
-in the app. The redactor is the sharp case: its whole purpose is stripping
-identifiers out of a payslip before the user shares it, and it keeps an
-unstripped copy on a disk that on a work machine belongs to the employer.
+All three persist by the same default as every other tool — `writeJson` on every
+keystroke, no expiry. The redactor is the sharp case: its whole purpose is
+stripping identifiers out of a payslip before the user shares it, and it kept an
+unstripped copy on a disk that on a work machine belongs to the employer, with
+nothing on screen saying so.
 
-Nothing is uploaded, which is what the copy says and is true. It is also written
-down, which the copy does not say. The options, for whoever takes this up: keep
-the default and say so in copy at first save; make these three in-memory only and
-lose reload-survival; or add a session-only mode. `src/lib/storage.ts` is a real
-choke point — most persisting surfaces route through `readJson`/`writeJson`, with
-`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
-`defaults.ts` bypassing it — so a backing-store switch there is smaller than it
-looks.
+**Fixed by disclosure, not by architecture.** `redactor.textHint`,
+`bond-scanner.textHint` and the new `resignation-letter.formHint` now say the
+text is saved on this device only, and never uploaded — true before and now
+said. No storage behaviour changed. An in-memory-only mode or a session-only
+toggle both remain open if a future decision wants them; `src/lib/storage.ts` is
+the choke point most surfaces already route through
+(`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
+`defaults.ts` bypass it directly), so that switch is smaller than it looks.
 
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 
