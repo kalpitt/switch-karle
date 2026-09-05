@@ -1,80 +1,91 @@
 # ROADMAP — Switch Karle
 
 Kalpit owns this file. Agents never edit it: propose changes in a handoff and
-he applies them. When he asks "what's next", answer from here.
+he applies them. 
 
 ## Settled — do not re-open
 
-These have been decided. An agent that raises one of them again is wasting his
-time, and two of them have already been re-raised more than once.
+These have been decided. Re-opening them wastes time:
 
 - **Domain: `switchkarle.fyi`.** Bought 2026-08-22 on Spaceship, DNS pointed at
-  Cloudflare. Nothing to buy, no TLD to choose. Do not check availability, do
-  not propose `.com` or `.in`.
+  Cloudflare. Nothing to buy, no TLD to choose.
 - **Connecting the domain is deliberately held.** Kalpit cuts over once the
-  site is complete, while user count is still zero and the base-path change
-  from `/switch-karle/` to `/` costs nothing. It is not a blocker and not a
-  pending action. Do not prompt him about it.
-- **The cutover is one file.** `site.config.mjs` holds `SITE` and `BASE`;
-  `astro.config.mjs` and `scripts/check-base-build.mjs` both import from it.
+  site is complete, while user count is still zero. Do not prompt him about it.
 - **No redirect from `kalpit.me/switch-karle/`.** Owner decision. Old links
   need no preservation.
-- **Notes mode is deleted**, not parked in code. The replacement is in Later.
-  Reasoning: `docs/ARCHITECTURE.md`.
+- **Notes mode is deleted**, not parked in code. The replacement is the
+  keyboard panic switch in Later.
+- **The journey starts at "I'm done here."** Decided to leave, applied nowhere.
+  That person is the first user, not an edge case.
+- **The site owns the whole switch, not the listings.** You find openings on
+  Naukri or LinkedIn. No job boards, resumes, ATS scoring, or interview banks.
+- **Raw text stays saved on device with disclosure.** Disclosed in copy; we do
+  not upload anything.
 
 ## Now
 
-- **Stage doorways.** Each tracker card links to the tools that matter at its
-  stage; an offer card carries its CTC to the Decoder without a URL.
-  [PR #18](https://github.com/kalpitt/switch-karle/pull/18), open.
-- **Data safety in the tracker.** `save()` is unguarded, so a full
-  `localStorage` throws and loses the write. Import is a destructive replace
-  with no merge and no undo. This is the one place the app can currently lose
-  a user's work.
+- **An erase button for saved data.** A clean, one-click button in the footer
+  and tracker to clear everything saved on the device.
+  *Why:* Users browse on company laptops where saved salary numbers, payslips,
+  and resignation letters are evidence.
+- **Stop using offer salary for resignation and buyout.** Separate current-job
+  math from new-offer math so notice buyout and resignation tools do not
+  inherit the new offer's CTC.
+  *Why:* Evaluating a 30 LPA offer in the decoder currently inflates your
+  notice buyout and resignation letter calculations.
+- **Say what the site is, on the home page.** Rewrite the tagline to cover the
+  full switch ("From 'I'm done here' to surviving notice and day 90") and show
+  it on the home page.
+  *Why:* First-time visitors currently land on an empty board and cannot tell
+  what the site does.
+- **Fix link paths before domain cutover.** Clean up subfolder links and build
+  checks across 404, manifest, and share cards.
+  *Why:* Moving to `switchkarle.fyi` should be a simple, zero-risk switch.
 
 ## Next
 
-- **Header bloat on mobile.** Roughly 440px sits above the board at 375px. The
-  board is the product; it should not open below the fold.
-- **Pure ingest core.** Parse a structured job-application dump into tracker
-  applications. Pure functions in `src/engine/**` with golden cases, no UI.
-- **Sweep prompt and paste panel.** The user runs a prompt in their own AI,
-  pastes the result back. Their AI, their send button.
-- **Coverage ledger.** Say honestly how much of a mailbox a sweep actually
-  found. Measured ceiling today: about 26% at a one-year scope, about 66% at
-  one month. Overclaiming here would be worse than shipping nothing.
-- **CSP, plus a `check:csp` gate** in the same shape as `check:seo`.
+- **An archive for closed applications.** Let users mark jobs as rejected,
+  ghosted, or withdrawn without deleting the card.
+  *Why:* Deleting cards wipes their memory, causing email sweeps to keep
+  finding and re-importing rejected jobs.
+- **Intent words in tool search.** Make search find tools when users type
+  common words like "job", "quit", "hike", or "in-hand".
+  *Why:* Typing "quit" or "in hand" currently returns zero results.
+- **Notice period fear guide: when an offer goes cold.** Practical advice and
+  a prompt template for when a hiring company goes quiet forty days into notice.
+  *Why:* An offer disappearing while you have already resigned is the worst fear
+  in the whole switch.
 
 ## Later
 
-- **Native-quality Hindi pass.** Every `en.ts` key has a Hindi pair and the
-  parity test enforces it, but the Hindi is agent-written draft, never read by
-  a native writer. It ships as draft until this happens.
-- **Panic switch.** Browser-level trigger, not a control on the page. Covers
-  company names and salary figures rather than site branding; restoring takes
-  a deliberate act. Replaces Notes mode. Design notes in
-  `docs/ARCHITECTURE.md`.
+- **Native-quality Hindi review.** A native writer reading every Hindi phrase
+  on the site.
+  *Why:* Current Hindi is an AI-written draft and needs human verification
+  before launch.
+- **Browser panic switch.** A quick keyboard shortcut that immediately disguises
+  the screen as generic office work.
+  *Why:* Open-plan offices need instant camouflage when someone walks past.
+- **Surviving the first 90 days.** Tools to handle PF transfer, background
+  checks, and the tax shock from two Form-16s.
+  *Why:* The switch does not end when you accept the offer; it ends when your
+  first tax filing and PF transfer clear.
 
 ## Waiting on Kalpit
 
-- **CA Review R1.** A real chartered accountant answering in writing. Every
-  constant still marked `CANDIDATE` in `docs/ARCHITECTURE.md` waits on it. An
-  AI reading tax blogs does not count and never will.
+- **CA Review R1.** A chartered accountant answering tax questions in writing.
+  *Why:* Statutory tax numbers must come from official sources, never AI
+  guesses.
 
 ## Not doing
 
-Rejected on reputational, ethical or privacy grounds. More capacity does not
-make any of these a better idea.
+Permanently rejected on reputational, ethical, or privacy grounds:
 
-- Naukri ranking or Resdex bump automation · LinkedIn automation
-- Multi-offer stalling engines and pretextual negotiation scripts
+- Job listings, aggregation, search · Naukri Resdex or LinkedIn automation
 - Resume builders, ATS scorers, cover letters, interview-question banks
-- Job aggregators, generic AI chatbot wrappers
-- Direct browser-to-LLM-API calls, including with the user's own key
-- Salary or personal data in a URL hash or query string, compressed or not
+- Multi-offer stalling engines and pretextual negotiation scripts
+- Generic AI chatbot wrapper, or direct browser-to-LLM-API calls
+- Salary or personal data in a URL hash or query string
 - IndexedDB
 
-**Parked, not rejected.** All distribution activity: promotion, Search Console,
-sitemap submission, analytics, pSEO, share-card campaigns, backlinks. Unparks
-only when Kalpit sets a date. Building so distribution is easy later is
-required; doing it is not.
+**Parked, not rejected.** All promotion, analytics, SEO submission, and
+marketing. Unparks only when Kalpit sets a date.
