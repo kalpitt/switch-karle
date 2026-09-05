@@ -105,6 +105,28 @@ bump and a migration path, never a bare rename.
 Server-side storage is permitted only for features that cannot work without it,
 and the local copy stays authoritative wherever it can.
 
+Two promises about that storage became true on 2026-09-05, having been claimed
+before they were:
+
+**Nothing is written until you type something.** Opening a tool used to save its
+example numbers to the device immediately. Because the home page renders the
+tracker, that meant every visitor to the front page had something written to a
+disk their employer may own, having asked for nothing. A tool now creates its
+key only once the user changes something. See `docs/ARCHITECTURE.md` for the
+mechanism and the one trap it sets for a new tool.
+
+**Everything saved can be erased, in one click.** An erase control sits in the
+footer of every page and on the tracker. It removes every `switchkarle.*` key,
+reads each one back to confirm it is gone, and says what it actually removed
+rather than asserting success — a browser can refuse a delete, and the user is
+told when that happens. It leaves keys belonging to anything else on the same
+origin alone.
+
+What erase does **not** clear, said plainly because a half-promise is worse than
+none: your browser history, and the PWA's offline cache of the site's own pages
+(which holds no salary numbers and returns on the next visit). Clearing history
+is the browser's job, and the dialog says so.
+
 ## 7. What this trade costs
 
 Recorded honestly so nobody re-litigates it from a half-memory:

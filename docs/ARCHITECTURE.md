@@ -101,6 +101,56 @@ the choke point most surfaces already route through
 (`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
 `defaults.ts` bypass it directly), so that switch is smaller than it looks.
 
+### Nothing is written until the user types, and everything can be erased
+
+Shipped 2026-09-05. Two halves of one promise.
+
+**The erase control.** `src/lib/erase.ts`, surfaced by
+`src/components/EraseData.tsx` in the footer (every page, via `Shell`) and in
+the tracker's button row. It sweeps every `switchkarle.*` key by prefix and
+never calls `localStorage.clear()`: the site has shipped from an origin it does
+not own alone (`kalpit.me/switch-karle/`), where `clear()` would take a
+neighbouring project's data with it. Scanning the prefix also means a tool added
+later is erased without anyone updating a list — a list would drift, and a key a
+drifted list missed is a saved salary number the user was told had been erased.
+
+Every key is read back after the delete, because a private-mode or quota-locked
+browser can accept `removeItem` and keep the value. The dialog reports what
+actually went and names what survived. A successful erase reloads the page:
+every tool holds its draft in React state and would write it back on the next
+keystroke.
+
+Scope is `localStorage`. The PWA precache holds site assets, not user input, and
+re-registers on the next load — whether erase should also clear it is open and
+Kalpit's call.
+
+**Untouched defaults are not persisted.** Every tool boots by reading its key and
+echoing what it loaded straight back, so opening a tool used to write its own
+example numbers to disk before the user typed anything. The home page renders
+`<Tracker />`, so every visitor to the front page got a key written to a disk
+their employer owns, having asked for nothing — and the erase button re-seeded
+storage on the very reload it triggered.
+
+`src/lib/storage.ts` now tracks this **by shape, not by value**: the first write
+after a boot read that found nothing does not create the key. A value comparison
+was tried and rejected — it only works for the ~10 tools that pass their real
+default as the `readJson` fallback; the other ~13 read with a `null` fallback and
+build their default themselves, so half the app would have kept re-seeding while
+appearing fixed. `src/tracker/store.ts` and `src/data/defaults.ts` apply the same
+rule for the two keys that bypass `writeJson`.
+
+**The trade, and the trap it sets.** Storage cannot tell an echo of a computed
+default from a real edit, so the skip is spent on the *first* save after a boot
+read, whatever it carries. That is safe only because every tool echoes on mount.
+A tool that saves only on an explicit user action would lose that first action.
+`releaseBootEcho(key)` exists for a tool that deliberately does not echo:
+`src/tools/decoder/index.tsx` holds its write back when seeded from a tracker
+card ("a suggestion, not a decision"), and without the release its user's first
+edit was silently dropped — found by verification, not by a failing test.
+
+**If you add a tool:** echo your draft on mount like every existing tool does, or
+call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
+
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 
 Notes mode was a nav toggle that renamed the site to "Notes", set the tab title
