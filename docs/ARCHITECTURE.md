@@ -156,7 +156,7 @@ call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
 Shipped 2026-09-05. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
 four optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
 `noticePeriodDays`. Basic and basic+DA never cross-seed — gratuity is on basic +
-DA (PGA s.2(s)), every other tool uses plain basic raw, and one shared field
+DA (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
 would hand a DA-drawing employee's wrong number to whichever tool read it.
 
 Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`

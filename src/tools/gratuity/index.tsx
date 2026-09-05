@@ -51,7 +51,7 @@ function Body() {
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
 
   useEffect(() => {
-    // Gratuity is on basic + DA (PGA s.2(s)), so it reads `monthlyBasicDA` and
+    // Gratuity is on basic + DA (see the VERIFIED marker in src/engine/gratuity.ts), so it reads `monthlyBasicDA` and
     // never the plain basic the other exit tools share.
     const job = loadCurrentJob()
     const fill = (d: Draft) => applyCurrentJob(d, job, { monthlyBasicDA: 'lastDrawnBasicDA' })

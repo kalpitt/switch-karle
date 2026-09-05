@@ -21,7 +21,7 @@ export interface CurrentJob {
   /** Plain monthly basic — notice-buyout, leave-encashment, fnf-checker. */
   monthlyBasic?: number
   /**
-   * Monthly basic + dearness allowance — gratuity (PGA s.4 wage). Kept apart
+   * Monthly basic + dearness allowance — gratuity, whose engine carries the verified source. Kept apart
    * from `monthlyBasic` on purpose and never cross-seeded: one shared "basic"
    * would hand a wrong number to anyone with a DA component.
    */

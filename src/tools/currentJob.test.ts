@@ -8,7 +8,7 @@ const toolsDir = dirname(fileURLToPath(import.meta.url))
 /**
  * Pins the 2026-09-05 decision (docs/DECISIONS.md, "Current-job pay gets one
  * home"): current-job pay has exactly one shared record, and basic must never
- * merge with basic+DA. gratuity asks for basic + DA (PGA s.2(s)); every other
+ * merge with basic+DA. gratuity asks for basic + DA (source: the VERIFIED marker in src/engine/gratuity.ts); every other
  * exit tool asks for plain basic and feeds it raw to its engine. One shared
  * field would hand a DA-drawing employee's wrong number to whichever tool read
  * it, silently.
