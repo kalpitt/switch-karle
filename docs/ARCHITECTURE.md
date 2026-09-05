@@ -151,6 +151,31 @@ edit was silently dropped — found by verification, not by a failing test.
 **If you add a tool:** echo your draft on mount like every existing tool does, or
 call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
 
+### Current-job pay has one home
+
+Shipped 2026-09-05. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
+four optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
+`noticePeriodDays`. Basic and basic+DA never cross-seed — gratuity is on basic +
+DA (PGA s.2(s)), every other tool uses plain basic raw, and one shared field
+would hand a DA-drawing employee's wrong number to whichever tool read it.
+
+Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`
+(monthlyBasicDA → `lastDrawnBasicDA`), `leave-encashment` and `fnf-checker`
+(monthlyBasic), `resignation-letter` and `notice-tracker` (noticePeriodDays).
+Seed-only, never written back: `notice-buyout`'s `unservedDays` (a starting
+point the user then negotiates down) and `fnf-checker`'s `monthlyGross` (what
+the F&F sheet *claims*, not a fact about the job).
+
+On boot each tool overlays the record on its saved draft or fixture, so the
+latest value typed anywhere wins everywhere. The Example chip compares against
+that overlaid boot state, not the bare fixture, so a record-filled field beside
+fixture dates still reads as an example — never a verdict on a number the page
+invented (`docs/DECISIONS.md`, standing rule 8).
+
+The record never echoes on mount, so `loadCurrentJob` calls `releaseBootEcho` on
+every read — without it, the first value typed into any of the six tools would
+be silently dropped, the trap described above.
+
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 
 Notes mode was a nav toggle that renamed the site to "Notes", set the tab title

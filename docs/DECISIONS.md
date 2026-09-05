@@ -81,10 +81,24 @@ into the gratuity engine as `lastDrawnBasicDA` internally
 (`src/engine/fnf.ts:89-94`), so that field is already ambiguous between the two —
 **pre-existing, unresolved, and Kalpit's to decide.**
 
-**Status: designed and reviewed, not built.** Work stopped 2026-09-05 before the
-tools were wired. The shared store must call `releaseBootEcho` on read — it never
-echoes on mount, so without it the user's first-ever entry is silently dropped,
-the same failure the decoder had. Nothing half-wired was left on the branch.
+**Built 2026-09-05**, branch `feat/current-job-record`. `src/data/currentJob.ts`
+holds the shared record and calls `releaseBootEcho` on read, per the design
+above. All six tools wired: `notice-buyout`, `resignation-letter` and
+`notice-tracker` no longer touch the decoder; `gratuity`, `leave-encashment` and
+`fnf-checker` moved from their own storage-only fields to the shared one where
+it applies. Two build-time decisions for Kalpit to confirm, not re-derive from
+the diff:
+
+(a) The Example chip's rule got stricter than "Decoder-seeded values count as
+Entered": a field the record fills, sitting next to a fixture the user has not
+touched in *that* tool, still shows the Example chip until the user types in
+that specific tool. A record-filled basic beside example dates is not a verdict
+the user asked for.
+
+(b) `fnf-checker` reads the record's plain `monthlyBasic`, and its own engine
+already feeds that number to gratuity's calculation as basic+DA
+(`src/engine/fnf.ts:89-94`) — the pre-existing ambiguity noted above is
+unchanged by this work and still his to decide.
 
 ---
 

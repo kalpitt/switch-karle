@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { addDays, epfoDateOverlap, lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, NumberField, Select, TextField, VerdictBanner } from '../../components/ui'
-import { loadOffer } from '../../data/defaults'
+import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -52,20 +52,24 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const o = loadOffer()
+    // The letter goes to the current employer, so the notice period is the
+    // current job's — from the shared record, never the new offer's.
+    const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     setDraft(
-      saved ?? {
-        company: '',
-        manager: '',
-        role: '',
-        yourName: '',
-        empId: '',
-        resignDate: todayISO(),
-        noticeDays: o.noticePeriodDays,
-        newJoinDate: '',
-        tone: 'professional',
-      },
+      saved
+        ? { ...saved, noticeDays: job.noticePeriodDays ?? saved.noticeDays }
+        : {
+            company: '',
+            manager: '',
+            role: '',
+            yourName: '',
+            empId: '',
+            resignDate: todayISO(),
+            noticeDays: job.noticePeriodDays ?? 90,
+            newJoinDate: '',
+            tone: 'professional',
+          },
     )
     setHydrated(true)
   }, [])
@@ -138,7 +142,10 @@ function Body() {
           label={t('resignation-letter.notice')}
           suffix={t('unit.days')}
           value={draft.noticeDays}
-          onChange={(v) => set({ noticeDays: v })}
+          onChange={(v) => {
+            set({ noticeDays: v })
+            rememberCurrentJob({ noticePeriodDays: v })
+          }}
         />
         <DateField
           label={t('resignation-letter.join')}

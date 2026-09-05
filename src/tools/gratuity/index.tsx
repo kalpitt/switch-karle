@@ -12,6 +12,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -46,9 +47,23 @@ function Body() {
   const t = useT()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
+  /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
+  const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
 
   useEffect(() => {
-    setDraft(readJson<Draft>(STORAGE_KEY, DEFAULT_DRAFT))
+    // Gratuity is on basic + DA (PGA s.2(s)), so it reads `monthlyBasicDA` and
+    // never the plain basic the other exit tools share.
+    const job = loadCurrentJob()
+    const fill = (d: Draft) => applyCurrentJob(d, job, { monthlyBasicDA: 'lastDrawnBasicDA' })
+    const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    if (saved) {
+      setDraft(fill(saved))
+      setExample(null)
+    } else {
+      const boot = fill(DEFAULT_DRAFT)
+      setDraft(boot)
+      setExample(boot)
+    }
     setHydrated(true)
   }, [])
 
@@ -58,10 +73,10 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => gratuity(draft), [draft])
-  /** Untouched fixture on first paint = worked example, not the user's data. */
+  /** Nothing typed in this tool yet = worked example, even where the record filled the basic. */
   const isExample =
     JSON.stringify({ ...draft, workWeekDays: draft.workWeekDays ?? 6 }) ===
-    JSON.stringify(DEFAULT_DRAFT)
+    JSON.stringify(example ?? DEFAULT_DRAFT)
   const verdict = result.eligible
     ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
     : t('gratuity.verdict.no', { years: result.completedYears })
@@ -79,7 +94,10 @@ function Body() {
           label={t('gratuity.basic')}
           hint={t('gratuity.basicHint')}
           value={draft.lastDrawnBasicDA}
-          onChange={(v) => set({ lastDrawnBasicDA: v })}
+          onChange={(v) => {
+            set({ lastDrawnBasicDA: v })
+            rememberCurrentJob({ monthlyBasicDA: v })
+          }}
         />
         <DateField label={t('gratuity.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
         <DateField label={t('gratuity.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
@@ -95,6 +113,7 @@ function Body() {
           checked={draft.workWeekDays === 5}
           onChange={(v) => set({ workWeekDays: v ? 5 : 6 })}
         />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (

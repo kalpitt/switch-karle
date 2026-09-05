@@ -17,6 +17,7 @@ export const hiSuite: Record<string, string> = {
   // ---- Decoder inheritance disclosure ----
   'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
   'ui.inheritLink': 'Decoder खोलें',
+  'ui.currentJob': 'Current job के figures — basic, gross, notice period — exit tools के बीच shared हैं। यहाँ बदलो तो हर जगह बदलेगा। सिर्फ़ इसी device पर saved।',
 
   // ---- Home: the journey ----
   'home.pinned': 'यहाँ से शुरू करें',
@@ -263,9 +264,6 @@ export const hiSuite: Record<string, string> = {
   'notice-buyout.row.basic': 'Monthly basic पर',
   'notice-buyout.row.gross': 'Monthly cash gross पर',
   'notice-buyout.gstNote': 'Notice buyout पर GST / income-tax का treatment disputed है — यह tool कोई tax compute नहीं करता।',
-  'notice-buyout.seed.decoder': 'Monthly figures आपके Decoder की cash salary से seed हुए हैं।',
-  'notice-buyout.seed.ctc12':
-    'आपके Decoder से seed किया गया। यहां cash gross CTC ÷ 12 बनता है — check करें कि employer PF और gratuity सच में CTC के अंदर हैं या नहीं।',
 
   // ---- Gratuity ----
   'gratuity.title': 'Gratuity',
