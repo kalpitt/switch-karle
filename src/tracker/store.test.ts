@@ -96,6 +96,33 @@ describe('save', () => {
     expect(() => save(list)).not.toThrow()
     expect(save(list)).toBe(false)
   })
+
+  it('does not create a key for an empty board that was never saved, and reports success', () => {
+    // The tracker's boot effect saves right after loading, so every home-page
+    // visitor who has added nothing would otherwise get a key written to a
+    // disk their employer owns. load() already returns [] for a missing key,
+    // so an absent key represents an empty board exactly as well as a stored
+    // [] would — and true is the honest answer, not false: nothing was lost.
+    expect(save([])).toBe(true)
+    expect(mem.getItem(STORAGE_KEY)).toBeNull()
+  })
+
+  it('still writes [] once the key already holds a board', () => {
+    // Deleting the last card off a stored board is a real edit, not a boot
+    // echo, and must persist.
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    save(list)
+    expect(mem.getItem(STORAGE_KEY)).not.toBeNull()
+    expect(save([])).toBe(true)
+    expect(mem.getItem(STORAGE_KEY)).toBe(JSON.stringify([]))
+    expect(load()).toEqual([])
+  })
+
+  it('a non-empty save is unaffected by the empty-board skip', () => {
+    const list = addApplication([], { company: 'Acme', role: 'SDE II' })
+    expect(save(list)).toBe(true)
+    expect(load()).toEqual(list)
+  })
 })
 
 describe('addApplication', () => {

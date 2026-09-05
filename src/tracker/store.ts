@@ -74,9 +74,20 @@ export function load(): Application[] {
  * Persist the application list. Returns false when the write did not land —
  * a full quota, or a browser blocking storage. The caller must surface that:
  * a board that shows unsaved work as saved is the worst failure this app has.
+ *
+ * An empty list on a key that has never been written is the tracker's boot
+ * effect echoing its own empty starting state back, not anything the user
+ * chose — every visitor to the home page would otherwise get a key written to
+ * a disk their employer owns. Skip that write and return true rather than
+ * false: load() already returns [] for a missing key, so an absent key
+ * faithfully represents an empty board, and false would show the caller's
+ * "this board did not save" alarm for a save nothing was lost from. Once the
+ * key exists, an empty list is a real edit (the last card was deleted) and is
+ * persisted like any other write.
  */
 export function save(list: Application[]): boolean {
   try {
+    if (list.length === 0 && localStorage.getItem(STORAGE_KEY) == null) return true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
     return true
   } catch {
