@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { buyoutQuote } from '../../engine/noticeBuyout'
-import { decodeOffer } from '../../engine/salary'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
@@ -13,7 +12,7 @@ import {
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
-import { DECODER_STORAGE_KEY, loadOffer } from '../../data/defaults'
+import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -29,7 +28,7 @@ interface Draft {
   monthlyGross: number
 }
 
-/** Pure fixture — what first paint shows when neither storage nor Decoder seeds it. */
+/** Pure fixture — what first paint shows when neither storage nor the current-job record fills it. */
 const PURE_DEFAULT: Draft = {
   basis: 'basic',
   mode: 'pay',
@@ -51,41 +50,32 @@ function Body() {
   const t = useT()
   const [draft, setDraft] = useState<Draft>(PURE_DEFAULT)
   const [hydrated, setHydrated] = useState(false)
-  /** Set once at mount from whatever seeded the fields; never persisted. */
-  const [seed, setSeed] = useState<{ fromDecoder: boolean; grossWasCtc12: boolean }>({
-    fromDecoder: false,
-    grossWasCtc12: false,
-  })
+  /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
+  const [example, setExample] = useState<Draft | null>(PURE_DEFAULT)
 
   useEffect(() => {
+    // Current pay comes from the current-job record, never from the Decoder:
+    // a buyout is owed to the current employer out of current pay, and the
+    // Decoder holds the NEW offer. Unserved days start at the full notice
+    // period — the figure if you walked out today — and are this tool's own.
+    const job = loadCurrentJob()
+    const fill = (d: Draft) =>
+      applyCurrentJob(d, job, {
+        monthlyBasic: 'monthlyBasic',
+        monthlyGross: 'monthlyGross',
+        noticePeriodDays: 'unservedDays',
+      })
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
     if (saved) {
       // Spread over the fixture so a draft saved before leave netting existed
       // hydrates with zero leave rather than undefined.
-      setDraft({ ...PURE_DEFAULT, ...saved })
-      setHydrated(true)
-      return
+      setDraft(fill({ ...PURE_DEFAULT, ...saved }))
+      setExample(null)
+    } else {
+      const boot = fill(PURE_DEFAULT)
+      setDraft(boot)
+      setExample(boot)
     }
-    let decoderHasData = false
-    try {
-      decoderHasData = localStorage.getItem(DECODER_STORAGE_KEY) != null
-    } catch {
-      /* storage unavailable */
-    }
-    const next: Draft = { ...PURE_DEFAULT }
-    if (decoderHasData) {
-      // Cash-gross seed per master plan §5.2: grossSalary/12, not CTC/12.
-      const offer = loadOffer()
-      const breakdown = decodeOffer(offer)
-      next.unservedDays = offer.noticePeriodDays
-      next.monthlyBasic = Math.round(breakdown.basic / 12)
-      next.monthlyGross = Math.round(breakdown.grossSalary / 12)
-      setSeed({
-        fromDecoder: true,
-        grossWasCtc12: next.monthlyGross === Math.round(offer.ctcAnnual / 12),
-      })
-    }
-    setDraft(next)
     setHydrated(true)
   }, [])
 
@@ -99,9 +89,8 @@ function Body() {
     () => buyoutQuote({ ...draft, basis: draft.basis === 'basic' ? 'gross' : 'basic' }),
     [draft],
   )
-  /** Fixture on first paint with no Decoder seed = worked example. */
-  const isExample =
-    !seed.fromDecoder && JSON.stringify(draft) === JSON.stringify(PURE_DEFAULT)
+  /** Nothing typed in this tool yet = worked example, even where the record filled a field. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(example ?? PURE_DEFAULT)
   const verdict =
     draft.mode === 'pay'
       ? t('notice-buyout.verdict.pay', { amount: formatINR(result.amount) })
@@ -155,14 +144,21 @@ function Body() {
           label={t('notice-buyout.basic')}
           hint={t('ui.money.hint')}
           value={draft.monthlyBasic}
-          onChange={(v) => set({ monthlyBasic: v })}
+          onChange={(v) => {
+            set({ monthlyBasic: v })
+            rememberCurrentJob({ monthlyBasic: v })
+          }}
         />
         <MoneyField
           label={t('notice-buyout.gross')}
           hint={t('ui.money.hint')}
           value={draft.monthlyGross}
-          onChange={(v) => set({ monthlyGross: v })}
+          onChange={(v) => {
+            set({ monthlyGross: v })
+            rememberCurrentJob({ monthlyGross: v })
+          }}
         />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
@@ -193,12 +189,6 @@ function Body() {
             </span>
           </p>
         </Card>
-        {seed.fromDecoder &&
-          (seed.grossWasCtc12 ? (
-            <p className="text-[13px] text-amberflag">{t('notice-buyout.seed.ctc12')}</p>
-          ) : (
-            <p className="text-[13px] text-ink-soft">{t('notice-buyout.seed.decoder')}</p>
-          ))}
         {result.leaveDaysApplied > 0 && (
           <p className="tnum text-[13px] text-ink-soft">
             {t('notice-buyout.leaveApplied', {

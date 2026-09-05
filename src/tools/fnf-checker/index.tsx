@@ -15,6 +15,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -57,11 +58,27 @@ function Body() {
   const t = useT()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
+  /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
+  const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
 
   useEffect(() => {
-    // Spread over the default so a draft saved before the mail fields existed
-    // hydrates with empty names instead of undefined.
-    setDraft({ ...DEFAULT_DRAFT, ...readJson<Partial<Draft>>(STORAGE_KEY, DEFAULT_DRAFT) })
+    // Basic and gross start from the current-job record. Only the basic is
+    // written back: the gross here is what the F&F sheet CLAIMS, which is the
+    // thing being checked, not a fact about the job.
+    const job = loadCurrentJob()
+    const fill = (d: Draft) =>
+      applyCurrentJob(d, job, { monthlyBasic: 'monthlyBasic', monthlyGross: 'monthlyGross' })
+    const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
+    if (saved) {
+      // Spread over the default so a draft saved before the mail fields existed
+      // hydrates with empty names instead of undefined.
+      setDraft(fill({ ...DEFAULT_DRAFT, ...saved }))
+      setExample(null)
+    } else {
+      const boot = fill(DEFAULT_DRAFT)
+      setDraft(boot)
+      setExample(boot)
+    }
     setHydrated(true)
   }, [])
 
@@ -91,8 +108,8 @@ function Body() {
   const result = useMemo(() => auditFnF(input), [input])
   const disputes = useMemo(() => disputeItems(input, result), [input, result])
 
-  /** Untouched fixture on first paint = worked example, not the user's sheet. */
-  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
+  /** Nothing typed in this tool yet = worked example, even where the record filled a field. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
 
   const verdict =
     result.netPayable < 0
@@ -141,7 +158,15 @@ function Body() {
         <h2 className="text-base font-bold">{t('fnf-checker.formTitle')}</h2>
         <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
-        <MoneyField label={t('fnf-checker.basic')} hint={t('ui.money.hint')} value={draft.monthlyBasic} onChange={(v) => set({ monthlyBasic: v })} />
+        <MoneyField
+          label={t('fnf-checker.basic')}
+          hint={t('ui.money.hint')}
+          value={draft.monthlyBasic}
+          onChange={(v) => {
+            set({ monthlyBasic: v })
+            rememberCurrentJob({ monthlyBasic: v })
+          }}
+        />
         <MoneyField label={t('fnf-checker.gross')} hint={t('ui.money.hint')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
@@ -153,6 +178,7 @@ function Body() {
           onChange={(v) => set({ hrName: v })}
         />
         <TextField label={t('fnf-checker.mailYou')} value={draft.yourName} onChange={(v) => set({ yourName: v })} />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (

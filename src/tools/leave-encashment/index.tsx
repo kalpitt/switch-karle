@@ -12,6 +12,7 @@ import {
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
+import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -43,12 +44,23 @@ function Body() {
   const t = useT()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
+  /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
+  const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
 
   useEffect(() => {
-    const saved = readJson<Draft>(STORAGE_KEY, DEFAULT_DRAFT)
-    // Retirement path is hidden (master plan 5.2): the switcher case is
-    // resignation — always fully taxable. Coerce any stored retirement draft.
-    setDraft({ ...saved, reason: 'resignation' })
+    const job = loadCurrentJob()
+    const fill = (d: Draft) => applyCurrentJob(d, job, { monthlyBasic: 'monthlyBasic' })
+    const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    if (saved) {
+      // Retirement path is hidden (master plan 5.2): the switcher case is
+      // resignation — always fully taxable. Coerce any stored retirement draft.
+      setDraft(fill({ ...saved, reason: 'resignation' }))
+      setExample(null)
+    } else {
+      const boot = fill(DEFAULT_DRAFT)
+      setDraft(boot)
+      setExample(boot)
+    }
     setHydrated(true)
   }, [])
 
@@ -58,8 +70,8 @@ function Body() {
   }, [draft, hydrated])
 
   const result = useMemo(() => leaveEncash(draft), [draft])
-/** Untouched fixture on first paint = worked example, not the user's data. */
-  const isExample = JSON.stringify(draft) === JSON.stringify(DEFAULT_DRAFT)
+  /** Nothing typed in this tool yet = worked example, even where the record filled the basic. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
   const verdict = result.resignationFullyTaxable
     ? t('leave-encashment.verdict.resign', { amount: formatINR(result.gross) })
     : t('leave-encashment.verdict.retire', { amount: formatINR(result.gross) })
@@ -78,7 +90,15 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('leave-encashment.formTitle')}</h2>
         <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
-        <MoneyField label={t('leave-encashment.basic')} hint={t('ui.money.hint')} value={draft.monthlyBasic} onChange={(v) => set({ monthlyBasic: v })} />
+        <MoneyField
+          label={t('leave-encashment.basic')}
+          hint={t('ui.money.hint')}
+          value={draft.monthlyBasic}
+          onChange={(v) => {
+            set({ monthlyBasic: v })
+            rememberCurrentJob({ monthlyBasic: v })
+          }}
+        />
         <Select
           label={t('leave-encashment.basis')}
           value={draft.dailyBasis}
@@ -88,6 +108,7 @@ function Body() {
             { value: '30', label: t('leave-encashment.basis.30') },
           ]}
         />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
