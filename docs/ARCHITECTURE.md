@@ -76,6 +76,31 @@ User data may leave the device only to deliver a feature the user explicitly
 turned on, only to a destination Kalpit controls, and only while it stays on.
 Nothing today does. No third-party analytics. No IndexedDB. No salary in URLs.
 
+### Three tools persist raw sensitive text, indefinitely, in plaintext
+
+Recorded 2026-09-05. Decided 2026-09-05: keep the default, say so in copy.
+
+| Tool | Key | What is written |
+|---|---|---|
+| `redactor` | `switchkarle.redactor.v1` | the **un-redacted** pasted text — payslip or offer, PAN and Aadhaar included |
+| `bond-scanner` | `switchkarle.bond.v1` | the pasted bond / non-compete clause |
+| `resignation-letter` | `switchkarle.resignation.v1` | the resignation draft |
+
+All three persist by the same default as every other tool — `writeJson` on every
+keystroke, no expiry. The redactor is the sharp case: its whole purpose is
+stripping identifiers out of a payslip before the user shares it, and it kept an
+unstripped copy on a disk that on a work machine belongs to the employer, with
+nothing on screen saying so.
+
+**Fixed by disclosure, not by architecture.** `redactor.textHint`,
+`bond-scanner.textHint` and the new `resignation-letter.formHint` now say the
+text is saved on this device only, and never uploaded — true before and now
+said. No storage behaviour changed. An in-memory-only mode or a session-only
+toggle both remain open if a future decision wants them; `src/lib/storage.ts` is
+the choke point most surfaces already route through
+(`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
+`defaults.ts` bypass it directly), so that switch is smaller than it looks.
+
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 
 Notes mode was a nav toggle that renamed the site to "Notes", set the tab title
@@ -109,6 +134,11 @@ in-page menu, screen clear immediately. Design notes for whoever picks it up:
   same-origin static site cannot change its own URL, which is the honest ceiling
   on how far an in-page version can go and part of why the extension route is
   the real answer.
+- **One candidate mechanism**, salvaged 2026-09-05 from a deleted strategy doc
+  and recorded as an option, not a spec: double-tap `Escape` under 400ms, or
+  `Alt+Q`, as the trigger; swap `document.title` and the favicon to something
+  unremarkable; require a different, deliberate combo to restore. It does not
+  solve the URL-and-history problem above, which stays the ceiling.
 
 Until that ships, the site makes no shoulder-surfing claim anywhere in copy.
 

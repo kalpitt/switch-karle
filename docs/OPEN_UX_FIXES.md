@@ -1,5 +1,10 @@
 # Open UX and logic fixes
 
+> **SUPERSEDED 2026-09-05.** Kept as history. Item 1 below ("Home is a grid, not
+> a journey — done") was reversed on 2026-08-30 when the tracker became the home
+> page; see `docs/DECISIONS.md` for both entries and why. Nothing here is a work
+> list.
+
 Extracted 2026-08-29 from a 225-line product audit of `build/suite` (2026-08-23,
 PR #6, closed not merged). The audit's essay half — executive verdict, four
 persona reviews, "what not to build" — has served its purpose and is not kept.

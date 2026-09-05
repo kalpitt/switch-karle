@@ -368,6 +368,7 @@ export const en: Record<string, string> = {
   'resignation-letter.title': 'Resignation letter',
   'resignation-letter.desc': 'Three tones. Last working day is resignation date plus notice minus one calendar day.',
   'resignation-letter.formTitle': 'The letter',
+  'resignation-letter.formHint': 'Your draft saves on this device only, never uploaded.',
   'resignation-letter.company': 'Company',
   'resignation-letter.manager': 'Manager',
   'resignation-letter.role': 'Your role',
@@ -619,7 +620,8 @@ export const en: Record<string, string> = {
   'bond-scanner.desc': 'Paste the bond, non-compete or probation clause. This flags patterns — it is not a court.',
   'bond-scanner.formTitle': 'The clause',
   'bond-scanner.text': 'Offer / appointment text',
-  'bond-scanner.textHint': 'Paste the bond or restraint paragraph. It never leaves this device.',
+  'bond-scanner.textHint':
+    'Paste the bond or restraint paragraph. Saved on this device only, never uploaded.',
   'bond-scanner.verdict.blank': 'Nothing has been checked yet. Paste the bond clause or appointment-letter text above.',
   'bond-scanner.verdict.clean': 'No bond, certificate-deposit or post-exit restraint pattern in this paste.',
   'bond-scanner.verdict.flags': '{n} pattern(s) worth a lawyer, not a panic. Case law is fact-specific.',
@@ -639,7 +641,8 @@ export const en: Record<string, string> = {
   'redactor.desc': 'Mask Aadhaar, PAN, UAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
   'redactor.formTitle': 'Paste the page',
   'redactor.text': 'Payslip or offer text',
-  'redactor.textHint': 'Nothing is uploaded. Download a PNG or print the masked page.',
+  'redactor.textHint':
+    'Saved on this device, unmasked — never uploaded. Download a PNG or print the masked page.',
   'redactor.verdict.none': 'Nothing matched. Paste text that includes PAN, Aadhaar, a phone, or a ₹ amount.',
   'redactor.verdict.hits': 'Masked {n} item(s). Download a PNG or print — pdf-lib is not used.',
   'redactor.download': 'Download PNG',

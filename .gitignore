@@ -23,3 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent scratch from multi-agent runs — never commit
+.agents/

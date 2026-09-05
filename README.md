@@ -1,11 +1,19 @@
 # Switch Karle
 
-**Decode your Indian job offer. Know what actually reaches your bank.**
+**Everything about an Indian job switch except finding the job.**
+
+From "I'm done here" — before you have applied anywhere — through the offer, the
+resignation, ninety days of notice, and surviving the first three months at the
+new place.
 
 **Live: [kalpit.me/switch-karle](https://kalpit.me/switch-karle/)** · target origin: `switchkarle.fyi` (not serving yet)
 
-A free, open-source suite of instant micro-tools for the Indian job switch. Every
-number runs in your browser. Nothing is uploaded. No accounts, no analytics.
+Free and open source. Every number runs in your browser. Nothing is uploaded. No
+accounts, no analytics, no AI calls.
+
+You find openings on Naukri or LinkedIn. We do not do job listings, resumes, ATS
+scoring or interview banks, and we are not going to — see [PRODUCT.md](PRODUCT.md)
+for what that decision is and why.
 
 [![CI](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml/badge.svg)](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml)
 
@@ -81,9 +89,10 @@ npm run lint         # oxlint
 npm run build        # astro build
 npm run check:base   # asset URLs resolve under the configured base
 npm run check:seo    # canonical + OG on every route; no analytics in dist/
+npm run check:csp    # CSP meta + hashes; no off-origin subresources
 npm run new-tool     # node scripts/new-tool.mjs <slug>
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, and `check:seo` must all pass before you open a pull request.
+`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, and `check:csp` must all pass before you open a pull request.
 
 MIT licensed. Built by a job-switcher, for job-switchers.

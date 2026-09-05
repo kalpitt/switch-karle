@@ -384,6 +384,7 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.title': 'Resignation Letter',
   'resignation-letter.desc': 'तीन tones। Last working day = resignation date + notice − एक calendar दिन।',
   'resignation-letter.formTitle': 'Letter',
+  'resignation-letter.formHint': 'आपका draft सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
   'resignation-letter.company': 'Company',
   'resignation-letter.manager': 'Manager',
   'resignation-letter.role': 'आपका role',
@@ -657,7 +658,8 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.desc': 'Bond, non-compete या probation clause paste करें। यह patterns flag करता है — यह कोई court नहीं है।',
   'bond-scanner.formTitle': 'Clause',
   'bond-scanner.text': 'Offer / appointment text',
-  'bond-scanner.textHint': 'Bond या restraint वाला paragraph paste करें। यह कभी इस device से बाहर नहीं जाता।',
+  'bond-scanner.textHint':
+    'Bond या restraint वाला paragraph paste करें। सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
   'bond-scanner.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर bond clause या appointment letter का text paste करें।',
   'bond-scanner.verdict.clean': 'इस paste में bond, certificate-deposit या post-exit restraint का pattern नहीं है।',
   'bond-scanner.verdict.flags': '{n} pattern lawyer से बात करने लायक हैं, panic करने की नहीं। Case law fact-specific होता है।',
@@ -679,7 +681,8 @@ export const hiSuite: Record<string, string> = {
   'redactor.desc': 'Payslip या offer का screenshot लेने से पहले Aadhaar, PAN, UAN, phone, email और rupee amounts को इस device पर mask करें।',
   'redactor.formTitle': 'Page paste करें',
   'redactor.text': 'Payslip या offer text',
-  'redactor.textHint': 'कुछ भी upload नहीं होता। Masked page को PNG में download करें या print करें।',
+  'redactor.textHint':
+    'सिर्फ़ इस device पर save होता है, बिना mask किए — कभी upload नहीं होता। Masked page को PNG में download करें या print करें।',
   'redactor.verdict.none': 'कुछ भी match नहीं हुआ। ऐसा text paste करें जिसमें PAN, Aadhaar, फोन नंबर या ₹ amount हो।',
   'redactor.verdict.hits': '{n} items mask किए गए। PNG download करें या print करें — pdf-lib इस्तेमाल नहीं होती।',
   'redactor.download': 'PNG Download करें',
