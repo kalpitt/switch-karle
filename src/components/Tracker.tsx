@@ -32,6 +32,7 @@ import { withLang } from '../lib/langPath'
 import { todayIso } from '../lib/today'
 import { formatDate } from '../lib/formatDate'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
+import { EraseData } from './EraseData'
 import { SweepPanel } from './SweepPanel'
 
 const L = 100_000
@@ -453,6 +454,7 @@ function ExportImportButtons({
       >
         {t('tracker.import')}
       </button>
+      <EraseData className="rounded-xl border border-alarm/40 px-3 py-2.5 text-[13px] font-semibold text-alarm" />
       <button
         type="button"
         onClick={onSweepToggle}

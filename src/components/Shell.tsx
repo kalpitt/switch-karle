@@ -5,6 +5,7 @@ import { TOOLS } from '../data/tools'
 import { RULES_LAST_VERIFIED } from '../data/rules'
 import { withLang } from '../lib/langPath'
 import { CommandPalette } from './CommandPalette'
+import { EraseData } from './EraseData'
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
   const t = useT()
@@ -79,6 +80,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
         >
           GitHub
         </a>
+        <br />
+        <span className="mt-2 inline-block">
+          <EraseData className="font-semibold text-alarm underline" />
+        </span>
       </footer>
     </div>
   )

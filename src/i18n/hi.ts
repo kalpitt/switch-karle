@@ -25,6 +25,21 @@ export const hi: Record<string, string> = {
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',
 
+  // ---- Erase saved data ----
+  'erase.button': 'Saved data मिटाएं',
+  'erase.title': 'इस site ने जो save किया है, वह मिटाएं',
+  'erase.saved': 'इस browser में Switch Karle के {n} saved items हैं — आपने जो numbers टाइप किए, आपकी dates, और कोई letter draft।',
+  'erase.savedOne': 'इस browser में Switch Karle का 1 saved item है।',
+  'erase.empty': 'Switch Karle ने इस browser में कुछ save नहीं किया है। मिटाने को कुछ नहीं है।',
+  'erase.warning': 'मिटाने के बाद वापस नहीं आएगा। अपना board रखना है तो पहले backup export कर लें।',
+  'erase.historyNote': 'यह सिर्फ वही मिटाता है जो Switch Karle ने save किया था। आपकी browser history यह नहीं मिटाता — वह अपने browser से clear करें।',
+  'erase.confirm': 'सब कुछ मिटाएं',
+  'erase.cancel': 'रहने दें',
+  'erase.done': 'मिट गया। {n} saved items अब इस browser में नहीं हैं।',
+  'erase.doneOne': 'मिट गया। वह 1 saved item अब इस browser में नहीं है।',
+  'erase.failed': 'इनमें से {n} नहीं मिट पाए। यह browser storage में बदलाव रोक रहा है — browser settings से इस site का data clear करें।',
+  'erase.close': 'ठीक है',
+
   'nav.home': 'होम',
   'home.kicker': 'हर application एक ही board पर। सही calculator सिर्फ़ एक tap दूर।',
   'home.allTools': 'सभी {n} tools',
