@@ -15,6 +15,21 @@ export const en: Record<string, string> = {
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'Language',
 
+  // ---- Erase saved data ----
+  'erase.button': 'Erase saved data',
+  'erase.title': 'Erase what this site has saved',
+  'erase.saved': 'This browser is holding {n} saved items from Switch Karle — the numbers you typed, your dates, and any letter you drafted.',
+  'erase.savedOne': 'This browser is holding 1 saved item from Switch Karle.',
+  'erase.empty': 'Switch Karle has saved nothing in this browser. There is nothing to erase.',
+  'erase.warning': 'Erasing cannot be undone. If you want to keep your board, export a backup first.',
+  'erase.historyNote': 'This erases only what Switch Karle saved. It does not clear your browser history — clear that from your browser.',
+  'erase.confirm': 'Erase everything',
+  'erase.cancel': 'Cancel',
+  'erase.done': 'Erased. {n} saved items are gone from this browser.',
+  'erase.doneOne': 'Erased. The 1 saved item is gone from this browser.',
+  'erase.failed': 'Could not erase {n} of them. This browser is blocking storage changes — clear this site’s data from your browser settings.',
+  'erase.close': 'Done',
+
   'nav.home': 'Home',
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',

@@ -10,6 +10,84 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-05 — An erase control, and storage that waits for the user
+
+**Decided:** ship the ROADMAP "Now" item as two halves — the erase button, and
+the reason it could not work without a second fix.
+
+**Why the second half was not optional.** The erase button worked and then
+re-seeded storage on its own reload. Every tool boots by reading its key and
+echoing what it loaded back, so opening a tool wrote its example numbers to
+disk before the user typed anything. The home page renders the tracker, so
+*every visitor to the front page* got a key written to a disk their employer may
+own. That is PRODUCT.md rule 6 ("nothing persists unless the user chose
+persistence") broken on the exact machine the product worries about, and it made
+the erase button a claim rather than a fact.
+
+**Mechanism, and the one that was rejected.** Skip by shape, not by value: the
+first write after a boot read that found nothing does not create the key. The
+obvious alternative — remember the default and skip a write equal to it — was
+designed, reviewed and thrown away: it works only for the ~10 tools that pass
+their real default as the `readJson` fallback, and the other ~13 read with a
+`null` fallback and build their default themselves, so half the app would have
+kept re-seeding while looking fixed.
+
+**What it costs.** Storage cannot tell an echo of a computed default from a real
+edit, so the skip is spent on the first save after a boot read whatever it
+carries. Safe only because every tool echoes on mount. The decoder does not —
+it holds its write when seeded from a tracker card — and lost the user's first
+edit until `releaseBootEcho` was added. That bug was found by verifying the
+change in a browser, not by a test going red, and is now pinned by a test that
+fails without the fix.
+
+**Scope held.** Erase covers `localStorage`, not the PWA precache (site assets,
+no user input, returns on the next load) and not browser history. Both said out
+loud in the dialog and in `PRIVACY.md` rather than quietly omitted.
+
+**Consequence to know:** `notice-buyout` and `form16-shock` decide whether to
+inherit from the decoder by testing whether its key exists. Someone who opens the
+decoder and types nothing no longer counts as having an offer, so those tools use
+their own fixtures — correct, and it stops them presenting example numbers as
+"from your decoder". **Open for Kalpit:** confirm that reads right, and whether
+erase should also clear the PWA cache.
+
+---
+
+## 2026-09-05 — Current-job pay gets one home, separate from the new offer
+
+**Decided by Kalpit**, asked directly: build a shared "your current job" record
+rather than simply dropping the wrong seed or extending the decoder.
+
+**The bug it answers.** `notice-buyout` seeds monthly basic, gross and unserved
+days from `decodeOffer(loadOffer())` — the **new** offer. A notice buyout is owed
+to the current employer out of current pay, so decoding a 30 LPA offer inflates
+it. `resignation-letter` does the same with the notice period, for a letter
+addressed to the current employer. Review found `notice-tracker` does it too, on
+the same field, to count down notice served at the current employer.
+
+**Why a shared record rather than nothing.** Five tools ask for current-job pay
+separately today (`gratuity.lastDrawnBasicDA`, `leave-encashment.monthlyBasic`,
+`fnf-checker.monthlyBasic`/`monthlyGross`, `notice-buyout.monthlyBasic`/
+`monthlyGross`). PRODUCT.md rule 7: a value already typed is never asked for
+twice.
+
+**Two "basic" numbers, never merged.** Review caught this before any code
+shipped: `gratuity` asks for **basic + DA** and says so in its hint, while
+`notice-buyout` and `leave-encashment` ask for plain **basic** and their engines
+use it raw. One shared field would hand a wrong number to anyone with a DA
+component. The record therefore carries `monthlyBasic` and `monthlyBasicDA` as
+separate fields that never cross-seed. `fnf-checker` feeds its `monthlyBasic`
+into the gratuity engine as `lastDrawnBasicDA` internally
+(`src/engine/fnf.ts:89-94`), so that field is already ambiguous between the two —
+**pre-existing, unresolved, and Kalpit's to decide.**
+
+**Status: designed and reviewed, not built.** Work stopped 2026-09-05 before the
+tools were wired. The shared store must call `releaseBootEcho` on read — it never
+echoes on mount, so without it the user's first-ever entry is silently dropped,
+the same failure the decoder had. Nothing half-wired was left on the branch.
+
+---
+
 ## 2026-09-05 — The journey starts at "I'm done here"
 
 **Decided:** a person who has decided to leave but has applied nowhere is a

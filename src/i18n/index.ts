@@ -61,14 +61,19 @@ const LangContext = createContext<LangContextValue | null>(null)
 export function LangProvider({ children, initialLang = 'en' }: { children: ReactNode; initialLang?: Lang }) {
   // SSR and the first client render must match. Hindi routes pass initialLang="hi".
   const [lang, setLangState] = useState<Lang>(initialLang)
-  const [hydrated, setHydrated] = useState(false)
-
-  useEffect(() => {
-    setHydrated(true)
-  }, [])
 
   const setLang = useCallback(
     (next: Lang) => {
+      // Written here and only here: on a language the user actually picked.
+      // Writing it on every mount instead left a saved key behind for a visitor
+      // who had chosen nothing, so the erase dialog opened on someone's first
+      // page saying one item was saved. Nothing persists unless the user chose
+      // persistence — the language toggle is that choice.
+      try {
+        localStorage.setItem(STORAGE_KEY, next)
+      } catch {
+        /* storage unavailable (private mode, quota) — language just won't persist */
+      }
       if (typeof window !== 'undefined') {
         const base = import.meta.env.BASE_URL || '/'
         const target = next === 'hi' ? hindiPath(window.location.pathname, base) : englishPath(window.location.pathname, base)
@@ -83,14 +88,8 @@ export function LangProvider({ children, initialLang = 'en' }: { children: React
   )
 
   useEffect(() => {
-    if (!hydrated) return
-    try {
-      localStorage.setItem(STORAGE_KEY, lang)
-    } catch {
-      /* storage unavailable (private mode, quota) — language just won't persist */
-    }
     document.documentElement.lang = lang === 'hi' ? 'hi' : 'en'
-  }, [lang, hydrated])
+  }, [lang])
 
   return createElement(LangContext.Provider, { value: { lang, setLang } }, children)
 }

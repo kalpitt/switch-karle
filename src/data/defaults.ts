@@ -1,4 +1,5 @@
 import type { OfferInput } from '../engine/types'
+import { isBootEchoWrite, noteBootRead } from '../lib/storage'
 
 export const DECODER_STORAGE_KEY = 'switchkarle.decoder.v1'
 export const HANDOFF_STORAGE_KEY = 'switchkarle.handoff.v1'
@@ -59,15 +60,30 @@ export function consumeHandoff(to: string): HandoffPayload | null {
 export function loadOffer(): OfferInput {
   try {
     const raw = localStorage.getItem(DECODER_STORAGE_KEY)
-    if (raw) return { ...DEFAULT_OFFER, ...JSON.parse(raw) }
+    if (raw) {
+      const merged = { ...DEFAULT_OFFER, ...JSON.parse(raw) }
+      noteBootRead(DECODER_STORAGE_KEY, true)
+      return merged
+    }
   } catch {
     /* corrupted storage → fall through to defaults */
   }
+  noteBootRead(DECODER_STORAGE_KEY, false)
   return DEFAULT_OFFER
 }
 
 export function saveOffer(offer: OfferInput): void {
   try {
+    // The decoder's boot effect reads this key, gets nothing back, and echoes
+    // DEFAULT_OFFER into state; the save that follows is that echo, not
+    // anything the user chose, and must not create the key. Do NOT compare
+    // `offer` against DEFAULT_OFFER field by field to detect this — OfferInput
+    // carries optional esop, joiningBonus, bond and `old` sections that
+    // DEFAULT_OFFER does not declare, so a field-wise comparison would treat
+    // an offer with only ESOP or bond details filled in as untouched and
+    // silently stop persisting it. Track the boot echo by shape instead, with
+    // the same helpers storage.ts uses.
+    if (isBootEchoWrite(DECODER_STORAGE_KEY) && localStorage.getItem(DECODER_STORAGE_KEY) == null) return
     localStorage.setItem(DECODER_STORAGE_KEY, JSON.stringify(offer))
   } catch {
     /* storage unavailable — decoder just won't persist */
