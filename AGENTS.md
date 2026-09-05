@@ -9,28 +9,48 @@ technical block.
 
 ## Where direction lives
 
-**`ROADMAP.md` in this repo.** Now, Next, Later, and what is settled. Read it
-before you start and answer "what's next" from it. Kalpit owns it: agents never
-edit it, they propose changes in a handoff and he applies them.
+Two files, both owned by Kalpit. **Agents never edit either one** — propose
+changes in a handoff and he applies them.
 
-Its **Settled** section is not advisory. Those questions were decided, and some
-have already been re-raised more than once. Re-opening one wastes his time.
+- **`PRODUCT.md`** — what this is, who it is for, where their journey starts and
+  ends, what we do at each stage, and what we refuse to do. Read it first. It
+  outranks any inference you could draw from the code.
+- **`ROADMAP.md`** — what to build next. Now, Next, Later, and what is settled.
+  Answer "what's next" from it.
 
-The *reasoning* behind the roadmap is Kalpit's own and not all of it is public.
-This repo is public; his notes are not. So when the roadmap does not answer a
-question, **ask him rather than inventing direction** from what you find here.
+`ROADMAP.md`'s **Settled** section is not advisory. Those questions were decided,
+and some have already been re-raised more than once. Re-opening one wastes his
+time.
 
-Three earlier strategy documents (`docs/AGENT-HANDOFF.md`, `docs/BLUEPRINT.md`,
-`docs/HUNT_OS_STRATEGY_BLUEPRINT.md`) were superseded and deleted from git in
-August 2026. **Any document claiming to be product direction is stale unless it
-is `ROADMAP.md`.** What lives here instead: `docs/ARCHITECTURE.md` (living
-technical truth) and `docs/MASTER_IMPROVEMENT_PLAN.md` (executed quality-cycle
-record — history and parked items, not direction). Do not add a second strategy
-document. Partial restatements drift, and drifting duplicates once produced
-three contradicting roadmaps in a single day.
+The *reasoning* behind both is Kalpit's own and not all of it is public. This
+repo is public; his notes are not. So when neither file answers a question,
+**ask him rather than inventing direction** from what you find here.
+
+### One home per fact
+
+Every fact has exactly one canonical file. Write it there or nowhere. A fact
+stated twice will drift, and drifting duplicates once produced three
+contradicting roadmaps in a single day.
+
+| Question | File |
+|---|---|
+| What is this, who is it for, what does it do at each stage | `PRODUCT.md` |
+| What do we build next | `ROADMAP.md` |
+| How do agents work here | `AGENTS.md` |
+| How does the code work | `docs/ARCHITECTURE.md` |
+| What was decided, when, and why | `docs/DECISIONS.md` |
+| What do we promise about data | `PRIVACY.md` |
+
+**If you are about to write a document explaining what this product should be,
+stop.** That document is `PRODUCT.md` and Kalpit owns it. Three strategy
+documents were deleted from git in August 2026 for this reason; two more appeared
+unbidden in September, one declaring itself "Authoritative Reference Document"
+while proposing to reverse decisions only he makes. **Any document claiming to be
+product direction is stale unless it is `PRODUCT.md` or `ROADMAP.md`.**
 
 All docs are subordinate to the code: verify against the repo before believing
-any of them, including this one.
+any of them, including this one. If a document and the code disagree, say so —
+do not silently pick one.
 
 ## Never do these five things
 

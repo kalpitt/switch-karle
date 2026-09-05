@@ -1,5 +1,14 @@
 # Switch Karle — Quality Cycle Record (C1 → 5.2)
 
+> **SUPERSEDED 2026-09-05.** The load-bearing parts of this file — standing
+> requirements, the decisions that still stand, and the CA-pending parked list —
+> now live in `docs/DECISIONS.md`. Executed slice detail stays here only as
+> history; git history on `quality/suite-pass` is the fuller record.
+>
+> Two locks below were retired: "no new tool" was a one-PR freeze, not a product
+> rule, and "no category headings" was contradicted by shipped code within a
+> week. Do not act on §3 or §4 from this file — read `docs/DECISIONS.md`.
+
 **Date:** 2026-08-23
 **Status:** EXECUTED AND AUDITED. This file was the one-PR implementation brief; every slice below shipped as commits on `quality/suite-pass` (PR #8) and survived a five-agent audit. It stays as the record of what was decided, what remains parked, and how to verify. It is **not** product direction — that is personal-os §A (`context/handoffs/2026-08-22-switch-karle-master-roadmap-v2.md`). Living technical truth: `docs/ARCHITECTURE.md`.
 
