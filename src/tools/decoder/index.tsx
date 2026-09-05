@@ -6,7 +6,8 @@ import { Results } from '../../components/Results'
 import { ShareButton } from '../../components/ShareCard'
 import { AutoFill } from '../../components/AutoFill'
 import { IslandRoot } from '../../components/IslandRoot'
-import { DEFAULT_OFFER, consumeHandoff, loadOffer, saveOffer } from '../../data/defaults'
+import { DECODER_STORAGE_KEY, DEFAULT_OFFER, consumeHandoff, loadOffer, saveOffer } from '../../data/defaults'
+import { releaseBootEcho } from '../../lib/storage'
 import type { OfferInput } from '../../engine/types'
 import { useT, type Lang } from '../../i18n'
 
@@ -37,6 +38,11 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
         ...(handoff.noticePeriodDays ? { noticePeriodDays: handoff.noticePeriodDays } : {}),
       })
       setSeeded(true)
+      // Holding the write below means this tool never makes the mount echo that
+      // storage expects to spend its "do not create the key for untouched
+      // defaults" skip on. Say so, or the skip is still armed when the user's
+      // first real edit arrives and that edit is silently dropped.
+      releaseBootEcho(DECODER_STORAGE_KEY)
     } else {
       setOffer(saved)
     }

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import {
+  DECODER_STORAGE_KEY,
   DEFAULT_OFFER,
   HANDOFF_STORAGE_KEY,
   consumeHandoff,
@@ -7,7 +8,7 @@ import {
   saveOffer,
   writeHandoff,
 } from './defaults'
-import { resetBootEchoForTests } from '../lib/storage'
+import { releaseBootEcho, resetBootEchoForTests } from '../lib/storage'
 
 class MemoryStorage {
   private readonly data = new Map<string, string>()
@@ -129,6 +130,32 @@ describe('defaults and handoff', () => {
     expect(mem.getItem('switchkarle.decoder.v1')).toBeNull()
     saveOffer({ ...DEFAULT_OFFER, ctcAnnual: 9_900_000 })
     expect(mem.getItem('switchkarle.decoder.v1')).not.toBeNull()
+  })
+
+  it('a decoder seeded by a handoff still saves the user\u2019s first edit', () => {
+    // The sequence that was found broken: a tracker card hands a CTC to a
+    // decoder that has never been used, so nothing is stored. The decoder holds
+    // its mount write back on purpose \u2014 a handed-in CTC is a suggestion, not a
+    // decision \u2014 so no echo ever spends the boot-echo skip. Without
+    // releaseBootEcho the still-armed skip swallowed the user's first real edit,
+    // and if they navigated away after that single edit it was gone with no
+    // error shown.
+    install()
+    writeHandoff({ to: 'decoder', at: Date.now(), ctcAnnual: 3_000_000 })
+    const saved = loadOffer() // boot read: nothing stored, arms the skip
+    const handoff = consumeHandoff('decoder')
+    expect(handoff?.ctcAnnual).toBe(3_000_000)
+    const seededOffer = { ...saved, ctcAnnual: handoff!.ctcAnnual! }
+    releaseBootEcho(DECODER_STORAGE_KEY) // the tool declaring it will not echo
+
+    // Seeing a suggestion must still not persist anything on its own.
+    expect(mem.getItem(DECODER_STORAGE_KEY)).toBeNull()
+
+    // The user's first edit, and the only one they make before leaving.
+    saveOffer({ ...seededOffer, basicPercent: 45 })
+    expect(mem.getItem(DECODER_STORAGE_KEY)).not.toBeNull()
+    expect(loadOffer().basicPercent).toBe(45)
+    expect(loadOffer().ctcAnnual).toBe(3_000_000)
   })
 
   it('consumeHandoff("real-hike") on a payload addressed to decoder returns null and leaves the key in place', () => {

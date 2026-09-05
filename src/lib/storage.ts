@@ -33,6 +33,20 @@ export function isBootEchoWrite(key: string): boolean {
 }
 
 /**
+ * Give up the boot-echo skip for `key` without spending it on a write.
+ *
+ * For a tool that deliberately does NOT echo its draft on mount. The decoder is
+ * the one: a CTC carried in from a tracker card is a suggestion, not a
+ * decision, so it holds the write back until the user edits something. Without
+ * this the mark would still be armed when that edit arrived, and the edit —
+ * a real one, the first the user made — would be swallowed as if it were the
+ * echo. A tool that skips its mount echo must say so here.
+ */
+export function releaseBootEcho(key: string): void {
+  bootEcho.delete(key)
+}
+
+/**
  * Test-only: forgets every key this module has seen a boot read for. A real
  * page load gets a fresh module instance, so `readOnce`/`bootEcho` start
  * empty; a test file reuses the same module across every `it()`, so without
