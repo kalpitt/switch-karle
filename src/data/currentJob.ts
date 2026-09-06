@@ -1,3 +1,4 @@
+import { isIsoDate } from '../engine/dates'
 import { readJson, releaseBootEcho, writeJson } from '../lib/storage'
 
 /**
@@ -30,19 +31,70 @@ export interface CurrentJob {
   monthlyGross?: number
   /** Contractual notice period at the current employer, in days. */
   noticePeriodDays?: number
+  /**
+   * The day the user joined the current employer, ISO `YYYY-MM-DD`. Gratuity,
+   * the F&F checker and the EPF transfer tool each still keep their own copy;
+   * moving them onto this one is Phase 1. Until then the record's standing rule
+   * holds the line: the latest value typed anywhere wins.
+   */
+  joinDate?: string
+  /**
+   * 5 or 6. The gratuity fast path is four years and 190 days on a five-day
+   * week, 240 on a six-day week — seven weeks apart for a January 2022 joiner.
+   * Asked on screen two as a fork, never defaulted into a cliff of its own.
+   */
+  workWeekDays?: 5 | 6
+  /**
+   * Whether the Payment of Gratuity Act reaches this employer, which turns on
+   * the ten-employee threshold. Asked, not assumed — and `false` is the answer
+   * that changes the screen, so it has to survive `sanitise`.
+   */
+  coveredByAct?: boolean
 }
 
-const FIELDS = ['monthlyBasic', 'monthlyBasicDA', 'monthlyGross', 'noticePeriodDays'] as const
+/**
+ * Adding an optional field here is backward compatible and needs no key version
+ * bump: an old record simply lacks it, and `sanitise` already drops anything it
+ * does not know. A version bump is for a field that changes meaning or shape.
+ */
+const FIELDS = [
+  'monthlyBasic',
+  'monthlyBasicDA',
+  'monthlyGross',
+  'noticePeriodDays',
+  'joinDate',
+  'workWeekDays',
+  'coveredByAct',
+] as const
 
-/** Keep only the known fields, and only finite positive numbers. */
+function positiveNumber(v: unknown): boolean {
+  return typeof v === 'number' && Number.isFinite(v) && v > 0
+}
+
+/**
+ * What each field has to look like to be kept. Per-field, and it has to be:
+ * the single "finite number above zero" test this replaced silently dropped an
+ * ISO join date for being a string, and `coveredByAct: false` for being falsy.
+ */
+const VALID: Record<(typeof FIELDS)[number], (v: unknown) => boolean> = {
+  monthlyBasic: positiveNumber,
+  monthlyBasicDA: positiveNumber,
+  monthlyGross: positiveNumber,
+  noticePeriodDays: positiveNumber,
+  joinDate: isIsoDate,
+  workWeekDays: (v) => v === 5 || v === 6,
+  coveredByAct: (v) => typeof v === 'boolean',
+}
+
+/** Keep only the known fields, and only values that pass that field's own test. */
 function sanitise(raw: unknown): CurrentJob {
   if (typeof raw !== 'object' || raw === null) return {}
-  const out: CurrentJob = {}
+  const out: Record<string, unknown> = {}
   for (const field of FIELDS) {
     const v = (raw as Record<string, unknown>)[field]
-    if (typeof v === 'number' && Number.isFinite(v) && v > 0) out[field] = v
+    if (VALID[field](v)) out[field] = v
   }
-  return out
+  return out as CurrentJob
 }
 
 export function loadCurrentJob(): CurrentJob {
@@ -57,8 +109,10 @@ export function loadCurrentJob(): CurrentJob {
 
 /**
  * Merge what the user just typed into the record. A field the patch leaves
- * undefined, or sets to zero / NaN, is not a value — the field already stored
- * is kept, so a cleared input never blanks the number every other tool relies on.
+ * undefined, or sets to a value its own test rejects — zero, NaN, `2022-02-30`,
+ * a seven-day week — is not a value, so the field already stored is kept and a
+ * cleared input never blanks the number every other tool relies on. A `false`
+ * for `coveredByAct` is a value and does overwrite.
  */
 export function rememberCurrentJob(patch: Partial<CurrentJob>): void {
   const next = { ...loadCurrentJob(), ...sanitise(patch) }
