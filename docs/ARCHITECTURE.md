@@ -98,8 +98,9 @@ text is saved on this device only, and never uploaded — true before and now
 said. No storage behaviour changed. An in-memory-only mode or a session-only
 toggle both remain open if a future decision wants them; `src/lib/storage.ts` is
 the choke point most surfaces already route through
-(`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
-`defaults.ts` bypass it directly), so that switch is smaller than it looks.
+(`form16-shock`, `PromptStudio`, `tracker/store.ts` and `defaults.ts` bypass it
+directly), so that switch is smaller than it looks. `notice-buyout` was on that
+list until the current-job record removed its raw `localStorage` read.
 
 ### Nothing is written until the user types, and everything can be erased
 
@@ -153,7 +154,8 @@ call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
 
 ### Current-job pay has one home
 
-Shipped 2026-09-05. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
+Built 2026-09-06 on `feat/current-job-record` (PR #39); true on `main` once that
+merges. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
 four optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
 `noticePeriodDays`. Basic and basic+DA never cross-seed — gratuity is on basic +
 DA (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
@@ -179,11 +181,13 @@ which made the tool audit the sheet against itself and report no gap.
 `src/data/currentJob.test.ts` pins the rule; a source test in
 `src/tools/currentJob.test.ts` pins that those two fields stay under `seedOnly`.
 
-On boot each tool overlays the record on its saved draft or fixture, so the
-latest value typed anywhere wins everywhere. The Example chip compares against
-that overlaid boot state, not the bare fixture, so a record-filled field beside
-fixture dates still reads as an example — never a verdict on a number the page
-invented (`docs/DECISIONS.md`, standing rule 8).
+On boot each tool overlays the record on its saved draft or fixture, so for a
+shared field the latest value typed anywhere wins everywhere. The Example chip
+compares against that overlaid boot state, not the bare fixture, so a
+record-filled field beside fixture dates still reads as an example — never a
+verdict on a number the page invented (`docs/DECISIONS.md`, standing rule 8).
+That is stricter than the older "Decoder-seeded values count as Entered" rule,
+which the record replaces for these six tools.
 
 The record never echoes on mount, so `loadCurrentJob` calls `releaseBootEcho` on
 every read — without it, the first value typed into any of the six tools would
