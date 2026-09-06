@@ -98,8 +98,9 @@ text is saved on this device only, and never uploaded — true before and now
 said. No storage behaviour changed. An in-memory-only mode or a session-only
 toggle both remain open if a future decision wants them; `src/lib/storage.ts` is
 the choke point most surfaces already route through
-(`notice-buyout`, `form16-shock`, `PromptStudio`, `tracker/store.ts` and
-`defaults.ts` bypass it directly), so that switch is smaller than it looks.
+(`form16-shock`, `PromptStudio`, `tracker/store.ts` and `defaults.ts` bypass it
+directly), so that switch is smaller than it looks. `notice-buyout` was on that
+list until the current-job record removed its raw `localStorage` read.
 
 ### Nothing is written until the user types, and everything can be erased
 
@@ -150,6 +151,47 @@ edit was silently dropped — found by verification, not by a failing test.
 
 **If you add a tool:** echo your draft on mount like every existing tool does, or
 call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
+
+### Current-job pay has one home
+
+Built 2026-09-06 on `feat/current-job-record` (PR #39); true on `main` once that
+merges. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
+four optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
+`noticePeriodDays`. Basic and basic+DA never cross-seed — gratuity is on basic +
+DA (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
+would hand a DA-drawing employee's wrong number to whichever tool read it.
+
+Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`
+(monthlyBasicDA → `lastDrawnBasicDA`), `leave-encashment` and `fnf-checker`
+(monthlyBasic), `resignation-letter` and `notice-tracker` (noticePeriodDays).
+Seed-only: `notice-buyout`'s `unservedDays` (a starting point the user then
+negotiates down) and `fnf-checker`'s `monthlyGross` (what the F&F sheet
+*claims*, not a fact about the job).
+
+**Shared and seed-only are not the same fill, and mixing them destroys data.**
+`fillFromCurrentJob` takes both maps and a `hasSavedDraft` flag. A shared field
+is written back on every keystroke, so the record always holds the latest value
+typed anywhere and overlaying it on a saved draft is how "type it once" works.
+A seed-only field is never written back, so the record cannot know what the user
+typed here — overlaying it on a saved draft puts a stale number back on every
+visit and overwrites the user's on the next save effect. Both cases shipped in
+review and were caught in a browser: notice-buyout reset a negotiated 10 unserved
+days to the contractual 60, and F&F replaced the claimed gross with the real one,
+which made the tool audit the sheet against itself and report no gap.
+`src/data/currentJob.test.ts` pins the rule; a source test in
+`src/tools/currentJob.test.ts` pins that those two fields stay under `seedOnly`.
+
+On boot each tool overlays the record on its saved draft or fixture, so for a
+shared field the latest value typed anywhere wins everywhere. The Example chip
+compares against that overlaid boot state, not the bare fixture, so a
+record-filled field beside fixture dates still reads as an example — never a
+verdict on a number the page invented (`docs/DECISIONS.md`, standing rule 8).
+That is stricter than the older "Decoder-seeded values count as Entered" rule,
+which the record replaces for these six tools.
+
+The record never echoes on mount, so `loadCurrentJob` calls `releaseBootEcho` on
+every read — without it, the first value typed into any of the six tools would
+be silently dropped, the trap described above.
 
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 

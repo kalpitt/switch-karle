@@ -44,8 +44,10 @@ fails without the fix.
 no user input, returns on the next load) and not browser history. Both said out
 loud in the dialog and in `PRIVACY.md` rather than quietly omitted.
 
-**Consequence to know:** `notice-buyout` and `form16-shock` decide whether to
-inherit from the decoder by testing whether its key exists. Someone who opens the
+**Consequence to know** *(superseded for `notice-buyout` on 2026-09-06 by the
+current-job record below — it no longer reads the decoder at all; the paragraph
+still describes `form16-shock`)*: `notice-buyout` and `form16-shock` decide
+whether to inherit from the decoder by testing whether its key exists. Someone who opens the
 decoder and types nothing no longer counts as having an offer, so those tools use
 their own fixtures — correct, and it stops them presenting example numbers as
 "from your decoder". **Open for Kalpit:** confirm that reads right, and whether
@@ -81,10 +83,31 @@ into the gratuity engine as `lastDrawnBasicDA` internally
 (`src/engine/fnf.ts:89-94`), so that field is already ambiguous between the two —
 **pre-existing, unresolved, and Kalpit's to decide.**
 
-**Status: designed and reviewed, not built.** Work stopped 2026-09-05 before the
-tools were wired. The shared store must call `releaseBootEcho` on read — it never
-echoes on mount, so without it the user's first-ever entry is silently dropped,
-the same failure the decoder had. Nothing half-wired was left on the branch.
+**Built 2026-09-05**, branch `feat/current-job-record`. `src/data/currentJob.ts`
+holds the shared record and calls `releaseBootEcho` on read, per the design
+above. All six tools wired: `notice-buyout`, `resignation-letter` and
+`notice-tracker` no longer touch the decoder; `gratuity`, `leave-encashment` and
+`fnf-checker` moved from their own storage-only fields to the shared one where
+it applies. Two build-time decisions for Kalpit to confirm, not re-derive from
+the diff:
+
+(a) The Example chip's rule got stricter than "Decoder-seeded values count as
+Entered": a field the record fills, sitting next to a fixture the user has not
+touched in *that* tool, still shows the Example chip until the user types in
+that specific tool. A record-filled basic beside example dates is not a verdict
+the user asked for.
+
+(b) A field a tool never writes back to the record fills a **fresh draft only**.
+Found in review, reproduced in a browser: re-applying the record over a saved
+draft reset a negotiated 10 unserved days to 60, and replaced the F&F sheet's
+claimed gross with the real one — which made the checker compare the sheet
+against itself and find nothing wrong. `fillFromCurrentJob` now takes the two
+maps separately.
+
+(c) `fnf-checker` reads the record's plain `monthlyBasic`, and its own engine
+already feeds that number to gratuity's calculation as basic+DA
+(`src/engine/fnf.ts:89-94`) — the pre-existing ambiguity noted above is
+unchanged by this work and still his to decide.
 
 ---
 
@@ -104,6 +127,9 @@ tools carry the `ui.inherit` disclosure. Nothing inherits from the current job;
 there is no `switchkarle.currentjob.v1`. That absence is the old
 "journey-starts-at-the-offer" model encoded in the schema, and it is what has to
 change for this decision to be true in the product rather than only in a document.
+
+*Closed 2026-09-06 (PR #39): the key exists, spelled `switchkarle.current-job.v1`,
+and six tools read it. See the entry above.*
 
 **Recorded with it:** three tools that ship today — `gratuity`,
 `leave-encashment`, `notice-buyout` — take only current-job inputs and no offer
@@ -232,6 +258,16 @@ executable spec for correct money math.
    Engines return ids; the UI maps them through `t()`.
 7. No shared cross-tool profile blob. Read-only pulls from another island's
    storage key are allowed.
+   **Amended 2026-09-06 (PR #39), needs Kalpit's confirmation.** He decided on
+   2026-09-05 to build a shared current-job record, and six tools now write to
+   it — a read-only pull, which is what this rule permitted, could not have
+   worked, because no single tool owns the current job. The rule as written
+   forbids what he asked for, so it is amended rather than quietly broken. What
+   still holds: one narrow record, four numbers about the current job
+   (`src/data/currentJob.ts`), written only from a keystroke, never merged with
+   the offer, carrying no name, employer or identifier, and erasable with
+   everything else. A general profile blob spanning offer, identity and history
+   stays forbidden.
 8. Nothing user-copyable may contain `CANDIDATE:`, leftover `[placeholders]`,
    labour-commissioner threats, "helper draft", "in the bank" phrasing on an
    estimate, or a rupee the page invented. Empty page → no verdict; untouched
@@ -250,7 +286,10 @@ executable spec for correct money math.
 - Gratuity: eligibility (PGA s.2A — 5y, or 4y + 190d on a 5-day week / 240d on a
   6-day week) is a separate test from payable years (s.4(2)). ₹20L cap (s.4(3)).
 - Example detection uses each island's own fixture constant. Decoder-seeded
-  values count as Entered, not Example.
+  values count as Entered, not Example. **Amended 2026-09-06 (PR #39):** the six
+  tools on the current-job record compare against their boot state instead, so a
+  record-filled field still shows the Example chip until the user types in that
+  tool. The decoder no longer seeds any of them.
 - Every URL stays.
 - HR-script bracket templates remain fill-after-copy, by owner decision.
 

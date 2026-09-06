@@ -102,6 +102,11 @@ Local-first stays the default. `localStorage`, keyed `switchkarle.<tool>.v<N>`,
 with JSON export/import for anything stateful. A shape change means a version
 bump and a migration path, never a bare rename.
 
+One key is not a tool's own: `switchkarle.current-job.v1` holds your current
+basic, gross and notice period so the six exit tools do not each ask again. It
+stays on the device like every other key, carries no employer name and no new
+kind of data, and the erase control sweeps it with the rest.
+
 Server-side storage is permitted only for features that cannot work without it,
 and the local copy stays authoritative wherever it can.
 
