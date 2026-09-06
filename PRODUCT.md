@@ -144,7 +144,7 @@ frightening, in secret, about money. Good here is **relief with a number
 attached** — a competent friend who has done this before, does not need anything
 from you, and does not flinch from the bad news.
 
-Eight rules, one of them retired in place. Each one is checkable against the
+Fourteen rules, one of them retired in place. Each one is checkable against the
 code.
 
 **1. Answer before you ask.** Every screen shows a real result before it requires
@@ -187,6 +187,31 @@ consecutive days of the most stressful week of the switch.
 test-enforced. The register is code-mixed — *"Courts ने specialised training cost
 मांगा है"* — because that is how this audience actually talks about work. A
 native-writer pass should keep that, not sanitise it into pure Hindi.
+
+**Rules 9 to 14 are part of the same trial, since 2026-09-07.** They are
+confirmed or reversed with its result, same as the first-visit premise above.
+
+**9. One next thing, never a list.** Show the single next action, not a queue.
+Finishing it reveals what comes after. A list of ten is a reason to close the
+tab.
+
+**10. Fifteen minutes, or split it.** Any action that does not fit in fifteen
+minutes is really two actions. Break it before you ship it.
+
+**11. Dates before money.** The plan hands back a calendar first. Money
+attaches to a date, as in "leaving three days early loses ₹2,07,692," never the
+other way round. This is also why the three opening questions ask for no
+salary.
+
+**12. Their words, given back.** The reason they typed stays on screen through
+the visit, never behind a tap. We never write their motivation for them.
+
+**13. A date is a decision, so keep it visible.** Days remaining shows on
+every visit. Changing the date is allowed and recorded, never nagged about.
+
+**14. Send them out of the site.** The real actions happen on Naukri, in a
+WhatsApp message, in their own AI. The plan points and lets go. Automating any
+of it stays off the table, permanently.
 
 ---
 
