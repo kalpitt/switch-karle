@@ -1,7 +1,7 @@
 {
-  "name": "Switch Karle — Decode your CTC",
+  "name": "Switch Karle",
   "short_name": "Switch Karle",
-  "description": "Decode your Indian job offer: real in-hand salary, red flags, application tracker, BYO-AI prompts. 100% private, in your browser.",
+  "description": "The Indian job switch, end to end: what leaving costs, what an offer really pays, notice, F&F and the first 90 days. Private, in your browser.",
   "lang": "en-IN",
   "start_url": "/switch-karle/",
   "scope": "/switch-karle/",
