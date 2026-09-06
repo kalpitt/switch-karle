@@ -8,9 +8,12 @@ That fix is in Part 3, and finding it turned up eight more.
 Revised again after an outside review by Gemini 3.8, which found the weakest
 thing in the design: **there is no mechanism that brings anyone back.** That is
 Part 3 under "How he comes back at all", and it changed the pass mark in Part 9.
-The same review caught that showing someone's reason for leaving on a work
-screen breaks `PRODUCT.md` rule 5. Both were right. Checking them turned up a
-live problem on `main` that neither review had spotted, in Part 10.
+
+That review also said the returning screen should hide the user's reason for
+leaving, because `PRODUCT.md` rule 5 forbids naming the job switch to someone
+glancing at the screen. **Kalpit overruled it on 2026-09-06 and retired rule 5.**
+His reasoning is in Part 3. This document was briefly written the other way and
+is now written his way.
 
 **This is a proposal. Kalpit decides.** Nothing here is in force until he says
 so. Parts 1 to 8 are written for him to read and argue with. Part 11 is build
@@ -136,20 +139,39 @@ something for today, whatever the calendar says.
 He picks 1 June. He writes his reason. He closes the tab. He comes back on
 Sunday and the page opens with:
 
+> *"My manager takes credit for my work and I have stopped learning."*
 > Day 12. Next: name five companies you would say yes to. Twelve minutes.
 > 257 days until 1 June.
-> *Why you started* ▸
 
-**His reason sits behind that tap, not on the screen.** Writing it down is what
-makes it work. Putting it in front of an open-plan floor is a career risk, and
-`PRODUCT.md` rule 5 says nothing on screen should name the job switch to someone
-glancing over. Rule 12 in Part 7 yields to rule 5.
+**His own sentence, in front of him, is the point.** It is what makes someone
+who has drifted for eleven days do the next twelve minutes. Hiding it behind a
+tap to protect a stranger's glance would weaken the one thing on the screen that
+does any work.
 
-Hiding one line is not a full answer and this document should not pretend it is.
-"Name five companies you would say yes to" also names the job switch, and the
-board shows real company names on screen today. **The plan makes the panic
-switch, currently sitting in Later, more urgent than it was. Whether it moves up
-is Kalpit's call.**
+### Why the shoulder-surfing rule was retired
+
+`PRODUCT.md` rule 5 used to say nothing on screen or in browser chrome should
+name the job switch to someone glancing over. **Kalpit retired it on
+2026-09-06.** Recorded here because a future agent will otherwise re-derive it
+from the old text and design timidly again.
+
+His reasoning: most people do this on a personal device, in the evening, on
+their own phone. Designing every screen around the few who open it at work taxes
+everyone else for a threat most users do not have.
+
+And the rule never held anyway. The site is called Switch Karle. The URL says
+`switch-karle`. So does the tab title, and so does the installed app. **A rule
+the product's own name breaks on every page is decoration, not a constraint.**
+Notes mode was already deleted in August for exactly this reason, recorded in
+`docs/ARCHITECTURE.md`: a disguise that leaves the incriminating half on screen
+is worse than none, because someone may rely on it.
+
+What does not change. Nothing persists unless the user chose it, and the erase
+button stays one click away in the footer of every page. That is a different
+rule and it survives untouched. The panic switch stays where it is on the
+roadmap, as an **opt-in for the minority who do open this at work**, which is
+the same argument applied consistently rather than a default that makes the
+product quieter for everyone.
 
 That is the product. The calculators sit underneath and appear when they are
 relevant. The decoder shows up when he has an offer. The notice tracker shows up
@@ -335,10 +357,10 @@ minutes it is really two actions.
 attaches to a date, as in "leaving three days early loses ₹2,07,700". Never the
 other way round. This is also why the three questions ask for no salary.
 
-**12. Their words, given back, but never on display.** The reason they typed is
-one tap away on every visit, collapsed by default. We never write their
-motivation for them, and we never put it in front of whoever is walking past.
-Where this rule and rule 5 pull against each other, rule 5 wins.
+**12. Their words, given back.** The reason they typed opens every visit, on the
+screen and not behind a tap. We never write their motivation for them. This rule
+briefly yielded to the shoulder-surfing rule, which Kalpit retired on
+2026-09-06. See Part 3.
 
 **13. A date is a decision, so keep it visible.** Days remaining, every visit.
 Changing it is allowed and recorded. Never nagged about.
@@ -373,13 +395,16 @@ there.
 - **Prompt Studio reads the plan**, so prompts arrive pre-filled with the
   company and the stage. Never with money.
 
-### Also now, because the plan depends on them
+### Also now, because the plan depends on it
 
-- **Rename the installed app.** `public/manifest.webmanifest` currently names
-  the job switch on a home screen. One file, and it blocks nothing, but the plan
-  leans on people installing the site.
-- **Decide whether the panic switch moves up.** It is in Later today. A home
-  page that opens on someone's switch plan raises the cost of not having it.
+- **Rename the installed app.** `public/manifest.webmanifest` still says
+  "Decode your CTC", which is the old, narrower product. One file. It blocks
+  nothing, but the plan asks people to install the site, and the icon should
+  match the tagline it is shipping alongside.
+
+The panic switch stays in Later, unchanged. Retiring the shoulder-surfing rule
+does not remove it: it is an opt-in for the people who do open this at work, and
+that is a different thing from making every screen quieter by default.
 
 ### Later
 
@@ -447,13 +472,14 @@ the person who built the thing is the least reliable answer anyone gives.
   honest options are a reminder that needs a server, which is Kalpit's decision
   under `PRIVACY.md` and nobody else's, or accepting that this is a one-session
   product and designing it as one.
-- **The installed app announces the job switch.** `public/manifest.webmanifest`
-  calls it "Switch Karle — Decode your CTC" and describes decoding your Indian
-  job offer. Whoever installs it gets that on a home screen, and the same words
-  appear in the browser's install prompt. That is rule 5 broken in browser
-  chrome, on `main`, today. It is not caused by this proposal and it gets worse
-  under it, because the plan leans on installation as a way back. **Renaming it
-  is branding, so it is Kalpit's call, not an agent's.**
+- **The installed app describes a narrower product than the one we are
+  building.** `public/manifest.webmanifest` calls it "Switch Karle — Decode your
+  CTC" and its description is entirely about decoding an offer. That was the old
+  product. It matters more under this proposal, because the plan leans on people
+  installing the site as a way back, and the icon they install should say what
+  the site now does. This was first written up as a privacy problem; that
+  reasoning went when rule 5 was retired, and the naming problem is still real.
+  **Renaming is branding, so it is Kalpit's call, not an agent's.**
 - **The premise might be wrong.** People may take the first action and still not
   switch. Or not take it at all. The pass mark exists so this shows up in two
   weeks instead of two years.
@@ -554,9 +580,10 @@ CTC, PF and notice period in English. `PRODUCT.md` rule 1 holds: a real calendar
 renders from example inputs behind the Example chip before anyone types. Check at
 375px: the first action must be visible without scrolling.
 
-**The reason for leaving is collapsed by default** and opens on an explicit tap.
-It must not be in the first paint, in the tab title, or in any meta tag. Pin that
-with a test, because it is a rule-5 obligation and not a style preference.
+**The reason for leaving renders on the screen, not behind a tap.** An earlier
+draft of this document said the opposite, on a rule Kalpit retired on
+2026-09-06. Do not reintroduce it. It still must not reach the tab title or any
+meta tag, for the same reason no other user input does.
 
 **The erase control has to survive the change.** It lives in two places today:
 `src/components/Shell.tsx` puts it in the footer of every page, which a new home
