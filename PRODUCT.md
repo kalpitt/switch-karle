@@ -18,8 +18,9 @@ A salaried Indian professional, roughly 26 to 38. IT services, product, BFSI or
 analytics. A metro or a tier-2 hub. Two facts shape everything:
 
 **They are still employed.** Sixty or ninety days of notice sit in their
-appointment letter. They work on a laptop the company owns, on a network the
-company monitors, in an office where someone can walk past the screen.
+appointment letter. Most of them read this on their own phone or laptop, in the
+evening, not on the company machine. Some do open it at work, and the panic
+switch on the roadmap is for them. The default reader is at home.
 
 **Everyone around them is giving them adjectives.** The manager says "we value
 you." The recruiter says "great package." A parent says "don't leave a stable
@@ -52,6 +53,26 @@ They do not need a job board. They need the arithmetic.
 **The journey ends** at surviving the first ninety days of the new job: PF
 transferred, BGV cleared, the insurance gap counted, and the tax bill from two
 Form-16s seen coming before March.
+
+---
+
+## What the first visit is
+
+**The first visit is the plan, not the calculators.** Three questions they can
+answer without opening anything: when did you join, what is your notice period,
+which month does the hike actually reach your account. Out of those come the
+dates that matter: the gratuity cliff, the hike month, the notice they owe.
+Then they pick a resign date. Then they keep the dates: a calendar file, a
+screenshot, a message to someone. That is the whole first session, and it is
+worth the visit even if they never come back.
+
+The calculators are what later visits and links are for. Money attaches to a
+date, never the other way round: the rupee figure sits behind a link that says
+what a date is worth, and that link only exists once a date does. **The plan is
+the door. One number they can hold on to is still the job.**
+
+**Trial since 2026-09-07.** Confirmed or reversed when the ten-person result in
+`ROADMAP.md` is in. Result: (pending)
 
 ---
 
@@ -119,11 +140,12 @@ getting-hired half and finds nothing cannot tell "refused on principle" from
 ## What good feels like
 
 Not delight the way a consumer app means it. This person is doing something
-frightening, in secret, about money, on a device they do not own. Good here is
-**relief with a number attached** — a competent friend who has done this before,
-does not need anything from you, and does not flinch from the bad news.
+frightening, in secret, about money. Good here is **relief with a number
+attached** — a competent friend who has done this before, does not need anything
+from you, and does not flinch from the bad news.
 
-Eight rules. Each one is checkable against the code.
+Eight rules, one of them retired in place. Each one is checkable against the
+code.
 
 **1. Answer before you ask.** Every screen shows a real result before it requires
 a single field. Sixteen tools already boot on example numbers behind an `Example`
@@ -142,9 +164,16 @@ already do this in code — and the user never sees it. That is backwards.
 **4. Bad news first, plainly.** The verdict leads with the number that hurts.
 Never a "42% hike!" headline above a 6% in-hand delta.
 
-**5. Closable in one second, and silent when closed.** Design for an interrupted
-session on an open-plan floor. Nothing on screen or in browser chrome should
-name the job switch to someone glancing over.
+**5. Retired 2026-09-06.** This used to say the product had to be closable in one
+second and silent when closed, and that nothing on screen or in browser chrome
+should name the job switch to someone glancing over. It is gone. Most people do
+this on a personal device in the evening, and designing every screen around the
+few who open it at work taxes everyone else. The rule never held anyway: the site
+is called Switch Karle, the URL says so, and so do the tab title and the
+installed app. A rule the product's own name breaks on every page is decoration.
+The number stays so the rules below keep theirs. Nothing persists unless the user
+chose it, rule 6, is a separate promise and it stands. The panic switch stays on
+the roadmap as an opt-in for people who do open this at work.
 
 **6. Nothing persists unless the user chose persistence.** On a company laptop a
 saved file is evidence. Saving is a decision, not a default — and there must
@@ -172,19 +201,25 @@ user has typed a salary.
 verifiable, not asserted — every data broker also writes "we respect your
 privacy." Ours is checkable: no backend, read the source.
 
-### The part we have not been honest about
+### The part we were not honest about, and what we did
 
-We tell a frightened user "nothing is uploaded" while writing their salary to a
-disk their employer owns. Both halves are true. Only one is said.
+We told a frightened user "nothing is uploaded" while writing their salary to a
+disk their employer might own. Both halves were true. Only one was said.
 
-Most tools persist to `localStorage`. The home page title names the job switch,
-which lands in the tab strip, browser history, bookmarks and most corporate
-browsing logs. It is a PWA, so it leaves a service worker and a cache behind.
-There is no control anywhere that erases what we have stored.
+Most tools persist to `localStorage`, and it is a PWA, so it leaves a service
+worker and a cache behind. **The erase control shipped on 5 September 2026, in
+PR #38.** It sits in the footer of every page and again inside the tracker
+(`src/components/EraseData.tsx`, rendered from `Shell.tsx` and `Tracker.tsx`).
+It counts what is saved before it clears it. And storage no longer writes a key
+just because a tool was opened: the first write that only echoes a boot read
+which found nothing is skipped (`src/lib/storage.ts`).
 
-**This is the only place the product can currently hurt someone.** Fixing it is
-one honest sentence at first save, one erase button, and a title that does not
-confess. Zero users is the cheapest hour this will ever cost.
+**Two things the erase control does not reach, and the dialog says both.** The
+PWA precache, which holds site assets and no user input and returns on the next
+load. And browser history, which is the browser's to clear.
+
+The tab title and the URL name the job switch. That is no longer counted as a
+defect. See rule 5.
 
 ---
 
