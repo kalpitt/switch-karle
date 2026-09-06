@@ -3,7 +3,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, NumberField, VerdictBanner } from '../../components/ui'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayUTC } from '../../engine/dates'
-import { loadOffer } from '../../data/defaults'
+import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
@@ -55,10 +55,16 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const o = loadOffer()
+    // Notice is served at the current employer, so the period is the current
+    // job's — from the shared record, never the new offer's.
+    const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     setAsOf(todayUTC())
-    setDraft(saved ?? { resignDate: todayUTC(), noticePeriodDays: o.noticePeriodDays, done: [] })
+    setDraft(
+      saved
+        ? { ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays }
+        : { resignDate: todayUTC(), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
+    )
     setHydrated(true)
   }, [])
   useEffect(() => {
@@ -83,7 +89,16 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('notice-tracker.formTitle')}</h2>
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
-        <NumberField label={t('notice-tracker.notice')} suffix={t('unit.days')} value={draft.noticePeriodDays} onChange={(v) => set({ noticePeriodDays: v })} />
+        <NumberField
+          label={t('notice-tracker.notice')}
+          suffix={t('unit.days')}
+          value={draft.noticePeriodDays}
+          onChange={(v) => {
+            set({ noticePeriodDays: v })
+            rememberCurrentJob({ noticePeriodDays: v })
+          }}
+        />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
