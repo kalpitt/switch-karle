@@ -32,7 +32,8 @@ spent half its effort on problems a newer draft had already fixed.
 | 2026-09-06 b | Kalpit found the salary hole. Fixing it exposed eight more errors |
 | 2026-09-06 c | Gemini 3.8 review. Three findings accepted, one overruled by Kalpit |
 | 2026-09-06 d | Rewritten for clarity. App rename opened as PR #41 |
-| 2026-09-06 e | This version. Two repo-aware reviews. Eight code-level findings, all verified true, all fixed |
+| 2026-09-06 e | Two repo-aware reviews. Eight code-level findings, all verified true, all fixed |
+| 2026-09-06 f | This version. Eleven more from the same two reviews. Ten accepted, one disproved |
 
 ### Already fixed. Please do not re-report these
 
@@ -74,6 +75,40 @@ Every one of these was checked against the code before being accepted.
 - **Phase 0 had grown into the whole plan product**, contradicting this
   document's own two-week guard. It is now an eight-item slice.
 
+### Fixed in version f
+
+Eleven findings from the two repo-aware reviews. Ten were right.
+
+- **A person with no cliffs got a blank timeline.** `gratuity()` returns
+  `flipDate: null` for anyone already eligible, so six years in with no hike
+  month gives an empty cliff list. The date step now offers plain runway instead,
+  and Part 13 says a blank timeline never ships.
+- **The document contained four different first-session sequences.** Frozen to
+  one in Part 3: questions, cliffs, pick a date, then one action. Part 13 matches.
+- **The first screen could not fit on a phone.** Phase 0 is three screens now,
+  not one viewport carrying seven things.
+- **The calendar file was measured in Part 9 and shipped in Next.** One
+  add-to-calendar control moved into Phase 0. You cannot measure what you have
+  not built.
+- **The pass mark scored only a downloaded file.** It now counts any way of
+  keeping the dates, including a screenshot.
+- **The hike month had no year.** Ravi answers "May" in September 2026, when May
+  has already gone. The rule and the printed year are both in Part 3.
+- **"Nine of ten actions can be done today" was false.** Only three are safe six
+  months early. The list is date-aware in Part 6, and outbound actions are pinned
+  shut by a test.
+- **The public profile change came before company research.** Swapped. Both
+  reviewers raised it independently.
+- **The bond check was mandatory for everyone.** Conditional now.
+- **The returning screen put the tool grid back** underneath the one next thing.
+  Removed.
+
+**And one that was wrong.** One review said 12 January 2022 to 6 September 2026
+is four years and eight months. It is four years, seven months and 25 days: the
+eighth month completes on 12 September. The same review's own gratuity arithmetic
+depends on it being 237 days into year five, which agrees with seven months. The
+text is unchanged.
+
 ### Settled by the owner. Please do not re-open
 
 - **The shoulder-surfing rule is retired**, as of 2026-09-06. Reasoning in
@@ -90,7 +125,8 @@ Every one of these was checked against the code before being accepted.
    we know it.
 2. **Part 3, the six-month gap.** The honest advice to Ravi is "start applying
    in March". A plan that says come back in March is a plan he closes.
-3. **Part 6, the order of the ten actions.** Invented, not researched.
+3. **Part 6, the order of the ten actions.** Still partly invented. The private
+   and outbound split is defensible. The order inside each half is not evidence.
 4. **Part 9, the pass mark numbers.** Five, four, four and three out of ten are
    judgement calls, not evidence.
 
@@ -114,8 +150,17 @@ Every one of these was checked against the code before being accepted.
 Three colleagues opened the site. None of them wanted it. What they meant,
 underneath the politeness:
 
-**"Can't I just ask ChatGPT this?"** They saw a page of calculators, and a page
-of calculators looks like something a chatbot already does.
+**"Can't I just ask ChatGPT this?"** They saw a decoder and a page of
+calculators, which is what the home page was at the time. A page of calculators
+looks like something a chatbot already does.
+
+**What a stranger sees today is different, and worse for this person.** Since 30
+August the home page has been the application board, with the tools below it
+(`src/tools/home/index.tsx` renders `<Tracker />`). Someone who has applied
+nowhere now lands on a Kanban of example applications at companies that do not
+exist. A reviewer read the old scene and assumed the colleagues had seen the
+board. They had not, but the point survives the correction: **the current door is
+aimed even further past this person than the one they rejected.**
 
 **"I need something to get me started."** Their problem was never the maths.
 They have wanted to leave for months and have done nothing.
@@ -197,7 +242,9 @@ The site asks three things he can answer without opening anything.
 
 1. When did you join? *12 January 2022*
 2. What is your notice period? *90 days*
-3. Which month does your hike reach your account? *May*, and he can skip this
+3. Which month does the hike actually reach your account? *May*, and he can
+   skip this. Not the appraisal month and not the letter month, because those
+   come earlier and people answer with the wrong one.
 
 ### Step one: dates, with no money in them
 
@@ -212,9 +259,51 @@ toggle:
 
 > **Your gratuity was already safe on 21 July, seven weeks ago.**
 > That is one thing less holding you here.
-> **Your hike lands in May.** That is now the only date holding you.
+> **Your hike lands in May 2027.** That is now the only date holding you.
 
-**Those two toggles are not decoration, and this is the second hole this
+**The hike month must print a year, and this was the third hole.** Ravi answers
+"May" in September 2026, and May 2026 has already gone. The rule is the next time
+that month comes round, skipping it if we are already past it this year, and the
+screen prints "May 2027" rather than "May". Without the year, "waiting until June
+costs you nine months" is arithmetic about a date that already happened.
+
+### Step two: pick a date
+
+Cliffs, then the date. Nothing else in between.
+
+> **When do you want to be out?**
+> **[10 September, the day after your gratuity]**
+> **[1 June 2027, after the hike lands]**
+> **[pick any date]**
+
+**Three taps, and none of them is recommended.** A stuck person handed an empty
+date picker has been given homework, not help. Offering the day after each cliff
+turns the arithmetic into a choice. Marking one of them "recommended" would make
+the choice for him, and this document forbids that in Part 10: the nine months
+against one hike is his trade, not ours.
+
+**When there are no cliffs at all, the screen must still work.** Someone six
+years in who skips the hike month has nothing statutory ahead of them, and
+`gratuity()` returns `flipDate: null` once a person is already eligible, so the
+cliff list is genuinely empty. That is not a rare case and a blank timeline is
+the worst possible answer to it. The date step then offers plain runway instead:
+**three months, six months, end of the financial year, or any date.** The
+backward plan works identically. It never needed a cliff, only a date.
+
+### Step three: one thing to do today
+
+Only after the date exists:
+
+> **Today, fifteen minutes: write the one line reason you are leaving.**
+
+**A reason before a date is a journal entry. A reason after a date is a
+decision.** An earlier draft of this document put the action first and the date
+somewhere later, and separately described a first screen carrying the questions,
+the cliffs, the money field, the bond line, the date picker and the action all at
+once. That is four different sequences in one document. This is the one that
+counts, and Part 13 matches it.
+
+**Those two toggles above are not decoration, and this is the second hole this
 document had.** The gratuity cliff is four years and 190 days on a five-day week
 and 240 on a six-day week. Ravi is 21 July on one and 9 September on the other.
 The engine defaults to six because it is the conservative statutory default, and
@@ -234,7 +323,7 @@ join date and a notice period. A rupee figure needs your last drawn basic plus
 dearness allowance, and nobody asked for it. Promising money from three
 questions that cannot produce it was the first hole in this document.
 
-### Step two: money, only if he wants it
+### Step four: money, only if he wants it
 
 One optional field under the calendar.
 
@@ -264,7 +353,7 @@ broken three times over already, and the fix belongs in Phase 0: add `joinDate`
 to `src/data/currentJob.ts` and move those three onto it, using the pattern PR
 #39 already proved.
 
-### Step three: the gap that decides whether this works
+### Step five: the gap that decides whether this works
 
 The site now knows Ravi should resign after 1 June, needs an offer by 18 May, and
 should start applying by 23 March. **March is six months away.**
@@ -278,14 +367,25 @@ Starting earlier is usually better. It only means holding an offer longer or
 negotiating a later joining date. **The screen says "starting now is allowed" in
 those words**, because a date six months out reads as permission to do nothing.
 
-**Nine of the ten actions can be done today.** Writing his reason, naming five
-companies, messaging an ex-colleague, fixing his profile, researching a company.
-Only the last one, actually applying, is timed. So the plan always has something
-for today, whatever the calendar says.
+**An earlier draft claimed nine of the ten actions can be done today. That was
+false, and a reviewer was right to call it homework.** Messaging an ex-colleague,
+changing a public profile, and blocking Saturday for applications are how a
+manager finds out six months early, or are empty ritual, or both. Only three are
+genuinely safe in September: write the reason, name five companies privately,
+tell one person outside the company.
 
-**This is the sharpest risk in the design and it may not be enough.** If round
-two shows people still drift away between picking a date and applying, this needs
-an idea nobody has had yet.
+**So the list is date-aware or it is not a list.** Before `startApplyingBy`, only
+the private actions appear. The outbound ones unlock when the calendar says
+looking has started, or earlier if he pulls his own date forward. Part 6 sets out
+which is which. **We do not invent month-by-month busywork to cover the gap**, and
+a made-up task is worse than an honest empty week.
+
+**This is still the sharpest risk in the design and it may not be enough.** Three
+actions do not fill six months. What might: saying the failure mode on the screen,
+in the plainest words, that most people who set a date this far out do not start
+on time; and making it one tap to pull the date forward. If round two shows people
+drift away between picking a date and applying, this needs an idea nobody has had
+yet.
 
 ---
 
@@ -297,6 +397,12 @@ and the page opens with:
 > *"My manager takes credit for my work and I have stopped learning."*
 > Day 12. Next: name five companies you would say yes to. Twelve minutes.
 > 257 days until 1 June.
+
+**That is the whole screen, and the restraint is the point.** An earlier draft
+added the current stage's tools underneath. At "I'm done here" that is five
+calculators sitting next to a twelve-minute action, which is rule 9 broken by the
+document that wrote rule 9. People tap the calculator and the plan dies. Stage
+tools go behind one tap, or they wait for Phase 2.
 
 **His own sentence, in front of him, is the point.** It is what makes someone who
 has drifted for eleven days do the next twelve minutes.
@@ -405,37 +511,62 @@ or points somewhere specific.
 because it is what the calendar exists to produce. Putting it here too would show
 two next things at once, breaking rule 9 in Part 8.
 
+**Private, and safe the day they arrive.** These are the only ones shown before
+the calendar says looking has started.
+
 1. Write the one line reason you are leaving. *(on the site)*
-2. Read what your bond or joining bonus actually commits you to. *(bond scanner,
-   bonus clawback, clause library)*
-3. Add your monthly basic, so every number from here is yours and not an example.
-   *(the shared pay record)*
-4. Name five companies you would say yes to. *(tracker cards, no job title
+2. Name five companies you would say yes to. *(tracker cards, no job title
    needed)*
-5. Tell one person **outside your company**. A partner, a sibling, a friend with
+3. Tell one person **outside your company**. A partner, a sibling, a friend with
    no line back to your employer. *(a share card with dates only, no money)*
+4. **Only if they said they have a bond or a joining bonus:** read what it
+   actually commits you to. *(bond scanner, bonus clawback, clause library)*
+
+**Outbound. These unlock at `startApplyingBy`, or earlier if they pull their own
+date forward.**
+
+5. Research your first two companies using your own AI. *(Prompt Studio)*
 6. Message one ex-colleague about a referral. *(Scripts)*
-7. Update your Naukri and LinkedIn headline. **The most visible thing on this
-   list**, so the action says so plainly and points at the recruiters-only
-   settings before suggesting any change. *(a checklist, never automation)*
-8. Research the first company using your own AI. *(Prompt Studio)*
-9. Block two hours on Saturday for applications. *(calendar file)*
-10. Apply to one.
+7. Update your Naukri and LinkedIn headline, with notify-your-network off and the
+   recruiters-only setting on. **The most visible thing on this list**, and the
+   action says so before it suggests any change. *(a checklist, never automation)*
+8. Block two hours on Saturday for applications. *(calendar)*
+9. Apply to one.
+10. Apply to four more.
 
 After ten, the board takes over. It already knows what to do with an application,
 an interview and an offer.
 
-**Two corrections worth recording.** Action 3 used to say "enter your current
-in-hand". It does not now, because in-hand is something the decoder computes from
-a full offer and nothing stores it. What we store is monthly basic and gross.
+**Three changes both reviews asked for, and one they did not.**
 
-**And one disagreement with the outside review.** It said "tell one person" at
-five is too early for someone on 90 days notice, and should move to eight or
-nine. The secrecy concern is right, which is why the action now names who to
-tell. Moving it is wrong: telling someone is a commitment device and its value is
-highest early, when motivation is the thing missing. At nine it arrives after the
-hard part is done. Steps six and seven are the larger disclosures anyway, and
-they carry the warnings. **Round two settles this, not argument.**
+**Research now comes before the public profile change.** It used to be the other
+way round. Changing a headline before you know which companies you want, or have
+anything ready to send them, exposes you with nothing in the pipeline. Both
+reviewers raised it independently and they are right.
+
+**The bond check is conditional.** Most people have neither a bond nor a clawable
+joining bonus, and a mandatory step two that does not apply to you is where
+someone stops. It appears only for the people who said they have one, using the
+optional line from Part 5.
+
+**"Enter your monthly basic" is no longer an action at all.** It was step three.
+It is the product asking for data rather than the user doing something, and it
+fought rule 11: dates before money. It stays where it belongs, as the optional
+field in Part 3, and never as a task with a tick box.
+
+**Action 10 is new, and it is the honest end of the list.** One application is a
+test. Five is a pipeline. Ending the list at one taught someone that the job was
+done when it had barely started.
+
+**And one disagreement that survives two reviews.** Both said telling someone is
+too early and should move near the end. The secrecy concern is right, which is
+why the action names who to tell: someone with no line back to the employer.
+Moving it is still wrong. Telling a person is a commitment device and its value is
+highest while motivation is the thing missing, not after the hard part is done. It
+also carries no disclosure risk once the audience is a partner or a sibling. The
+real leaks are the referral message and the public profile, and both now sit in
+the outbound half behind the applying date. **Round two settles this, not
+argument.**
 
 ---
 
@@ -503,14 +634,22 @@ their job. Colleagues, ex-colleagues, friends. Not founders. Not people already
 interviewing.
 
 **The message.** "Open this, answer the three questions, and do the first thing
-if you feel like it. I'll ask you four questions next Sunday."
+if you feel like it." **Do not say when you will follow up.**
+
+**Why that last sentence matters more than it looks.** An earlier version
+announced "I'll ask you four questions next Sunday", which is exactly the
+reminder the product cannot send. Question 4 would then measure Kalpit's
+WhatsApp, not the product, and it would measure it as an upper bound because they
+knew he was coming. Message on day 8 without warning, or have someone else send
+it.
 
 **Ask a week later.** All four are about what already happened. None asks for a
 promise.
 
 1. Did you do the first action?
 2. Did you pick a date?
-3. Did you put the dates in your calendar?
+3. Did you record the dates anywhere? Added to a calendar, screenshotted, or
+   sent to someone all count.
 4. Have you opened it again since that first time?
 
 **The pass mark, split by what the product can actually cause.**
@@ -519,7 +658,7 @@ promise.
 |---|---|---|
 | Did the first action | 5 of 10 | Yes. Phase 0 owns this |
 | Picked a date | 4 of 10 | Yes. Phase 0 owns this |
-| Saved the calendar | 4 of 10 | Yes, once Phase 1 ships the file |
+| Recorded the dates somewhere | 4 of 10 | Yes. Phase 0 now ships one add-to-calendar control |
 | Opened it again | 3 of 10 | **No. Nothing can reach them** |
 
 **Miss the first two and stop building.** That is the door failing, and the
@@ -535,9 +674,19 @@ product. Neither of those is "the plan was the wrong idea".
 here means the door works on friendly traffic. It is not proof the nine-month
 walk works.
 
-**Question three carries more weight than it looks.** The calendar file is the
-only way this product can reach anyone, so a person who did not save it is a
-person who is not coming back.
+**Question three carries more weight than it looks, and it was measuring the
+wrong thing.** The calendar is the only way this product can reach anyone, so
+someone who kept the dates nowhere is someone who is not coming back. But an
+earlier version scored only a downloaded `.ics` file. A person who screenshotted
+their dates has recorded them; failing them would have marked a file-handling
+annoyance as the premise being wrong. Two reviewers caught the same thing and the
+question now counts any way of keeping the dates.
+
+**The bigger problem was that this question measured something not yet built.**
+The calendar file sat in Next, while the ten-person test runs the week the door
+ships. You cannot measure what you have not shipped, so **one add-to-calendar
+control moved into Phase 0**, offered at the moment they pick a date. One event,
+not five: several dated job-switch events in a work calendar is how this leaks.
 
 **An earlier version asked "will you open it again this Sunday?"** A review
 pointed out that this is a promise, while the same page says compliments are not
@@ -617,8 +766,9 @@ description, not in a file agents will read as direction.
 
 ### Now
 
-- **The thin front door.** The eight-item slice in Part 13, and nothing beyond
-  it. English and Hindi.
+- **The thin front door.** The three-screen slice in Part 13, and nothing beyond
+  it. Questions, cliffs, pick a date, one action, one add-to-calendar control.
+  English and Hindi.
   *Why: three out of three people could not get from the thought to an action.*
 - **The tagline, title and app name say what the site is.** The two sentences in
   Part 2, the home page title in both languages, and the manifest rename already
@@ -628,10 +778,11 @@ description, not in a file agents will read as direction.
 
 ### Next
 
-- **The first ten actions**, with tick boxes and the returning-visitor line. The
-  tracker accepts a company with no job title.
-- **Calendar file, and the "tell one person" card.** Dates only, dull titles, and
-  every event carries a link back.
+- **The first ten actions**, with tick boxes, the private and outbound split, and
+  the returning-visitor line. The tracker accepts a company with no job title.
+- **The rest of the calendar events, and the "tell one person" card.** The single
+  resign-date event ships with the front door. This adds the others. Dates only,
+  dull titles, and every event carries a link back.
 - **The tools move behind their stages**, which means reconciling the registry's
   four buckets with the seven stages first. The home page stops being a grid.
 - **Prompt Studio reads the plan**, so prompts arrive pre-filled with the company
@@ -677,19 +828,36 @@ and stop there.*
 this same document says to cut it back if it grows past two weeks. A reviewer
 called that out. This is the slice that goes in front of ten people:
 
-1. The two sentences.
-2. Three questions, plus the work-week and 10-employee toggles beside the cliff
-   they change.
-3. Cliffs, no rupees, Example chip on before anyone types.
-4. Optional basic plus DA, labelled as such.
-5. Pick a date. The backward dates appear only then.
-6. One action: write the reason.
-7. English and Hindi.
-8. Tracker still one tap away. Erase still in the footer.
+**It is three screens, not one, and that correction came from a reviewer doing
+the arithmetic on a phone.** The earlier list was eight items with a note that the
+first action had to be visible at 375px without scrolling. Two sentences, three
+fields, cliffs, a money field, a bond line, a date picker and an action is not one
+viewport. It is four. Staged, it fits:
 
-**Not in Phase 0:** the ten tick-boxes, the calendar file, the share card, the
-journey-stage registry work, Prompt Studio wiring, or removing the tool grid.
-Rule 9 says one next thing, and that applies to the build as much as the screen.
+**Screen one.** The two sentences, and the three questions. Nothing else.
+
+**Screen two.** The cliffs, with the work-week and 10-employee toggles beside the
+cliff they change. No rupees. Then the date step: chips for the day after each
+cliff, plus any-date. **No chip is marked recommended.** When there are no cliffs
+at all, which is what `gratuity()` returns for anyone already past the line, the
+chips become plain runway instead: three months, six months, end of the financial
+year, any date. **A blank timeline is never shipped.**
+
+**Screen three.** The backward dates, one action, and one add-to-calendar control.
+
+Plus, not on any screen: the Example chip working before anyone types, English and
+Hindi, the tracker still one tap away, erase still in the footer, and the optional
+basic-plus-DA field which can live under the cliffs on screen two.
+
+**The add-to-calendar control is in Phase 0 on purpose**, against the instinct to
+cut it. It is the only way this product can reach anyone, and the ten-person test
+in Part 9 measures it in the same week the door ships. One event, dull title, link
+back to the plan, no rupees and no company names.
+
+**Not in Phase 0:** the ten tick-boxes, the returning-visitor layout, the share
+card, the journey-stage registry work, Prompt Studio wiring, or removing the tool
+grid. Rule 9 says one next thing, and that applies to the build as much as to the
+screen.
 
 **The calculation.** New file `src/engine/switchCalendar.ts`. Pure TypeScript, no
 React, with `switchCalendar.test.ts` written first.
@@ -733,6 +901,13 @@ whole output; someone inside the 240-day window on a six-day week; the same
 person on a five-day week, where the date differs; a resign date falling before a
 cliff, which must be listed as forfeited and never silently dropped; and two
 cliffs pulling in opposite directions, which is Ravi's case in Part 3.
+
+**One calendar event.** New file `src/lib/ics.ts`, a pure string builder, tested
+against a fixed expected output. Phase 0 needs exactly one event: the chosen
+resign date. Dull title, the plan's URL in both the `URL` property and the
+description, no rupee figure and no company name. Phase 1 grows it to the full
+set. It is here rather than in Phase 1 because Part 9 measures it in the week the
+door ships, and a metric for something unshipped is not a metric.
 
 **The saved plan.** New file `src/data/plan.ts`, key `switchkarle.plan.v1`, shape
 from Part 5, through `src/lib/storage.ts`.
@@ -792,13 +967,20 @@ checking the thing most likely to break.
 
 ### Phase 1: actions, coming back, calendar, sharing
 
-- `src/data/actions.ts`: the ten actions in order, each with `id`, `stage`,
-  `minutes`, and `where: 'here' | 'tool:<slug>' | 'external'`. Tested for order,
-  and that every `tool:` slug exists in the registry.
+- `src/data/actions.ts`: the ten actions from Part 6, each with `id`, `stage`,
+  `minutes`, `where: 'here' | 'tool:<slug>' | 'external'`, and
+  **`visibility: 'private' | 'outbound'`**. Private actions show immediately.
+  Outbound ones are hidden until `startApplyingBy` has arrived or the user has
+  pulled their date forward. Tested for order, for every `tool:` slug existing in
+  the registry, and that **no outbound action can render before that date** —
+  that last one is the point of the field and it is the difference between a plan
+  and six months of homework. Action 4, the bond check, renders only when the
+  user said they have a bond or a joining bonus.
 - The returning-visitor screen from Part 4. Tick boxes record the date.
 - Tracker: allow saving a card with a company and no job title. That is
   `PRODUCT.md` rule 2, and it is why someone at stage 0 cannot use it today.
-- `src/lib/ics.ts`: pure string builder, tested against a fixed expected output.
+- `src/lib/ics.ts` grows from the single Phase 0 event to the full set. Pure
+  string builder, tested against a fixed expected output.
   Dull event titles by default. Downloaded the same way the share image is.
   **Every event carries a URL back to the plan**, in both the `URL` property and
   the description, because this file is the only reminder a site with no server
