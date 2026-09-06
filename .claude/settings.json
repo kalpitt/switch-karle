@@ -14,8 +14,7 @@
       "Bash(git branch:*)"
     ],
     "ask": [
-      "Bash(npm install:*)",
-      "Bash(npx:*)"
+     
     ],
     "deny": [
       "Bash(sudo:*)"
