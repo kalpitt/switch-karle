@@ -33,8 +33,11 @@ separate promise and it stands. The panic switch stays on the roadmap as an
 opt-in.
 
 **`PRODUCT.md` and `ROADMAP.md` were edited by an agent**, under Kalpit's
-explicit one-off authorisation on 2026-09-07 and only for this. The standing
-rule is unchanged: agents never edit either file.
+explicit authorisation on 2026-09-07 for the direction-reset absorption: once
+now, and once more when the ten-person trial result is recorded, so the two
+files never carry two different premises at once. He also authorised merging
+those PRs and the Phase 0 PR via subagents. Outside those edits, the standing
+rule is unchanged: agents never edit either file, and Kalpit merges.
 
 ---
 
