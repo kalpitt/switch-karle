@@ -8,9 +8,14 @@ stay exactly as they are and appear when they become relevant. Nothing is
 deleted, and no new calculator gets built until the front door exists.
 
 **Kalpit decides.** This is a proposal, not a decision. Parts 1 to 12 are written
-for him. Part 13 is instructions for coding agents and he can skip it. When the
-work in Part 13 is done, delete this file, so the repo never has two documents
-both claiming to say what the product is.
+for him. Part 13 is instructions for coding agents and he can skip it.
+
+**Delete this file as soon as he has absorbed it, not after Phase 3.** An earlier
+version said to keep it until the build was finished. That is wrong, and
+`PRODUCT.md` says why: a second document explaining what the product should be is
+how this repo ended up with three contradicting roadmaps in one day. Until the
+content moves, every agent has two bibles. The absorption is four short edits and
+they are listed in Part 12.
 
 ---
 
@@ -26,7 +31,8 @@ spent half its effort on problems a newer draft had already fixed.
 | 2026-09-06 a | First draft, after three colleagues rejected the site |
 | 2026-09-06 b | Kalpit found the salary hole. Fixing it exposed eight more errors |
 | 2026-09-06 c | Gemini 3.8 review. Three findings accepted, one overruled by Kalpit |
-| 2026-09-06 d | This version. Rewritten for clarity. App renamed |
+| 2026-09-06 d | Rewritten for clarity. App rename opened as PR #41 |
+| 2026-09-06 e | This version. Two repo-aware reviews. Eight code-level findings, all verified true, all fixed |
 
 ### Already fixed. Please do not re-report these
 
@@ -43,6 +49,30 @@ spent half its effort on problems a newer draft had already fixed.
   weakest thing in the design.
 - **The pass mark accepted a promise as evidence.** Fixed in Part 9. Every
   question now asks what already happened.
+- **The reason for leaving is no longer hidden behind a tap.** One review still
+  reports this as open. It was reverted when Kalpit retired the rule behind it,
+  and Part 4 now shows the reason in plain text on the screen.
+
+### Fixed in version e, from two repo-aware reviews
+
+Every one of these was checked against the code before being accepted.
+
+- **The worked example used the wrong work week.** Pune IT services is a
+  five-day week, where the gratuity cliff is four years and 190 days, not 240.
+  Ravi's real cliff was 21 July 2026, seven weeks before the draft said it was
+  coming. Part 3 now turns that into the reason the toggle exists.
+- **The ten-employee threshold was silently assumed.** The engine comment says
+  *asked, not assumed*, and the gratuity tool asks it.
+- **The money field said "monthly basic" and then priced gratuity from it**,
+  which is the exact DA trap the same section warns about two paragraphs later.
+- **Join date has no shared home.** Three tools each keep their own copy, and
+  the plan would have been a fourth.
+- **The build brief told an agent to take a clawback end date from
+  `bonusClawback()`, which returns no date.**
+- **The app rename was described as done.** It is PR #41, open, unmerged.
+- **Recruiter follow-up was missing from the stage table.**
+- **Phase 0 had grown into the whole plan product**, contradicting this
+  document's own two-week guard. It is now an eight-item slice.
 
 ### Settled by the owner. Please do not re-open
 
@@ -103,6 +133,25 @@ application, and then stays with them for the nine months after.
 
 That thing is a plan with dates on it, not a page of tools.
 
+### This does not replace what the product is for
+
+`PRODUCT.md` says the job is "one number they can hold on to, in their own hand,
+that nobody else in the conversation has." That stays true. **The plan is the
+door. The number is still the job.** If the home page becomes a streak of
+fifteen-minute tasks, we have built a habit app that owns some calculators, and
+the complaint was paralysis rather than a missing to-do list.
+
+So the sentence in `PRODUCT.md` gains a companion rather than being replaced: the
+plan is what the first visit is for, and the number is what every visit after it
+is for.
+
+**And this is the second front-door rewrite, which is worth saying out loud.**
+The tool grid was replaced by the board on 30 August, on the same kind of hallway
+feedback that produced this document. The board is now the thing in the way.
+Naming that here is the only defence against a third rewrite in October: **the
+ten-person test in Part 9 exists so the next change is driven by evidence rather
+than by the last conversation.**
+
 ---
 
 ## 2. The idea
@@ -153,28 +202,46 @@ The site asks three things he can answer without opening anything.
 ### Step one: dates, with no money in them
 
 > **You become eligible for gratuity on 9 September, three days from now.**
-> The line is four years and 240 days on a six-day week, not five years.
+> *Assuming a six-day week and 10 or more employees.* **[5-day week]** **[under 10]**
 > **Your hike lands in May.** Resigning before it means you never see it.
->
-> These two pull in opposite directions. Waiting three days is free. Waiting
-> until June for the hike costs you nine months. **That one is your call.**
 >
 > **Today, fifteen minutes: write the one line reason you are leaving.**
 
-**This is why the three questions ask for no salary.** A date needs only a join
-date and a notice period. A rupee figure needs your last drawn basic plus
+Ravi works for an IT services company, which is a five-day week. He taps the
+toggle:
+
+> **Your gratuity was already safe on 21 July, seven weeks ago.**
+> That is one thing less holding you here.
+> **Your hike lands in May.** That is now the only date holding you.
+
+**Those two toggles are not decoration, and this is the second hole this
+document had.** The gratuity cliff is four years and 190 days on a five-day week
+and 240 on a six-day week. Ravi is 21 July on one and 9 September on the other.
+The engine defaults to six because it is the conservative statutory default, and
+for a Pune IT services employee that default **invents a cliff that is not
+there** and tells him to wait seven weeks for something he already has.
+
+The same applies to the Payment of Gratuity Act's ten-employee threshold. The
+engine comment says it plainly: *asked, not assumed*. The gratuity tool asks
+both questions today. The plan cannot quietly assume them.
+
+**Three questions, then the assumptions shown next to the answer they change.**
+That keeps the front door short without lying. A number whose assumptions are
+hidden is exactly the thing this product exists to be better than.
+
+**And this is why the three questions ask for no salary.** A date needs only a
+join date and a notice period. A rupee figure needs your last drawn basic plus
 dearness allowance, and nobody asked for it. Promising money from three
-questions that cannot produce it was the first real error in this document.
+questions that cannot produce it was the first hole in this document.
 
 ### Step two: money, only if he wants it
 
 One optional field under the calendar.
 
-> Add your monthly basic and I will tell you what each date is worth.
-> *[ ₹72,000 ]*
+> Add your monthly **basic plus DA** and I will tell you what each date is
+> worth. *[ ₹72,000 ]*
 
-> That gratuity is worth about ₹2,07,700. Leaving three days too early loses all
-> of it.
+> That gratuity is worth about ₹2,07,700.
 
 **If he has used the gratuity, notice buyout, leave encashment or F&F tool
 before, this field is already filled in.** Those six tools share one saved record
@@ -185,6 +252,17 @@ is `PRODUCT.md` rule 7, and the plan is the first thing that really uses it.
 plus dearness allowance. Notice buyout and leave encashment use plain basic. The
 saved record keeps them apart deliberately and never copies one into the other.
 Merging them hands a wrong number to anyone with a DA component.
+
+**An earlier draft of this document walked straight into that trap**, two
+paragraphs after warning about it. It labelled the field "monthly basic" and
+then printed a gratuity figure from it. For anyone drawing DA that number is
+wrong. The field says basic plus DA, or no gratuity rupee hangs off it.
+
+**Join date has no shared home either, and the plan would be the fourth copy.**
+`gratuity`, `fnf-checker` and `epf-transfer` each keep their own. That is rule 7
+broken three times over already, and the fix belongs in Phase 0: add `joinDate`
+to `src/data/currentJob.ts` and move those three onto it, using the pattern PR
+#39 already proved.
 
 ### Step three: the gap that decides whether this works
 
@@ -197,7 +275,8 @@ to be true for it to survive that.
 
 **"Start applying by" is the latest safe start, never an instruction to wait.**
 Starting earlier is usually better. It only means holding an offer longer or
-negotiating a later joining date. The screen says so.
+negotiating a later joining date. **The screen says "starting now is allowed" in
+those words**, because a date six months out reads as permission to do nothing.
 
 **Nine of the ten actions can be done today.** Writing his reason, naming five
 companies, messaging an ex-colleague, fixing his profile, researching a company.
@@ -262,10 +341,17 @@ event we generate links straight back to his plan. That is the only reminder a
 site with no server can send, which makes `src/lib/ics.ts` matter far more than a
 file that formats dates should.
 
+**Say the cost of that out loud.** If he imports it into a work Google account,
+the event and the link sit on a company server under a name containing
+`switchkarle`. Dull event titles reduce what a glance shows. They do not hide
+where it came from. That is consistent with retiring the shoulder-surfing rule
+rather than a reason to reverse it, and the download says so in one line.
+
 **The site is installable and almost nobody knows.** The manifest is already
-there, set to standalone with icons. It was renamed on 2026-09-06 from "Switch
-Karle — Decode your CTC" to plain "Switch Karle", because the old name described
-a narrower product than the one being built.
+there, set to standalone with icons. Renaming it from "Switch Karle — Decode
+your CTC" to plain "Switch Karle" is **proposed in PR #41 and not merged**, so
+on `main` the old name still stands. An earlier version of this document said it
+was done. It was not, and a reviewer with repo access caught it.
 
 **The first session has to be worth it even if he never returns.** He should
 leave with his dates in his calendar and one thing done, so the visit paid for
@@ -361,7 +447,7 @@ are on screen. The rest live behind "All tools", which keeps the search.
 | Stage | Shown here |
 |---|---|
 | "I'm done here" | gratuity, bond scanner, bonus clawback, leave encashment, clause library |
-| "Looking, quietly" | tracker, Prompt Studio, redactor |
+| "Looking, quietly" | tracker, Prompt Studio, redactor, recruiter follow-up |
 | "Talking to them" | expected CTC script, real hike |
 | "The number on the table" | decoder, offer comparison, variable pay, ESOP, fake offer, relocation |
 | "Telling them" | resignation letter, manager script, counter offer, early release, decline accepted, counter offer reply, notice buyout |
@@ -427,10 +513,27 @@ promise.
 3. Did you put the dates in your calendar?
 4. Have you opened it again since that first time?
 
-**The pass mark.** Five of ten did the first action. Four picked a date. Four
-saved the calendar. Three opened it again. Miss any one, fix it and run again
-with ten new people. **Miss twice and stop building.** The premise is wrong and
-another tool will not fix it.
+**The pass mark, split by what the product can actually cause.**
+
+| Measure | Bar | Can the product cause it? |
+|---|---|---|
+| Did the first action | 5 of 10 | Yes. Phase 0 owns this |
+| Picked a date | 4 of 10 | Yes. Phase 0 owns this |
+| Saved the calendar | 4 of 10 | Yes, once Phase 1 ships the file |
+| Opened it again | 3 of 10 | **No. Nothing can reach them** |
+
+**Miss the first two and stop building.** That is the door failing, and the
+premise is in trouble.
+
+**Missing the last one is not the same failure and must not be treated as one.**
+It means a site with no reminder cannot create a habit, which everyone already
+suspects. The answer to that is a reminder that needs a server, which is
+Kalpit's decision under `PRIVACY.md`, or accepting that this is a one-session
+product. Neither of those is "the plan was the wrong idea".
+
+**And ten people from your own circle will be kinder than strangers.** A pass
+here means the door works on friendly traffic. It is not proof the nine-month
+walk works.
 
 **Question three carries more weight than it looks.** The calendar file is the
 only way this product can reach anyone, so a person who did not save it is a
@@ -493,15 +596,34 @@ chatbot cannot copy. The plan is how they finally get seen.
 For `ROADMAP.md`, if Kalpit accepts this. Settled stays settled. Not Doing stays
 where it is.
 
+### First, four edits only Kalpit can make
+
+These come before any code, because until they land the repo has two documents
+claiming to say what the product is.
+
+1. **`PRODUCT.md`**: add the plan as the first-visit job, keeping "one number" as
+   what every visit after it is for. Retire rule 5 in place, keeping its number
+   so the references below it survive. Fix the trust section, which still says
+   there is no way to erase saved data. Erase shipped on 5 September.
+2. **`PRODUCT.md`**: the reader is still described as someone on a company laptop
+   on a monitored network. If that is no longer the design centre, that paragraph
+   changes too, or agents keep designing timidly from page one.
+3. **`ROADMAP.md`**: take the Now, Next, Later and Stop below.
+4. **`docs/DECISIONS.md`**: record retiring the shoulder-surfing rule, in about
+   five lines.
+
+Then delete `docs/DIRECTION.md`. Part 13 belongs in the Phase 0 pull request
+description, not in a file agents will read as direction.
+
 ### Now
 
-- **The plan becomes the home page.** Three questions, the calendar, the optional
-  money field, pick a date, one action. English and Hindi.
+- **The thin front door.** The eight-item slice in Part 13, and nothing beyond
+  it. English and Hindi.
   *Why: three out of three people could not get from the thought to an action.*
-- **The tagline says what the site is.** The two sentences in Part 2. This also
-  covers the home page title, which still reads "Decode your CTC" in both
-  languages and should change with the tagline rather than before it.
-- **The ten person test, round two.** Run it the week the plan ships, not after
+- **The tagline, title and app name say what the site is.** The two sentences in
+  Part 2, the home page title in both languages, and the manifest rename already
+  open as PR #41.
+- **The ten person test, round two.** Run it the week the door ships, not after
   "the site is complete".
 
 ### Next
@@ -546,9 +668,28 @@ request: `test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`,
 `check:csp`. Read `AGENTS.md`, `PRODUCT.md` and `docs/DECISIONS.md` first. Never
 edit `PRODUCT.md` or `ROADMAP.md`.
 
-### Phase 0: the calendar and the new front door
+### Phase 0: the thin front door
 
-*Plain version: work out the dates, save the answers, put them on the home page.*
+*Plain version: work out the dates, save the answers, put them on the home page,
+and stop there.*
+
+**An earlier version of this phase was the whole plan product**, and Part 10 of
+this same document says to cut it back if it grows past two weeks. A reviewer
+called that out. This is the slice that goes in front of ten people:
+
+1. The two sentences.
+2. Three questions, plus the work-week and 10-employee toggles beside the cliff
+   they change.
+3. Cliffs, no rupees, Example chip on before anyone types.
+4. Optional basic plus DA, labelled as such.
+5. Pick a date. The backward dates appear only then.
+6. One action: write the reason.
+7. English and Hindi.
+8. Tracker still one tap away. Erase still in the footer.
+
+**Not in Phase 0:** the ten tick-boxes, the calendar file, the share card, the
+journey-stage registry work, Prompt Studio wiring, or removing the tool grid.
+Rule 9 says one next thing, and that applies to the build as much as the screen.
 
 **The calculation.** New file `src/engine/switchCalendar.ts`. Pure TypeScript, no
 React, with `switchCalendar.test.ts` written first.
@@ -556,15 +697,25 @@ React, with `switchCalendar.test.ts` written first.
 Input: `joinDate`, `noticePeriodDays`, optional `hikeCreditMonth` (1 to 12),
 optional `bondEndDate`, optional `joiningBonusDate` with `clawbackMonths`,
 optional `targetResignDate`, `offerLeadWeeks` (default 8), `offerBufferDays`
-(default 14), `workWeekDays` (5 or 6, default 6), and `asOf`.
+(default 14), `workWeekDays` (5 or 6, default 6), `coveredByAct` (default true),
+and `asOf`.
+
+**`workWeekDays` and `coveredByAct` must reach the screen, not sit as silent
+defaults.** On a five-day week the cliff is four years and 190 days; on six it is
+240. For someone who joined on 12 January 2022 that is 21 July 2026 against 9
+September 2026, and the wrong default invents a cliff seven weeks after the real
+one has passed. The engine's own comment on `coveredByAct` says *asked, not
+assumed*, and the gratuity tool asks both today.
 
 Output: dated cliffs as `{ id, date, kind, daysAway }` where `kind` is
 `'statutory' | 'contractual' | 'convention'`. Take the gratuity cliff from
 `gratuity()` in `src/engine/gratuity.ts`, which already returns `flipDate` and
 already implements both the four-years-240-days rule and the five-day-week
-variant. Take the clawback end from `bonusClawback()` in
-`src/engine/clawback.ts`. **Do not reimplement either.** Then
-`earliestCleanDate`, and working backwards from the resign date:
+variant. **The clawback end date is not in `bonusClawback()`.** That function returns
+rupees and a repayment curve, and no date at all. An earlier draft told an agent
+to take a date from it, which would have left them stalled or inventing one. The
+date is `addMonths(joiningBonusDate, clawbackMonths)` from `src/engine/dates.ts`.
+Then `earliestCleanDate`, and working backwards from the resign date:
 `lastWorkingDay`, `needOfferBy`, `startApplyingBy`, each with `daysAway`.
 
 **Those last three are null until the user picks a date.** Do not quietly
@@ -593,6 +744,11 @@ loses the user's first entry. It must either echo its draft on mount like every
 existing tool, or call `releaseBootEcho` and say why in a comment. Choose one
 deliberately and pin it with a test that fails without it.
 `src/data/currentJob.ts` is the worked example and the newer of the two patterns.
+
+**Add `joinDate` to `src/data/currentJob.ts` and move `gratuity`, `fnf-checker`
+and `epf-transfer` onto it**, in this phase, using the pattern PR #39 proved.
+Those three each keep their own copy today. The plan would be a fourth, and
+`PRODUCT.md` rule 7 says a value already typed is never asked for twice.
 
 `noticePeriodDays`, `monthlyBasic` and `monthlyBasicDA` are **not** stored in the
 plan. They live in `src/data/currentJob.ts`. Read and write them there through
@@ -626,8 +782,13 @@ Example chip before anyone types. Check at 375px wide, where the first action
 must be visible without scrolling.
 
 **Done when** a stranger with nothing saved lands, reads two sentences, answers
-three questions, sees their own dates and one thing to do, and nobody with
-existing saved data notices any change.
+three questions, sees their own dates and one thing to do.
+
+For someone with saved data: **no saved value is lost, every existing URL still
+works, and the tracker is one tap from the new home page.** An earlier draft said
+nobody would notice any change, which cannot be true when the board leaves the
+front page. Saying it anyway would have let an agent mark this done without
+checking the thing most likely to break.
 
 ### Phase 1: actions, coming back, calendar, sharing
 
