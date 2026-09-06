@@ -12,7 +12,7 @@ import {
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
-import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -49,8 +49,9 @@ function Body() {
 
   useEffect(() => {
     const job = loadCurrentJob()
-    const fill = (d: Draft) => applyCurrentJob(d, job, { monthlyBasic: 'monthlyBasic' })
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    const fill = (d: Draft) =>
+      fillFromCurrentJob(d, job, { shared: { monthlyBasic: 'monthlyBasic' } }, saved != null)
     if (saved) {
       // Retirement path is hidden (master plan 5.2): the switcher case is
       // resignation — always fully taxable. Coerce any stored retirement draft.

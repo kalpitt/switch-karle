@@ -162,9 +162,22 @@ would hand a DA-drawing employee's wrong number to whichever tool read it.
 Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`
 (monthlyBasicDA → `lastDrawnBasicDA`), `leave-encashment` and `fnf-checker`
 (monthlyBasic), `resignation-letter` and `notice-tracker` (noticePeriodDays).
-Seed-only, never written back: `notice-buyout`'s `unservedDays` (a starting
-point the user then negotiates down) and `fnf-checker`'s `monthlyGross` (what
-the F&F sheet *claims*, not a fact about the job).
+Seed-only: `notice-buyout`'s `unservedDays` (a starting point the user then
+negotiates down) and `fnf-checker`'s `monthlyGross` (what the F&F sheet
+*claims*, not a fact about the job).
+
+**Shared and seed-only are not the same fill, and mixing them destroys data.**
+`fillFromCurrentJob` takes both maps and a `hasSavedDraft` flag. A shared field
+is written back on every keystroke, so the record always holds the latest value
+typed anywhere and overlaying it on a saved draft is how "type it once" works.
+A seed-only field is never written back, so the record cannot know what the user
+typed here — overlaying it on a saved draft puts a stale number back on every
+visit and overwrites the user's on the next save effect. Both cases shipped in
+review and were caught in a browser: notice-buyout reset a negotiated 10 unserved
+days to the contractual 60, and F&F replaced the claimed gross with the real one,
+which made the tool audit the sheet against itself and report no gap.
+`src/data/currentJob.test.ts` pins the rule; a source test in
+`src/tools/currentJob.test.ts` pins that those two fields stay under `seedOnly`.
 
 On boot each tool overlays the record on its saved draft or fixture, so the
 latest value typed anywhere wins everywhere. The Example chip compares against

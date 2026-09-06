@@ -12,7 +12,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
-import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -54,8 +54,9 @@ function Body() {
     // Gratuity is on basic + DA (see the VERIFIED marker in src/engine/gratuity.ts), so it reads `monthlyBasicDA` and
     // never the plain basic the other exit tools share.
     const job = loadCurrentJob()
-    const fill = (d: Draft) => applyCurrentJob(d, job, { monthlyBasicDA: 'lastDrawnBasicDA' })
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    const fill = (d: Draft) =>
+      fillFromCurrentJob(d, job, { shared: { monthlyBasicDA: 'lastDrawnBasicDA' } }, saved != null)
     if (saved) {
       setDraft(fill(saved))
       setExample(null)

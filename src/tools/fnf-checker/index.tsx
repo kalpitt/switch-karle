@@ -15,7 +15,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
-import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -62,13 +62,20 @@ function Body() {
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
 
   useEffect(() => {
-    // Basic and gross start from the current-job record. Only the basic is
-    // written back: the gross here is what the F&F sheet CLAIMS, which is the
-    // thing being checked, not a fact about the job.
+    // Basic is shared. Gross is seed-only: the field is what the F&F sheet
+    // CLAIMS, which is the very thing this tool audits against the recomputed
+    // figure. Overlaying the record on a saved draft would replace the claimed
+    // number with the real one on every visit, so the audit would compare the
+    // sheet against itself and report no gap.
     const job = loadCurrentJob()
-    const fill = (d: Draft) =>
-      applyCurrentJob(d, job, { monthlyBasic: 'monthlyBasic', monthlyGross: 'monthlyGross' })
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
+    const fill = (d: Draft) =>
+      fillFromCurrentJob(
+        d,
+        job,
+        { shared: { monthlyBasic: 'monthlyBasic' }, seedOnly: { monthlyGross: 'monthlyGross' } },
+        saved != null,
+      )
     if (saved) {
       // Spread over the default so a draft saved before the mail fields existed
       // hydrates with empty names instead of undefined.

@@ -50,6 +50,30 @@ describe('current-job record: one home, basic and basic+DA never merge', () => {
     }
   })
 
+  it('the two seed-only fields are declared seed-only, not shared', () => {
+    // notice-buyout's unserved days and fnf-checker's claimed gross are never
+    // written back to the record, so re-applying the record over a saved draft
+    // destroys what the user typed. Both bugs were reproduced in a browser.
+    // The maps are written across several lines, so match the whole call.
+    const buyout = read('notice-buyout')
+    expect(buyout).toMatch(/seedOnly:\s*\{\s*noticePeriodDays:\s*'unservedDays'/)
+    expect(buyout).not.toMatch(/shared:\s*\{[^}]*noticePeriodDays/)
+
+    const fnf = read('fnf-checker')
+    expect(fnf).toMatch(/seedOnly:\s*\{\s*monthlyGross:\s*'monthlyGross'/)
+    expect(fnf).not.toMatch(/shared:\s*\{[^}]*monthlyGross/)
+  })
+
+  it('every tool that fills from the record says whether it has a saved draft', () => {
+    // fillFromCurrentJob's last argument is what keeps seed-only fields off a
+    // saved draft. A tool that hardcodes `false` there would re-introduce the bug.
+    for (const tool of TOOLS_READING_CURRENT_JOB) {
+      const src = read(tool)
+      if (!src.includes('fillFromCurrentJob')) continue
+      expect(src).toMatch(/saved\s*!=\s*null/)
+    }
+  })
+
   it('no tool maps monthlyBasicDA to anything other than lastDrawnBasicDA', () => {
     for (const tool of TOOLS_READING_CURRENT_JOB) {
       const src = read(tool)

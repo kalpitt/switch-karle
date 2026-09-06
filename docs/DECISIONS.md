@@ -95,7 +95,14 @@ touched in *that* tool, still shows the Example chip until the user types in
 that specific tool. A record-filled basic beside example dates is not a verdict
 the user asked for.
 
-(b) `fnf-checker` reads the record's plain `monthlyBasic`, and its own engine
+(b) A field a tool never writes back to the record fills a **fresh draft only**.
+Found in review, reproduced in a browser: re-applying the record over a saved
+draft reset a negotiated 10 unserved days to 60, and replaced the F&F sheet's
+claimed gross with the real one — which made the checker compare the sheet
+against itself and find nothing wrong. `fillFromCurrentJob` now takes the two
+maps separately.
+
+(c) `fnf-checker` reads the record's plain `monthlyBasic`, and its own engine
 already feeds that number to gratuity's calculation as basic+DA
 (`src/engine/fnf.ts:89-94`) — the pre-existing ambiguity noted above is
 unchanged by this work and still his to decide.

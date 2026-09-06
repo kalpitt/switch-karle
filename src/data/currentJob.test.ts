@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { resetBootEchoForTests } from '../lib/storage'
-import { CURRENT_JOB_STORAGE_KEY, applyCurrentJob, loadCurrentJob, rememberCurrentJob } from './currentJob'
+import {
+  CURRENT_JOB_STORAGE_KEY,
+  applyCurrentJob,
+  fillFromCurrentJob,
+  loadCurrentJob,
+  rememberCurrentJob,
+} from './currentJob'
 
 class MemoryStorage {
   private readonly data = new Map<string, string>()
@@ -115,5 +121,48 @@ describe('current job record', () => {
 
   it('lives under the switchkarle prefix so the erase control sweeps it', () => {
     expect(CURRENT_JOB_STORAGE_KEY.startsWith('switchkarle.')).toBe(true)
+  })
+})
+
+/**
+ * The distinction that cost two bugs, both reproduced in a browser before this
+ * was written: a field the tool never writes back to the record must not be
+ * put back over a draft the user has already saved.
+ *
+ * `notice-buyout` seeds unserved days from the notice period, then the user
+ * negotiates it down to 10 and saves. `fnf-checker` seeds the claimed gross,
+ * then the user replaces it with what the settlement sheet actually says.
+ * Neither number ever reaches the record, so re-applying the record on boot
+ * silently restored the old value and overwrote the user's on disk — and in
+ * the F&F case it made the tool audit the sheet against itself.
+ */
+describe('fillFromCurrentJob: shared always, seed-only on a fresh draft', () => {
+  const draft = { monthlyBasic: 80_000, monthlyGross: 1_50_000, unservedDays: 30 }
+  const job = { monthlyBasic: 95_000, monthlyGross: 1_60_000, noticePeriodDays: 60 }
+  const maps = {
+    shared: { monthlyBasic: 'monthlyBasic' as const },
+    seedOnly: { noticePeriodDays: 'unservedDays' as const, monthlyGross: 'monthlyGross' as const },
+  }
+
+  it('fills both kinds when the tool has nothing saved', () => {
+    expect(fillFromCurrentJob(draft, job, maps, false)).toEqual({
+      monthlyBasic: 95_000,
+      monthlyGross: 1_60_000,
+      unservedDays: 60,
+    })
+  })
+
+  it('leaves seed-only fields alone once the tool has a saved draft', () => {
+    const saved = { monthlyBasic: 80_000, monthlyGross: 1_42_500, unservedDays: 10 }
+    expect(fillFromCurrentJob(saved, job, maps, true)).toEqual({
+      monthlyBasic: 95_000, // shared: the latest typed anywhere still wins
+      monthlyGross: 1_42_500, // seed-only: what the user typed here survives
+      unservedDays: 10,
+    })
+  })
+
+  it('an absent map is not an error, and an empty record changes nothing', () => {
+    expect(fillFromCurrentJob(draft, job, {}, false)).toEqual(draft)
+    expect(fillFromCurrentJob(draft, {}, maps, false)).toEqual(draft)
   })
 })

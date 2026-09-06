@@ -89,3 +89,33 @@ export function applyCurrentJob<D extends object>(
   }
   return next
 }
+
+/**
+ * Fill a tool's draft from the record. Two kinds of field, and the difference
+ * is not cosmetic — getting it wrong destroys what the user typed.
+ *
+ * `shared`: the tool also writes this field back on every keystroke, so the
+ * record always holds the latest value typed anywhere, this tool included.
+ * Overlaying it on a saved draft is how "type it once" works.
+ *
+ * `seedOnly`: the tool never writes this field back, because in this tool the
+ * field means something else — `notice-buyout`'s unserved days is what is left
+ * after negotiating, not the contractual notice period; `fnf-checker`'s gross
+ * is what the settlement sheet *claims*, which is the thing being audited. The
+ * record therefore never learns what the user typed here, so overlaying it on a
+ * saved draft would put back a number the user had already replaced, on every
+ * single visit. These fill a fresh draft only.
+ */
+export function fillFromCurrentJob<D extends object>(
+  draft: D,
+  job: CurrentJob,
+  maps: {
+    shared?: Partial<Record<keyof CurrentJob, keyof D>>
+    seedOnly?: Partial<Record<keyof CurrentJob, keyof D>>
+  },
+  hasSavedDraft: boolean,
+): D {
+  const withShared = applyCurrentJob(draft, job, maps.shared ?? {})
+  if (hasSavedDraft) return withShared
+  return applyCurrentJob(withShared, job, maps.seedOnly ?? {})
+}

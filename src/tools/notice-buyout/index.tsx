@@ -12,7 +12,7 @@ import {
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
-import { applyCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -56,16 +56,24 @@ function Body() {
   useEffect(() => {
     // Current pay comes from the current-job record, never from the Decoder:
     // a buyout is owed to the current employer out of current pay, and the
-    // Decoder holds the NEW offer. Unserved days start at the full notice
-    // period — the figure if you walked out today — and are this tool's own.
+    // Decoder holds the NEW offer.
+    //
+    // Unserved days is seed-only. On a first visit the full notice period is
+    // the right starting point — the figure if you walked out today — but once
+    // the user has saved a number here it is what is LEFT after negotiating,
+    // and the record must not put the contractual period back over it.
     const job = loadCurrentJob()
-    const fill = (d: Draft) =>
-      applyCurrentJob(d, job, {
-        monthlyBasic: 'monthlyBasic',
-        monthlyGross: 'monthlyGross',
-        noticePeriodDays: 'unservedDays',
-      })
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
+    const fill = (d: Draft) =>
+      fillFromCurrentJob(
+        d,
+        job,
+        {
+          shared: { monthlyBasic: 'monthlyBasic', monthlyGross: 'monthlyGross' },
+          seedOnly: { noticePeriodDays: 'unservedDays' },
+        },
+        saved != null,
+      )
     if (saved) {
       // Spread over the fixture so a draft saved before leave netting existed
       // hydrates with zero leave rather than undefined.
