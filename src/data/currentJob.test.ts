@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { resetBootEchoForTests } from '../lib/storage'
 import {
   CURRENT_JOB_STORAGE_KEY,
-  applyCurrentJob,
   fillFromCurrentJob,
   loadCurrentJob,
   rememberCurrentJob,
@@ -104,21 +103,6 @@ describe('current job record', () => {
     expect(loadCurrentJob()).toEqual({ monthlyGross: 1_50_000 })
   })
 
-  it('applyCurrentJob overlays only the fields the record holds, where the tool says', () => {
-    const draft = { basis: 'basic', unservedDays: 30, monthlyBasic: 80_000, monthlyGross: 1_50_000 }
-    const job = { monthlyBasic: 95_000, noticePeriodDays: 90, monthlyBasicDA: 1_10_000 }
-    expect(
-      applyCurrentJob(draft, job, {
-        monthlyBasic: 'monthlyBasic',
-        monthlyGross: 'monthlyGross',
-        noticePeriodDays: 'unservedDays',
-      }),
-    ).toEqual({ basis: 'basic', unservedDays: 90, monthlyBasic: 95_000, monthlyGross: 1_50_000 })
-    // basic+DA was not asked for, so it does not land anywhere.
-    expect(applyCurrentJob(draft, job, { monthlyBasicDA: 'monthlyBasic' }).monthlyBasic).toBe(1_10_000)
-    expect(applyCurrentJob(draft, {}, { monthlyBasic: 'monthlyBasic' })).toEqual(draft)
-  })
-
   it('lives under the switchkarle prefix so the erase control sweeps it', () => {
     expect(CURRENT_JOB_STORAGE_KEY.startsWith('switchkarle.')).toBe(true)
   })
@@ -164,5 +148,13 @@ describe('fillFromCurrentJob: shared always, seed-only on a fresh draft', () => 
   it('an absent map is not an error, and an empty record changes nothing', () => {
     expect(fillFromCurrentJob(draft, job, {}, false)).toEqual(draft)
     expect(fillFromCurrentJob(draft, {}, maps, false)).toEqual(draft)
+  })
+
+  it('a record field lands only where the tool asks for it', () => {
+    // basic+DA is in the record but this tool never asks for it, so it must not
+    // reach a field of its own accord.
+    const filled = fillFromCurrentJob(draft, { ...job, monthlyBasicDA: 1_10_000 }, maps, false)
+    expect(filled.monthlyBasic).toBe(95_000)
+    expect(Object.keys(filled).sort()).toEqual(['monthlyBasic', 'monthlyGross', 'unservedDays'])
   })
 })

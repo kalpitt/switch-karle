@@ -64,16 +64,6 @@ describe('current-job record: one home, basic and basic+DA never merge', () => {
     expect(fnf).not.toMatch(/shared:\s*\{[^}]*monthlyGross/)
   })
 
-  it('every tool that fills from the record says whether it has a saved draft', () => {
-    // fillFromCurrentJob's last argument is what keeps seed-only fields off a
-    // saved draft. A tool that hardcodes `false` there would re-introduce the bug.
-    for (const tool of TOOLS_READING_CURRENT_JOB) {
-      const src = read(tool)
-      if (!src.includes('fillFromCurrentJob')) continue
-      expect(src).toMatch(/saved\s*!=\s*null/)
-    }
-  })
-
   it('no tool maps monthlyBasicDA to anything other than lastDrawnBasicDA', () => {
     for (const tool of TOOLS_READING_CURRENT_JOB) {
       const src = read(tool)

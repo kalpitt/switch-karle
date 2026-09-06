@@ -34,16 +34,6 @@ export interface CurrentJob {
 
 const FIELDS = ['monthlyBasic', 'monthlyBasicDA', 'monthlyGross', 'noticePeriodDays'] as const
 
-function read(): CurrentJob {
-  const raw = readJson<unknown>(CURRENT_JOB_STORAGE_KEY, null)
-  // This record never echoes on mount: it is written only from a keystroke in
-  // some tool. Without the release, the boot-echo skip armed by the read above
-  // would swallow the user's first-ever entry — the same failure the decoder
-  // had when seeded from a tracker card.
-  releaseBootEcho(CURRENT_JOB_STORAGE_KEY)
-  return sanitise(raw)
-}
-
 /** Keep only the known fields, and only finite positive numbers. */
 function sanitise(raw: unknown): CurrentJob {
   if (typeof raw !== 'object' || raw === null) return {}
@@ -56,7 +46,13 @@ function sanitise(raw: unknown): CurrentJob {
 }
 
 export function loadCurrentJob(): CurrentJob {
-  return read()
+  const raw = readJson<unknown>(CURRENT_JOB_STORAGE_KEY, null)
+  // This record never echoes on mount: it is written only from a keystroke in
+  // some tool. Without the release, the boot-echo skip armed by the read above
+  // would swallow the user's first-ever entry — the same failure the decoder
+  // had when seeded from a tracker card.
+  releaseBootEcho(CURRENT_JOB_STORAGE_KEY)
+  return sanitise(raw)
 }
 
 /**
@@ -65,16 +61,17 @@ export function loadCurrentJob(): CurrentJob {
  * is kept, so a cleared input never blanks the number every other tool relies on.
  */
 export function rememberCurrentJob(patch: Partial<CurrentJob>): void {
-  const next = { ...read(), ...sanitise(patch) }
+  const next = { ...loadCurrentJob(), ...sanitise(patch) }
   writeJson(CURRENT_JOB_STORAGE_KEY, next)
 }
 
 /**
  * Overlay the record on a tool's draft: every field the record holds replaces
  * the draft's, everything else is untouched. `pick` names which draft field
- * each record field lands in.
+ * each record field lands in. Module-private: tools go through
+ * `fillFromCurrentJob`, which is the one that knows about seed-only fields.
  */
-export function applyCurrentJob<D extends object>(
+function applyCurrentJob<D extends object>(
   draft: D,
   job: CurrentJob,
   pick: Partial<Record<keyof CurrentJob, keyof D>>,
