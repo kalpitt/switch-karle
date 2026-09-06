@@ -5,6 +5,13 @@ did not want to use it. Revised the same day after he found a hole in it: three
 questions cannot produce a rupee figure, because none of them asks what he earns.
 That fix is in Part 3, and finding it turned up eight more.
 
+Revised again after an outside review by Gemini 3.8, which found the weakest
+thing in the design: **there is no mechanism that brings anyone back.** That is
+Part 3 under "How he comes back at all", and it changed the pass mark in Part 9.
+The same review caught that showing someone's reason for leaving on a work
+screen breaks `PRODUCT.md` rule 5. Both were right. Checking them turned up a
+live problem on `main` that neither review had spotted, in Part 10.
+
 **This is a proposal. Kalpit decides.** Nothing here is in force until he says
 so. Parts 1 to 8 are written for him to read and argue with. Part 11 is build
 instructions for coding agents and he can skip it. Once the plan is built, delete
@@ -129,13 +136,52 @@ something for today, whatever the calendar says.
 He picks 1 June. He writes his reason. He closes the tab. He comes back on
 Sunday and the page opens with:
 
-> *"My manager takes credit for my work and I have stopped learning."*
 > Day 12. Next: name five companies you would say yes to. Twelve minutes.
 > 257 days until 1 June.
+> *Why you started* ▸
+
+**His reason sits behind that tap, not on the screen.** Writing it down is what
+makes it work. Putting it in front of an open-plan floor is a career risk, and
+`PRODUCT.md` rule 5 says nothing on screen should name the job switch to someone
+glancing over. Rule 12 in Part 7 yields to rule 5.
+
+Hiding one line is not a full answer and this document should not pretend it is.
+"Name five companies you would say yes to" also names the job switch, and the
+board shows real company names on screen today. **The plan makes the panic
+switch, currently sitting in Later, more urgent than it was. Whether it moves up
+is Kalpit's call.**
 
 That is the product. The calculators sit underneath and appear when they are
 relevant. The decoder shows up when he has an offer. The notice tracker shows up
 the day he resigns.
+
+### How he comes back at all
+
+**This is the weakest link in the design, and an outside review found it before
+we did.**
+
+There is no account, no email address, no backend, and no notification code
+anywhere in the repo. Nothing can reach Ravi. The returning-visitor screen above
+assumes he comes back on Sunday, and nothing in the product causes that to
+happen. A plan he never reopens is a one-page report with extra steps.
+
+Three answers. None of them is strong, and they are worth having anyway.
+
+**The calendar file is the way back, so it has to carry the link.** A calendar
+event can hold a URL and a description, and calendar apps show them. Every event
+we generate carries a link straight back to his plan. That is the only reminder
+a site with no server can send, which makes `src/lib/ics.ts` matter far more
+than a file that writes a date format should.
+
+**The site is installable and nearly nobody knows it.** The manifest is already
+there, set to standalone with icons. "Add to home screen" turns it into an app
+icon, which is a real way back. Read the first risk in Part 10 before leaning on
+this, because of what the icon is currently called.
+
+**The first session has to be worth it even if he never returns.** He should
+leave with his dates in his calendar and one thing done, so the visit paid for
+itself on its own. Design for one session. Treat every return as a bonus rather
+than an assumption.
 
 *The figures above are illustrative. Every real number on the site comes from
 the engines, which carry the section of the Act and the date it was checked.*
@@ -211,9 +257,13 @@ would show him two next things at once, which breaks rule 9 below.
    example. *(the shared pay record)*
 4. Name five companies you would say yes to. *(tracker cards, no job title
    needed)*
-5. Tell one person. *(a share card with dates only, no money)*
+5. Tell one person **outside your company**. A partner, a sibling, a friend
+   with no line back to your employer. *(a share card with dates only, no money)*
 6. Message one ex-colleague about a referral. *(Scripts)*
-7. Update your Naukri and LinkedIn headline. *(a checklist, never automation)*
+7. Update your Naukri and LinkedIn headline. **The most visible thing on this
+   list**, so the action says so plainly and points at the recruiters-only
+   settings before it suggests changing anything. *(a checklist, never
+   automation)*
 8. Research the first company using your own AI. *(Prompt Studio)*
 9. Block two hours on Saturday for applications. *(calendar file)*
 10. Apply to one.
@@ -224,6 +274,16 @@ application, an interview and an offer.
 **Action 3 used to say "enter your current in-hand".** It does not, because we
 do not store in-hand anywhere. In-hand is something the decoder works out from a
 full offer. What we store is monthly basic and gross.
+
+**On the order, where this document disagrees with its outside review.** The
+review said "tell one person" at five is too early for an Indian IT employee on
+90 days notice, and should move to eight or nine. The secrecy concern is right
+and it is why the action now names who to tell. Moving it is wrong. Telling
+someone is a commitment device and its whole value is early, when motivation is
+the thing that is missing. Moved to nine it arrives after the hard part is
+already done. Steps six and seven are the larger disclosures anyway, since an
+ex-colleague may still talk to current ones and a jobseeker profile is public by
+design. Those two carry the warnings. **Round two settles this, not argument.**
 
 ---
 
@@ -275,8 +335,10 @@ minutes it is really two actions.
 attaches to a date, as in "leaving three days early loses ₹2,07,700". Never the
 other way round. This is also why the three questions ask for no salary.
 
-**12. Their words, given back.** The reason they typed opens every visit. We
-never write their motivation for them.
+**12. Their words, given back, but never on display.** The reason they typed is
+one tap away on every visit, collapsed by default. We never write their
+motivation for them, and we never put it in front of whoever is walking past.
+Where this rule and rule 5 pull against each other, rule 5 wins.
 
 **13. A date is a decision, so keep it visible.** Days remaining, every visit.
 Changing it is allowed and recorded. Never nagged about.
@@ -311,6 +373,14 @@ there.
 - **Prompt Studio reads the plan**, so prompts arrive pre-filled with the
   company and the stage. Never with money.
 
+### Also now, because the plan depends on them
+
+- **Rename the installed app.** `public/manifest.webmanifest` currently names
+  the job switch on a home screen. One file, and it blocks nothing, but the plan
+  leans on people installing the site.
+- **Decide whether the panic switch moves up.** It is in Later today. A home
+  page that opens on someone's switch plan raises the cost of not having it.
+
 ### Later
 
 - **When an offer goes cold.** What to do on day 40 of notice when the new
@@ -343,16 +413,27 @@ interviewing.
 **The message.** "Open this, answer the three questions, and do the first thing
 if you feel like it. I'll ask you three questions next Sunday."
 
-**Ask a week later.**
+**Ask a week later.** All four are about what already happened. None asks for a
+promise.
 
 1. Did you do the first action?
 2. Did you pick a date?
-3. Will you open it again this Sunday?
+3. Did you put the dates in your calendar?
+4. Have you opened it again since that first time?
 
-**The pass mark.** Five of ten did the first action. Four picked a date. Three
-say they will come back. Miss any one, fix it and run again with ten new people.
-**Miss twice and stop building.** The premise is wrong and another tool will not
-fix it.
+**The pass mark.** Five of ten did the first action. Four picked a date. Four
+saved the calendar. Three opened it again. Miss any one, fix it and run again
+with ten new people. **Miss twice and stop building.** The premise is wrong and
+another tool will not fix it.
+
+**Question three carries more weight than it looks.** The calendar file is the
+only way the product can reach anyone, so someone who did not save it is
+someone who is not coming back.
+
+**The earlier version of this list asked "will you open it again this Sunday?"**
+An outside review pointed out that this is a promise, and the same page says
+compliments are not data. It was inconsistent and it is fixed. A promise made to
+the person who built the thing is the least reliable answer anyone gives.
 
 **What does not count.** "Looks clean." "Nice idea." Compliments are not data.
 
@@ -360,6 +441,19 @@ fix it.
 
 ## 10. What could go wrong
 
+- **Nothing can bring anyone back.** No account, no email, no notifications, no
+  server. The calendar file and an installed icon are the whole answer and both
+  are weak. If round two shows people do the first action and never return, the
+  honest options are a reminder that needs a server, which is Kalpit's decision
+  under `PRIVACY.md` and nobody else's, or accepting that this is a one-session
+  product and designing it as one.
+- **The installed app announces the job switch.** `public/manifest.webmanifest`
+  calls it "Switch Karle — Decode your CTC" and describes decoding your Indian
+  job offer. Whoever installs it gets that on a home screen, and the same words
+  appear in the browser's install prompt. That is rule 5 broken in browser
+  chrome, on `main`, today. It is not caused by this proposal and it gets worse
+  under it, because the plan leans on installation as a way back. **Renaming it
+  is branding, so it is Kalpit's call, not an agent's.**
 - **The premise might be wrong.** People may take the first action and still not
   switch. Or not take it at all. The pass mark exists so this shows up in two
   weeks instead of two years.
@@ -460,6 +554,16 @@ CTC, PF and notice period in English. `PRODUCT.md` rule 1 holds: a real calendar
 renders from example inputs behind the Example chip before anyone types. Check at
 375px: the first action must be visible without scrolling.
 
+**The reason for leaving is collapsed by default** and opens on an explicit tap.
+It must not be in the first paint, in the tab title, or in any meta tag. Pin that
+with a test, because it is a rule-5 obligation and not a style preference.
+
+**The erase control has to survive the change.** It lives in two places today:
+`src/components/Shell.tsx` puts it in the footer of every page, which a new home
+page inherits for free, and `src/components/Tracker.tsx` puts it in the board's
+button row, which moves off the home page when the tracker does. Do not let the
+second one disappear silently in the move.
+
 **Done when** a stranger with nothing saved lands, reads two sentences, answers
 three questions, sees their own dates and one thing to do, and nobody with
 existing saved data notices any change.
@@ -474,6 +578,10 @@ existing saved data notices any change.
   `PRODUCT.md` rule 2, and it is why someone at stage 0 cannot use it today.
 - `src/lib/ics.ts`: pure string builder, tested against a fixed expected output.
   Dull event titles by default. Downloaded the same way the share image is.
+  **Every event carries a URL back to the plan**, in both the `URL` property and
+  the description, because this file is the only reminder a site with no server
+  can send. Test that the link is present in every event and that no event
+  contains a rupee figure, a company name or the words that name the job switch.
 - The "tell one person" card: dates and stage only. Reuse the share image path.
 
 **Done when** a round-two tester goes from first visit to "applied to one"
