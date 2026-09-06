@@ -10,6 +10,34 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-07 — The front door becomes a dated plan, as a trial
+
+**Decided by Kalpit.** The first visit stops being a board and a grid of
+calculators. It becomes three questions, the dates they produce, a resign date to
+pick, and one button that keeps the dates. Three colleagues rejected the site,
+and what they meant was that they arrived stuck at "I want to leave and cannot
+start" and were handed tools that only matter later.
+
+**It is a trial, not a settled direction.** Ten people, a pass mark written down
+before anyone sees it, and a miss-twice-and-stop rule. Both live in `ROADMAP.md`.
+The screen-by-screen spec is `docs/DIRECTION.md`, which is deleted once the
+result is recorded there.
+
+**Rule 5 retired**, in place and keeping its number so the five references below
+it survive. His reasoning: most people do this on a personal device in the
+evening, and designing every screen around the few who open it at work taxes
+everyone else. "The site is called Switch Karle, the URL says so, and so do the
+tab title and the installed app. A rule the product's own name breaks on every
+page is decoration." Rule 6, nothing persists unless the user chose it, is a
+separate promise and it stands. The panic switch stays on the roadmap as an
+opt-in.
+
+**`PRODUCT.md` and `ROADMAP.md` were edited by an agent**, under Kalpit's
+explicit one-off authorisation on 2026-09-07 and only for this. The standing
+rule is unchanged: agents never edit either file.
+
+---
+
 ## 2026-09-05 — An erase control, and storage that waits for the user
 
 **Decided:** ship the ROADMAP "Now" item as two halves — the erase button, and
