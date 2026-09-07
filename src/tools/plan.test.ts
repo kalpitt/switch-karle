@@ -37,6 +37,15 @@ describe('the door writes each fact to its own record', () => {
   it('asks for no money anywhere: rule 11 puts money after a date', () => {
     expect(door).not.toMatch(/MoneyField|monthlyBasic|monthlyGross|formatINR/)
   })
+
+  it('reads a skipped hike month back as skipped, not as the example month', () => {
+    // Rule 7. Someone who tapped "skip this" and closed the tab has answered
+    // the question; the plan simply holds no month for them. Falling back to
+    // EXAMPLE on the next visit shows May with no Example chip beside it and
+    // invents a cliff that moves their earliest clean date.
+    const mount = door.match(/setAnswers\(\{[\s\S]*?\}\)/)?.[0] ?? ''
+    expect(mount).toMatch(/hikeCreditMonth:\s*\n?\s*savedPlan\.hikeCreditMonth \?\? \(answeredBefore \? 0 : EXAMPLE\.hikeCreditMonth\)/)
+  })
 })
 
 describe('Phase 0 renders no outbound action', () => {

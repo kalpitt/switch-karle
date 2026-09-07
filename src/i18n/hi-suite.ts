@@ -64,7 +64,7 @@ export const hiSuite: Record<string, string> = {
   'plan.trade.fixed.detail': '{date} को बाहर। Apply करना {apply} तक शुरू कर दें।',
   'plan.trade.earned.detail':
     'यहाँ से कोई भी date चुनेंगे तो आगे जो बाक़ी है वह छोड़ना पड़ेगा। {date} से कुछ नहीं छूटता।',
-  'plan.trade.own.detail': 'Date डालिए, बाक़ी हिसाब मैं उससे पीछे की ओर लगा दूँगा।',
+  'plan.trade.own.detail': 'Date डालिए, बाक़ी सब उसी से पीछे की ओर निकल आएगा।',
   'plan.trade.late': 'Apply शुरू करने में आप पहले ही देर कर चुके होंगे।',
   'plan.trade.dateLabel': 'आपकी date',
   'plan.trade.use': 'यही date रखें',
@@ -87,7 +87,7 @@ export const hiSuite: Record<string, string> = {
   'plan.reason.hint': 'एक लाइन। हर बार लौटने पर यह सबसे ऊपर दिखेगी। Optional है।',
   'plan.reason.save': 'यह लाइन save करें',
   'plan.reason.saved': 'Save हो गई',
-  'plan.looking.cta': 'मैं अभी से देखना शुरू करना चाहता हूँ',
+  'plan.looking.cta': 'मुझे अभी से देखना शुरू करना है',
   'plan.looking.warning':
     'अभी शुरू करना बिलकुल ठीक है। दो चीज़ें manager तक पहुँच सकती हैं: referral वाला message, और आपकी public profile में बदलाव। दोनों अपने आप नहीं होतीं, दोनों आपकी मर्ज़ी हैं।',
   'plan.looking.since': '{date} से देख रहे हैं। आपकी resign date वहीं है, हिली नहीं।',

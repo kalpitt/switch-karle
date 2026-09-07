@@ -79,14 +79,21 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setToday(todayIso())
     setJob(savedJob)
     setPlan(savedPlan)
+    // A value the user typed in some other tool is theirs, not an example, and
+    // rule 7 says it is never asked for twice.
+    const answeredBefore = savedJob.joinDate != null || savedJob.noticePeriodDays != null
     setAnswers({
       joinDate: savedJob.joinDate ?? EXAMPLE.joinDate,
       noticePeriodDays: savedJob.noticePeriodDays ?? EXAMPLE.noticePeriodDays,
-      hikeCreditMonth: savedPlan.hikeCreditMonth ?? EXAMPLE.hikeCreditMonth,
+      // For someone who has answered before, a hike month the plan does not
+      // hold IS their answer: they tapped "skip this". Falling back to the
+      // example there puts May back in front of them with no Example chip
+      // beside it, and invents a hike cliff they have already said they do not
+      // have — which moves their earliest clean date.
+      hikeCreditMonth:
+        savedPlan.hikeCreditMonth ?? (answeredBefore ? 0 : EXAMPLE.hikeCreditMonth),
     })
-    // A value the user typed in some other tool is theirs, not an example, and
-    // rule 7 says it is never asked for twice.
-    if (savedJob.joinDate != null || savedJob.noticePeriodDays != null) setTouched(true)
+    if (answeredBefore) setTouched(true)
     if (savedPlan.resignDate != null) setReturning(true)
   }, [])
 

@@ -49,7 +49,7 @@ export const en: Record<string, string> = {
   'plan.trade.fixed.detail': 'Out on {date}. Start applying by {apply}.',
   'plan.trade.earned.detail':
     'Pick any date from here and you give up whatever is still ahead. From {date} nothing is given up.',
-  'plan.trade.own.detail': 'Type it and I will work backwards from it.',
+  'plan.trade.own.detail': 'Type it and the rest works backwards from it.',
   'plan.trade.late': 'You would already be late to start applying.',
   'plan.trade.dateLabel': 'Your date',
   'plan.trade.use': 'Use this date',
