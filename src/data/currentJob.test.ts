@@ -109,6 +109,72 @@ describe('current job record', () => {
 })
 
 /**
+ * The three fields the plan adds (docs/DIRECTION.md Part 5). All three are
+ * facts about the employer, so they live here rather than on the plan.
+ *
+ * `sanitise` used to keep a field only when it was a finite number above zero,
+ * which silently dropped every one of them: a join date is a string, and
+ * `coveredByAct: false` — the answer that actually changes the screen — is a
+ * boolean that is also falsy. Per-field validation is what these pin.
+ */
+describe('the employer facts the plan needs: join date, work week, Act coverage', () => {
+  it('keeps a valid ISO join date, and a work week of 5 or 6', () => {
+    install()
+    rememberCurrentJob({ joinDate: '2022-01-12', workWeekDays: 5 })
+    expect(loadCurrentJob()).toEqual({ joinDate: '2022-01-12', workWeekDays: 5 })
+    rememberCurrentJob({ workWeekDays: 6 })
+    expect(loadCurrentJob().workWeekDays).toBe(6)
+  })
+
+  it('coveredByAct: false survives — it is the answer that matters', () => {
+    install()
+    rememberCurrentJob({ coveredByAct: false })
+    expect(loadCurrentJob()).toEqual({ coveredByAct: false })
+    rememberCurrentJob({ coveredByAct: true })
+    expect(loadCurrentJob().coveredByAct).toBe(true)
+  })
+
+  it('a junk join date is dropped rather than stored', () => {
+    install()
+    rememberCurrentJob({ joinDate: '2022-01-12' })
+    for (const junk of ['12/01/2022', '2022-1-12', '2022-02-30', '2022-13-01', 'yesterday', '']) {
+      rememberCurrentJob({ joinDate: junk })
+    }
+    expect(loadCurrentJob().joinDate).toBe('2022-01-12')
+  })
+
+  it('a work week of 7, or 0, or a string, is dropped', () => {
+    install()
+    rememberCurrentJob({ workWeekDays: 5 })
+    mem.setItem(
+      CURRENT_JOB_STORAGE_KEY,
+      JSON.stringify({ workWeekDays: 7, joinDate: '2022-01-12' }),
+    )
+    expect(loadCurrentJob()).toEqual({ joinDate: '2022-01-12' })
+    mem.setItem(CURRENT_JOB_STORAGE_KEY, JSON.stringify({ workWeekDays: '5' }))
+    expect(loadCurrentJob()).toEqual({})
+    mem.setItem(CURRENT_JOB_STORAGE_KEY, JSON.stringify({ coveredByAct: 'no' }))
+    expect(loadCurrentJob()).toEqual({})
+  })
+
+  it('a number field is still a positive finite number, and nothing else', () => {
+    install()
+    mem.setItem(
+      CURRENT_JOB_STORAGE_KEY,
+      JSON.stringify({ monthlyBasic: '90000', noticePeriodDays: 0, monthlyGross: 1_50_000 }),
+    )
+    expect(loadCurrentJob()).toEqual({ monthlyGross: 1_50_000 })
+  })
+
+  it('the key is not versioned up: old records simply lack the new fields', () => {
+    install()
+    mem.setItem(CURRENT_JOB_STORAGE_KEY, JSON.stringify({ monthlyBasic: 90_000 }))
+    expect(CURRENT_JOB_STORAGE_KEY).toBe('switchkarle.current-job.v1')
+    expect(loadCurrentJob()).toEqual({ monthlyBasic: 90_000 })
+  })
+})
+
+/**
  * The distinction that cost two bugs, both reproduced in a browser before this
  * was written: a field the tool never writes back to the record must not be
  * put back over a draft the user has already saved.

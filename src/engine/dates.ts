@@ -43,6 +43,21 @@ function formatISO(p: Ymd): string {
   return `${y}-${m}-${d}`
 }
 
+/**
+ * True for a real calendar date written as `YYYY-MM-DD`. The predicate the rest
+ * of the app needs before it hands a string to the functions below, which throw
+ * rather than guess. `2022-02-30` parses as digits and is still not a day.
+ */
+export function isIsoDate(value: unknown): value is string {
+  if (typeof value !== 'string') return false
+  try {
+    parts(value)
+    return true
+  } catch {
+    return false
+  }
+}
+
 /** Calendar date in UTC from a Date (tests inject `now`). */
 export function todayUTC(now = new Date()): string {
   return formatISO({ y: now.getUTCFullYear(), m: now.getUTCMonth() + 1, d: now.getUTCDate() })

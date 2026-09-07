@@ -55,6 +55,30 @@ function payableYearsFor(joinISO: string, exitISO: string, completedYears: numbe
   return completedYears + (stubBeyondSixMonths ? 1 : 0)
 }
 
+/**
+ * The calendar date on which s.2A eligibility is reached: four completed years
+ * plus this establishment's fast-path days into the fifth (190 on a five-day
+ * week, 240 on a six-day week). Both are shorter than a fifth full year, so
+ * this is always the earliest date eligibility can arrive.
+ *
+ * `gratuity().flipDate` answers the same question but only while the person is
+ * still short of the line — it is null once they are eligible. The plan screen
+ * needs the date even when it is in the past ("safe since 21 July 2026"), and
+ * needs both work weeks' readings before the user has said which is theirs, so
+ * it asks here instead. Same statute, same numbers, no second source.
+ *
+ * Returns null when the Act does not cover the employer: no amount of tenure
+ * creates a statutory date for an establishment the statute does not reach.
+ */
+export function gratuityEligibilityDate(
+  joinDate: string,
+  workWeekDays: 5 | 6 = 6,
+  coveredByAct = true,
+): string | null {
+  if (!coveredByAct) return null
+  return addDays(addMonths(joinDate, 48), FAST_PATH_DAYS[workWeekDays])
+}
+
 function flipDateWhenIneligible(
   joinDate: string,
   tenure: ReturnType<typeof completedYearsWithDayCount>,

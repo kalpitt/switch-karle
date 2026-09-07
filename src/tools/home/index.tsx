@@ -3,12 +3,22 @@ import { homeSections, pinnedTools } from '../../data/home'
 import type { ToolDef } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Tracker } from '../../components/Tracker'
+import { Plan } from '../plan'
 
 export default function HomeTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="home">
-      <HomeGrid />
+      {/* The front door is the home page. A stranger lands on three questions,
+          not on a board and not on a grid of calculators: they arrive stuck at
+          "I want to leave and cannot start", and a Kanban column is an answer
+          to a question they have not reached yet (docs/DIRECTION.md Part 13).
+          `Plan` shows the saved plan instead once a resign date exists, and
+          hides everything below on that screen. */}
+      {/* `data-tool="home"` stays on the page itself: check:base asserts
+          dist/index.html is the home island and not some other tool's. */}
+      <div data-tool="home">
+        <Plan belowDoor={<BelowTheDoor />} />
+      </div>
     </IslandRoot>
   )
 }
@@ -30,25 +40,32 @@ function ToolCard({ tool, lang, featured = false }: { tool: ToolDef; lang: Lang;
   )
 }
 
-function HomeGrid() {
+/**
+ * Everything the door pushed down: the board, and the tools behind one tap.
+ *
+ * The tracker is no longer rendered here — it is the `tracker` page, which is
+ * one tap from the nav on every screen and from the link below. Its own erase
+ * control travels with it, so the second copy did not vanish in the move.
+ * Removing the tool grid is Phase 2, not this one, so it stays where it was:
+ * collapsed, under the door.
+ */
+function BelowTheDoor() {
   const t = useT()
   const { lang } = useLang()
   const pinned = pinnedTools()
   const sections = homeSections()
   // Counted from what the disclosure actually renders, not from TOOLS.length —
-  // the registry also carries `tracker` and `prompts`, which live in the nav,
-  // and the tracker is now the page itself.
+  // the registry also carries `tracker` and `prompts`, which live in the nav.
   const toolCount = pinned.length + sections.reduce((n, section) => n + section.tools.length, 0)
 
-  // The board is the page. Research killed the tool-menu home: visitors bounced
-  // off the grid within seconds, and the tracker was the one part they wanted.
-  // The tools are not gone: they are one tap down here, and one tap from the
-  // stage doorways on each card, which is what the kicker promises.
   return (
-    <div data-tool="home" className="space-y-8">
-      <p className="max-w-2xl text-[15px] leading-relaxed text-ink-soft">{t('home.kicker')}</p>
-
-      <Tracker />
+    <div className="space-y-4">
+      <p className="text-[13px] leading-relaxed text-ink-faint">
+        {t('home.trackerLink')}{' '}
+        <a href={withLang(lang, 'tracker')} className="font-semibold text-saffron underline">
+          {t('home.trackerLink.cta')}
+        </a>
+      </p>
 
       <details className="group rounded-2xl border border-line bg-card">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-[14px] font-bold">

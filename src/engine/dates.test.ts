@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, lastWorkingDay, monthsBetween } from './dates'
+import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, isIsoDate, lastWorkingDay, monthsBetween } from './dates'
 
 describe('daysBetween', () => {
   it('is 0 for the same day', () => {
@@ -128,5 +128,27 @@ describe('monthsBetween', () => {
 
   it('crosses a leap day without drifting', () => {
     expect(monthsBetween('2028-01-29', '2028-02-29')).toBe(1)
+  })
+})
+
+describe('isIsoDate', () => {
+  it('accepts a real calendar date in YYYY-MM-DD', () => {
+    expect(isIsoDate('2022-01-12')).toBe(true)
+    expect(isIsoDate('2024-02-29')).toBe(true)
+  })
+
+  it('rejects a day the calendar does not have, however well formatted', () => {
+    expect(isIsoDate('2022-02-30')).toBe(false)
+    expect(isIsoDate('2023-02-29')).toBe(false)
+    expect(isIsoDate('2022-13-01')).toBe(false)
+  })
+
+  it('rejects anything that is not the ISO shape, and anything that is not a string', () => {
+    for (const junk of ['12/01/2022', '2022-1-12', '', 'yesterday', '2022-01-12T00:00:00Z']) {
+      expect(isIsoDate(junk)).toBe(false)
+    }
+    expect(isIsoDate(20220112)).toBe(false)
+    expect(isIsoDate(null)).toBe(false)
+    expect(isIsoDate(undefined)).toBe(false)
   })
 })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { GRATUITY_CAP, gratuity } from './gratuity'
+import { GRATUITY_CAP, gratuity, gratuityEligibilityDate } from './gratuity'
 
 /**
  * Goldens from the CA-closed G1 spec (master plan §6 PR G1), basic ₹50,000.
@@ -90,5 +90,27 @@ describe('gratuity — eligibility vs payable years (PGA s.2A / s.4(2))', () => 
     expect(r.amount).toBe(0)
     expect(r.eligible).toBe(false)
     expect(r.notes.some((n) => n.id === 'act-may-not-apply')).toBe(true)
+  })
+})
+
+describe('gratuityEligibilityDate — the same s.2A date, answerable in the past', () => {
+  it('agrees with flipDate while the person is still short of the line', () => {
+    const short = gratuity({ ...BASE, exitDate: '2024-03-27' })
+    expect(gratuityEligibilityDate(BASE.joinDate, 6)).toBe(short.flipDate)
+    const shortFive = gratuity({ ...BASE, exitDate: '2024-02-06', workWeekDays: 5 })
+    expect(gratuityEligibilityDate(BASE.joinDate, 5)).toBe(shortFive.flipDate)
+  })
+
+  it('still answers once eligibility is behind them, where flipDate is null', () => {
+    // The plan screen says "safe since 21 July 2026", which needs the date
+    // after it has passed. gratuity() has stopped returning one by then.
+    expect(gratuity({ ...BASE, exitDate: '2026-01-01' }).flipDate).toBeNull()
+    expect(gratuityEligibilityDate('2022-01-12', 5)).toBe('2026-07-21')
+    expect(gratuityEligibilityDate('2022-01-12', 6)).toBe('2026-09-09')
+  })
+
+  it('defaults to the six-day week and returns nothing when the Act does not apply', () => {
+    expect(gratuityEligibilityDate('2022-01-12')).toBe('2026-09-09')
+    expect(gratuityEligibilityDate('2022-01-12', 5, false)).toBeNull()
   })
 })

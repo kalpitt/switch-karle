@@ -156,8 +156,14 @@ call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
 
 Built 2026-09-06 on `feat/current-job-record` (PR #39); true on `main` once that
 merges. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
-four optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
-`noticePeriodDays`. Basic and basic+DA never cross-seed — gratuity is on basic +
+seven optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
+`noticePeriodDays`, and — added by the door, 2026-09-07 — `joinDate`,
+`workWeekDays` (5 or 6) and `coveredByAct`. The last three are facts about the
+employer, so they live here rather than in the plan; `sanitise` validates
+per-field for them, because the old "finite number above zero" test dropped an
+ISO date for being a string and `coveredByAct: false` for being falsy. Adding
+optional fields is backward compatible and needs no key version bump. Basic and
+basic+DA never cross-seed — gratuity is on basic +
 DA (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
 would hand a DA-drawing employee's wrong number to whichever tool read it.
 
@@ -192,6 +198,45 @@ which the record replaces for these six tools.
 The record never echoes on mount, so `loadCurrentJob` calls `releaseBootEcho` on
 every read — without it, the first value typed into any of the six tools would
 be silently dropped, the trap described above.
+
+### The plan record, and the door on the home page
+
+Built 2026-09-07 on `feat/plan-phase-0`. The home page is `src/tools/home/`,
+which keeps `data-tool="home"` on its wrapper (`check:base` asserts
+`dist/index.html` is the home island) and renders `src/tools/plan/` inside it.
+The board and the tool grid are pushed below, and neither renders on the return
+screen.
+
+| Record | Key | Holds |
+|---|---|---|
+| `src/data/currentJob.ts` | `switchkarle.current-job.v1` | facts about the employer: pay, `noticePeriodDays`, `joinDate`, `workWeekDays`, `coveredByAct` |
+| `src/data/plan.ts` | `switchkarle.plan.v1` | what the plan invented: `reason`, `hikeCreditMonth` + `hikeCreditYear`, `resignDate`, `lookingSince`, `ticks`, `companies` |
+
+**One home per fact, and it is load-bearing.** A join date in both records is
+how someone types it once and sees two different gratuity dates.
+`src/tools/plan.test.ts` reads the component's source and fails if any
+`savePlan` call mentions a current-job field. **No money is in the plan record at
+all** — the `dates.ics` file is built from it and may land in a work calendar.
+
+The plan record does **not** echo its draft on mount: it is written from
+discrete answers (submitting the three questions, tapping a trade, tapping
+"start looking", saving a reason), never from continuous typing. So `loadPlan`
+calls `releaseBootEcho` for the reason the section above gives — left armed, the
+skip would swallow the session's first real save, which for a first-time visitor
+is their resign date.
+
+`src/engine/switchCalendar.ts` is the arithmetic: cliffs, `earliestCleanDate`,
+the trades, and the backward plan from a chosen date. Pure, UTC, ids not English,
+and it never sees a rupee. `gratuityEligibilityDate` in `src/engine/gratuity.ts`
+reuses the existing `FAST_PATH_DAYS` constant under the same VERIFIED marker —
+no second source and no new statutory number. `src/lib/ics.ts` is a pure string
+builder for `dates.ics`, all-day events, no `VALARM` (Google Calendar drops
+custom alarms on import), and its link comes from `SITE` + `BASE` rather than a
+literal.
+
+Erase needs no change for the new key: `src/lib/erase.ts` sweeps the
+`switchkarle.` prefix. `erasePlan()` is the narrower door behind "start over",
+which must not take six other tools' saved pay figures with it.
 
 ## Shoulder-surfing: Notes mode removed 2026-08-30, replacement in backlog
 

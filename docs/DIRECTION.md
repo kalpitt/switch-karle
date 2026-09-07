@@ -953,27 +953,32 @@ action is not one screen. It is four. Staged, it fits:
 
 **Screen one.** The tagline from Part 2, and the three questions. Nothing else.
 
-**Screen two.** The cliffs. **The work week is a fork, not a default**: print both
-readings, with the question "which is yours?", and label neither as the user's
-until they answer. No countdown sentence before the answer. The ten-employee line
-sits under the gratuity cliff and works the same way. Both answers are written to
-`currentJob`. No rupees on this screen at all. Then the date step, offering
-**trades, not bare dates**: "keep the hike" (the day after the hike cliff, which is
-the last day of the hike month), "keep only what is already earned" (shows
-`earliestCleanDate` and asks for a date), and "I already have a date". **No option
-is marked recommended, and any option whose `startApplyingBy` has already passed
-says so on itself, in words.** When there are no cliffs at all, which is what
-`gratuity()` returns for anyone already past the line, the options become plain
-runway instead: three months, six months, **31 March (the end of the financial
-year)**, any date. **A blank timeline is never shipped.**
+**Screen two.** The cliffs, and nothing else. **The work week is a fork, not a
+default**: print both readings, with the question "which is yours?", and label
+neither as the user's until they answer. No countdown sentence before the answer.
+The ten-employee line sits under the gratuity cliff and works the same way. Both
+answers are written to `currentJob`. No rupees on this screen at all.
 
-**Screen three.** The dates recap, then **one button: add these to my calendar.**
-Below it, the optional reason box, with one line saying the reason comes back at
-the top of the next visit. Below that, the looking tap: **"I want to start looking
-now"**, which sets `plan.lookingSince` to today, unlocks the outbound actions, and
-**does not move the resign date**. It carries one line of warning naming the two
-things that reach a manager: the referral message and a change to a public
-profile. **The words "starting now is allowed" appear on this screen.**
+**Screen three.** The date step, offering **trades, not bare dates**: "keep the
+hike" (the day after the hike cliff, which is the last day of the hike month),
+"keep only what is already earned" (shows `earliestCleanDate` and asks for a
+date), and "I already have a date". **No option is marked recommended, and any
+option whose `startApplyingBy` has already passed says so on itself, in words.**
+When there are no cliffs at all, which is what `gratuity()` returns for anyone
+already past the line, the options become plain runway instead: three months, six
+months, **31 March (the end of the financial year)**, any date. **A blank
+timeline is never shipped.**
+
+Then, on the same screen once a date exists, the options give way to the dates
+recap and **one button: add these to my calendar.** They are swapped rather than
+stacked: leaving five option cards above the recap pushes the one button this
+screen is for off a 375px viewport. "Change my date" brings them back. Below the
+button, the optional reason box, with one line saying the reason comes back at
+the top of the next visit. Below that, the looking tap: **"I want to start
+looking now"**, which sets `plan.lookingSince` to today, unlocks the outbound
+actions, and **does not move the resign date**. It carries one line of warning
+naming the two things that reach a manager: the referral message and a change to
+a public profile. **The words "starting now is allowed" appear on this screen.**
 
 Plus, not on any screen: the Example chip working before anyone types, English and
 Hindi, the tracker still one tap away, and erase still in the footer.
@@ -987,10 +992,12 @@ break.
 cut it. It is the only way this product can reach anyone, and the ten-person test
 in Part 9 measures it in the same week the door ships.
 
-**Not in Phase 0:** the ten tick-boxes, the returning-visitor layout, the share
-card, the journey-stage registry work, Prompt Studio wiring, or removing the tool
-grid. Rule 9 says one next thing, and that applies to the build as much as to the
-screen.
+**Not in Phase 0:** the ten tick-boxes, the share card, the journey-stage
+registry work, Prompt Studio wiring, or removing the tool grid. Rule 9 says one
+next thing, and that applies to the build as much as to the screen. (An earlier
+version of this list also named the returning-visitor layout, which contradicted
+the "with a saved plan" paragraph further down the same section. The layout is in
+Phase 0: without it, a plan can be saved and never handed back.)
 
 **The calculation.** New file `src/engine/switchCalendar.ts`. Pure TypeScript, no
 React, with `switchCalendar.test.ts` written first.
@@ -1143,10 +1150,10 @@ Copy goes in `en.ts` with Hindi pairs in `hi-suite.ts`, in the code-mixed
 register that file already uses, keeping CTC, PF and notice period in English.
 `PRODUCT.md` rule 1 holds: a real calendar renders from example inputs behind the
 Example chip before anyone types. **Check at 375px wide, where the one control on
-each screen must be visible without scrolling**: the questions on screen one, the
-date options on screen two, the add-to-calendar button on screen three. The old
-rule asked one viewport to hold the first action along with everything else, which
-is what forced the split.
+each screen must be visible without scrolling**: "see my dates" on screen one,
+"next: pick a date" on screen two, the first date option and then the
+add-to-calendar button on screen three. The old rule asked one viewport to hold
+the first action along with everything else, which is what forced the split.
 
 **Done when** a stranger with nothing saved lands, reads the tagline, answers
 three questions, sees their own dates, and leaves with them in their calendar.

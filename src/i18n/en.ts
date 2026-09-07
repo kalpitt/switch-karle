@@ -5,6 +5,99 @@
  * language-specific entry is missing).
  */
 export const en: Record<string, string> = {
+  // ---- The plan: the front door (docs/DIRECTION.md Part 3, 4 and 13) ----
+  'plan.tagline':
+    'You have wanted to leave for a while. Three questions. Your dates. One thing to do today.',
+  'plan.q.title': 'Three questions',
+  'plan.example.chip': 'Example',
+  'plan.example.note': 'Example answers, so a real calendar is here before you type. Change them to yours.',
+  'plan.q.join': 'When did you join?',
+  'plan.q.joinHint': 'The day you started at your current employer.',
+  'plan.q.notice': 'What is your notice period?',
+  'plan.q.noticeHint': 'The number in your appointment letter.',
+  'plan.q.noticeSuffix': 'days',
+  'plan.q.hike': 'Which month does the hike actually reach your account?',
+  'plan.q.hikeHint':
+    'Not the appraisal month and not the letter month — the month the money lands. You can skip this.',
+  'plan.q.hikeSkip': 'Skip this',
+  'plan.q.next': 'See my dates',
+  'plan.back': 'Back',
+
+  'plan.cliffs.title': 'Your dates, before any money',
+  'plan.week.title': 'Gratuity depends on your week.',
+  'plan.week.five': 'Five-day week, Saturday and Sunday off',
+  'plan.week.six': 'Six-day week',
+  'plan.week.ask': 'Which is yours?',
+  'plan.gratuity.past':
+    'Your gratuity was already safe on {date}, {days} days ago. That is one thing less holding you here.',
+  'plan.gratuity.ahead': 'Your gratuity is safe from {date}, {days} days away.',
+  'plan.act.label': 'Fewer than ten people at your employer?',
+  'plan.act.hint': 'Then the Act does not cover you. Your employer may still pay gratuity anyway.',
+  'plan.act.none':
+    'With fewer than ten people, the Act sets no gratuity date for you. Nothing statutory is holding you here.',
+  'plan.hike.line': 'Your hike lands in {month}. Resigning before {date} means you never see it.',
+  'plan.cliffs.none': 'Nothing is ahead of you. No date is holding you here.',
+  'plan.cliffs.next': 'Next: pick a date',
+
+  'plan.dates.title': 'When do you want to be out?',
+  'plan.trade.keep-the-hike': 'Keep the hike',
+  'plan.trade.keep-what-is-earned': 'Keep only what is already earned',
+  'plan.trade.own-date': 'I already have a date',
+  'plan.trade.runway-3-months': 'Three months from today',
+  'plan.trade.runway-6-months': 'Six months from today',
+  'plan.trade.runway-financial-year-end': '31 March, the end of the financial year',
+  'plan.trade.fixed.detail': 'Out on {date}. Start applying by {apply}.',
+  'plan.trade.earned.detail':
+    'Pick any date from here and you give up whatever is still ahead. From {date} nothing is given up.',
+  'plan.trade.own.detail': 'Type it and the rest works backwards from it.',
+  'plan.trade.late': 'You would already be late to start applying.',
+  'plan.trade.dateLabel': 'Your date',
+  'plan.trade.use': 'Use this date',
+
+  'plan.recap.title': 'Your dates.',
+  'plan.recap.apply': 'Start applying by {date}.',
+  'plan.recap.offer': 'Offer in hand by {date}.',
+  'plan.recap.resign': 'Resign on {date}.',
+  'plan.recap.lwd': 'Last working day {date}, on {days} days’ notice.',
+  'plan.recap.forfeit': 'you give this up',
+  'plan.cliff.gratuity-5-day': 'Gratuity on {date}',
+  'plan.cliff.gratuity-6-day': 'Gratuity on {date}',
+  'plan.cliff.hike': 'Hike money on {date}',
+  'plan.cliff.bond-end': 'Bond ends {date}',
+  'plan.cliff.bonus-clawback': 'Joining bonus clawback ends {date}',
+  'plan.calendar.cta': 'Add these to my calendar',
+  'plan.calendar.note':
+    'Downloads dates.ics — a check-in in seven days, your cliffs, and your date. The notes inside carry a link with this site’s name in it, so think before adding it to a work calendar.',
+  'plan.reason.label': 'Why are you leaving?',
+  'plan.reason.hint': 'One line. You will see it at the top every time you come back. Optional.',
+  'plan.reason.save': 'Save this line',
+  'plan.reason.saved': 'Saved',
+  'plan.looking.cta': 'I want to start looking now',
+  'plan.looking.warning':
+    'Starting now is allowed. Two things can reach your manager: the referral message and a change to your public profile. Neither is automatic and both stay your choice.',
+  'plan.looking.since': 'Looking since {date}. Your resign date has not moved.',
+  'plan.worth': 'what this is worth',
+  'plan.change': 'Change my date',
+  'plan.startOver': 'Start over',
+  'plan.startOver.confirm':
+    'Delete this plan and start again? Your saved pay figures stay — only the plan goes.',
+  'plan.return.countdown': '{days} days until {date}.',
+  'plan.return.next': 'Next: keep these dates somewhere you will see them.',
+
+  'plan.ics.checkIn': 'Check my dates',
+  'plan.ics.checkIn.note': 'Open the plan and do the next thing.',
+  'plan.ics.cliff.gratuity-5-day': 'Gratuity date',
+  'plan.ics.cliff.gratuity-6-day': 'Gratuity date',
+  'plan.ics.cliff.hike': 'Hike month ends',
+  'plan.ics.cliff.bond-end': 'Bond ends',
+  'plan.ics.cliff.bonus-clawback': 'Joining bonus clawback ends',
+  'plan.ics.cliff.note': 'A date on my plan.',
+  'plan.ics.resign': 'The date I picked',
+  'plan.ics.resign.note': 'The day I picked.',
+
+  'home.trackerLink': 'Already applying? Your board is here:',
+  'home.trackerLink.cta': 'Applications',
+
   // ---- App shell ----
   'app.tagline': 'Decode your offer. Know what actually reaches your bank.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
