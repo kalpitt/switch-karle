@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import {
   cliffs as computeCliffs,
   hikeCliffDate,
@@ -18,7 +18,7 @@ import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
-import { chosenGratuityCliff, isGratuityCliff } from './fork'
+import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
 import { planIcsEvents, planSiteUrl } from './planEvents'
 
 /**
@@ -76,6 +76,11 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [repicking, setRepicking] = useState(false)
   const [downloaded, setDownloaded] = useState(false)
 
+  // The top of whichever screen is showing, so a step change can scroll back
+  // up to it instead of leaving the visitor wherever the last tap landed.
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mounted = useRef(false)
+
   useEffect(() => {
     const savedJob = loadCurrentJob()
     const savedPlan = loadPlan()
@@ -99,6 +104,20 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     if (answeredBefore) setTouched(true)
     if (savedPlan.resignDate != null) setReturning(true)
   }, [])
+
+  // Every step, repicking and recap swap opens at its own top rather than
+  // wherever the previous screen's last tap left the scroll position — not on
+  // the first render, which is already at the top. `hasResignDate` stands in
+  // for the trade-cards-to-recap swap within the dates step, which neither
+  // `step` nor `repicking` alone changes.
+  const hasResignDate = plan.resignDate != null
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    containerRef.current?.scrollIntoView({ block: 'start' })
+  }, [step, repicking, returning, hasResignDate])
 
   const answered = (patch: Partial<Answers>) => {
     setTouched(true)
@@ -251,12 +270,18 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
 
   if (returning && plan.resignDate != null) {
     return (
-      <ReturnScreen {...shared} noticePeriodDays={answers.noticePeriodDays} onChangeDate={changeDate} onStartOver={startOver} />
+      <ReturnScreen
+        {...shared}
+        noticePeriodDays={answers.noticePeriodDays}
+        onChangeDate={changeDate}
+        onStartOver={startOver}
+        containerRef={containerRef}
+      />
     )
   }
 
   return (
-    <div data-tool="plan" className="space-y-3">
+    <div ref={containerRef} data-tool="plan" className="space-y-3">
       <p className="max-w-xl text-[15px] leading-relaxed text-ink-soft">{t('plan.tagline')}</p>
 
       {step === 'questions' && (
@@ -416,6 +441,16 @@ function CliffScreen(props: {
   const chosen = chosenGratuityCliff(props.cliffs, props.workWeekDays)
   const hike = props.cliffs.find((c) => c.id === 'hike')
   const ahead = props.cliffs.filter((c) => !c.passed)
+  const reachable = dateStepReachable(props.coveredByAct, five != null && six != null, props.workWeekDays)
+  const [blocked, setBlocked] = useState(false)
+
+  function handleNext() {
+    if (!reachable) {
+      setBlocked(true)
+      return
+    }
+    props.onNext()
+  }
 
   return (
     <Card className="space-y-4">
@@ -448,6 +483,13 @@ function CliffScreen(props: {
           />
           {props.workWeekDays === undefined && (
             <p className="text-[14px] font-bold">{t('plan.week.ask')}</p>
+          )}
+          {/* The gate: tapping "Next" with neither card chosen re-prints the
+              same question in the warning colour already used for a late
+              trade (plan.trade.late) rather than moving to a date the
+              visitor has not earned a reading for. */}
+          {blocked && props.workWeekDays === undefined && (
+            <p className="text-[14px] font-bold text-alarm">{t('plan.week.ask')}</p>
           )}
           {/* Only once they have answered. `cliffs` holds BOTH readings until
               then, so a `find` here would print the five-day sentence to a
@@ -486,7 +528,7 @@ function CliffScreen(props: {
 
       {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
 
-      <PrimaryButton onClick={props.onNext}>{t('plan.cliffs.next')}</PrimaryButton>
+      <PrimaryButton onClick={handleNext}>{t('plan.cliffs.next')}</PrimaryButton>
       <button type="button" onClick={props.onBack} className="py-1 text-[13px] font-semibold text-ink-faint underline">
         {t('plan.back')}
       </button>
@@ -714,11 +756,13 @@ function Recap(props: RecapProps) {
 
 /* ---- the return screen ---- */
 
-function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
+function ReturnScreen(
+  props: RecapProps & { onStartOver: () => void; containerRef: RefObject<HTMLDivElement | null> },
+) {
   const { t, plan, result } = props
   const days = result.timeline?.daysAway ?? 0
   return (
-    <div data-tool="plan" className="space-y-4">
+    <div ref={props.containerRef} data-tool="plan" className="space-y-4">
       {/* Their own sentence, on the screen and not behind a tap. It is what
           makes someone who has drifted for eleven days do the next twelve
           minutes. It never reaches the tab title or a meta tag. */}

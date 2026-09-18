@@ -128,6 +128,27 @@ describe('the calendar download works on phones and says what happened', () => {
   })
 })
 
+describe('the week must be chosen before the dates, and each step opens at its top', () => {
+  it('CliffScreen gates "Next" on dateStepReachable instead of calling onNext directly', () => {
+    expect(door).toMatch(/import \{ chosenGratuityCliff, dateStepReachable, isGratuityCliff \} from ['"]\.\/fork['"]/)
+    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(cliffScreen).toMatch(/dateStepReachable\(/)
+    expect(cliffScreen).toMatch(/<PrimaryButton onClick=\{handleNext\}>/)
+  })
+
+  it('the blocked re-ask of plan.week.ask uses the alarm colour already used for a late trade', () => {
+    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(cliffScreen).toMatch(/blocked[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
+  })
+
+  it('every step, repicking and recap swap scrolls the container back to its top, skipping the first mount', () => {
+    const scrollEffect = door.match(/\/\/ Every step, repicking and recap swap[\s\S]*?\n  \}, \[[\s\S]*?\]\)/)?.[0] ?? ''
+    expect(scrollEffect).toMatch(/mounted\.current = true\s*\n\s*return/)
+    expect(scrollEffect).toMatch(/scrollIntoView\(\{ block: 'start' \}\)/)
+    expect(scrollEffect).toMatch(/\[step, repicking, returning, hasResignDate\]/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)

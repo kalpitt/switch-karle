@@ -24,3 +24,20 @@ export function chosenGratuityCliff(
   const wanted = workWeekDays === 5 ? 'gratuity-5-day' : 'gratuity-6-day'
   return cliffs.find((cliff) => cliff.id === wanted) ?? null
 }
+
+/**
+ * Whether screen three (the trades) can be reached from screen two.
+ *
+ * Only false while the fork is actually live — Act coverage applies and both
+ * gratuity readings exist — and no answer has been given yet. An employer the
+ * Act does not cover, or one with only one reading, has nothing to fork: the
+ * dates step is reachable straight away.
+ */
+export function dateStepReachable(
+  coveredByAct: boolean,
+  hasBothWeekReadings: boolean,
+  workWeekDays: 5 | 6 | undefined,
+): boolean {
+  if (!coveredByAct || !hasBothWeekReadings) return true
+  return workWeekDays !== undefined
+}
