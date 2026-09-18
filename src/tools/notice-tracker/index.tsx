@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, NumberField, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, NumberField, VerdictBanner } from '../../components/ui'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -80,6 +80,8 @@ function Body() {
     }
   }, [draft.resignDate, draft.noticePeriodDays, asOf])
 
+  /** Untouched fixture on first paint = worked example, not the user's data. */
+  const isExample = JSON.stringify(draft) === JSON.stringify(emptyDraft())
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const toggle = (id: NoticeItemId) =>
     set({ done: draft.done.includes(id) ? draft.done.filter((x) => x !== id) : [...draft.done, id] })
@@ -101,14 +103,18 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
-          {result
-            ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
-                days: Math.max(0, result.daysLeftOnNotice),
-                lwd: result.lastWorkingDay,
-              })
-            : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
-        </VerdictBanner>
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
+            {result
+              ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
+                  days: Math.max(0, result.daysLeftOnNotice),
+                  lwd: result.lastWorkingDay,
+                })
+              : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
+          </VerdictBanner>
+        )}
         <Card className="space-y-2">
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)
