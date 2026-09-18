@@ -169,6 +169,19 @@ describe('the late warning follows the date in the box, and impossible answers c
   })
 })
 
+describe('the hike months run in calendar order from next month', () => {
+  it('the Select options come from hikeMonthOrder(today), not a fixed 1-to-12 list', () => {
+    expect(door).toMatch(/import \{ hikeMonthOrder \} from ['"]\.\/hikeMonthOrder['"]/)
+    expect(door).toMatch(/\.\.\.hikeMonthOrder\(today\)\.map\(\(m\) => \(\{ value: String\(m\), label: monthLabel\(m, today, lang\) \}\)\)/)
+    expect(door).not.toMatch(/const MONTHS = /)
+  })
+
+  it("'Skip this' is still the first option, values still the bare month numbers", () => {
+    const options = door.match(/options=\{\[[\s\S]*?\]\}/)?.[0] ?? ''
+    expect(options).toMatch(/\{ value: '0', label: t\('plan\.q\.hikeSkip'\) \},\s*\n\s*\.\.\.hikeMonthOrder/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)

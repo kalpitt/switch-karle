@@ -20,6 +20,7 @@ import { todayIso } from '../../lib/today'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
+import { hikeMonthOrder } from './hikeMonthOrder'
 import { planIcsEvents, planSiteUrl } from './planEvents'
 
 /**
@@ -57,8 +58,6 @@ interface Answers {
  * edits anything.
  */
 const EXAMPLE: Answers = { joinDate: '2022-01-12', noticePeriodDays: 90, hikeCreditMonth: 5 }
-
-const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
 
 export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const t = useT()
@@ -310,7 +309,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             value={String(answers.hikeCreditMonth)}
             options={[
               { value: '0', label: t('plan.q.hikeSkip') },
-              ...MONTHS.map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
+              ...hikeMonthOrder(today).map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
             ]}
             onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
           />
