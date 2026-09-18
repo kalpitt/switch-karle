@@ -344,18 +344,30 @@ export function ExampleNote({
   chip,
   note,
   className = '',
+  onChipClick,
 }: {
   chip: string
   note: string
   className?: string
+  onChipClick?: () => void
 }) {
   return (
     <p
       className={`rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag ${className}`}
     >
-      <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-        {chip}
-      </span>
+      {onChipClick ? (
+        <button
+          type="button"
+          onClick={onChipClick}
+          className="mr-2 inline-block cursor-pointer rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold hover:underline"
+        >
+          {chip}
+        </button>
+      ) : (
+        <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+          {chip}
+        </span>
+      )}
       {note}
     </p>
   )

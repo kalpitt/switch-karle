@@ -73,6 +73,39 @@ describe('Phase 0 renders no outbound action', () => {
   })
 })
 
+describe('an untouched example is marked as an example on every screen, and never saved', () => {
+  it('guards every savePlan call with touched', () => {
+    const submitQuestions = door.match(/function submitQuestions\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    const pickResignDate = door.match(/function pickResignDate\([\s\S]*?\n  \}/)?.[0] ?? ''
+    const startLooking = door.match(/function startLooking\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    const saveReason = door.match(/function saveReason\([\s\S]*?\n  \}/)?.[0] ?? ''
+
+    expect(submitQuestions).toMatch(/if\s*\(touched\)\s*\{[\s\S]*?savePlan\(/)
+    expect(pickResignDate).toMatch(/if\s*\(touched\)\s*\{?[\s\S]*?savePlan\(/)
+    expect(startLooking).toMatch(/if\s*\(touched\)\s*\{?[\s\S]*?savePlan\(/)
+    expect(saveReason).toMatch(/if\s*\(touched\)\s*\{?[\s\S]*?savePlan\(/)
+  })
+
+  it('renders ExampleNote with plan.example.laterNote on cliffs, dates, recap and return screen when untouched', () => {
+    expect(door).toMatch(/plan\.example\.laterNote/)
+
+    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(cliffScreen).toMatch(/ExampleNote[\s\S]*?plan\.example\.laterNote/)
+
+    expect(door).toMatch(/step === 'dates'[\s\S]*?ExampleNote[\s\S]*?plan\.example\.laterNote/)
+
+    const recap = door.match(/function Recap\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(recap).toMatch(/ExampleNote[\s\S]*?plan\.example\.laterNote/)
+
+    const returnScreen = door.match(/function ReturnScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(returnScreen).toMatch(/ExampleNote[\s\S]*?plan\.example\.laterNote/)
+  })
+
+  it('the Example chip on later screens is tappable back to questions', () => {
+    expect(door).toMatch(/onChipClick/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)

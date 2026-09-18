@@ -26,6 +26,7 @@ export const hiSuite: Record<string, string> = {
   'plan.example.chip': 'Example',
   'plan.example.note':
     'Example जवाब, ताकि टाइप करने से पहले ही असली calendar दिखे। इन्हें अपने हिसाब से बदल दें।',
+  'plan.example.laterNote': 'Example dates, example जवाबों से। अपने जवाब बदलें तो आपकी dates आएँगी।',
   'plan.q.join': 'आपने join कब किया था?',
   'plan.q.joinHint': 'जिस दिन आपने current employer के साथ शुरुआत की थी।',
   'plan.q.notice': 'आपका notice period कितना है?',

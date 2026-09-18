@@ -141,19 +141,19 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
         joinDate: answers.joinDate,
         noticePeriodDays: answers.noticePeriodDays,
       })
+      if (answers.hikeCreditMonth > 0) {
+        // The year the month resolved to is pinned now, so a plan saved this
+        // September still means May 2027 when it is reopened in June 2027.
+        const keep = plan.hikeCreditMonth === answers.hikeCreditMonth && plan.hikeCreditYear != null
+        const cliff = hikeCliffDate(answers.hikeCreditMonth, today)
+        const year = keep ? plan.hikeCreditYear : cliff == null ? null : Number(cliff.slice(0, 4))
+        savePlan({ hikeCreditMonth: answers.hikeCreditMonth, hikeCreditYear: year ?? null })
+      } else {
+        savePlan({ hikeCreditMonth: null, hikeCreditYear: null })
+      }
+      setJob(loadCurrentJob())
+      setPlan(loadPlan())
     }
-    if (answers.hikeCreditMonth > 0) {
-      // The year the month resolved to is pinned now, so a plan saved this
-      // September still means May 2027 when it is reopened in June 2027.
-      const keep = plan.hikeCreditMonth === answers.hikeCreditMonth && plan.hikeCreditYear != null
-      const cliff = hikeCliffDate(answers.hikeCreditMonth, today)
-      const year = keep ? plan.hikeCreditYear : cliff == null ? null : Number(cliff.slice(0, 4))
-      savePlan({ hikeCreditMonth: answers.hikeCreditMonth, hikeCreditYear: year ?? null })
-    } else {
-      savePlan({ hikeCreditMonth: null, hikeCreditYear: null })
-    }
-    setJob(loadCurrentJob())
-    setPlan(loadPlan())
     setStep('cliffs')
   }
 
@@ -168,21 +168,40 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   }
 
   function pickResignDate(date: string) {
-    savePlan({ resignDate: date })
-    setPlan(loadPlan())
+    if (touched) {
+      savePlan({ resignDate: date })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, resignDate: date }))
+    }
     setRepicking(false)
   }
 
   function startLooking() {
     // Records the day, unlocks nothing on screen in Phase 0, and does not move
     // the resign date. Someone can be looking in September and leaving in June.
-    savePlan({ lookingSince: today })
-    setPlan(loadPlan())
+    if (touched) {
+      savePlan({ lookingSince: today })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, lookingSince: today }))
+    }
   }
 
   function saveReason(text: string) {
-    savePlan({ reason: text.trim() === '' ? null : text })
-    setPlan(loadPlan())
+    const trimmed = text.trim() === '' ? null : text
+    if (touched) {
+      savePlan({ reason: trimmed })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, reason: trimmed ?? undefined }))
+    }
+  }
+
+  function goToQuestions() {
+    setReturning(false)
+    setRepicking(false)
+    setStep('questions')
   }
 
   function changeDate() {
@@ -217,7 +236,19 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     URL.revokeObjectURL(url)
   }
 
-  const shared = { t, lang, fmt, plan, result, today, onDownload: downloadDates, onLooking: startLooking, onReason: saveReason }
+  const shared = {
+    t,
+    lang,
+    fmt,
+    plan,
+    result,
+    today,
+    touched,
+    onExampleChip: goToQuestions,
+    onDownload: downloadDates,
+    onLooking: startLooking,
+    onReason: saveReason,
+  }
 
   if (returning && plan.resignDate != null) {
     return (
@@ -269,6 +300,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           workWeekDays={job.workWeekDays}
           coveredByAct={job.coveredByAct ?? true}
           hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+          touched={touched}
+          onExampleChip={goToQuestions}
           onChooseWeek={chooseWeek}
           onChooseCoverage={chooseCoverage}
           onBack={() => setStep('questions')}
@@ -285,6 +318,13 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           {(repicking || plan.resignDate == null) && (
             <Card className="space-y-3">
               <h2 className="text-base font-bold">{t('plan.dates.title')}</h2>
+              {!touched && (
+                <ExampleNote
+                  chip={t('plan.example.chip')}
+                  note={t('plan.example.laterNote')}
+                  onChipClick={goToQuestions}
+                />
+              )}
               {result.trades.map((trade) => (
                 <TradeOption
                   key={trade.id}
@@ -364,6 +404,8 @@ function CliffScreen(props: {
   workWeekDays?: 5 | 6
   coveredByAct: boolean
   hikeLabel: string | null
+  touched: boolean
+  onExampleChip: () => void
   onChooseWeek: (days: 5 | 6) => void
   onChooseCoverage: (covered: boolean) => void
   onBack: () => void
@@ -379,6 +421,13 @@ function CliffScreen(props: {
   return (
     <Card className="space-y-4">
       <h2 className="text-base font-bold">{t('plan.cliffs.title')}</h2>
+      {!props.touched && (
+        <ExampleNote
+          chip={t('plan.example.chip')}
+          note={t('plan.example.laterNote')}
+          onChipClick={props.onExampleChip}
+        />
+      )}
 
       {props.coveredByAct && five != null && six != null ? (
         <div className="space-y-2">
@@ -534,6 +583,8 @@ interface RecapProps {
   result: ReturnType<typeof switchCalendar>
   today: string
   noticePeriodDays: number
+  touched: boolean
+  onExampleChip: () => void
   onDownload: () => void
   onLooking: () => void
   onReason: (text: string) => void
@@ -633,6 +684,13 @@ function Recap(props: RecapProps) {
   return (
     <Card className="space-y-4">
       <h2 className="text-base font-bold">{t('plan.recap.title')}</h2>
+      {!props.touched && (
+        <ExampleNote
+          chip={t('plan.example.chip')}
+          note={t('plan.example.laterNote')}
+          onChipClick={props.onExampleChip}
+        />
+      )}
       <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
       <CalendarButton t={t} onDownload={props.onDownload} />
       <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
@@ -662,6 +720,13 @@ function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
       )}
 
       <Card className="space-y-4">
+        {!props.touched && (
+          <ExampleNote
+            chip={t('plan.example.chip')}
+            note={t('plan.example.laterNote')}
+            onChipClick={props.onExampleChip}
+          />
+        )}
         <p className="text-[15px] font-bold">
           {t('plan.return.countdown', { days, date: props.fmt(result.timeline?.resignDate ?? '') })}
         </p>

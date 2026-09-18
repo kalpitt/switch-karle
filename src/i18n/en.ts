@@ -11,6 +11,7 @@ export const en: Record<string, string> = {
   'plan.q.title': 'Three questions',
   'plan.example.chip': 'Example',
   'plan.example.note': 'Example answers, so a real calendar is here before you type. Change them to yours.',
+  'plan.example.laterNote': 'Example dates, from the example answers. Change the answers to get yours.',
   'plan.q.join': 'When did you join?',
   'plan.q.joinHint': 'The day you started at your current employer.',
   'plan.q.notice': 'What is your notice period?',
