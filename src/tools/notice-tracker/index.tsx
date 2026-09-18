@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, NumberField, VerdictBanner } from '../../components/ui'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
-import { todayUTC } from '../../engine/dates'
+import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
@@ -19,7 +19,7 @@ interface Draft {
 }
 
 function emptyDraft(): Draft {
-  return { resignDate: todayUTC(new Date()), noticePeriodDays: 90, done: [] }
+  return { resignDate: todayIso(), noticePeriodDays: 90, done: [] }
 }
 
 /** A milestone row is a doorway: the tool that does the thing sits beside it. */
@@ -51,7 +51,7 @@ function Body() {
   const t = useT()
   const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(emptyDraft)
-  const [asOf, setAsOf] = useState(() => todayUTC(new Date()))
+  const [asOf, setAsOf] = useState(todayIso)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
@@ -59,11 +59,11 @@ function Body() {
     // job's — from the shared record, never the new offer's.
     const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
-    setAsOf(todayUTC(new Date()))
+    setAsOf(todayIso())
     setDraft(
       saved
         ? { ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays }
-        : { resignDate: todayUTC(new Date()), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
+        : { resignDate: todayIso(), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
     )
     setHydrated(true)
   }, [])

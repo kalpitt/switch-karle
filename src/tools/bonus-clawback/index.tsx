@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import type { OfferInput } from '../../engine/types'
 import { decodeOffer } from '../../engine/salary'
 import { bonusClawback } from '../../engine/clawback'
-import { addMonths, monthsBetween, todayUTC } from '../../engine/dates'
+import { addMonths, monthsBetween } from '../../engine/dates'
+import { todayIso } from '../../lib/today'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
@@ -42,7 +43,7 @@ type LegacyDraft = Partial<Draft> & { plannedTenureMonths?: number }
 
 function draftFrom(offer: OfferInput): Draft {
   const b = decodeOffer(offer)
-  const today = todayUTC(new Date())
+  const today = todayIso()
   return {
     amount: offer.joiningBonus?.amount ?? 200_000,
     clawbackMonths: offer.joiningBonus?.clawbackMonths ?? 12,
