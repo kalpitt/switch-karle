@@ -23,6 +23,7 @@ import {
 import { coverageState, type SweepRecord } from '../engine/coverage'
 import type { IngestCandidate } from '../engine/ingest'
 import { exampleApplications } from '../data/exampleBoard'
+import { downloadBlob } from '../lib/downloadBlob'
 import { STAGE_ACTIONS } from '../data/stageActions'
 import { writeHandoff } from '../data/defaults'
 import { TOOLS } from '../data/tools'
@@ -113,12 +114,7 @@ export function Tracker() {
 
   const handleExport = () => {
     const blob = new Blob([exportAll()], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'switch-karle-backup.json'
-    a.click()
-    URL.revokeObjectURL(url)
+    downloadBlob(blob, 'switch-karle-backup.json')
   }
 
   const handleImportFile = (file: File) => {

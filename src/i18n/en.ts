@@ -68,7 +68,9 @@ export const en: Record<string, string> = {
   'plan.cliff.bonus-clawback': 'Joining bonus clawback ends {date}',
   'plan.calendar.cta': 'Add these to my calendar',
   'plan.calendar.note':
-    'Downloads dates.ics — a check-in in seven days, your cliffs, and your date. The notes inside carry a link with this site’s name in it, so think before adding it to a work calendar.',
+    'Downloads dates.ics — a check-in in seven days, the dates above, and your date. The notes inside carry a link with this site’s name in it, so think before adding it to a work calendar.',
+  'plan.calendar.downloaded':
+    'dates.ics is in your downloads. Open it and your calendar app adds the dates.',
   'plan.reason.label': 'Why are you leaving?',
   'plan.reason.hint': 'One line. You will see it at the top every time you come back. Optional.',
   'plan.reason.save': 'Save this line',

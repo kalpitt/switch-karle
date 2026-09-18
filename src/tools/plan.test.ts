@@ -106,6 +106,28 @@ describe('an untouched example is marked as an example on every screen, and neve
   })
 })
 
+describe('the calendar download works on phones and says what happened', () => {
+  it('downloadDates hands the blob to the shared downloadBlob helper, not a bare createObjectURL/click/revoke', () => {
+    expect(door).toMatch(/import \{ downloadBlob \} from ['"]\.\.\/\.\.\/lib\/downloadBlob['"]/)
+    const downloadDates = door.match(/function downloadDates\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(downloadDates).toMatch(/downloadBlob\(/)
+    expect(downloadDates).not.toMatch(/createObjectURL|revokeObjectURL|\.click\(\)/)
+  })
+
+  it('shows plan.calendar.downloaded under the button only after a tap', () => {
+    expect(door).toMatch(/downloaded && \(/)
+    expect(door).toMatch(/plan\.calendar\.downloaded/)
+    expect(en['plan.calendar.downloaded']).toBe(
+      'dates.ics is in your downloads. Open it and your calendar app adds the dates.',
+    )
+  })
+
+  it("plan.calendar.note no longer calls the dates 'your cliffs'", () => {
+    expect(en['plan.calendar.note']).not.toMatch(/your cliffs/)
+    expect(en['plan.calendar.note']).toMatch(/the dates above/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)

@@ -83,7 +83,8 @@ export const hiSuite: Record<string, string> = {
   'plan.cliff.bonus-clawback': 'Joining bonus clawback {date} को ख़त्म',
   'plan.calendar.cta': 'ये dates मेरे calendar में डालें',
   'plan.calendar.note':
-    'dates.ics download होगी — सात दिन बाद एक check-in, आपकी cliffs, और आपकी date। उसके notes में इस site के नाम वाला link रहता है, इसलिए work calendar में डालने से पहले सोच लें।',
+    'dates.ics download होगी — सात दिन बाद एक check-in, ऊपर वाली dates, और आपकी date। उसके notes में इस site के नाम वाला link रहता है, इसलिए work calendar में डालने से पहले सोच लें।',
+  'plan.calendar.downloaded': 'dates.ics आपके downloads में है। उसे खोलें, calendar app dates जोड़ देगा।',
   'plan.reason.label': 'आप क्यों निकलना चाहते हैं?',
   'plan.reason.hint': 'एक लाइन। हर बार लौटने पर यह सबसे ऊपर दिखेगी। Optional है।',
   'plan.reason.save': 'यह लाइन save करें',

@@ -11,6 +11,7 @@ import {
 import { isIsoDate } from '../../engine/dates'
 import { loadCurrentJob, rememberCurrentJob, type CurrentJob } from '../../data/currentJob'
 import { erasePlan, loadPlan, savePlan, type Plan } from '../../data/plan'
+import { downloadBlob } from '../../lib/downloadBlob'
 import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
@@ -73,6 +74,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [step, setStep] = useState<Step>('questions')
   const [returning, setReturning] = useState(false)
   const [repicking, setRepicking] = useState(false)
+  const [downloaded, setDownloaded] = useState(false)
 
   useEffect(() => {
     const savedJob = loadCurrentJob()
@@ -228,12 +230,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
       planSiteUrl(),
     )
     const blob = new Blob([text], { type: 'text/calendar;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = DATES_ICS_FILENAME
-    a.click()
-    URL.revokeObjectURL(url)
+    downloadBlob(blob, DATES_ICS_FILENAME)
+    setDownloaded(true)
   }
 
   const shared = {
@@ -244,6 +242,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     result,
     today,
     touched,
+    downloaded,
     onExampleChip: goToQuestions,
     onDownload: downloadDates,
     onLooking: startLooking,
@@ -584,6 +583,7 @@ interface RecapProps {
   today: string
   noticePeriodDays: number
   touched: boolean
+  downloaded: boolean
   onExampleChip: () => void
   onDownload: () => void
   onLooking: () => void
@@ -612,11 +612,18 @@ function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePerio
   )
 }
 
-function CalendarButton({ t, onDownload }: Pick<RecapProps, 't' | 'onDownload'>) {
+function CalendarButton({
+  t,
+  onDownload,
+  downloaded,
+}: Pick<RecapProps, 't' | 'onDownload' | 'downloaded'>) {
   return (
     <div className="space-y-1.5">
       <PrimaryButton onClick={onDownload}>{t('plan.calendar.cta')}</PrimaryButton>
       <p className="text-xs leading-relaxed text-ink-faint">{t('plan.calendar.note')}</p>
+      {downloaded && (
+        <p className="text-[13px] font-semibold leading-snug text-ink">{t('plan.calendar.downloaded')}</p>
+      )}
     </div>
   )
 }
@@ -692,7 +699,7 @@ function Recap(props: RecapProps) {
         />
       )}
       <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
-      <CalendarButton t={t} onDownload={props.onDownload} />
+      <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
       <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
       <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -736,7 +743,7 @@ function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
             the only thing this product can do that survives the tab closing. */}
         <div className="space-y-1.5">
           <p className="text-[14px] font-bold">{t('plan.return.next')}</p>
-          <CalendarButton t={t} onDownload={props.onDownload} />
+          <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
         </div>
 
         <ReasonBox t={t} plan={plan} onReason={props.onReason} />
