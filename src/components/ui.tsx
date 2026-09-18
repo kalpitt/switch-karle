@@ -27,7 +27,9 @@ export function NumberField(props: {
   suffix?: string
   step?: number
   max?: number
+  min?: number
 }) {
+  const min = props.min ?? 0
   return (
     <label className="block">
       <Label hint={props.hint}>{props.label}</Label>
@@ -37,10 +39,10 @@ export function NumberField(props: {
           inputMode="decimal"
           className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
           value={Number.isFinite(props.value) ? props.value : 0}
-          min={0}
+          min={min}
           max={props.max}
           step={props.step ?? 1}
-          onChange={(e) => props.onChange(Math.max(0, Number(e.target.value)))}
+          onChange={(e) => props.onChange(Math.max(min, Number(e.target.value)))}
         />
         {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-faint">{props.suffix}</span>}
       </span>
@@ -82,6 +84,7 @@ export function TextField(props: {
   placeholder?: string
   type?: 'text' | 'date'
   required?: boolean
+  max?: string
 }) {
   return (
     <label className="block">
@@ -93,6 +96,7 @@ export function TextField(props: {
           value={props.value}
           placeholder={props.placeholder}
           required={props.required}
+          max={props.max}
           onChange={(e) => props.onChange(e.target.value)}
         />
       </span>
@@ -257,6 +261,7 @@ export function DateField(props: {
   value: string
   onChange: (v: string) => void
   required?: boolean
+  max?: string
 }) {
   return (
     <TextField
@@ -266,6 +271,7 @@ export function DateField(props: {
       onChange={props.onChange}
       type="date"
       required={props.required}
+      max={props.max}
     />
   )
 }

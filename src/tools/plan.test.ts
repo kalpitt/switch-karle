@@ -149,6 +149,26 @@ describe('the week must be chosen before the dates, and each step opens at its t
   })
 })
 
+describe('the late warning follows the date in the box, and impossible answers cannot be submitted', () => {
+  it('TradeOption computes the late line from startApplyingByPassed(value, today) for a card with a picker', () => {
+    expect(door).toMatch(
+      /import \{\s*\n?\s*cliffs as computeCliffs,\s*\n?\s*hikeCliffDate,\s*\n?\s*startApplyingByPassed,/,
+    )
+    const tradeOption = door.match(/function TradeOption\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(tradeOption).toMatch(/startApplyingByPassed\(value, props\.today\)/)
+    expect(tradeOption).not.toMatch(/\{trade\.startApplyingByPassed && \(/)
+  })
+
+  it('the join date cannot be set in the future', () => {
+    expect(door).toMatch(/<DateField[\s\S]*?label=\{t\('plan\.q\.join'\)\}[\s\S]*?max=\{today === '' \? undefined : today\}/)
+  })
+
+  it('the notice field cannot go below 1, and 0 or blank keeps "See my dates" disabled', () => {
+    expect(door).toMatch(/<NumberField[\s\S]*?label=\{t\('plan\.q\.notice'\)\}[\s\S]*?min=\{1\}/)
+    expect(door).toMatch(/disabled=\{!isIsoDate\(answers\.joinDate\) \|\| answers\.noticePeriodDays < 1\}/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)

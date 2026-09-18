@@ -3,6 +3,7 @@ import type { ReactNode, RefObject } from 'react'
 import {
   cliffs as computeCliffs,
   hikeCliffDate,
+  startApplyingByPassed,
   switchCalendar,
   type Cliff,
   type SwitchCalendarInput,
@@ -292,6 +293,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             label={t('plan.q.join')}
             hint={t('plan.q.joinHint')}
             value={answers.joinDate}
+            max={today === '' ? undefined : today}
             onChange={(v) => answered({ joinDate: v })}
           />
           <NumberField
@@ -299,6 +301,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             hint={t('plan.q.noticeHint')}
             value={answers.noticePeriodDays}
             suffix={t('plan.q.noticeSuffix')}
+            min={1}
             onChange={(v) => answered({ noticePeriodDays: v })}
           />
           <Select
@@ -311,7 +314,12 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             ]}
             onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
           />
-          <PrimaryButton onClick={submitQuestions} disabled={!isIsoDate(answers.joinDate)}>{t('plan.q.next')}</PrimaryButton>
+          <PrimaryButton
+            onClick={submitQuestions}
+            disabled={!isIsoDate(answers.joinDate) || answers.noticePeriodDays < 1}
+          >
+            {t('plan.q.next')}
+          </PrimaryButton>
         </Card>
       )}
 
@@ -571,6 +579,15 @@ function TradeOption(props: {
     setValue(trade.earliestDate ?? props.today)
   }, [trade.earliestDate, trade.resignDate, props.today])
 
+  // A card with a picker can show any date the visitor types, so the late
+  // line has to follow that date rather than the fixed one the Trade was
+  // built from — otherwise "keep what is earned" reads as late forever, even
+  // nine months out, because it is frozen at today's own date.
+  const late =
+    needsPicker && isIsoDate(value)
+      ? startApplyingByPassed(value, props.today)
+      : trade.startApplyingByPassed
+
   const detail =
     trade.id === 'keep-what-is-earned'
       ? t('plan.trade.earned.detail', { date: fmt(trade.resignDate ?? props.today) })
@@ -586,7 +603,7 @@ function TradeOption(props: {
       <p className="text-[14px] font-bold">{t(`plan.trade.${trade.id}`)}</p>
       <p className="mt-1 text-[13px] leading-snug text-ink-soft">{detail}</p>
       {/* In words, on the option itself. Hiding it would be choosing for them. */}
-      {trade.startApplyingByPassed && (
+      {late && (
         <p className="mt-1 text-[13px] font-semibold leading-snug text-alarm">{t('plan.trade.late')}</p>
       )}
       {needsPicker ? (

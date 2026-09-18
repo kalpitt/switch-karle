@@ -7,6 +7,7 @@ import {
   hikeCliffDate,
   markForfeited,
   outboundUnlocked,
+  startApplyingByPassed,
   switchCalendar,
   timeline,
   trades,
@@ -232,6 +233,21 @@ describe('trades — options that name what each date keeps', () => {
     // The six-day cliff is 9 September 2026 and still ahead, so the clean date
     // is the day after it — this is not the runway case.
     expect(options[0]!.resignDate).toBe('2026-09-10')
+  })
+})
+
+describe('startApplyingByPassed — the late line follows whatever date is asked about, not a frozen one', () => {
+  // Ravi, today 2026-09-19 (join 2022-01-12, 90 days, hike May) — finding 4:
+  // the earned card's late line must follow the date currently in its picker,
+  // not the fixed date the Trade was built with when trades() ran.
+  const TODAY = '2026-09-19'
+
+  it('no late line for a picker value nine months out', () => {
+    expect(startApplyingByPassed('2027-06-01', TODAY)).toBe(false)
+  })
+
+  it('the late line appears once the picker value is close enough that 8 weeks + 14 days before it has already gone by', () => {
+    expect(startApplyingByPassed('2026-10-01', TODAY)).toBe(true)
   })
 })
 
