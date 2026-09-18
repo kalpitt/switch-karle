@@ -21,7 +21,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- The plan: सामने का दरवाज़ा (docs/DIRECTION.md Part 3, 4, 13) ----
   'plan.tagline':
-    'आप काफ़ी समय से निकलना चाह रहे हैं। तीन सवाल। आपकी dates। और आज करने लायक एक काम।',
+    '“बस, अब यहाँ नहीं” से लेकर notice निकालने और नई नौकरी के day 90 तक। तीन सवाल, और आपकी dates तैयार।',
   'plan.q.title': 'तीन सवाल',
   'plan.example.chip': 'Example',
   'plan.example.note':

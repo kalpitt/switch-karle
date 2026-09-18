@@ -7,7 +7,7 @@
 export const en: Record<string, string> = {
   // ---- The plan: the front door (docs/DIRECTION.md Part 3, 4 and 13) ----
   'plan.tagline':
-    'You have wanted to leave for a while. Three questions. Your dates. One thing to do today.',
+    'From “I’m done here” to surviving notice and day 90. Three questions, and you have your dates.',
   'plan.q.title': 'Three questions',
   'plan.example.chip': 'Example',
   'plan.example.note': 'Example answers, so a real calendar is here before you type. Change them to yours.',
@@ -99,7 +99,7 @@ export const en: Record<string, string> = {
   'home.trackerLink.cta': 'Applications',
 
   // ---- App shell ----
-  'app.tagline': 'Decode your offer. Know what actually reaches your bank.',
+  'app.tagline': 'The whole job switch, from “I’m done here” to surviving notice and day 90.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
   'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source ·',
   'app.footer.privacy': 'your data never leaves this device',
