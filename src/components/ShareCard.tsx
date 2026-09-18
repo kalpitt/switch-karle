@@ -3,6 +3,7 @@ import { toPng } from 'html-to-image'
 import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatINR, formatLPA } from '../engine/format'
 import { useT } from '../i18n'
+import { shareFooterLabel } from '../lib/base'
 
 /**
  * The WhatsApp artifact: a dark card rendered off-screen at 3x and downloaded
@@ -65,7 +66,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
             <p className="text-[15px] font-extrabold">
               Switch <span className="font-semibold text-white/60">Karle</span>
             </p>
-            <p className="text-[11px] font-semibold text-white/50">{t('shareCard.footer')}</p>
+            <p className="text-[11px] font-semibold text-white/50">{shareFooterLabel()}</p>
           </div>
         </div>
       </div>

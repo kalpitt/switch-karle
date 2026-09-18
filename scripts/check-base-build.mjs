@@ -107,6 +107,72 @@ if (!existsSync(swPath)) {
   }
 }
 
+function walkSource(dir) {
+  const out = []
+  if (!existsSync(dir)) return out
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, entry.name)
+    if (entry.isDirectory()) out.push(...walkSource(p))
+    else out.push(p)
+  }
+  return out
+}
+
+/** Text extensions worth scanning. Everything else in public/ is binary. */
+const SCANNABLE = /\.(?:ts|tsx|astro|mjs|js|json|webmanifest|css|html|txt|xml|svg|md)$/
+
+function stripComments(content, file) {
+  if (!/\.(?:ts|tsx|astro|mjs|js)$/.test(file)) return content
+  const withoutBlock = content.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\r\n]/g, ' '))
+  // Do not treat `//` inside a URL, a string or an escape as a comment: blanking
+  // the rest of such a line would hide a hardcoded path sitting after it.
+  return withoutBlock.replace(/(^|[^:"'`\\])\/\/[^\r\n]*/g, (m, p1) => p1 + ' '.repeat(m.length - p1.length))
+}
+
+const needle = BASE.endsWith('/') && BASE.length > 1 ? BASE.slice(0, -1) : BASE
+if (!needle || needle === '/') {
+  // At BASE = '/' there is no path segment to search for, so this scan has
+  // nothing to do. Say so out loud rather than exiting 0 in silence: a guard
+  // that quietly stops guarding is the failure mode this check exists for.
+  console.log('check-base-build: source scan inactive — BASE is "/", no path segment to look for.')
+} else {
+  const sourceFiles = [...walkSource(join(root, 'src')), ...walkSource(join(root, 'public'))]
+  const sourceHits = []
+
+  for (const file of sourceFiles) {
+    if (file.endsWith('.test.ts') || file.endsWith('.test.tsx')) continue
+    // Binary assets (icons, the OG image) are not source and decoding them as
+    // UTF-8 would be both pointless and a source of phantom matches.
+    if (!SCANNABLE.test(file)) continue
+    const raw = readFileSync(file, 'utf8')
+    const stripped = stripComments(raw, file)
+    const lines = stripped.split(/\r?\n/)
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (line.includes(needle)) {
+        const rel = relative(root, file)
+        // The repository URL is not a site path.
+        if (line.includes('github.com/kalpitt/switch-karle')) continue
+        // `shareCard.footer` is frozen in hi-freeze.json and no longer read by
+        // any component — ShareCard composes the label from SITE + BASE now.
+        // The dead value keeps the literal, so exempt it, but only here.
+        if (rel.startsWith('src/i18n/') && line.includes('shareCard.footer')) continue
+        sourceHits.push(`${rel}:${i + 1}`)
+      }
+    }
+  }
+
+  if (sourceHits.length > 0) {
+    console.error(
+      `check-base-build: FAIL — hardcoded base path "${needle}" found in source. Use import.meta.env.BASE_URL or import from site.config.mjs instead:`,
+    )
+    for (const hit of sourceHits) {
+      console.error(`  ${hit}`)
+    }
+    failed = true
+  }
+}
+
 if (failed) process.exit(1)
 
 console.log(
