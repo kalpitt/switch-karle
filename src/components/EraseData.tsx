@@ -56,7 +56,7 @@ export function EraseData({ className }: { className?: string }) {
       <button
         type="button"
         onClick={openDialog}
-        className={className ?? 'font-semibold underline'}
+        className={className ?? 'py-1 font-semibold underline'}
       >
         {t('erase.button')}
       </button>

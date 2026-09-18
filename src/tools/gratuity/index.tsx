@@ -73,19 +73,29 @@ function Body() {
     writeJson(STORAGE_KEY, draft)
   }, [draft, hydrated])
 
-  const result = useMemo(() => gratuity(draft), [draft])
+  const result = useMemo(() => {
+    try {
+      return gratuity(draft)
+    } catch {
+      return null
+    }
+  }, [draft])
   /** Nothing typed in this tool yet = worked example, even where the record filled the basic. */
   const isExample =
     JSON.stringify({ ...draft, workWeekDays: draft.workWeekDays ?? 6 }) ===
     JSON.stringify(example ?? DEFAULT_DRAFT)
-  const verdict = result.eligible
-    ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
-    : t('gratuity.verdict.no', { years: result.completedYears })
+  const verdict = result
+    ? result.eligible
+      ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
+      : t('gratuity.verdict.no', { years: result.completedYears })
+    : null
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
-  const copyText = [verdict, result.flipDate ? t('gratuity.flip', { date: result.flipDate }) : '', t('ui.disclaimer')]
-    .filter(Boolean)
-    .join('\n')
+  const copyText = result && verdict
+    ? [verdict, result.flipDate ? t('gratuity.flip', { date: result.flipDate }) : '', t('ui.disclaimer')]
+        .filter(Boolean)
+        .join('\n')
+    : ''
 
   return (
     <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -119,16 +129,16 @@ function Body() {
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
           <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
+        ) : result && verdict ? (
           <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
-        )}
-        {result.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
-        {result.notes.map((n) => (
+        ) : null}
+        {result?.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
+        {result?.notes.map((n) => (
           <p key={n.id} className="text-[13px] text-ink-soft">
             {t(`gratuity.note.${n.id}`)}
           </p>
         ))}
-        {!isExample && (
+        {!isExample && result && (
           <ShareRow
             copyText={copyText}
             copyLabel={t('ui.copy')}

@@ -8,6 +8,7 @@ import {
   type SwitchCalendarInput,
   type Trade,
 } from '../../engine/switchCalendar'
+import { isIsoDate } from '../../engine/dates'
 import { loadCurrentJob, rememberCurrentJob, type CurrentJob } from '../../data/currentJob'
 import { erasePlan, loadPlan, savePlan, type Plan } from '../../data/plan'
 import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
@@ -106,7 +107,10 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     plan.hikeCreditMonth === answers.hikeCreditMonth ? plan.hikeCreditYear : undefined
 
   const input: SwitchCalendarInput = {
-    joinDate: answers.joinDate,
+    // The engine is a pure function of its input, so it needs a day even when
+    // the user clears the field. Nothing derived from `joinDate` renders on the
+    // questions screen, which is the only screen where `joinDate` can be invalid.
+    joinDate: isIsoDate(answers.joinDate) ? answers.joinDate : '2000-01-01',
     noticePeriodDays: answers.noticePeriodDays,
     hikeCreditMonth: answers.hikeCreditMonth > 0 ? answers.hikeCreditMonth : undefined,
     hikeCreditYear: hikeYear,
@@ -130,10 +134,14 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   // ---- writes. Every one of these is a button the user pressed. ----
 
   function submitQuestions() {
-    rememberCurrentJob({
-      joinDate: answers.joinDate,
-      noticePeriodDays: answers.noticePeriodDays,
-    })
+    // Only write to the shared record when the user actually edited the
+    // answers. Prefilled example values must not seed the rest of the app.
+    if (touched) {
+      rememberCurrentJob({
+        joinDate: answers.joinDate,
+        noticePeriodDays: answers.noticePeriodDays,
+      })
+    }
     if (answers.hikeCreditMonth > 0) {
       // The year the month resolved to is pinned now, so a plan saved this
       // September still means May 2027 when it is reopened in June 2027.
@@ -248,7 +256,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             ]}
             onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
           />
-          <PrimaryButton onClick={submitQuestions}>{t('plan.q.next')}</PrimaryButton>
+          <PrimaryButton onClick={submitQuestions} disabled={!isIsoDate(answers.joinDate)}>{t('plan.q.next')}</PrimaryButton>
         </Card>
       )}
 
@@ -288,7 +296,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
                   onPick={pickResignDate}
                 />
               ))}
-              <button type="button" onClick={() => setStep('cliffs')} className="text-[13px] font-semibold text-ink-faint underline">
+              <button type="button" onClick={() => setStep('cliffs')} className="py-1 text-[13px] font-semibold text-ink-faint underline">
                 {t('plan.back')}
               </button>
             </Card>
@@ -325,12 +333,21 @@ function hikeMonthLabel(month: number, cliffs: readonly Cliff[], lang: Lang): st
   return formatMonthYear(month, Number(hike.date.slice(0, 4)), lang)
 }
 
-function PrimaryButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+function PrimaryButton({
+  children,
+  onClick,
+  disabled,
+}: {
+  children: ReactNode
+  onClick: () => void
+  disabled?: boolean
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-xl bg-saffron px-4 py-3 text-[15px] font-bold text-white"
+      disabled={disabled}
+      className="w-full rounded-xl bg-saffron px-4 py-3 text-[15px] font-bold text-white disabled:opacity-60"
     >
       {children}
     </button>
@@ -422,7 +439,7 @@ function CliffScreen(props: {
       {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
 
       <PrimaryButton onClick={props.onNext}>{t('plan.cliffs.next')}</PrimaryButton>
-      <button type="button" onClick={props.onBack} className="text-[13px] font-semibold text-ink-faint underline">
+      <button type="button" onClick={props.onBack} className="py-1 text-[13px] font-semibold text-ink-faint underline">
         {t('plan.back')}
       </button>
     </Card>
@@ -456,12 +473,13 @@ function TradeOption(props: {
   onPick: (date: string) => void
 }) {
   const { t, fmt, trade } = props
-  const needsPicker = trade.resignDate === null || trade.earliestDate !== null
+  const needsPicker =
+    trade.id === 'keep-what-is-earned' || trade.resignDate === null || trade.earliestDate !== null
   const [value, setValue] = useState(trade.earliestDate ?? props.today)
 
   useEffect(() => {
     setValue(trade.earliestDate ?? props.today)
-  }, [trade.earliestDate, props.today])
+  }, [trade.earliestDate, trade.resignDate, props.today])
 
   const detail =
     trade.id === 'keep-what-is-earned'
@@ -487,7 +505,8 @@ function TradeOption(props: {
           <button
             type="button"
             onClick={() => props.onPick(value)}
-            className="w-full rounded-xl border border-saffron px-3 py-2 text-[14px] font-bold text-saffron"
+            disabled={!isIsoDate(value)}
+            className="w-full rounded-xl border border-saffron px-3 py-2 text-[14px] font-bold text-saffron disabled:opacity-60"
           >
             {t('plan.trade.use')}
           </button>
@@ -620,7 +639,7 @@ function Recap(props: RecapProps) {
       <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <WorthLink t={t} lang={props.lang} />
-        <button type="button" onClick={props.onChangeDate} className="text-[13px] font-semibold text-ink-faint underline">
+        <button type="button" onClick={props.onChangeDate} className="py-1 text-[13px] font-semibold text-ink-faint underline">
           {t('plan.change')}
         </button>
       </div>
@@ -660,10 +679,10 @@ function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <WorthLink t={t} lang={props.lang} />
-          <button type="button" onClick={props.onChangeDate} className="text-[13px] font-semibold text-ink-faint underline">
+          <button type="button" onClick={props.onChangeDate} className="py-1 text-[13px] font-semibold text-ink-faint underline">
             {t('plan.change')}
           </button>
-          <button type="button" onClick={props.onStartOver} className="text-[13px] font-semibold text-ink-faint underline">
+          <button type="button" onClick={props.onStartOver} className="py-1 text-[13px] font-semibold text-ink-faint underline">
             {t('plan.startOver')}
           </button>
         </div>

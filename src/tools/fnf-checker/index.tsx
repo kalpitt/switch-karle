@@ -112,28 +112,46 @@ function Body() {
     }),
     [draft, t],
   )
-  const result = useMemo(() => auditFnF(input), [input])
-  const disputes = useMemo(() => disputeItems(input, result), [input, result])
+  const result = useMemo(() => {
+    try {
+      return auditFnF(input)
+    } catch {
+      return null
+    }
+  }, [input])
+  const disputes = useMemo(() => {
+    if (!result) return []
+    try {
+      return disputeItems(input, result)
+    } catch {
+      return []
+    }
+  }, [input, result])
 
   /** Nothing typed in this tool yet = worked example, even where the record filled a field. */
   const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
 
   const verdict =
-    result.netPayable < 0
-      ? t('fnf-checker.verdict.owe', { amount: formatINR(-result.netPayable) })
-      : t('fnf-checker.verdict.pay', { amount: formatINR(result.netPayable) })
+    result == null
+      ? null
+      : result.netPayable < 0
+        ? t('fnf-checker.verdict.owe', { amount: formatINR(-result.netPayable) })
+        : t('fnf-checker.verdict.pay', { amount: formatINR(result.netPayable) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
-  const copyText = [
-    verdict,
-    ...result.lines.map(
-      (line) =>
-        `${t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}: ${formatINR(line.claimed)} → ${formatINR(line.recomputed)}${
-          line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''
-        }`,
-    ),
-    t('ui.disclaimer'),
-  ].join('\n')
+  const copyText =
+    result && verdict
+      ? [
+          verdict,
+          ...result.lines.map(
+            (line) =>
+              `${t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}: ${formatINR(line.claimed)} → ${formatINR(line.recomputed)}${
+                line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''
+              }`,
+          ),
+          t('ui.disclaimer'),
+        ].join('\n')
+      : ''
 
   const label = (id: string) => t(`fnf-checker.line.${id}`, { fallbackLabel: id })
   const mail = [
@@ -190,27 +208,29 @@ function Body() {
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
           <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
+        ) : result && verdict ? (
           <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
+        ) : null}
+        {result && (
+          <Card>
+            <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
+            {result.lines.map((line) => (
+              <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
+                <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
+                <span>
+                  {formatINR(line.claimed)} → {formatINR(line.recomputed)}
+                  {line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''}
+                </span>
+              </p>
+            ))}
+          </Card>
         )}
-        <Card>
-          <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
-          {result.lines.map((line) => (
-            <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
-              <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
-              <span>
-                {formatINR(line.claimed)} → {formatINR(line.recomputed)}
-                {line.delta !== 0 ? ` (${formatINR(line.delta)})` : ''}
-              </span>
-            </p>
-          ))}
-        </Card>
-        {result.flags.map((f) => (
+        {result?.flags.map((f) => (
           <p key={f.id} className={`text-[13px] ${f.severity === 'red' ? 'text-alarm' : 'text-amberflag'}`}>
             {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
-        {!isExample && (
+        {!isExample && result && (
           <Card className="space-y-3">
             <h3 className="text-sm font-bold">{t('fnf-checker.mailTitle')}</h3>
             {disputes.length === 0 ? (
@@ -228,7 +248,7 @@ function Body() {
             )}
           </Card>
         )}
-        {!isExample && (
+        {!isExample && result && (
           <ShareRow
             copyText={copyText}
             copyLabel={t('ui.copy')}
