@@ -692,6 +692,17 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
   useEffect(() => {
     setDraft(plan.reason ?? '')
   }, [plan.reason])
+
+  // The button is kept, but a line typed and then abandoned by tapping
+  // elsewhere or pressing Enter must not be lost — it is the one personal
+  // thing on this screen. onReason already carries the untouched-example
+  // guard (no write while touched is false), so this needs no guard of its
+  // own.
+  const save = () => {
+    onReason(draft)
+    setSaved(true)
+  }
+
   return (
     <div className="space-y-2">
       <TextArea
@@ -703,15 +714,14 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
           setDraft(v)
           setSaved(false)
         }}
-      />
-      <button
-        type="button"
-        onClick={() => {
-          onReason(draft)
-          setSaved(true)
+        onBlur={save}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter' || e.shiftKey) return
+          e.preventDefault()
+          save()
         }}
-        className="rounded-xl border border-line px-3 py-2 text-[13px] font-bold"
-      >
+      />
+      <button type="button" onClick={save} className="rounded-xl border border-line px-3 py-2 text-[13px] font-bold">
         {saved ? t('plan.reason.saved') : t('plan.reason.save')}
       </button>
     </div>

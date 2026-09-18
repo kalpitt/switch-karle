@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { parseINRInput } from '../lib/money'
 
@@ -104,7 +104,15 @@ export function TextField(props: {
   )
 }
 
-export function TextArea(props: { label: string; hint?: string; value: string; onChange: (v: string) => void; rows?: number }) {
+export function TextArea(props: {
+  label: string
+  hint?: string
+  value: string
+  onChange: (v: string) => void
+  rows?: number
+  onBlur?: () => void
+  onKeyDown?: (e: ReactKeyboardEvent<HTMLTextAreaElement>) => void
+}) {
   return (
     <label className="block">
       <Label hint={props.hint}>{props.label}</Label>
@@ -113,6 +121,8 @@ export function TextArea(props: { label: string; hint?: string; value: string; o
         rows={props.rows ?? 3}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
+        onBlur={props.onBlur}
+        onKeyDown={props.onKeyDown}
       />
     </label>
   )

@@ -182,6 +182,25 @@ describe('the hike months run in calendar order from next month', () => {
   })
 })
 
+describe('the reason line saves itself on blur and Enter', () => {
+  it('ReasonBox saves on blur, on Enter (without a shift key) and still on the button', () => {
+    const reasonBox = door.match(/function ReasonBox\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(reasonBox).toMatch(/onBlur=\{save\}/)
+    expect(reasonBox).toMatch(/e\.key !== 'Enter' \|\| e\.shiftKey/)
+    expect(reasonBox).toMatch(/onClick=\{save\}/)
+    // Exactly one write path, so the untouched-example guard already inside
+    // onReason (saveReason) covers all three the same way.
+    expect(reasonBox.match(/onReason\(draft\)/g)).toHaveLength(1)
+  })
+
+  it('TextArea passes onBlur and onKeyDown through to the textarea itself', () => {
+    const ui = readFileSync(join(toolsDir, '..', 'components', 'ui.tsx'), 'utf8')
+    const textArea = ui.match(/export function TextArea\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(textArea).toMatch(/onBlur=\{props\.onBlur\}/)
+    expect(textArea).toMatch(/onKeyDown=\{props\.onKeyDown\}/)
+  })
+})
+
 describe('the home island is the door', () => {
   it('imports the plan and renders it', () => {
     expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)
