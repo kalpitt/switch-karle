@@ -42,7 +42,7 @@ type LegacyDraft = Partial<Draft> & { plannedTenureMonths?: number }
 
 function draftFrom(offer: OfferInput): Draft {
   const b = decodeOffer(offer)
-  const today = todayUTC()
+  const today = todayUTC(new Date())
   return {
     amount: offer.joiningBonus?.amount ?? 200_000,
     clawbackMonths: offer.joiningBonus?.clawbackMonths ?? 12,

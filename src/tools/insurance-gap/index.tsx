@@ -15,7 +15,7 @@ interface Draft {
 }
 
 function skeleton(): Draft {
-  const today = todayUTC()
+  const today = todayUTC(new Date())
   return { lastWorkingDay: today, newJoinDate: addDays(today, 15), hasPersonalCover: false }
 }
 

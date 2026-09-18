@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, isIsoDate, lastWorkingDay, monthsBetween } from './dates'
+import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, isIsoDate, lastWorkingDay, monthsBetween, todayUTC } from './dates'
 
 describe('daysBetween', () => {
   it('is 0 for the same day', () => {
@@ -150,5 +150,22 @@ describe('isIsoDate', () => {
     expect(isIsoDate(20220112)).toBe(false)
     expect(isIsoDate(null)).toBe(false)
     expect(isIsoDate(undefined)).toBe(false)
+  })
+})
+
+describe('todayUTC', () => {
+  it('reads the UTC calendar day out of the Date it is given', () => {
+    expect(todayUTC(new Date('2026-09-19T11:00:00.000Z'))).toBe('2026-09-19')
+  })
+
+  it('takes the UTC day, not the local one, when the two differ', () => {
+    // 01:00 IST on the 19th is still the 18th in UTC. This is the behaviour
+    // three tools depend on and it did not change when the clock read moved
+    // out of the engine.
+    expect(todayUTC(new Date('2026-09-18T20:30:00.000Z'))).toBe('2026-09-18')
+  })
+
+  it('pads a single-digit month and day', () => {
+    expect(todayUTC(new Date('2027-01-05T00:00:00.000Z'))).toBe('2027-01-05')
   })
 })

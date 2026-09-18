@@ -58,8 +58,8 @@ export function isIsoDate(value: unknown): value is string {
   }
 }
 
-/** Calendar date in UTC from a Date (tests inject `now`). */
-export function todayUTC(now = new Date()): string {
+/** Calendar date in UTC from a Date the caller supplies. */
+export function todayUTC(now: Date): string {
   return formatISO({ y: now.getUTCFullYear(), m: now.getUTCMonth() + 1, d: now.getUTCDate() })
 }
 
