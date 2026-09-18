@@ -165,7 +165,7 @@ describe('the late warning follows the date in the box, and impossible answers c
 
   it('the notice field cannot go below 1, and 0 or blank keeps "See my dates" disabled', () => {
     expect(door).toMatch(/<NumberField[\s\S]*?label=\{t\('plan\.q\.notice'\)\}[\s\S]*?min=\{1\}/)
-    expect(door).toMatch(/disabled=\{!isIsoDate\(answers\.joinDate\) \|\| answers\.noticePeriodDays < 1\}/)
+    expect(door).toMatch(/disabled=\{!questionsSubmittable\(answers\.joinDate, answers\.noticePeriodDays, today\)\}/)
   })
 })
 

@@ -1,3 +1,4 @@
+import { isIsoDate } from '../../engine/dates'
 import type { Cliff } from '../../engine/switchCalendar'
 
 /**
@@ -40,4 +41,15 @@ export function dateStepReachable(
 ): boolean {
   if (!coveredByAct || !hasBothWeekReadings) return true
   return workWeekDays !== undefined
+}
+
+/**
+ * Whether the three questions can be submitted. A join date after today is
+ * impossible (the browser marks the field invalid but does not stop a tap),
+ * and a notice of zero or less is unanswered. `today` is '' before the first
+ * effect runs; the date bound is skipped until it is known.
+ */
+export function questionsSubmittable(joinDate: string, noticePeriodDays: number, today: string): boolean {
+  if (!isIsoDate(joinDate) || !(noticePeriodDays >= 1)) return false
+  return today === '' || joinDate <= today
 }

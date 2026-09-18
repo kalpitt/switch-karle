@@ -17,6 +17,7 @@ import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
+import { questionsSubmittable } from './fork'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
@@ -161,6 +162,10 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
       rememberCurrentJob({
         joinDate: answers.joinDate,
         noticePeriodDays: answers.noticePeriodDays,
+        // A week or coverage answer given while still on the example lived on
+        // screen only; it becomes real with the first real answers.
+        ...(job.workWeekDays !== undefined ? { workWeekDays: job.workWeekDays } : {}),
+        ...(job.coveredByAct !== undefined ? { coveredByAct: job.coveredByAct } : {}),
       })
       if (answers.hikeCreditMonth > 0) {
         // The year the month resolved to is pinned now, so a plan saved this
@@ -178,12 +183,16 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setStep('cliffs')
   }
 
+  // An untouched example keeps these answers on screen only: writing them
+  // would seed the shared record with facts about nobody's employer.
   function chooseWeek(days: 5 | 6) {
+    if (!touched) return setJob((j) => ({ ...j, workWeekDays: days }))
     rememberCurrentJob({ workWeekDays: days })
     setJob(loadCurrentJob())
   }
 
   function chooseCoverage(covered: boolean) {
+    if (!touched) return setJob((j) => ({ ...j, coveredByAct: covered }))
     rememberCurrentJob({ coveredByAct: covered })
     setJob(loadCurrentJob())
   }
@@ -315,7 +324,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           />
           <PrimaryButton
             onClick={submitQuestions}
-            disabled={!isIsoDate(answers.joinDate) || answers.noticePeriodDays < 1}
+            disabled={!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)}
           >
             {t('plan.q.next')}
           </PrimaryButton>

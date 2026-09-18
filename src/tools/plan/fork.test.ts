@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { cliffs } from '../../engine/switchCalendar'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
+import { questionsSubmittable } from './fork'
 
 /** Ravi: 21 July 2026 on a five-day week, 9 September 2026 on a six-day one. */
 const RAVI = { joinDate: '2022-01-12', noticePeriodDays: 90, asOf: '2026-09-06' }
@@ -43,5 +44,20 @@ describe('dateStepReachable', () => {
 
   it('is reachable straight away when there is only one reading', () => {
     expect(dateStepReachable(true, false, undefined)).toBe(true)
+  })
+})
+
+describe('questionsSubmittable', () => {
+  const today = '2026-09-19'
+  it('accepts a past join date and a positive notice', () => {
+    expect(questionsSubmittable('2022-01-12', 90, today)).toBe(true)
+    expect(questionsSubmittable(today, 1, today)).toBe(true)
+  })
+  it('refuses a join date after today, which the browser only marks invalid', () => {
+    expect(questionsSubmittable('2026-12-25', 90, today)).toBe(false)
+  })
+  it('refuses a blank date and a notice of zero', () => {
+    expect(questionsSubmittable('', 90, today)).toBe(false)
+    expect(questionsSubmittable('2022-01-12', 0, today)).toBe(false)
   })
 })
