@@ -30,10 +30,12 @@ describe('Lead 4: notice-tracker resign-date default', () => {
     expect(result.daysLeftOnNotice).toBe(89)
     expect(result.served).toBe(false)
 
-    // isExample must compare the whole draft against the untouched default
-    // (not just resignDate), so it also turns false the moment a save exists
-    // or the notice period is inherited from a real, saved job.
-    expect(trackerSrc).toMatch(/isExample\s*=\s*JSON\.stringify\(draft\)\s*===\s*JSON\.stringify\(emptyDraft\(\)\)/)
+    // Example-ness is a touched flag: set by a user edit or a saved tracker,
+    // NOT by a notice period inherited from the shared job record, because
+    // the resign date would still be invented.
+    expect(trackerSrc).toMatch(/const isExample = !touched/)
+    expect(trackerSrc).toMatch(/if \(saved\) setTouched\(true\)/)
+    expect(trackerSrc).not.toMatch(/job\.noticePeriodDays[^\n]*setTouched/)
     // And the render swaps ExampleNote in for VerdictBanner while isExample is true.
     expect(trackerSrc).toMatch(/isExample \? \(\s*<ExampleNote/)
   })

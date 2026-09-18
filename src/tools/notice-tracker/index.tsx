@@ -53,6 +53,11 @@ function Body() {
   const [draft, setDraft] = useState<Draft>(emptyDraft)
   const [asOf, setAsOf] = useState(todayIso)
   const [hydrated, setHydrated] = useState(false)
+  // Example until the user edits something here or a saved tracker exists.
+  // An inherited notice period alone does not count: the resign date would
+  // still be invented, and the countdown would be to a resignation that did
+  // not happen.
+  const [touched, setTouched] = useState(false)
 
   useEffect(() => {
     // Notice is served at the current employer, so the period is the current
@@ -60,6 +65,7 @@ function Body() {
     const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     setAsOf(todayIso())
+    if (saved) setTouched(true)
     setDraft(
       saved
         ? { ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays }
@@ -80,9 +86,11 @@ function Body() {
     }
   }, [draft.resignDate, draft.noticePeriodDays, asOf])
 
-  /** Untouched fixture on first paint = worked example, not the user's data. */
-  const isExample = JSON.stringify(draft) === JSON.stringify(emptyDraft())
-  const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const isExample = !touched
+  const set = (patch: Partial<Draft>) => {
+    setTouched(true)
+    setDraft((d) => ({ ...d, ...patch }))
+  }
   const toggle = (id: NoticeItemId) =>
     set({ done: draft.done.includes(id) ? draft.done.filter((x) => x !== id) : [...draft.done, id] })
 
