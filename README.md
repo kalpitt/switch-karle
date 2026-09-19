@@ -64,6 +64,8 @@ Every English URL has a Hindi twin at `/hi/<same-slug>/`. Language follows the U
 - **No AI calls.** Bring your own AI: the app generates prompts you paste into ChatGPT/Claude/Gemini.
 - Data lives in `localStorage` under `switchkarle.<tool>.v<N>`, with JSON export/import on the Tracker.
 
+The engineering rule behind these promises, and what it would take to change one, is in [`PRIVACY.md`](PRIVACY.md).
+
 See [PRIVACY.md](PRIVACY.md).
 
 ## Tax engine

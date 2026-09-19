@@ -44,9 +44,15 @@ Ask these in order. Any "stop" kills the feature as designed.
 - **Selling, renting, or sharing user data with anyone.** No exceptions, no
   aggregate-and-anonymise carve-out, no "trusted partner".
 - **Using user data to train models, or for advertising or profiling.**
-- **Third-party analytics, telemetry, or scripts that carry user data.**
-  First-party, privacy-respecting product analytics are now permitted but are
-  a separate decision Kalpit has not yet made. Until he does, none ship.
+- **Analytics of any kind, first-party or third-party, for as long as
+  `README.md` promises none.** First-party, privacy-respecting product
+  analytics are not prohibited in principle. But `README.md` tells every
+  visitor "no analytics", so shipping one before that line changes would make
+  the README a false promise. The order is fixed and not negotiable: Kalpit
+  decides, `README.md` changes in the same pull request, and only then may a
+  counter ship. Never the other way round.
+- **Third-party analytics, telemetry, or scripts that carry user data.** This
+  one stays prohibited whatever Kalpit decides about a first-party counter.
 - **Salary or personal data in URLs.** A URL lands in browser history, in
   referrer headers, and in accidental pastes.
 - **Reading a data source beyond the scope the user granted.** If the user
