@@ -27,6 +27,7 @@ import NoticeTrackerTool from '../tools/notice-tracker/index'
 import BondScannerTool from '../tools/bond-scanner/index'
 import RedactorTool from '../tools/redactor/index'
 import ClauseLibraryTool from '../tools/clause-library/index'
+import OfferGoesColdTool from '../tools/offer-goes-cold/index'
 import { isScriptSlug } from '../data/hrScripts'
 import type { Lang } from '../i18n'
 
@@ -66,3 +67,4 @@ const { slug, lang } = Astro.props
 {slug === 'bond-scanner' && <BondScannerTool client:load lang={lang} />}
 {slug === 'redactor' && <RedactorTool client:load lang={lang} />}
 {slug === 'clause-library' && <ClauseLibraryTool client:load lang={lang} />}
+{slug === 'offer-goes-cold' && <OfferGoesColdTool client:load lang={lang} />}
