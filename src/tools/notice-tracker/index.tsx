@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, NumberField, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, NumberField, VerdictBanner } from '../../components/ui'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
-import { todayUTC } from '../../engine/dates'
+import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
@@ -19,7 +19,7 @@ interface Draft {
 }
 
 function emptyDraft(): Draft {
-  return { resignDate: todayUTC(new Date()), noticePeriodDays: 90, done: [] }
+  return { resignDate: todayIso(), noticePeriodDays: 90, done: [] }
 }
 
 /** A milestone row is a doorway: the tool that does the thing sits beside it. */
@@ -51,19 +51,25 @@ function Body() {
   const t = useT()
   const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(emptyDraft)
-  const [asOf, setAsOf] = useState(() => todayUTC(new Date()))
+  const [asOf, setAsOf] = useState(todayIso)
   const [hydrated, setHydrated] = useState(false)
+  // Example until the user edits something here or a saved tracker exists.
+  // An inherited notice period alone does not count: the resign date would
+  // still be invented, and the countdown would be to a resignation that did
+  // not happen.
+  const [touched, setTouched] = useState(false)
 
   useEffect(() => {
     // Notice is served at the current employer, so the period is the current
     // job's — from the shared record, never the new offer's.
     const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
-    setAsOf(todayUTC(new Date()))
+    setAsOf(todayIso())
+    if (saved) setTouched(true)
     setDraft(
       saved
         ? { ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays }
-        : { resignDate: todayUTC(new Date()), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
+        : { resignDate: todayIso(), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
     )
     setHydrated(true)
   }, [])
@@ -80,7 +86,11 @@ function Body() {
     }
   }, [draft.resignDate, draft.noticePeriodDays, asOf])
 
-  const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const isExample = !touched
+  const set = (patch: Partial<Draft>) => {
+    setTouched(true)
+    setDraft((d) => ({ ...d, ...patch }))
+  }
   const toggle = (id: NoticeItemId) =>
     set({ done: draft.done.includes(id) ? draft.done.filter((x) => x !== id) : [...draft.done, id] })
 
@@ -101,14 +111,18 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
-          {result
-            ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
-                days: Math.max(0, result.daysLeftOnNotice),
-                lwd: result.lastWorkingDay,
-              })
-            : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
-        </VerdictBanner>
+        {isExample ? (
+          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
+        ) : (
+          <VerdictBanner tone={result?.served ? 'leaf' : 'amber'}>
+            {result
+              ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
+                  days: Math.max(0, result.daysLeftOnNotice),
+                  lwd: result.lastWorkingDay,
+                })
+              : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
+          </VerdictBanner>
+        )}
         <Card className="space-y-2">
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)

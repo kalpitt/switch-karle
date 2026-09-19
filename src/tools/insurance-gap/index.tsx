@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, DateField, Disclaimer, ExampleNote, Toggle, VerdictBanner } from '../../components/ui'
-import { todayUTC, addDays } from '../../engine/dates'
+import { addDays } from '../../engine/dates'
+import { todayIso } from '../../lib/today'
 import { insuranceGap } from '../../engine/insurance'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -15,7 +16,7 @@ interface Draft {
 }
 
 function skeleton(): Draft {
-  const today = todayUTC(new Date())
+  const today = todayIso()
   return { lastWorkingDay: today, newJoinDate: addDays(today, 15), hasPersonalCover: false }
 }
 
