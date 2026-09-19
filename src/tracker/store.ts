@@ -1,5 +1,9 @@
-import type { Application, Insight, Stage } from './types'
+import type { Application, ClosedReason, Insight, Stage } from './types'
 import type { SweepRecord } from '../engine/coverage'
+import { isIsoDate } from '../engine/dates'
+import { todayIso } from '../lib/today'
+
+export type { ClosedReason } from './types'
 
 export const STORAGE_KEY = 'switchkarle.tracker.v1'
 export const UNDO_STORAGE_KEY = 'switchkarle.tracker.undo.v1'
@@ -142,6 +146,60 @@ export function moveStage(list: Application[], id: string, dir: -1 | 1): Applica
     if (next === idx) return a
     return { ...a, stage: STAGE_ORDER[next], updatedAt: nowIso() }
   })
+}
+
+/** Pure: returns a new list with `id`'s application archived with `reason` and `closedOn`. */
+export function archiveApplication(
+  list: Application[],
+  id: string,
+  reason: ClosedReason,
+  closedOn: string = todayIso(),
+): Application[] {
+  return list.map((a) =>
+    a.id === id
+      ? {
+          ...a,
+          closed: { reason, closedOn },
+          updatedAt: nowIso(),
+        }
+      : a,
+  )
+}
+
+/** Pure: returns a new list with `id`'s application restored (closed removed) and updatedAt bumped. */
+export function restoreApplication(list: Application[], id: string): Application[] {
+  return list.map((a) => {
+    if (a.id !== id) return a
+    const { closed: _closed, ...rest } = a
+    return { ...rest, updatedAt: nowIso() }
+  })
+}
+
+export interface BoardApplications {
+  active: Record<Stage, Application[]>
+  archived: Application[]
+}
+
+/** Pure: splits a list into active applications by stage and archived applications. */
+export function splitApplications(list: Application[]): BoardApplications {
+  const active: Record<Stage, Application[]> = {
+    researching: [],
+    applied: [],
+    interviewing: [],
+    offer: [],
+    decided: [],
+  }
+  const archived: Application[] = []
+
+  for (const a of list) {
+    if (a.closed) {
+      archived.push(a)
+    } else {
+      active[a.stage].push(a)
+    }
+  }
+
+  return { active, archived }
 }
 
 /** Pure: appends a new insight to `appId`'s application and bumps updatedAt. No-op for an unknown id. */
@@ -333,6 +391,22 @@ function isBackupBundle(v: unknown): v is BackupBundle {
 }
 
 const KNOWN_STAGES: ReadonlySet<string> = new Set(STAGE_ORDER)
+export const KNOWN_CLOSED_REASONS: ReadonlySet<string> = new Set<ClosedReason>([
+  'rejected',
+  'ghosted',
+  'withdrawn',
+])
+
+function isClosed(v: unknown): v is { reason: ClosedReason; closedOn: string } {
+  if (typeof v !== 'object' || v === null) return false
+  const o = v as Record<string, unknown>
+  return (
+    typeof o.reason === 'string' &&
+    KNOWN_CLOSED_REASONS.has(o.reason) &&
+    typeof o.closedOn === 'string' &&
+    isIsoDate(o.closedOn)
+  )
+}
 
 function isApplication(v: unknown): v is Application {
   if (typeof v !== 'object' || v === null) return false
@@ -347,6 +421,7 @@ function isApplication(v: unknown): v is Application {
     typeof o.stage === 'string' &&
     KNOWN_STAGES.has(o.stage) &&
     typeof o.createdAt === 'string' &&
-    typeof o.updatedAt === 'string'
+    typeof o.updatedAt === 'string' &&
+    (o.closed === undefined || isClosed(o.closed))
   )
 }

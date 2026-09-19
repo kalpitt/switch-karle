@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import {
   addApplication,
   addInsight,
+  archiveApplication,
   exportAll,
   hasUndo,
   load,
@@ -12,8 +13,10 @@ import {
   removeApplication,
   removeInsight,
   restoreAll,
+  restoreApplication,
   save,
   snapshotForUndo,
+  splitApplications,
   STAGE_ORDER,
   STORAGE_KEY,
   UNDO_STORAGE_KEY,
@@ -575,3 +578,157 @@ describe('a stage the board cannot render never reaches the board', () => {
     }
   })
 })
+
+describe('archive and restore', () => {
+  const good: Application = {
+    id: 'g1',
+    company: 'Finlytix',
+    role: 'SDE',
+    stage: 'applied',
+    createdAt: '2026-08-01T00:00:00.000Z',
+    updatedAt: '2026-08-01T00:00:00.000Z',
+  }
+
+  it('an old v1 backup with no closed parses and loads all cards as active', () => {
+    const oldV1App = {
+      id: 'old-1',
+      company: 'Acme',
+      role: 'Dev',
+      stage: 'applied',
+      createdAt: '2026-08-01T00:00:00.000Z',
+      updatedAt: '2026-08-01T00:00:00.000Z',
+    }
+    const json = JSON.stringify({ version: 1, decoder: null, tracker: [oldV1App] })
+    const parsed = parseBackup(json)
+    expect(parsed.tracker).toHaveLength(1)
+    expect(parsed.tracker[0]?.closed).toBeUndefined()
+
+    mem.setItem(STORAGE_KEY, JSON.stringify([oldV1App]))
+    const loaded = load()
+    expect(loaded).toHaveLength(1)
+    expect(loaded[0]?.closed).toBeUndefined()
+
+    const { active, archived } = splitApplications(loaded)
+    expect(active.applied).toHaveLength(1)
+    expect(archived).toHaveLength(0)
+  })
+
+  it("a record with closed: { reason: 'fired', closedOn: '2026-08-01' } is rejected", () => {
+    const badRecord = {
+      id: 'bad-1',
+      company: 'Acme',
+      role: 'Dev',
+      stage: 'applied',
+      closed: { reason: 'fired', closedOn: '2026-08-01' },
+      createdAt: '2026-08-01T00:00:00.000Z',
+      updatedAt: '2026-08-01T00:00:00.000Z',
+    }
+    const json = JSON.stringify({ version: 1, decoder: null, tracker: [badRecord] })
+    expect(() => parseBackup(json)).toThrow()
+
+    mem.setItem(STORAGE_KEY, JSON.stringify([good, badRecord]))
+    expect(load()).toEqual([good])
+  })
+
+  it('archive then restore round-trips the application exactly except updatedAt', () => {
+    const app: Application = {
+      id: 'app-roundtrip',
+      company: 'Acme Corp',
+      role: 'Senior SDE',
+      stage: 'interviewing',
+      ctcDiscussedAnnual: 3_000_000,
+      noticePeriodDays: 30,
+      source: 'referral',
+      nextAction: 'Follow up',
+      nextActionDate: '2026-08-01',
+      appliedOn: '2026-07-20',
+      notes: 'Initial interview done',
+      createdAt: '2026-07-01T00:00:00.000Z',
+      updatedAt: '2026-07-01T00:00:00.000Z',
+    }
+    const initialList = [app]
+    const archivedList = archiveApplication(initialList, app.id, 'rejected', '2026-08-02')
+    expect(archivedList[0]?.closed).toEqual({ reason: 'rejected', closedOn: '2026-08-02' })
+    expect(archivedList[0]?.updatedAt >= app.updatedAt).toBe(true)
+
+    const restoredList = restoreApplication(archivedList, app.id)
+    expect(restoredList[0]?.closed).toBeUndefined()
+
+    const { updatedAt: origUpdated, ...origRest } = app
+    const { updatedAt: restoredUpdated, ...restoredRest } = restoredList[0]!
+    expect(restoredRest).toEqual(origRest)
+    expect(restoredUpdated >= origUpdated).toBe(true)
+  })
+
+  it('a pure helper that splits a list into active-by-stage and archived is tested for counts', () => {
+    const list: Application[] = [
+      {
+        id: '1',
+        company: 'A',
+        role: 'Dev',
+        stage: 'researching',
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+      {
+        id: '2',
+        company: 'B',
+        role: 'Dev',
+        stage: 'researching',
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+      {
+        id: '3',
+        company: 'C',
+        role: 'PM',
+        stage: 'applied',
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+      {
+        id: '4',
+        company: 'D',
+        role: 'Design',
+        stage: 'interviewing',
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+      {
+        id: '5',
+        company: 'E',
+        role: 'Lead',
+        stage: 'decided',
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+      {
+        id: '6',
+        company: 'F',
+        role: 'Dev',
+        stage: 'researching',
+        closed: { reason: 'withdrawn', closedOn: '2026-08-05' },
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-05T00:00:00.000Z',
+      },
+      {
+        id: '7',
+        company: 'G',
+        role: 'QA',
+        stage: 'interviewing',
+        closed: { reason: 'ghosted', closedOn: '2026-08-06' },
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-06T00:00:00.000Z',
+      },
+    ]
+
+    const { active, archived } = splitApplications(list)
+    expect(active.researching).toHaveLength(2)
+    expect(active.applied).toHaveLength(1)
+    expect(active.interviewing).toHaveLength(1)
+    expect(active.offer).toHaveLength(0)
+    expect(active.decided).toHaveLength(1)
+    expect(archived).toHaveLength(2)
+  })
+})
+
