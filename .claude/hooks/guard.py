@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PreToolUse guard (template) — mechanically enforces repo invariants.
+"""PreToolUse guard (template): a typo-catcher for repo invariants, not a boundary.
 
 Architecture adopted from VivoType's guard (the most battle-tested one, 2026-07):
 - FAIL-OPEN. Any internal error, unparsable input, or unknown shape -> allow

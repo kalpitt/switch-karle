@@ -90,14 +90,26 @@ These claims are **true today** and must not be edited pre-emptively. They
 become false the moment the first byte of user data leaves the device, and
 changing them is part of that change, not a follow-up:
 
-- `src/i18n/en.ts:10` and `src/i18n/hi.ts:20` — `app.privacyBadge`,
+- `src/i18n/en.ts` and `src/i18n/hi.ts` — `app.privacyBadge`,
   "100% private — runs entirely in your browser, nothing is uploaded"
-- `src/i18n/en.ts:12` — `app.footer.privacy`, "your data never leaves this device"
-- `src/i18n/en.ts:201` — `fake-offer.textHint`, "It never leaves this device."
-- `src/i18n/en.ts:624` — `bond-scanner.textHint`, "It never leaves this device."
-- `src/pages/404.astro:7` and `:13` — two "nothing is uploaded" claims
-- `README.md:55` — "100% client-side. No server, no accounts, no analytics."
-- `docs/MASTER_IMPROVEMENT_PLAN.md:32` — restates the retired rule
+- `src/i18n/en.ts` — `app.footer.privacy`, "your data never leaves this device"
+- `src/i18n/en.ts` — `fake-offer.textHint`, "It never leaves this device."
+- `src/pages/404.astro` — the meta description ("nothing is uploaded") and the
+  body copy ("runs entirely in your browser")
+- `README.md` — the intro ("Nothing is uploaded.") and the features list
+  ("100% client-side. No server, no accounts, no analytics.")
+- Every other user-facing string that says something is "never uploaded", "on
+  this device only" or "never leaves this device". There are more than the list
+  above, and a list goes stale. Find them with
+  `grep -rniE "never uploaded|nothing is uploaded|leaves this device|on this device only|entirely in your browser" src README.md`.
+  That finds the English copy. The Hindi files (`src/i18n/hi.ts`,
+  `src/i18n/hi-suite.ts`) carry the same claims in Hindi and need the same pass
+  by key.
+
+Locations are given by key or quoted text, not line number: line numbers drift
+(re-checked 2026-09-19: six of the nine earlier citations had moved or no
+longer existed, the list was missing five strings, and it quoted a sixth by
+wording it no longer has).
 
 A tool that still runs fully locally may keep the claim, scoped to that tool.
 A blanket app-level claim may not survive a backend.
