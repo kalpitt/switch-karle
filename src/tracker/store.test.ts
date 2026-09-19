@@ -649,7 +649,7 @@ describe('archive and restore', () => {
     const initialList = [app]
     const archivedList = archiveApplication(initialList, app.id, 'rejected', '2026-08-02')
     expect(archivedList[0]?.closed).toEqual({ reason: 'rejected', closedOn: '2026-08-02' })
-    expect(archivedList[0]?.updatedAt >= app.updatedAt).toBe(true)
+    expect(archivedList[0]?.updatedAt).not.toBe(app.updatedAt)
 
     const restoredList = restoreApplication(archivedList, app.id)
     expect(restoredList[0]?.closed).toBeUndefined()
@@ -657,7 +657,7 @@ describe('archive and restore', () => {
     const { updatedAt: origUpdated, ...origRest } = app
     const { updatedAt: restoredUpdated, ...restoredRest } = restoredList[0]!
     expect(restoredRest).toEqual(origRest)
-    expect(restoredUpdated >= origUpdated).toBe(true)
+    expect(restoredUpdated > origUpdated).toBe(true)
   })
 
   it('a pure helper that splits a list into active-by-stage and archived is tested for counts', () => {

@@ -105,6 +105,9 @@ export function Tracker() {
   }
 
   const handleArchive = (id: string, reason: ClosedReason) => {
+    // An open edit form for this card would save over it after it moved to the
+    // archive, so close it with the card.
+    if (typeof formMode === 'object' && formMode.editId === id) setFormMode('closed')
     setList((l) => archiveApplication(l, id, reason, todayIso()))
   }
 
