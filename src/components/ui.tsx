@@ -28,8 +28,11 @@ export function NumberField(props: {
   step?: number
   max?: number
   min?: number
+  allowBlank?: boolean
 }) {
   const min = props.min ?? 0
+  const isFinite = Number.isFinite(props.value)
+  const displayValue = isFinite ? props.value : props.allowBlank ? '' : 0
   return (
     <label className="block">
       <Label hint={props.hint}>{props.label}</Label>
@@ -38,11 +41,17 @@ export function NumberField(props: {
           type="number"
           inputMode="decimal"
           className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
-          value={Number.isFinite(props.value) ? props.value : 0}
+          value={displayValue}
           min={min}
           max={props.max}
           step={props.step ?? 1}
-          onChange={(e) => props.onChange(Math.max(min, Number(e.target.value)))}
+          onChange={(e) => {
+            if (props.allowBlank && e.target.value === '') {
+              props.onChange(NaN)
+              return
+            }
+            props.onChange(Math.max(min, Number(e.target.value)))
+          }}
         />
         {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-faint">{props.suffix}</span>}
       </span>

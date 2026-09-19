@@ -6,7 +6,6 @@ import {
   startApplyingByPassed,
   switchCalendar,
   type Cliff,
-  type SwitchCalendarInput,
   type Trade,
 } from '../../engine/switchCalendar'
 import { isIsoDate } from '../../engine/dates'
@@ -17,7 +16,7 @@ import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
-import { questionsSubmittable } from './fork'
+import { doorEngineInput, questionsSubmittable } from './fork'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
@@ -125,24 +124,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setAnswers((a) => ({ ...a, ...patch }))
   }
 
-  const hikeYear =
-    plan.hikeCreditMonth === answers.hikeCreditMonth ? plan.hikeCreditYear : undefined
-
-  const input: SwitchCalendarInput = {
-    // The engine is a pure function of its input, so it needs a day even when
-    // the user clears the field. Nothing derived from `joinDate` renders on the
-    // questions screen, which is the only screen where `joinDate` can be invalid.
-    joinDate: isIsoDate(answers.joinDate) ? answers.joinDate : '2000-01-01',
-    noticePeriodDays: answers.noticePeriodDays,
-    hikeCreditMonth: answers.hikeCreditMonth > 0 ? answers.hikeCreditMonth : undefined,
-    hikeCreditYear: hikeYear,
-    workWeekDays: job.workWeekDays,
-    coveredByAct: job.coveredByAct ?? true,
-    targetResignDate: plan.resignDate,
-    // The engine is a pure function of its input, so it needs a day even before
-    // the effect has run. Nothing derived from this renders until `today` is set.
-    asOf: today === '' ? '2000-01-01' : today,
-  }
+  const input = doorEngineInput(answers, job, plan, today)
 
   // Not memoised on purpose: the whole calculation is a few date additions on
   // a handful of fields, and a memo keyed on this object would need a stringify
@@ -156,6 +138,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   // ---- writes. Every one of these is a button the user pressed. ----
 
   function submitQuestions() {
+    if (!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)) return
     // Only write to the shared record when the user actually edited the
     // answers. Prefilled example values must not seed the rest of the app.
     if (touched) {
@@ -246,6 +229,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     // rely on stay. Erasing everything is the footer's control, not this one.
     erasePlan()
     setPlan({})
+    setDownloaded(false)
     setReturning(false)
     setRepicking(false)
     setStep('questions')
@@ -310,6 +294,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             value={answers.noticePeriodDays}
             suffix={t('plan.q.noticeSuffix')}
             min={1}
+            allowBlank
             onChange={(v) => answered({ noticePeriodDays: v })}
           />
           <Select
@@ -497,7 +482,7 @@ function CliffScreen(props: {
             active={props.workWeekDays === 6}
             onClick={() => props.onChooseWeek(6)}
           />
-          {props.workWeekDays === undefined && (
+          {!blocked && props.workWeekDays === undefined && (
             <p className="text-[14px] font-bold">{t('plan.week.ask')}</p>
           )}
           {/* The gate: tapping "Next" with neither card chosen re-prints the

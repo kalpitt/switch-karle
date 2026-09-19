@@ -1,5 +1,5 @@
 import { isIsoDate } from '../../engine/dates'
-import type { Cliff } from '../../engine/switchCalendar'
+import type { Cliff, SwitchCalendarInput } from '../../engine/switchCalendar'
 
 /**
  * The work-week fork on screen two, as a pure function so the rule that makes
@@ -52,4 +52,54 @@ export function dateStepReachable(
 export function questionsSubmittable(joinDate: string, noticePeriodDays: number, today: string): boolean {
   if (!isIsoDate(joinDate) || !(noticePeriodDays >= 1)) return false
   return today === '' || joinDate <= today
+}
+
+export interface DoorEngineAnswers {
+  joinDate: string
+  noticePeriodDays: number
+  hikeCreditMonth: number
+}
+
+export interface DoorEngineJob {
+  workWeekDays?: 5 | 6
+  coveredByAct?: boolean
+}
+
+export interface DoorEnginePlan {
+  resignDate?: string
+  hikeCreditMonth?: number | null
+  hikeCreditYear?: number | null
+}
+
+/**
+ * Builds safe engine input from the door's current state.
+ *
+ * The date engine is a pure function of its inputs. If the notice field is
+ * blank (NaN) or invalid while the user is typing, we fall back to a safe
+ * display-only value (90 days) so that render-time cliff computations never
+ * crash. When answers are submittable, the user's real finite notice is used.
+ */
+export function doorEngineInput(
+  answers: DoorEngineAnswers,
+  job: DoorEngineJob,
+  plan: DoorEnginePlan,
+  today: string,
+): SwitchCalendarInput {
+  const hikeYear =
+    plan.hikeCreditMonth === answers.hikeCreditMonth ? plan.hikeCreditYear ?? undefined : undefined
+  const safeNotice =
+    Number.isFinite(answers.noticePeriodDays) && answers.noticePeriodDays >= 1
+      ? answers.noticePeriodDays
+      : 90
+
+  return {
+    joinDate: isIsoDate(answers.joinDate) ? answers.joinDate : '2000-01-01',
+    noticePeriodDays: safeNotice,
+    hikeCreditMonth: answers.hikeCreditMonth > 0 ? answers.hikeCreditMonth : undefined,
+    hikeCreditYear: hikeYear,
+    workWeekDays: job.workWeekDays,
+    coveredByAct: job.coveredByAct ?? true,
+    targetResignDate: plan.resignDate,
+    asOf: today === '' ? '2000-01-01' : today,
+  }
 }

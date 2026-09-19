@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { cliffs } from '../../engine/switchCalendar'
-import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
+import { chosenGratuityCliff, dateStepReachable, doorEngineInput, isGratuityCliff } from './fork'
 import { questionsSubmittable } from './fork'
 
 /** Ravi: 21 July 2026 on a five-day week, 9 September 2026 on a six-day one. */
@@ -59,5 +59,32 @@ describe('questionsSubmittable', () => {
   it('refuses a blank date and a notice of zero', () => {
     expect(questionsSubmittable('', 90, today)).toBe(false)
     expect(questionsSubmittable('2022-01-12', 0, today)).toBe(false)
+  })
+  it('refuses a NaN notice period', () => {
+    expect(questionsSubmittable('2022-01-12', NaN, today)).toBe(false)
+  })
+})
+
+describe('doorEngineInput', () => {
+  const today = '2026-09-19'
+  it('proves the engine input the door builds is finite when the notice is NaN', () => {
+    const input = doorEngineInput(
+      { joinDate: '2022-01-12', noticePeriodDays: NaN, hikeCreditMonth: 5 },
+      {},
+      {},
+      today,
+    )
+    expect(Number.isFinite(input.noticePeriodDays)).toBe(true)
+    expect(input.noticePeriodDays).toBeGreaterThanOrEqual(1)
+  })
+
+  it('keeps the user notice period when finite and >= 1', () => {
+    const input = doorEngineInput(
+      { joinDate: '2022-01-12', noticePeriodDays: 60, hikeCreditMonth: 5 },
+      {},
+      {},
+      today,
+    )
+    expect(input.noticePeriodDays).toBe(60)
   })
 })

@@ -6,16 +6,19 @@ class FakeAnchor {
   href = ''
   download = ''
   clicked = false
+  events: string[] = []
   click() {
     this.clicked = true
+    this.events.push('clicked')
   }
 }
 
 /** A minimal stand-in for `document`, just enough to prove the ordering. */
 function fakeDocument() {
-  const anchor = new FakeAnchor()
-  const body: { children: FakeAnchor[] } = { children: [] }
   const events: string[] = []
+  const anchor = new FakeAnchor()
+  anchor.events = events
+  const body: { children: FakeAnchor[] } = { children: [] }
   const doc = {
     createElement: () => anchor,
     body: {
@@ -50,7 +53,7 @@ describe('downloadBlob', () => {
     expect(anchor.href).toBe('blob:fake-url')
     expect(anchor.download).toBe('dates.ics')
     expect(anchor.clicked).toBe(true)
-    expect(events).toEqual(['appended', 'removed'])
+    expect(events).toEqual(['appended', 'clicked', 'removed'])
   })
 
   it('removes the anchor from the document once the click has fired', () => {

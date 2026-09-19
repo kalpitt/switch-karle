@@ -122,6 +122,11 @@ describe('the calendar download works on phones and says what happened', () => {
     )
   })
 
+  it('startOver resets the downloaded state', () => {
+    const startOver = door.match(/function startOver\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(startOver).toMatch(/setDownloaded\(false\)/)
+  })
+
   it("plan.calendar.note no longer calls the dates 'your cliffs'", () => {
     expect(en['plan.calendar.note']).not.toMatch(/your cliffs/)
     expect(en['plan.calendar.note']).toMatch(/the dates above/)
@@ -139,6 +144,12 @@ describe('the week must be chosen before the dates, and each step opens at its t
   it('the blocked re-ask of plan.week.ask uses the alarm colour already used for a late trade', () => {
     const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
     expect(cliffScreen).toMatch(/blocked[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
+  })
+
+  it('shows the plain week ask only when not blocked, and the alarm ask only when blocked', () => {
+    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
+    expect(cliffScreen).toMatch(/!blocked && props\.workWeekDays === undefined[\s\S]*?plan\.week\.ask/)
+    expect(cliffScreen).toMatch(/blocked && props\.workWeekDays === undefined[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
   })
 
   it('every step, repicking and recap swap scrolls the container back to its top, skipping the first mount', () => {
@@ -166,6 +177,10 @@ describe('the late warning follows the date in the box, and impossible answers c
   it('the notice field cannot go below 1, and 0 or blank keeps "See my dates" disabled', () => {
     expect(door).toMatch(/<NumberField[\s\S]*?label=\{t\('plan\.q\.notice'\)\}[\s\S]*?min=\{1\}/)
     expect(door).toMatch(/disabled=\{!questionsSubmittable\(answers\.joinDate, answers\.noticePeriodDays, today\)\}/)
+  })
+
+  it('the notice field on the door opts into allowBlank', () => {
+    expect(door).toMatch(/<NumberField[\s\S]*?label=\{t\('plan\.q\.notice'\)\}[\s\S]*?allowBlank/)
   })
 })
 
