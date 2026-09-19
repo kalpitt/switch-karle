@@ -23,7 +23,7 @@ const toolsSrc = resolve(root, 'src/data/tools.ts')
 // still has to catch.
 const UA_COMMANDS = 'create|send|set|require|remove|provide|rename|get|ready'
 export const ANALYTICS = new RegExp(
-  String.raw`googletagmanager|google-analytics|gtag\s*(?:\?\.)?\s*\(|\bga\s*(?:\?\.)?\s*\(\s*['"](?:${UA_COMMANDS})['"]|\bplausible\b|\bumami\b|\bfathom\b|clarity\.ms|\bclarity\s*(?:\?\.)?\s*\(`,
+  String.raw`googletagmanager|google-analytics|gtag\s*(?:\?\.)?\s*\(|\bga\s*(?:\?\.)?\s*\(\s*['"\`](?:${UA_COMMANDS})['"\`]|\bplausible\b|\bumami\b|\bfathom\b|clarity\.ms|\bclarity\s*(?:\?\.)?\s*\(`,
   'i',
 )
 
@@ -93,10 +93,45 @@ export function checkSitemap(sitemap, slugs, base = BASE, site = SITE) {
 
 export function checkRobots(robots) {
   const errors = []
+  let disallowRoot = false
+  const lines = robots.split('\n')
+  let inWildcard = false
+  let prevWasUserAgent = false
+
+  for (const rawLine of lines) {
+    const line = rawLine.replace(/#.*$/, '').trim()
+    if (!line) continue
+
+    const uaMatch = line.match(/^User-agent:\s*(.*)$/i)
+    if (uaMatch) {
+      const agent = uaMatch[1].trim()
+      if (prevWasUserAgent) {
+        if (agent === '*') inWildcard = true
+      } else {
+        inWildcard = agent === '*'
+      }
+      prevWasUserAgent = true
+      continue
+    }
+
+    prevWasUserAgent = false
+
+    if (inWildcard) {
+      const disallowMatch = line.match(/^Disallow:\s*(.*)$/i)
+      if (disallowMatch) {
+        const path = disallowMatch[1].trim()
+        if (path === '/') {
+          disallowRoot = true
+          break
+        }
+      }
+    }
+  }
+
   // Anchored to the start of a line on purpose: `Disallow: /` contains the
   // substring `allow: /`, so an unanchored test passed a robots.txt that
   // blocked the entire site — the one thing this check exists to catch.
-  if (!/^\s*User-agent:\s*\*/im.test(robots) || !/^\s*Allow:\s*\//im.test(robots)) {
+  if (!/^\s*User-agent:\s*\*/im.test(robots) || !/^\s*Allow:\s*\//im.test(robots) || disallowRoot) {
     errors.push('check-seo: FAIL — robots.txt must allow all')
   }
   return { ok: errors.length === 0, errors }

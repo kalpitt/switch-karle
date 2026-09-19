@@ -70,6 +70,13 @@ describe('check-csp: off-origin URL detection holes', () => {
     expect(result.ok).toBe(false)
     expect(result.errors.some((e: string) => e.includes('off-origin image'))).toBe(true)
   })
+
+  it('catches off-origin resources in slash-delimited HTML tags', () => {
+    const html = `<html><head><meta http-equiv="Content-Security-Policy" content="default-src 'self';connect-src 'self';img-src 'self';font-src 'self';base-uri 'self';form-action 'none';object-src 'none';script-src 'self' 'sha256-BF0290pkb3jxQsE7z00xR8Imp8X34FLC88L0lkMnrGw=';style-src 'self';"><script/src="https://evil.com/x.js"></script></head><body></body></html>`
+    const result = checkCspHtml(html, 'index.html')
+    expect(result.ok).toBe(false)
+    expect(result.errors.some((e: string) => e.includes('off-origin script'))).toBe(true)
+  })
 })
 
 describe('check-csp: meta tag and attribute parsing holes', () => {
@@ -177,5 +184,12 @@ describe('check-csp: directive validation holes', () => {
     const result = checkCspHtml(html, 'index.html')
     expect(result.ok).toBe(false)
     expect(result.errors.some((e: string) => e.includes('connect-src is'))).toBe(true)
+  })
+
+  it('rejects duplicate CSP directives', () => {
+    const html = `<html><head><meta http-equiv="Content-Security-Policy" content="default-src 'self';connect-src 'self';img-src 'self';font-src 'self';base-uri 'self';form-action 'none';object-src 'none';script-src 'self';script-src 'sha256-BF0290pkb3jxQsE7z00xR8Imp8X34FLC88L0lkMnrGw=';style-src 'self';"></head><body></body></html>`
+    const result = checkCspHtml(html, 'index.html')
+    expect(result.ok).toBe(false)
+    expect(result.errors.some((e: string) => e.includes('duplicate CSP directive "script-src"'))).toBe(true)
   })
 })

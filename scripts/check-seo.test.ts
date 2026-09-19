@@ -135,6 +135,13 @@ describe('check-seo: no-analytics holes', () => {
     const clarity = '<script src="https://www.clarity.ms/tag/xyz123"></script>'
     expect(checkAnalytics(clarity, 'index.html').ok).toBe(false)
   })
+
+  it('catches ga with template literal command', () => {
+    const snippet = 'ga(`send`, "pageview");'
+    const result = checkAnalytics(snippet, 'tracker.js')
+    expect(result.ok).toBe(false)
+    expect(result.errors).toContain('check-seo: FAIL — analytics snippet in tracker.js')
+  })
 })
 
 describe('check-seo: robots and sitemap contracts', () => {
@@ -148,13 +155,28 @@ describe('check-seo: robots and sitemap contracts', () => {
     expect(checkRobots(robots).ok).toBe(false)
   })
 
+  it('rejects robots.txt when Disallow: / is present for User-agent * even if Allow: / is present', () => {
+    const robots = 'User-agent: *\nDisallow: /\nAllow: /\n'
+    const result = checkRobots(robots)
+    expect(result.ok).toBe(false)
+  })
+
+  it('allows Disallow: / for specific bot if User-agent * allows all', () => {
+    const robots = 'User-agent: BadBot\nDisallow: /\n\nUser-agent: *\nAllow: /\n'
+    expect(checkRobots(robots).ok).toBe(true)
+  })
+
   it('accepts valid sitemap containing required routes', () => {
     const sitemap = '<urlset><loc>https://switchkarle.in/</loc><loc>https://switchkarle.in/hi/</loc><loc>https://switchkarle.in/decoder/</loc><loc>https://switchkarle.in/hi/decoder/</loc></urlset>'
     expect(checkSitemap(sitemap, ['decoder'], '', 'https://switchkarle.in').ok).toBe(true)
   })
 
-  it('rejects sitemap with sitemapindex', () => {
-    const sitemap = '<sitemapindex><sitemap><loc>https://switchkarle.in/sitemap-0.xml</loc></sitemap></sitemapindex>'
-    expect(checkSitemap(sitemap, [], '', 'https://switchkarle.in').ok).toBe(false)
+  it('rejects sitemap with sitemapindex even when required home URLs are present', () => {
+    const sitemap = '<sitemapindex><sitemap><loc>https://switchkarle.in/</loc><loc>https://switchkarle.in/hi/</loc><loc>https://switchkarle.in/sitemap-0.xml</loc></sitemap></sitemapindex>'
+    const result = checkSitemap(sitemap, [], '', 'https://switchkarle.in')
+    expect(result.ok).toBe(false)
+    expect(result.errors).toContain('check-seo: FAIL — sitemap-index is not allowed')
+    expect(result.errors).not.toContain('check-seo: FAIL — sitemap missing home https://switchkarle.in/')
+    expect(result.errors).not.toContain('check-seo: FAIL — sitemap missing Hindi home https://switchkarle.in/hi/')
   })
 })

@@ -40,7 +40,7 @@ export function stripHtmlComments(html) {
 }
 
 export function getAttr(tag, attr) {
-  const re = new RegExp(`(?:^|\\s)${attr}\\s*=\\s*(?:(["'])([\\s\\S]*?)\\1|([^\\s>]+))`, 'i')
+  const re = new RegExp(`(?:^|[\\s/])${attr}\\s*=\\s*(?:(["'])([\\s\\S]*?)\\1|([^\\s>]+))`, 'i')
   const match = tag.match(re)
   if (!match) return null
   return match[2] !== undefined ? match[2] : match[3]
@@ -60,6 +60,7 @@ export function getCspContent(html) {
 
 export function parseDirectives(cspString) {
   const directives = new Map()
+  const duplicates = []
   const parts = cspString.split(';').map((s) => s.trim()).filter(Boolean)
   for (const part of parts) {
     const tokens = part.split(/\s+/).filter(Boolean)
@@ -67,12 +68,15 @@ export function parseDirectives(cspString) {
       const name = tokens[0].toLowerCase()
       const values = tokens.slice(1)
       if (directives.has(name)) {
-        directives.get(name).push(...values)
+        if (!duplicates.includes(name)) {
+          duplicates.push(name)
+        }
       } else {
         directives.set(name, values)
       }
     }
   }
+  directives.duplicates = duplicates
   return directives
 }
 
@@ -89,6 +93,10 @@ export function checkCspHtml(html, rel = 'page.html') {
     errors.push(`check-csp: FAIL — ${rel} missing Content-Security-Policy meta element`)
   } else {
     const directives = parseDirectives(csp)
+
+    for (const dup of directives.duplicates || []) {
+      errors.push(`check-csp: FAIL — ${rel} duplicate CSP directive "${dup}"`)
+    }
 
     for (const dir of REQUIRED_DIRECTIVES) {
       if (!directives.has(dir) || directives.get(dir).length === 0) {
