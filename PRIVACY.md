@@ -98,7 +98,6 @@ changing them is part of that change, not a follow-up:
   body copy ("runs entirely in your browser")
 - `README.md` — the intro ("Nothing is uploaded.") and the features list
   ("100% client-side. No server, no accounts, no analytics.")
-- `docs/MASTER_IMPROVEMENT_PLAN.md` — restates the retired rule
 - Every other user-facing string that says something is "never uploaded", "on
   this device only" or "never leaves this device". There are more than the list
   above, and a list goes stale. Find them with
