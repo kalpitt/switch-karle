@@ -26,6 +26,7 @@ export const hiSuite: Record<string, string> = {
   'plan.example.chip': 'Example',
   'plan.example.note':
     'Example जवाब, ताकि टाइप करने से पहले ही असली calendar दिखे। इन्हें अपने हिसाब से बदल दें।',
+  'plan.example.laterNote': 'Example dates, example जवाबों से। अपने जवाब बदलें तो आपकी dates आएँगी।',
   'plan.q.join': 'आपने join कब किया था?',
   'plan.q.joinHint': 'जिस दिन आपने current employer के साथ शुरुआत की थी।',
   'plan.q.notice': 'आपका notice period कितना है?',
@@ -82,7 +83,8 @@ export const hiSuite: Record<string, string> = {
   'plan.cliff.bonus-clawback': 'Joining bonus clawback {date} को ख़त्म',
   'plan.calendar.cta': 'ये dates मेरे calendar में डालें',
   'plan.calendar.note':
-    'dates.ics download होगी — सात दिन बाद एक check-in, आपकी cliffs, और आपकी date। उसके notes में इस site के नाम वाला link रहता है, इसलिए work calendar में डालने से पहले सोच लें।',
+    'dates.ics download होगी — सात दिन बाद एक check-in, ऊपर वाली dates, और आपकी date। उसके notes में इस site के नाम वाला link रहता है, इसलिए work calendar में डालने से पहले सोच लें।',
+  'plan.calendar.downloaded': 'dates.ics आपके downloads में है। उसे खोलें, calendar app dates जोड़ देगा।',
   'plan.reason.label': 'आप क्यों निकलना चाहते हैं?',
   'plan.reason.hint': 'एक लाइन। हर बार लौटने पर यह सबसे ऊपर दिखेगी। Optional है।',
   'plan.reason.save': 'यह लाइन save करें',

@@ -268,6 +268,44 @@ describe('DateField on door screen one (Plan)', () => {
     expect(uncaughtError).toBeNull()
   })
 
+  it('clearing notice input on the first screen does not crash the component and disables the next button', async () => {
+    const root = ReactDOMClient.createRoot(container as any, {
+      onUncaughtError(err: any) {
+        uncaughtError = err
+      },
+    })
+
+    root.render(
+      React.createElement(
+        LangProvider,
+        null,
+        React.createElement(Plan, null),
+      ),
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    const noticeInput = findInputByLabelOrType(container, 'number')
+    expect(noticeInput).not.toBeNull()
+
+    const reactPropsKey = Object.keys(noticeInput!).find((k) => k.startsWith('__reactProps'))
+    expect(reactPropsKey).toBeDefined()
+    const props = (noticeInput as any)[reactPropsKey!]
+    expect(props.value).toBe(90)
+
+    props.onChange({ target: { value: '' } })
+
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    expect(uncaughtError).toBeNull()
+
+    const button = findButtonByText(container, 'See my dates')
+    expect(button).not.toBeNull()
+    const buttonPropsKey = Object.keys(button!).find((k) => k.startsWith('__reactProps'))
+    const buttonProps = (button as any)[buttonPropsKey!]
+    expect(buttonProps.disabled).toBe(true)
+  })
+
   it('gratuity renders without throwing when its date field is cleared', async () => {
     const root = ReactDOMClient.createRoot(container as any, {
       onUncaughtError(err: any) {

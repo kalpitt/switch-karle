@@ -299,6 +299,31 @@ function nextFinancialYearEnd(today: string): string {
   return candidate > today ? candidate : `${yearOf(today) + 1}-03-31`
 }
 
+/**
+ * The latest safe day to start applying for a given target date. Exported so
+ * the UI can re-run it against whatever date a visitor currently has typed
+ * into an editable picker, not only the fixed date a `Trade` was built from —
+ * a `Trade`'s own `startApplyingByPassed` is frozen at the moment `trades()`
+ * ran and does not move when the picker's value does.
+ */
+export function startApplyingByDate(
+  date: string,
+  conventions: Partial<Conventions> = {},
+): string {
+  const offerBufferDays = conventions.offerBufferDays ?? DEFAULT_OFFER_BUFFER_DAYS
+  const offerLeadWeeks = conventions.offerLeadWeeks ?? DEFAULT_OFFER_LEAD_WEEKS
+  return addDays(addDays(date, -offerBufferDays), -offerLeadWeeks * 7)
+}
+
+/** Whether the latest safe day to start applying for `date` has already gone by. */
+export function startApplyingByPassed(
+  date: string,
+  today: string,
+  conventions: Partial<Conventions> = {},
+): boolean {
+  return startApplyingByDate(date, conventions) < today
+}
+
 function tradeFor(
   id: TradeId,
   resignDate: string | null,
@@ -306,16 +331,14 @@ function tradeFor(
   today: string,
   conventions: Conventions,
 ): Trade {
-  const applyingFor = (date: string): string =>
-    addDays(addDays(date, -conventions.offerBufferDays), -conventions.offerLeadWeeks * 7)
   const base = earliestDate ?? resignDate
   return {
     id,
     resignDate,
     earliestDate,
     offerBy: resignDate === null ? null : addDays(resignDate, -conventions.offerBufferDays),
-    startApplyingBy: resignDate === null ? null : applyingFor(resignDate),
-    startApplyingByPassed: base !== null && applyingFor(base) < today,
+    startApplyingBy: resignDate === null ? null : startApplyingByDate(resignDate, conventions),
+    startApplyingByPassed: base !== null && startApplyingByPassed(base, today, conventions),
   }
 }
 

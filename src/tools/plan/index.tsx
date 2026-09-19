@@ -1,23 +1,26 @@
-import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import {
   cliffs as computeCliffs,
   hikeCliffDate,
+  startApplyingByPassed,
   switchCalendar,
   type Cliff,
-  type SwitchCalendarInput,
   type Trade,
 } from '../../engine/switchCalendar'
 import { isIsoDate } from '../../engine/dates'
 import { loadCurrentJob, rememberCurrentJob, type CurrentJob } from '../../data/currentJob'
 import { erasePlan, loadPlan, savePlan, type Plan } from '../../data/plan'
+import { downloadBlob } from '../../lib/downloadBlob'
 import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
+import { doorEngineInput, questionsSubmittable } from './fork'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
-import { chosenGratuityCliff, isGratuityCliff } from './fork'
+import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
+import { hikeMonthOrder } from './hikeMonthOrder'
 import { planIcsEvents, planSiteUrl } from './planEvents'
 
 /**
@@ -56,8 +59,6 @@ interface Answers {
  */
 const EXAMPLE: Answers = { joinDate: '2022-01-12', noticePeriodDays: 90, hikeCreditMonth: 5 }
 
-const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
-
 export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const t = useT()
   const { lang } = useLang()
@@ -73,6 +74,12 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [step, setStep] = useState<Step>('questions')
   const [returning, setReturning] = useState(false)
   const [repicking, setRepicking] = useState(false)
+  const [downloaded, setDownloaded] = useState(false)
+
+  // The top of whichever screen is showing, so a step change can scroll back
+  // up to it instead of leaving the visitor wherever the last tap landed.
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mounted = useRef(false)
 
   useEffect(() => {
     const savedJob = loadCurrentJob()
@@ -98,29 +105,26 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     if (savedPlan.resignDate != null) setReturning(true)
   }, [])
 
+  // Every step, repicking and recap swap opens at its own top rather than
+  // wherever the previous screen's last tap left the scroll position — not on
+  // the first render, which is already at the top. `hasResignDate` stands in
+  // for the trade-cards-to-recap swap within the dates step, which neither
+  // `step` nor `repicking` alone changes.
+  const hasResignDate = plan.resignDate != null
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    containerRef.current?.scrollIntoView({ block: 'start' })
+  }, [step, repicking, returning, hasResignDate])
+
   const answered = (patch: Partial<Answers>) => {
     setTouched(true)
     setAnswers((a) => ({ ...a, ...patch }))
   }
 
-  const hikeYear =
-    plan.hikeCreditMonth === answers.hikeCreditMonth ? plan.hikeCreditYear : undefined
-
-  const input: SwitchCalendarInput = {
-    // The engine is a pure function of its input, so it needs a day even when
-    // the user clears the field. Nothing derived from `joinDate` renders on the
-    // questions screen, which is the only screen where `joinDate` can be invalid.
-    joinDate: isIsoDate(answers.joinDate) ? answers.joinDate : '2000-01-01',
-    noticePeriodDays: answers.noticePeriodDays,
-    hikeCreditMonth: answers.hikeCreditMonth > 0 ? answers.hikeCreditMonth : undefined,
-    hikeCreditYear: hikeYear,
-    workWeekDays: job.workWeekDays,
-    coveredByAct: job.coveredByAct ?? true,
-    targetResignDate: plan.resignDate,
-    // The engine is a pure function of its input, so it needs a day even before
-    // the effect has run. Nothing derived from this renders until `today` is set.
-    asOf: today === '' ? '2000-01-01' : today,
-  }
+  const input = doorEngineInput(answers, job, plan, today)
 
   // Not memoised on purpose: the whole calculation is a few date additions on
   // a handful of fields, and a memo keyed on this object would need a stringify
@@ -134,55 +138,83 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   // ---- writes. Every one of these is a button the user pressed. ----
 
   function submitQuestions() {
+    if (!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)) return
     // Only write to the shared record when the user actually edited the
     // answers. Prefilled example values must not seed the rest of the app.
     if (touched) {
       rememberCurrentJob({
         joinDate: answers.joinDate,
         noticePeriodDays: answers.noticePeriodDays,
+        // A week or coverage answer given while still on the example lived on
+        // screen only; it becomes real with the first real answers.
+        ...(job.workWeekDays !== undefined ? { workWeekDays: job.workWeekDays } : {}),
+        ...(job.coveredByAct !== undefined ? { coveredByAct: job.coveredByAct } : {}),
       })
+      if (answers.hikeCreditMonth > 0) {
+        // The year the month resolved to is pinned now, so a plan saved this
+        // September still means May 2027 when it is reopened in June 2027.
+        const keep = plan.hikeCreditMonth === answers.hikeCreditMonth && plan.hikeCreditYear != null
+        const cliff = hikeCliffDate(answers.hikeCreditMonth, today)
+        const year = keep ? plan.hikeCreditYear : cliff == null ? null : Number(cliff.slice(0, 4))
+        savePlan({ hikeCreditMonth: answers.hikeCreditMonth, hikeCreditYear: year ?? null })
+      } else {
+        savePlan({ hikeCreditMonth: null, hikeCreditYear: null })
+      }
+      setJob(loadCurrentJob())
+      setPlan(loadPlan())
     }
-    if (answers.hikeCreditMonth > 0) {
-      // The year the month resolved to is pinned now, so a plan saved this
-      // September still means May 2027 when it is reopened in June 2027.
-      const keep = plan.hikeCreditMonth === answers.hikeCreditMonth && plan.hikeCreditYear != null
-      const cliff = hikeCliffDate(answers.hikeCreditMonth, today)
-      const year = keep ? plan.hikeCreditYear : cliff == null ? null : Number(cliff.slice(0, 4))
-      savePlan({ hikeCreditMonth: answers.hikeCreditMonth, hikeCreditYear: year ?? null })
-    } else {
-      savePlan({ hikeCreditMonth: null, hikeCreditYear: null })
-    }
-    setJob(loadCurrentJob())
-    setPlan(loadPlan())
     setStep('cliffs')
   }
 
+  // An untouched example keeps these answers on screen only: writing them
+  // would seed the shared record with facts about nobody's employer.
   function chooseWeek(days: 5 | 6) {
+    if (!touched) return setJob((j) => ({ ...j, workWeekDays: days }))
     rememberCurrentJob({ workWeekDays: days })
     setJob(loadCurrentJob())
   }
 
   function chooseCoverage(covered: boolean) {
+    if (!touched) return setJob((j) => ({ ...j, coveredByAct: covered }))
     rememberCurrentJob({ coveredByAct: covered })
     setJob(loadCurrentJob())
   }
 
   function pickResignDate(date: string) {
-    savePlan({ resignDate: date })
-    setPlan(loadPlan())
+    if (touched) {
+      savePlan({ resignDate: date })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, resignDate: date }))
+    }
     setRepicking(false)
   }
 
   function startLooking() {
     // Records the day, unlocks nothing on screen in Phase 0, and does not move
     // the resign date. Someone can be looking in September and leaving in June.
-    savePlan({ lookingSince: today })
-    setPlan(loadPlan())
+    if (touched) {
+      savePlan({ lookingSince: today })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, lookingSince: today }))
+    }
   }
 
   function saveReason(text: string) {
-    savePlan({ reason: text.trim() === '' ? null : text })
-    setPlan(loadPlan())
+    const trimmed = text.trim() === '' ? null : text
+    if (touched) {
+      savePlan({ reason: trimmed })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, reason: trimmed ?? undefined }))
+    }
+  }
+
+  function goToQuestions() {
+    setReturning(false)
+    setRepicking(false)
+    setStep('questions')
   }
 
   function changeDate() {
@@ -197,6 +229,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     // rely on stay. Erasing everything is the footer's control, not this one.
     erasePlan()
     setPlan({})
+    setDownloaded(false)
     setReturning(false)
     setRepicking(false)
     setStep('questions')
@@ -209,24 +242,39 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
       planSiteUrl(),
     )
     const blob = new Blob([text], { type: 'text/calendar;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = DATES_ICS_FILENAME
-    a.click()
-    URL.revokeObjectURL(url)
+    downloadBlob(blob, DATES_ICS_FILENAME)
+    setDownloaded(true)
   }
 
-  const shared = { t, lang, fmt, plan, result, today, onDownload: downloadDates, onLooking: startLooking, onReason: saveReason }
+  const shared = {
+    t,
+    lang,
+    fmt,
+    plan,
+    result,
+    today,
+    touched,
+    downloaded,
+    onExampleChip: goToQuestions,
+    onDownload: downloadDates,
+    onLooking: startLooking,
+    onReason: saveReason,
+  }
 
   if (returning && plan.resignDate != null) {
     return (
-      <ReturnScreen {...shared} noticePeriodDays={answers.noticePeriodDays} onChangeDate={changeDate} onStartOver={startOver} />
+      <ReturnScreen
+        {...shared}
+        noticePeriodDays={answers.noticePeriodDays}
+        onChangeDate={changeDate}
+        onStartOver={startOver}
+        containerRef={containerRef}
+      />
     )
   }
 
   return (
-    <div data-tool="plan" className="space-y-3">
+    <div ref={containerRef} data-tool="plan" className="space-y-3">
       <p className="max-w-xl text-[15px] leading-relaxed text-ink-soft">{t('plan.tagline')}</p>
 
       {step === 'questions' && (
@@ -237,6 +285,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             label={t('plan.q.join')}
             hint={t('plan.q.joinHint')}
             value={answers.joinDate}
+            max={today === '' ? undefined : today}
             onChange={(v) => answered({ joinDate: v })}
           />
           <NumberField
@@ -244,6 +293,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             hint={t('plan.q.noticeHint')}
             value={answers.noticePeriodDays}
             suffix={t('plan.q.noticeSuffix')}
+            min={1}
+            allowBlank
             onChange={(v) => answered({ noticePeriodDays: v })}
           />
           <Select
@@ -252,11 +303,16 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             value={String(answers.hikeCreditMonth)}
             options={[
               { value: '0', label: t('plan.q.hikeSkip') },
-              ...MONTHS.map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
+              ...hikeMonthOrder(today).map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
             ]}
             onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
           />
-          <PrimaryButton onClick={submitQuestions} disabled={!isIsoDate(answers.joinDate)}>{t('plan.q.next')}</PrimaryButton>
+          <PrimaryButton
+            onClick={submitQuestions}
+            disabled={!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)}
+          >
+            {t('plan.q.next')}
+          </PrimaryButton>
         </Card>
       )}
 
@@ -269,6 +325,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           workWeekDays={job.workWeekDays}
           coveredByAct={job.coveredByAct ?? true}
           hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+          touched={touched}
+          onExampleChip={goToQuestions}
           onChooseWeek={chooseWeek}
           onChooseCoverage={chooseCoverage}
           onBack={() => setStep('questions')}
@@ -285,6 +343,13 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           {(repicking || plan.resignDate == null) && (
             <Card className="space-y-3">
               <h2 className="text-base font-bold">{t('plan.dates.title')}</h2>
+              {!touched && (
+                <ExampleNote
+                  chip={t('plan.example.chip')}
+                  note={t('plan.example.laterNote')}
+                  onChipClick={goToQuestions}
+                />
+              )}
               {result.trades.map((trade) => (
                 <TradeOption
                   key={trade.id}
@@ -364,6 +429,8 @@ function CliffScreen(props: {
   workWeekDays?: 5 | 6
   coveredByAct: boolean
   hikeLabel: string | null
+  touched: boolean
+  onExampleChip: () => void
   onChooseWeek: (days: 5 | 6) => void
   onChooseCoverage: (covered: boolean) => void
   onBack: () => void
@@ -375,10 +442,27 @@ function CliffScreen(props: {
   const chosen = chosenGratuityCliff(props.cliffs, props.workWeekDays)
   const hike = props.cliffs.find((c) => c.id === 'hike')
   const ahead = props.cliffs.filter((c) => !c.passed)
+  const reachable = dateStepReachable(props.coveredByAct, five != null && six != null, props.workWeekDays)
+  const [blocked, setBlocked] = useState(false)
+
+  function handleNext() {
+    if (!reachable) {
+      setBlocked(true)
+      return
+    }
+    props.onNext()
+  }
 
   return (
     <Card className="space-y-4">
       <h2 className="text-base font-bold">{t('plan.cliffs.title')}</h2>
+      {!props.touched && (
+        <ExampleNote
+          chip={t('plan.example.chip')}
+          note={t('plan.example.laterNote')}
+          onChipClick={props.onExampleChip}
+        />
+      )}
 
       {props.coveredByAct && five != null && six != null ? (
         <div className="space-y-2">
@@ -398,8 +482,15 @@ function CliffScreen(props: {
             active={props.workWeekDays === 6}
             onClick={() => props.onChooseWeek(6)}
           />
-          {props.workWeekDays === undefined && (
+          {!blocked && props.workWeekDays === undefined && (
             <p className="text-[14px] font-bold">{t('plan.week.ask')}</p>
+          )}
+          {/* The gate: tapping "Next" with neither card chosen re-prints the
+              same question in the warning colour already used for a late
+              trade (plan.trade.late) rather than moving to a date the
+              visitor has not earned a reading for. */}
+          {blocked && props.workWeekDays === undefined && (
+            <p className="text-[14px] font-bold text-alarm">{t('plan.week.ask')}</p>
           )}
           {/* Only once they have answered. `cliffs` holds BOTH readings until
               then, so a `find` here would print the five-day sentence to a
@@ -438,7 +529,7 @@ function CliffScreen(props: {
 
       {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
 
-      <PrimaryButton onClick={props.onNext}>{t('plan.cliffs.next')}</PrimaryButton>
+      <PrimaryButton onClick={handleNext}>{t('plan.cliffs.next')}</PrimaryButton>
       <button type="button" onClick={props.onBack} className="py-1 text-[13px] font-semibold text-ink-faint underline">
         {t('plan.back')}
       </button>
@@ -481,6 +572,15 @@ function TradeOption(props: {
     setValue(trade.earliestDate ?? props.today)
   }, [trade.earliestDate, trade.resignDate, props.today])
 
+  // A card with a picker can show any date the visitor types, so the late
+  // line has to follow that date rather than the fixed one the Trade was
+  // built from — otherwise "keep what is earned" reads as late forever, even
+  // nine months out, because it is frozen at today's own date.
+  const late =
+    needsPicker && isIsoDate(value)
+      ? startApplyingByPassed(value, props.today)
+      : trade.startApplyingByPassed
+
   const detail =
     trade.id === 'keep-what-is-earned'
       ? t('plan.trade.earned.detail', { date: fmt(trade.resignDate ?? props.today) })
@@ -496,7 +596,7 @@ function TradeOption(props: {
       <p className="text-[14px] font-bold">{t(`plan.trade.${trade.id}`)}</p>
       <p className="mt-1 text-[13px] leading-snug text-ink-soft">{detail}</p>
       {/* In words, on the option itself. Hiding it would be choosing for them. */}
-      {trade.startApplyingByPassed && (
+      {late && (
         <p className="mt-1 text-[13px] font-semibold leading-snug text-alarm">{t('plan.trade.late')}</p>
       )}
       {needsPicker ? (
@@ -534,6 +634,9 @@ interface RecapProps {
   result: ReturnType<typeof switchCalendar>
   today: string
   noticePeriodDays: number
+  touched: boolean
+  downloaded: boolean
+  onExampleChip: () => void
   onDownload: () => void
   onLooking: () => void
   onReason: (text: string) => void
@@ -561,11 +664,18 @@ function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePerio
   )
 }
 
-function CalendarButton({ t, onDownload }: Pick<RecapProps, 't' | 'onDownload'>) {
+function CalendarButton({
+  t,
+  onDownload,
+  downloaded,
+}: Pick<RecapProps, 't' | 'onDownload' | 'downloaded'>) {
   return (
     <div className="space-y-1.5">
       <PrimaryButton onClick={onDownload}>{t('plan.calendar.cta')}</PrimaryButton>
       <p className="text-xs leading-relaxed text-ink-faint">{t('plan.calendar.note')}</p>
+      {downloaded && (
+        <p className="text-[13px] font-semibold leading-snug text-ink">{t('plan.calendar.downloaded')}</p>
+      )}
     </div>
   )
 }
@@ -576,6 +686,17 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
   useEffect(() => {
     setDraft(plan.reason ?? '')
   }, [plan.reason])
+
+  // The button is kept, but a line typed and then abandoned by tapping
+  // elsewhere or pressing Enter must not be lost — it is the one personal
+  // thing on this screen. onReason already carries the untouched-example
+  // guard (no write while touched is false), so this needs no guard of its
+  // own.
+  const save = () => {
+    onReason(draft)
+    setSaved(true)
+  }
+
   return (
     <div className="space-y-2">
       <TextArea
@@ -587,15 +708,14 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
           setDraft(v)
           setSaved(false)
         }}
-      />
-      <button
-        type="button"
-        onClick={() => {
-          onReason(draft)
-          setSaved(true)
+        onBlur={save}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter' || e.shiftKey) return
+          e.preventDefault()
+          save()
         }}
-        className="rounded-xl border border-line px-3 py-2 text-[13px] font-bold"
-      >
+      />
+      <button type="button" onClick={save} className="rounded-xl border border-line px-3 py-2 text-[13px] font-bold">
         {saved ? t('plan.reason.saved') : t('plan.reason.save')}
       </button>
     </div>
@@ -633,8 +753,15 @@ function Recap(props: RecapProps) {
   return (
     <Card className="space-y-4">
       <h2 className="text-base font-bold">{t('plan.recap.title')}</h2>
+      {!props.touched && (
+        <ExampleNote
+          chip={t('plan.example.chip')}
+          note={t('plan.example.laterNote')}
+          onChipClick={props.onExampleChip}
+        />
+      )}
       <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
-      <CalendarButton t={t} onDownload={props.onDownload} />
+      <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
       <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
       <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -649,11 +776,13 @@ function Recap(props: RecapProps) {
 
 /* ---- the return screen ---- */
 
-function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
+function ReturnScreen(
+  props: RecapProps & { onStartOver: () => void; containerRef: RefObject<HTMLDivElement | null> },
+) {
   const { t, plan, result } = props
   const days = result.timeline?.daysAway ?? 0
   return (
-    <div data-tool="plan" className="space-y-4">
+    <div ref={props.containerRef} data-tool="plan" className="space-y-4">
       {/* Their own sentence, on the screen and not behind a tap. It is what
           makes someone who has drifted for eleven days do the next twelve
           minutes. It never reaches the tab title or a meta tag. */}
@@ -662,6 +791,13 @@ function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
       )}
 
       <Card className="space-y-4">
+        {!props.touched && (
+          <ExampleNote
+            chip={t('plan.example.chip')}
+            note={t('plan.example.laterNote')}
+            onChipClick={props.onExampleChip}
+          />
+        )}
         <p className="text-[15px] font-bold">
           {t('plan.return.countdown', { days, date: props.fmt(result.timeline?.resignDate ?? '') })}
         </p>
@@ -671,7 +807,7 @@ function ReturnScreen(props: RecapProps & { onStartOver: () => void }) {
             the only thing this product can do that survives the tab closing. */}
         <div className="space-y-1.5">
           <p className="text-[14px] font-bold">{t('plan.return.next')}</p>
-          <CalendarButton t={t} onDownload={props.onDownload} />
+          <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
         </div>
 
         <ReasonBox t={t} plan={plan} onReason={props.onReason} />

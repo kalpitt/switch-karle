@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { parseINRInput } from '../lib/money'
 
@@ -27,7 +27,12 @@ export function NumberField(props: {
   suffix?: string
   step?: number
   max?: number
+  min?: number
+  allowBlank?: boolean
 }) {
+  const min = props.min ?? 0
+  const isFinite = Number.isFinite(props.value)
+  const displayValue = isFinite ? props.value : props.allowBlank ? '' : 0
   return (
     <label className="block">
       <Label hint={props.hint}>{props.label}</Label>
@@ -36,11 +41,17 @@ export function NumberField(props: {
           type="number"
           inputMode="decimal"
           className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
-          value={Number.isFinite(props.value) ? props.value : 0}
-          min={0}
+          value={displayValue}
+          min={min}
           max={props.max}
           step={props.step ?? 1}
-          onChange={(e) => props.onChange(Math.max(0, Number(e.target.value)))}
+          onChange={(e) => {
+            if (props.allowBlank && e.target.value === '') {
+              props.onChange(NaN)
+              return
+            }
+            props.onChange(Math.max(min, Number(e.target.value)))
+          }}
         />
         {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-faint">{props.suffix}</span>}
       </span>
@@ -82,6 +93,7 @@ export function TextField(props: {
   placeholder?: string
   type?: 'text' | 'date'
   required?: boolean
+  max?: string
 }) {
   return (
     <label className="block">
@@ -93,6 +105,7 @@ export function TextField(props: {
           value={props.value}
           placeholder={props.placeholder}
           required={props.required}
+          max={props.max}
           onChange={(e) => props.onChange(e.target.value)}
         />
       </span>
@@ -100,7 +113,15 @@ export function TextField(props: {
   )
 }
 
-export function TextArea(props: { label: string; hint?: string; value: string; onChange: (v: string) => void; rows?: number }) {
+export function TextArea(props: {
+  label: string
+  hint?: string
+  value: string
+  onChange: (v: string) => void
+  rows?: number
+  onBlur?: () => void
+  onKeyDown?: (e: ReactKeyboardEvent<HTMLTextAreaElement>) => void
+}) {
   return (
     <label className="block">
       <Label hint={props.hint}>{props.label}</Label>
@@ -109,6 +130,8 @@ export function TextArea(props: { label: string; hint?: string; value: string; o
         rows={props.rows ?? 3}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
+        onBlur={props.onBlur}
+        onKeyDown={props.onKeyDown}
       />
     </label>
   )
@@ -257,6 +280,7 @@ export function DateField(props: {
   value: string
   onChange: (v: string) => void
   required?: boolean
+  max?: string
 }) {
   return (
     <TextField
@@ -266,6 +290,7 @@ export function DateField(props: {
       onChange={props.onChange}
       type="date"
       required={props.required}
+      max={props.max}
     />
   )
 }
@@ -344,18 +369,30 @@ export function ExampleNote({
   chip,
   note,
   className = '',
+  onChipClick,
 }: {
   chip: string
   note: string
   className?: string
+  onChipClick?: () => void
 }) {
   return (
     <p
       className={`rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2.5 text-[13px] font-semibold leading-snug text-amberflag ${className}`}
     >
-      <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
-        {chip}
-      </span>
+      {onChipClick ? (
+        <button
+          type="button"
+          onClick={onChipClick}
+          className="mr-2 inline-block cursor-pointer rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold hover:underline"
+        >
+          {chip}
+        </button>
+      ) : (
+        <span className="mr-2 inline-block rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold">
+          {chip}
+        </span>
+      )}
       {note}
     </p>
   )
