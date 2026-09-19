@@ -30,3 +30,24 @@ describe('OfferGoesColdTool', () => {
     expect(match).toBeNull()
   })
 })
+
+  it('renders all required tool links for escalation and runway planning', () => {
+    const html = renderToString(OfferGoesColdTool({ lang: 'en' }))
+    const requiredTools = [
+      'bgv-prep',
+      'relieving-chaser',
+      'tracker',
+      'clause-library',
+      'fnf-checker',
+      'insurance-gap',
+      'notice-tracker'
+    ]
+    
+    for (const tool of requiredTools) {
+      expect(html).toContain(`href="/${tool}/"`)
+    }
+    
+    // Also assert that the old tools were removed
+    expect(html).not.toContain('fake-offer')
+    expect(html).not.toContain('offer-comparison')
+  })

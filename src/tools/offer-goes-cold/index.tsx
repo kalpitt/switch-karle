@@ -27,7 +27,17 @@ function Body() {
         
         <Card className="space-y-2">
           <h3 className="text-sm font-bold">{t('offer-goes-cold.s1.title')}</h3>
-          <p className="text-[13px] leading-relaxed text-ink-soft">{t('offer-goes-cold.s1.body')}</p>
+          <p className="text-[13px] leading-relaxed text-ink-soft">
+            {t('offer-goes-cold.s1.body.1')}
+            <a href={withLang(lang, 'bgv-prep')} className="font-semibold underline">
+              {t('bgv-prep.title')}
+            </a>
+            {t('offer-goes-cold.s1.and')}
+            <a href={withLang(lang, 'relieving-chaser')} className="font-semibold underline">
+              {t('relieving-chaser.title')}
+            </a>
+            {t('offer-goes-cold.s1.body.2')}
+          </p>
         </Card>
 
         <Card className="space-y-2">
@@ -43,31 +53,41 @@ function Body() {
         <Card className="space-y-2">
           <h3 className="text-sm font-bold">{t('offer-goes-cold.s4.title')}</h3>
           <p className="text-[13px] leading-relaxed text-ink-soft">
-            {t('offer-goes-cold.s4.body.1')}{' '}
-            <a href={withLang(lang, 'fake-offer')} className="font-semibold underline">
-              {t('offer-goes-cold.s4.fakeOffer')}
-            </a>{' '}
-            {t('offer-goes-cold.s4.and')}{' '}
-            <a href={withLang(lang, 'offer-comparison')} className="font-semibold underline">
-              {t('offer-goes-cold.s4.offerComparison')}
-            </a>{' '}
+            {t('offer-goes-cold.s4.body.1')}
+            <a href={withLang(lang, 'tracker')} className="font-semibold underline">
+              {t('tab.tracker')}
+            </a>
             {t('offer-goes-cold.s4.body.2')}
           </p>
         </Card>
 
         <Card className="space-y-2">
           <h3 className="text-sm font-bold">{t('offer-goes-cold.s5.title')}</h3>
-          <p className="text-[13px] leading-relaxed text-ink-soft">{t('offer-goes-cold.s5.body')}</p>
+          <p className="text-[13px] leading-relaxed text-ink-soft">
+            {t('offer-goes-cold.s5.body.1')}
+            <a href={withLang(lang, 'clause-library')} className="font-semibold underline">
+              {t('clause-library.title')}
+            </a>
+            {t('offer-goes-cold.s5.body.2')}
+          </p>
         </Card>
 
         <Card className="space-y-2">
           <h3 className="text-sm font-bold">{t('offer-goes-cold.s6.title')}</h3>
           <p className="text-[13px] leading-relaxed text-ink-soft">
-            {t('offer-goes-cold.s6.body.1')}{' '}
+            {t('offer-goes-cold.s6.body.1')}
             <a href={withLang(lang, 'fnf-checker')} className="font-semibold underline">
-              {t('offer-goes-cold.s6.fnfChecker')}
-            </a>{' '}
+              {t('fnf-checker.title')}
+            </a>
             {t('offer-goes-cold.s6.body.2')}
+            <a href={withLang(lang, 'insurance-gap')} className="font-semibold underline">
+              {t('insurance-gap.title')}
+            </a>
+            {t('offer-goes-cold.s6.body.3')}
+            <a href={withLang(lang, 'notice-tracker')} className="font-semibold underline">
+              {t('notice-tracker.title')}
+            </a>
+            {t('offer-goes-cold.s6.body.4')}
           </p>
         </Card>
 
