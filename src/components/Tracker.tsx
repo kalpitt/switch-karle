@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import type { Application, Stage } from '../tracker/types'
+import type { Application, ClosedReason, Stage } from '../tracker/types'
 import {
   addApplication,
+  archiveApplication,
   exportAll,
   hasUndo,
   load,
@@ -13,8 +14,10 @@ import {
   recordSweep,
   removeApplication,
   restoreAll,
+  restoreApplication,
   save,
   snapshotForUndo,
+  splitApplications,
   STAGE_ORDER,
   undoLastRestore,
   updateApplication,
@@ -81,17 +84,8 @@ export function Tracker() {
     setSaveFailed(!save(list))
   }, [list, hydrated])
 
-  const grouped = useMemo(() => {
-    const g: Record<Stage, Application[]> = {
-      researching: [],
-      applied: [],
-      interviewing: [],
-      offer: [],
-      decided: [],
-    }
-    for (const a of list) g[a.stage].push(a)
-    return g
-  }, [list])
+  const { active, archived } = useMemo(() => splitApplications(list), [list])
+  const activeCount = list.length - archived.length
 
   const editingApp =
     typeof formMode === 'object' ? list.find((a) => a.id === formMode.editId) : undefined
@@ -108,6 +102,17 @@ export function Tracker() {
   const handleDelete = (id: string) => {
     if (!confirm(t('tracker.confirmDelete'))) return
     setList((l) => removeApplication(l, id))
+  }
+
+  const handleArchive = (id: string, reason: ClosedReason) => {
+    // An open edit form for this card would save over it after it moved to the
+    // archive, so close it with the card.
+    if (typeof formMode === 'object' && formMode.editId === id) setFormMode('closed')
+    setList((l) => archiveApplication(l, id, reason, todayIso()))
+  }
+
+  const handleRestore = (id: string) => {
+    setList((l) => restoreApplication(l, id))
   }
 
   const handleMove = (id: string, dir: -1 | 1) => setList((l) => moveStage(l, id, dir))
@@ -212,7 +217,10 @@ export function Tracker() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold">{t('tracker.title')}</h2>
-          <p className="text-[13px] text-ink-soft">{t('tracker.trackedCount', { n: list.length })}</p>
+          <p className="text-[13px] text-ink-soft">
+            {t('tracker.trackedCount', { n: activeCount })}
+            {archived.length > 0 && ` · ${t('tracker.archive.count', { count: archived.length })}`}
+          </p>
           <p className="mt-1 text-[12px] leading-relaxed text-ink-faint">
             {coverageText}
             {coverage.stale && (
@@ -360,17 +368,38 @@ export function Tracker() {
       {list.length === 0 && formMode === 'closed' ? (
         <EmptyState />
       ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-          {STAGE_ORDER.map((stage) => (
-            <StageColumn
-              key={stage}
-              stage={stage}
-              apps={grouped[stage]}
-              onEdit={(id) => setFormMode({ editId: id })}
-              onDelete={handleDelete}
-              onMove={handleMove}
-            />
-          ))}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+            {STAGE_ORDER.map((stage) => (
+              <StageColumn
+                key={stage}
+                stage={stage}
+                apps={active[stage]}
+                onEdit={(id) => setFormMode({ editId: id })}
+                onDelete={handleDelete}
+                onMove={handleMove}
+                onArchive={handleArchive}
+              />
+            ))}
+          </div>
+
+          {archived.length > 0 && (
+            <details className="rounded-2xl border border-line bg-paper/60 p-4">
+              <summary className="cursor-pointer text-sm font-bold text-ink-soft hover:text-ink select-none">
+                {t('tracker.archive.count', { count: archived.length })}
+              </summary>
+              <div className="mt-3 space-y-3">
+                {archived.map((app) => (
+                  <ArchivedApplicationCard
+                    key={app.id}
+                    app={app}
+                    onRestore={() => handleRestore(app.id)}
+                    onDelete={() => handleDelete(app.id)}
+                  />
+                ))}
+              </div>
+            </details>
+          )}
         </div>
       )}
     </div>
@@ -610,12 +639,14 @@ function StageColumn({
   onEdit,
   onDelete,
   onMove,
+  onArchive,
 }: {
   stage: Stage
   apps: Application[]
   onEdit?: (id: string) => void
   onDelete?: (id: string) => void
   onMove?: (id: string, dir: -1 | 1) => void
+  onArchive?: (id: string, reason: ClosedReason) => void
 }) {
   const t = useT()
   const STAGE_LABEL = useStageLabel()
@@ -641,6 +672,7 @@ function StageColumn({
               onEdit={onEdit && (() => onEdit(app.id))}
               onDelete={onDelete && (() => onDelete(app.id))}
               onMove={onMove && ((dir) => onMove(app.id, dir))}
+              onArchive={onArchive && ((reason) => onArchive(app.id, reason))}
             />
           ))
         )}
@@ -655,14 +687,17 @@ function ApplicationCard({
   onEdit,
   onDelete,
   onMove,
+  onArchive,
 }: {
   app: Application
   onEdit?: () => void
   onDelete?: () => void
   onMove?: (dir: -1 | 1) => void
+  onArchive?: (reason: ClosedReason) => void
 }) {
   const t = useT()
   const { lang } = useLang()
+  const [archiving, setArchiving] = useState(false)
   const STAGE_LABEL = useStageLabel()
   const idx = STAGE_ORDER.indexOf(app.stage)
   const isOverdue = !!app.nextActionDate && app.nextActionDate < todayIso()
@@ -745,38 +780,132 @@ function ApplicationCard({
       )}
 
       {onMove && onEdit && onDelete && (
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex gap-1">
-          <button
-            type="button"
-            aria-label={t('tracker.movePrev')}
-            disabled={idx === 0}
-            onClick={() => onMove(-1)}
-            className="rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            aria-label={t('tracker.moveNext')}
-            disabled={idx === STAGE_ORDER.length - 1}
-            onClick={() => onMove(1)}
-            className="rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
-          >
-            →
-          </button>
+        <div className="space-y-2 pt-1">
+          <div className="flex flex-wrap items-center justify-between gap-1">
+            <div className="flex gap-1">
+              <button
+                type="button"
+                aria-label={t('tracker.movePrev')}
+                disabled={idx === 0}
+                onClick={() => onMove(-1)}
+                className="min-h-[24px] min-w-[24px] rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                aria-label={t('tracker.moveNext')}
+                disabled={idx === STAGE_ORDER.length - 1}
+                onClick={() => onMove(1)}
+                className="min-h-[24px] min-w-[24px] rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
+              >
+                →
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {onArchive && (
+                <button
+                  type="button"
+                  onClick={() => setArchiving((v) => !v)}
+                  className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft hover:text-ink"
+                >
+                  {t('tracker.archive')}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onEdit}
+                className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft hover:text-ink"
+              >
+                {t('tracker.edit')}
+              </button>
+              <button
+                type="button"
+                onClick={onDelete}
+                className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-alarm hover:underline"
+              >
+                {t('common.delete')}
+              </button>
+            </div>
+          </div>
+
+          {archiving && onArchive && (
+            <div className="rounded-xl border border-line bg-paper p-2 space-y-1.5">
+              <p className="text-[12px] font-semibold text-ink-soft">{t('tracker.archive.why')}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {(['rejected', 'ghosted', 'withdrawn'] as const).map((reason) => (
+                  <button
+                    key={reason}
+                    type="button"
+                    onClick={() => {
+                      onArchive(reason)
+                      setArchiving(false)
+                    }}
+                    className="min-h-[24px] rounded-lg border border-line bg-card px-2 py-1 text-xs font-semibold text-ink hover:border-saffron hover:text-saffron transition-colors"
+                  >
+                    {t(`tracker.archive.${reason}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        <div className="flex gap-1">
-          <button type="button" onClick={onEdit} className="rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft">
-            {t('tracker.edit')}
-          </button>
-          <button type="button" onClick={onDelete} className="rounded-lg px-2 py-1 text-xs font-semibold text-alarm">
-            {t('common.delete')}
-          </button>
-        </div>
-      </div>
       )}
     </Card>
+  )
+}
+
+function ArchivedApplicationCard({
+  app,
+  onRestore,
+  onDelete,
+}: {
+  app: Application
+  onRestore: () => void
+  onDelete: () => void
+}) {
+  const t = useT()
+  const reason = app.closed?.reason
+  const closedOn = app.closed?.closedOn
+
+  return (
+    <div className="rounded-xl border border-line bg-card/60 p-3 space-y-2 opacity-80">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-[14px] font-bold leading-tight text-ink-soft">{app.company}</p>
+          <p className="text-[13px] text-ink-faint">{app.role}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {reason && (
+            <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-semibold text-ink-soft">
+              {t(`tracker.archive.${reason}`)}
+            </span>
+          )}
+          {closedOn && (
+            <span className="tnum rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-medium text-ink-faint">
+              {t('tracker.archive.closedDate', { date: formatDate(closedOn) })}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between pt-1">
+        <button
+          type="button"
+          onClick={onRestore}
+          className="min-h-[24px] rounded-lg border border-line bg-paper px-2.5 py-1 text-xs font-semibold text-ink-soft hover:border-saffron hover:text-saffron transition-colors"
+        >
+          {t('tracker.archive.restore')}
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-alarm hover:underline"
+        >
+          {t('common.delete')}
+        </button>
+      </div>
+    </div>
   )
 }
 

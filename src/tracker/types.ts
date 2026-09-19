@@ -2,6 +2,8 @@
 
 export type Stage = 'researching' | 'applied' | 'interviewing' | 'offer' | 'decided'
 
+export type ClosedReason = 'rejected' | 'ghosted' | 'withdrawn'
+
 /** A pasted-back answer from the user's own AI, saved against an application. */
 export interface Insight {
   id: string
@@ -18,6 +20,12 @@ export interface Application {
   company: string
   role: string
   stage: Stage
+  /** Present only when the card is archived rather than deleted. */
+  closed?: {
+    reason: ClosedReason
+    /** ISO yyyy-mm-dd */
+    closedOn: string
+  }
   /** CTC actually discussed with this company, annual ₹ (may differ from a decoded offer). */
   ctcDiscussedAnnual?: number
   noticePeriodDays?: number

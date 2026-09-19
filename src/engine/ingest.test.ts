@@ -773,3 +773,41 @@ describe('an assistant answer that is nearly right must not be thrown away', () 
     expect(res.counts['unreadable-date']).toBe(0)
   })
 })
+
+describe('archived applications prevent re-importing via sweep', () => {
+  it('an archived application plus an email payload with the same company and role gives already-on-board and nothing accepted, including when the email row carries more fields than the card', () => {
+    const existing: Application[] = [
+      {
+        id: 'app-archived-1',
+        company: 'Finlytix',
+        role: 'Senior Backend Engineer',
+        stage: 'interviewing',
+        closed: { reason: 'rejected', closedOn: '2026-07-01' },
+        createdAt: '2026-06-01T00:00:00.000Z',
+        updatedAt: '2026-07-01T00:00:00.000Z',
+      },
+    ]
+
+    const payload: IngestPayload = {
+      version: 1,
+      applications: [
+        {
+          company: 'Finlytix Technologies Pvt Ltd',
+          role: 'Senior Backend Engineer',
+          appliedOn: '2026-07-14',
+          source: 'Naukri',
+          status: 'Interview scheduled',
+          ctcDiscussedLPA: 35,
+        },
+      ],
+    }
+
+    const res = ingest(payload, existing, { today: '2026-07-14' })
+    expect(res.accepted).toHaveLength(0)
+    expect(res.rejected).toEqual([
+      { index: 0, company: 'Finlytix Technologies Pvt Ltd', reason: 'already-on-board' },
+    ])
+    expect(res.counts['already-on-board']).toBe(1)
+  })
+})
+
