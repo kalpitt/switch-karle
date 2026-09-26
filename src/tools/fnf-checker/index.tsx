@@ -60,6 +60,8 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
+  // Read, never written here: the door asks it. Unknown is handled by the engine.
+  const [workWeekDays, setWorkWeekDays] = useState<5 | 6 | undefined>(undefined)
 
   useEffect(() => {
     // Basic is shared. Gross is seed-only: the field is what the F&F sheet
@@ -68,6 +70,7 @@ function Body() {
     // number with the real one on every visit, so the audit would compare the
     // sheet against itself and report no gap.
     const job = loadCurrentJob()
+    setWorkWeekDays(job.workWeekDays)
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
     const fill = (d: Draft) =>
       fillFromCurrentJob(
@@ -109,8 +112,9 @@ function Body() {
           ? [{ id: 'notice', label: t('fnf-checker.notice'), amount: draft.noticeRecovery, kind: 'deduction' as const }]
           : [],
       gratuityEligible: draft.gratuityEligible,
+      workWeekDays,
     }),
-    [draft, t],
+    [draft, t, workWeekDays],
   )
   const result = useMemo(() => {
     try {

@@ -49,6 +49,43 @@ describe('auditFnF', () => {
   })
 })
 
+/**
+ * Joined 12 Jan 2022, left 31 Jul 2026 on a five-day week: four years and 200
+ * days, past the 190-day line and short of the 240-day one. Gratuity is due,
+ * ₹1,44,231 on ₹50,000 basic. The checker called gratuity() without a work
+ * week, got the six-day default, recomputed ₹0, and told the user their
+ * missing gratuity "works out to about ₹0" with nothing in the mail.
+ */
+describe('gratuity in the F&F checker follows the work week', () => {
+  const FIVE_DAY_LEAVER = {
+    joinDate: '2022-01-12',
+    lastWorkingDay: '2026-07-31',
+    monthlyBasic: 50_000,
+    monthlyGross: 100_000,
+    unpaidLeaveDays: 0,
+    payslipLines: [{ id: 'salary', label: 'Salary', amount: 100_000, kind: 'earning' as const }],
+    recoveries: [],
+    gratuityEligible: true,
+  }
+
+  it('a five-day week at 4 years and 200 days is owed gratuity, and the mail asks for it', () => {
+    const input = { ...FIVE_DAY_LEAVER, workWeekDays: 5 as const }
+    const r = auditFnF(input)
+    expect(r.gratuityNotOnSheet).toBe(144_231)
+    expect(disputeItems(input, r).map((d) => [d.id, d.kind])).toEqual([['gratuity', 'missing']])
+  })
+
+  it('an unknown week takes the reading that agrees with the user saying gratuity is due', () => {
+    expect(auditFnF(FIVE_DAY_LEAVER).gratuityNotOnSheet).toBe(144_231)
+  })
+
+  it('a known six-day week at the same date is not yet eligible, and says nothing rather than ₹0', () => {
+    const r = auditFnF({ ...FIVE_DAY_LEAVER, workWeekDays: 6 })
+    expect(r.gratuityNotOnSheet).toBe(0)
+    expect(r.flags.map((f) => f.id)).not.toContain('gratuity-missing')
+  })
+})
+
 describe('disputeItems', () => {
   const base = {
     joinDate: '2021-08-01',
