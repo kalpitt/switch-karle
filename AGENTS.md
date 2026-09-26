@@ -76,14 +76,6 @@ primary source (Act / notification / circular), never a blog or another AI.
 Unresolved constants stay marked `CANDIDATE` and wait for a human chartered
 accountant. Living status table: `docs/ARCHITECTURE.md`.
 
-## When to stop and ask
-
-When a step doesn't need Kalpit's input, keep going; put status notes in the same message
-as your next action. Stop and ask only when you can't continue without him, or before
-anything destructive or outward-facing: merging (merge = deploy), pushing to `main`,
-touching a statutory number without a primary source, deleting data or branches, or
-changing anything outside this repository.
-
 ## Commands
 
 ```bash
