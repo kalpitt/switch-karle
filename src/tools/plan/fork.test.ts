@@ -1,7 +1,35 @@
 import { describe, expect, it } from 'vitest'
 import { cliffs } from '../../engine/switchCalendar'
 import { chosenGratuityCliff, dateStepReachable, doorEngineInput, isGratuityCliff } from './fork'
-import { questionsSubmittable } from './fork'
+import { questionsSubmittable, resignDatesMovedFrom } from './fork'
+
+describe('a moved resign date is named so it can be deleted from a calendar', () => {
+  it('names nothing on the first pick', () => {
+    expect(resignDatesMovedFrom([], undefined, '2027-06-01')).toEqual([])
+  })
+
+  it('names the old day when the date moves', () => {
+    expect(resignDatesMovedFrom([], '2027-06-01', '2027-07-15')).toEqual(['2027-06-01'])
+  })
+
+  it('keeps every day moved away from, oldest first', () => {
+    const once = resignDatesMovedFrom([], '2027-06-01', '2027-07-15')
+    expect(resignDatesMovedFrom(once, '2027-07-15', '2027-08-02')).toEqual(['2027-06-01', '2027-07-15'])
+  })
+
+  it('drops a day the user moves back to, because it is the plan again', () => {
+    const once = resignDatesMovedFrom([], '2027-06-01', '2027-07-15')
+    expect(resignDatesMovedFrom(once, '2027-07-15', '2027-06-01')).toEqual(['2027-07-15'])
+  })
+
+  it('does nothing when the same day is picked again', () => {
+    expect(resignDatesMovedFrom([], '2027-06-01', '2027-06-01')).toEqual([])
+  })
+
+  it('keeps the day after start over clears the plan, since the calendar still has it', () => {
+    expect(resignDatesMovedFrom([], '2027-06-01', undefined)).toEqual(['2027-06-01'])
+  })
+})
 
 /** Ravi: 21 July 2026 on a five-day week, 9 September 2026 on a six-day one. */
 const RAVI = { joinDate: '2022-01-12', noticePeriodDays: 90, asOf: '2026-09-06' }
