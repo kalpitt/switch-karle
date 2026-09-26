@@ -10,6 +10,38 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-27 — Gratuity re-cited to the Code on Social Security, 2020
+
+**Found, not decided.** The four Labour Codes took effect on 21 November 2025.
+The Code on Social Security, 2020 repealed the Payment of Gratuity Act, 1972
+(S.O. 5319(E), commencing s.164(1) item 6). On 23 August 2026 the gratuity
+engine was marked `VERIFIED` against the repealed Act, from a labour.gov.in PDF
+that now returns 404, and six user-facing strings named it as the law.
+
+**What moved, from the Code's own text** (India Code PDF of Act 36 of 2020):
+eligibility is s.53(1) with s.54, which keeps the 190/240-day rule; the 15/26
+formula and the six-month rounding are s.53(2) and its Explanation 3; the
+ten-employee threshold is the First Schedule. Those are re-verified and cited
+to the Code. Two things did change:
+
+- **The base is "wages", not basic + DA.** s.2(88) starts from basic, DA and
+  retaining allowance, then adds back whatever the excluded parts of pay (HRA,
+  conveyance and the rest of (a) to (i)) exceed one-half of all remuneration
+  by. The engine only sees basic + DA, so its figure is now a floor, and the
+  gratuity tool says so. Computing the Code's wages from a CTC breakdown is
+  parked for the CA: which components count is the contested part.
+- **The ₹20L ceiling is now "as may be notified" (s.53(3)).** None was found
+  under the Code, including in the final Social Security (Central) Rules, 2026
+  (G.S.R. 344(E), 8 May 2026). ₹20L is the 2018 notification under the old
+  Act, kept as `CANDIDATE`.
+
+**Why it went unnoticed:** a `VERIFIED` marker records that a number matches a
+document. Nothing checked that the document was still law.
+`src/engine/repealedLaw.test.ts` now fails if copy or a marker cites the
+repealed Act again. It guards this one repeal, not the next one.
+
+---
+
 ## 2026-09-07 — The front door becomes a dated plan, as a trial
 
 **Decided by Kalpit.** The first visit stops being a board and a grid of
@@ -314,8 +346,10 @@ executable spec for correct money math.
   stay ₹0 with `PT_AMOUNT_UNVERIFIED`. KA stays ₹2,400.
 - HRA keeps the four-city metro limb. No eight-city expansion — secondary sources
   only.
-- Gratuity: eligibility (PGA s.2A — 5y, or 4y + 190d on a 5-day week / 240d on a
-  6-day week) is a separate test from payable years (s.4(2)). ₹20L cap (s.4(3)).
+- Gratuity: eligibility (Code on Social Security, 2020 s.53(1) with s.54 — 5y,
+  or 4y + 190d on a 5-day week / 240d on a 6-day week) is a separate test from
+  payable years (s.53(2)). ₹20L cap is `CANDIDATE` under s.53(3). Was PGA
+  s.2A / s.4(2) / s.4(3) until the Act's repeal on 21 November 2025.
 - Example detection uses each island's own fixture constant. Decoder-seeded
   values count as Entered, not Example. **Amended 2026-09-06 (PR #39):** the six
   tools on the current-job record compare against their boot state instead, so a
@@ -344,4 +378,6 @@ answer arrives: one new PR, `VERIFIED` from that source.
 | C14 | ESOP Rule-3 FMV | Awaiting review |
 | C15 | PF withdrawal TDS in rupees | Awaiting review |
 | — | HRA eight-city list | Secondary sources only |
+| — | Gratuity ceiling under Code s.53(3) | No notification under the Code found; ₹20L carries only if s.164(2)(a) saves the 2018 one |
+| — | Gratuity on the Code's "wages" (s.2(88)) from a CTC breakdown | Which components count toward the 50% add-back is contested |
 | — | real-hike rent wipe · clawback two-date · counter-offer in-hands | Unless Kalpit names them |

@@ -344,7 +344,7 @@ export const hi: Record<string, string> = {
 
   'flag.gratuity-in-ctc.title': 'Gratuity CTC के अंदर गिना गया है',
   'flag.gratuity-in-ctc.detail':
-    'आपके CTC का ₹{amount}/साल gratuity accrual है — यह पैसा तभी मिलता है जब आप 5 साल टिकें (Payment of Gratuity Act के अनुसार)। 3rd साल में छोड़ने पर CTC का यह हिस्सा कभी आपका था ही नहीं।',
+    'आपके CTC का ₹{amount}/साल gratuity accrual है — यह पैसा तभी मिलता है जब आप 5 साल टिकें (Code on Social Security, 2020 के अनुसार)। 3rd साल में छोड़ने पर CTC का यह हिस्सा कभी आपका था ही नहीं।',
   'flag.gratuity-in-ctc.tip': 'Negotiate करने को कुछ नहीं — offers compare करते समय इसे mentally discount करें। CTC नहीं, fixed cash compare करें।',
 
   'flag.employer-pf-in-ctc.title': 'Employer PF भी CTC के figure में शामिल है',

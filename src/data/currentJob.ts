@@ -45,9 +45,11 @@ export interface CurrentJob {
    */
   workWeekDays?: 5 | 6
   /**
-   * Whether the Payment of Gratuity Act reaches this employer, which turns on
-   * the ten-employee threshold. Asked, not assumed — and `false` is the answer
-   * that changes the screen, so it has to survive `sanitise`.
+   * Whether the gratuity chapter of the Code on Social Security, 2020 (which
+   * replaced the Payment of Gratuity Act on 21 November 2025) reaches this
+   * employer, which turns on the ten-employee threshold. Asked, not assumed —
+   * and `false` is the answer that changes the screen, so it has to survive
+   * `sanitise`.
    */
   coveredByAct?: boolean
 }

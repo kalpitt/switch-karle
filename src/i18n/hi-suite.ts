@@ -48,9 +48,9 @@ export const hiSuite: Record<string, string> = {
     'आपकी gratuity {date} को ही safe हो चुकी थी, {days} दिन पहले। एक चीज़ कम हो गई जो आपको यहाँ रोक रही थी।',
   'plan.gratuity.ahead': 'आपकी gratuity {date} से safe है, {days} दिन बाद।',
   'plan.act.label': 'आपके employer के यहाँ दस से कम लोग हैं?',
-  'plan.act.hint': 'तो Act आप पर लागू नहीं होता। फिर भी company अपनी policy से gratuity दे सकती है।',
+  'plan.act.hint': 'तो gratuity के लिए Code on Social Security आप पर लागू नहीं होता। फिर भी company अपनी policy से gratuity दे सकती है।',
   'plan.act.none':
-    'दस से कम लोग हों तो Act आपके लिए कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
+    'दस से कम लोग हों तो Code आपके लिए कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
   'plan.hike.line': 'आपका hike {month} में आता है। {date} से पहले resign किया तो वह कभी नहीं मिलेगा।',
   'plan.cliffs.none': 'आगे कुछ नहीं है। कोई date आपको यहाँ नहीं रोक रही।',
   'plan.cliffs.next': 'अगला: date चुनें',
@@ -366,23 +366,26 @@ export const hiSuite: Record<string, string> = {
   'gratuity.desc': 'आप eligible हैं या नहीं, कितना मिलेगा, और कौन सी date आपको line के पार ले जाती है।',
   'gratuity.formTitle': 'Last Drawn Basic + DA',
   'gratuity.basic': 'Monthly basic + DA',
-  'gratuity.basicHint': 'Last drawn, CTC नहीं। Dearness allowance गिना जाता है; HRA नहीं।',
+  'gratuity.basicHint': 'Last drawn, CTC नहीं। Basic और dearness allowance; pay का और हिस्सा कब गिना जाता है, यह result के नीचे वाला note बताता है।',
   'gratuity.join': 'Join date',
   'gratuity.exit': 'Last working day',
   'gratuity.covered': 'Establishment में 10+ employees हैं',
-  'gratuity.coveredHint': 'Payment of Gratuity Act तभी apply होता है जब establishment covered हो। हम पूछते हैं; मानकर नहीं चलते।',
+  'gratuity.coveredHint': 'Code on Social Security, 2020 के तहत gratuity तभी apply होती है जब establishment covered हो: दस या ज़्यादा employees। हम पूछते हैं; मानकर नहीं चलते।',
   'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
   'gratuity.week5.hint': '5-day establishment में पांचवें साल के 4 साल + 190 दिन पर qualify होते हैं; 6-day वाले को 240 दिन चाहिए।',
   'gratuity.verdict.yes': '{years} completed years की service के बाद eligible। Estimate {amount} (15/26 × last drawn × payable years)।',
   'gratuity.verdict.no': 'अभी तक {years} completed years — 5-year / 4-years-plus-190-or-240-day rule के तहत अभी eligible नहीं।',
   'gratuity.flip': 'यह picture बदलने वाली अगली date: {date}।',
   'gratuity.note.s42-rounding':
-    'PGA s.4(2) के तहत service के साल का कोई भी हिस्सा छह महीने से ज़्यादा हुआ तो पूरा साल गिना जाता है; ठीक छह महीने नहीं।',
+    'Code on Social Security, 2020 s.53(2) के तहत service के साल का कोई भी हिस्सा छह महीने से ज़्यादा हुआ तो पूरा साल गिना जाता है; ठीक छह महीने नहीं।',
   'gratuity.note.act-may-not-apply':
-    'Payment of Gratuity Act apply नहीं हो सकता (employer 10-employee से नीचे)। Company policy से फिर भी gratuity मिल सकता है।',
+    'Code on Social Security, 2020 शायद इस employer पर apply न हो (10-employee threshold से नीचे)। Company policy से फिर भी gratuity मिल सकती है।',
   'gratuity.note.ineligible-service':
     'Service 5 completed years से कम है और 4-years-plus fast path से भी कम (5-day week पर 190 दिन, 6-day पर 240 दिन)।',
-  'gratuity.note.cap-applied': 'Statutory ₹20,00,000 ceiling पर capped है (PGA s.4(3))।',
+  'gratuity.note.cap-applied':
+    '₹20,00,000 पर capped है, वह ceiling जो 2018 में पुराने Act के तहत notify हुई थी। Code (s.53(3)) के तहत सरकार नई ceiling notify कर सकती है; check करते समय कोई नई नहीं मिली।',
+  'gratuity.note.code-wages':
+    '21 नवंबर 2025 से gratuity Code on Social Security, 2020 की “wages” (s.2(88)) पर मिलती है: basic और DA, और अगर HRA, conveyance जैसे excluded हिस्से आपकी pay के आधे से ज़्यादा हैं तो उससे ऊपर वाला हिस्सा भी। यह सिर्फ़ basic + DA पर है, इसलिए इसे कम से कम की रकम मानें।',
 
   // ---- Leave encashment ----
   'leave-encashment.title': 'Leave Encashment',
@@ -451,7 +454,7 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
   'fnf-checker.flag.gratuity-missing':
-    'इस sheet में gratuity की line नहीं है। आपकी service पर यह लगभग ₹{amount} बनता है — अगर आप Gratuity Act के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
+    'इस sheet में gratuity की line नहीं है। आपकी service पर यह कम से कम ₹{amount} बनता है। अगर आप Code on Social Security, 2020 के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
 
   // ---- Two Form-16 shock ----
   'form16-shock.title': 'दो Form-16 का झटका',
