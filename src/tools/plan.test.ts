@@ -127,6 +127,18 @@ describe('the calendar download works on phones and says what happened', () => {
     expect(startOver).toMatch(/setDownloaded\(false\)/)
   })
 
+  it('a moved resign date is named above the button, and the stale download line goes', () => {
+    const pick = door.match(/function pickResignDate\(date: string\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(pick).toMatch(/resignDatesMovedFrom\(m, plan\.resignDate, date\)/)
+    expect(pick).toMatch(/setDownloaded\(false\)/)
+    const startOver = door.match(/function startOver\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(startOver).toMatch(/resignDatesMovedFrom\(m, plan\.resignDate, undefined\)/)
+    const button = door.match(/function CalendarButton\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(button.indexOf('plan.calendar.moved')).toBeGreaterThan(-1)
+    expect(button.indexOf('plan.calendar.moved')).toBeLessThan(button.indexOf('plan.calendar.cta'))
+    expect(door.match(/movedFrom=\{props\.movedFrom\}/g)).toHaveLength(2)
+  })
+
   it("plan.calendar.note no longer calls the dates 'your cliffs'", () => {
     expect(en['plan.calendar.note']).not.toMatch(/your cliffs/)
     expect(en['plan.calendar.note']).toMatch(/the dates above/)

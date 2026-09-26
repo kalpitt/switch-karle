@@ -85,6 +85,8 @@ export const hiSuite: Record<string, string> = {
   'plan.calendar.note':
     'dates.ics download होगी — सात दिन बाद एक check-in, ऊपर वाली dates, और आपकी date। उसके notes में इस site के नाम वाला link रहता है, इसलिए work calendar में डालने से पहले सोच लें।',
   'plan.calendar.downloaded': 'dates.ics आपके downloads में है। उसे खोलें, calendar app dates जोड़ देगा।',
+  'plan.calendar.moved':
+    'Date {dates} से बदली है। अगर वह date पहले से आपके calendar में है, तो उसे वहीं delete करें। यह file नई date उसके साथ जोड़ती है, उसकी जगह नहीं।',
   'plan.reason.label': 'आप क्यों निकलना चाहते हैं?',
   'plan.reason.hint': 'एक लाइन। हर बार लौटने पर यह सबसे ऊपर दिखेगी। Optional है।',
   'plan.reason.save': 'यह लाइन save करें',

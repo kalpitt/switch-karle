@@ -54,6 +54,29 @@ export function questionsSubmittable(joinDate: string, noticePeriodDays: number,
   return today === '' || joinDate <= today
 }
 
+/**
+ * The resign dates this visit has moved away from, oldest first.
+ *
+ * A date already in someone's calendar does not leave it when the date changes
+ * here. Every event's UID carries its day (`resign-20270601@…`), so a second
+ * `dates.ics` adds the new day beside the old one, and on the old day their
+ * phone still says "Resign today" about a date they gave up. The file cannot
+ * reach into a calendar to delete anything, so the screen names the old days
+ * and the user deletes them.
+ *
+ * Moving back to a day already on the list takes it off: that day is the plan
+ * again, not a leftover.
+ */
+export function resignDatesMovedFrom(
+  movedFrom: readonly string[],
+  previous: string | undefined,
+  next: string | undefined,
+): string[] {
+  const kept = movedFrom.filter((date) => date !== next)
+  if (previous == null || previous === next || kept.includes(previous)) return kept
+  return [...kept, previous]
+}
+
 export interface DoorEngineAnswers {
   joinDate: string
   noticePeriodDays: number

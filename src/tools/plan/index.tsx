@@ -16,7 +16,7 @@ import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
-import { doorEngineInput, questionsSubmittable } from './fork'
+import { doorEngineInput, questionsSubmittable, resignDatesMovedFrom } from './fork'
 import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
@@ -75,6 +75,9 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [returning, setReturning] = useState(false)
   const [repicking, setRepicking] = useState(false)
   const [downloaded, setDownloaded] = useState(false)
+  // Resign dates given up this visit. Not saved: the point is to name them
+  // while the user is looking at the button that would add a second date.
+  const [movedFrom, setMovedFrom] = useState<string[]>([])
 
   // The top of whichever screen is showing, so a step change can scroll back
   // up to it instead of leaving the visitor wherever the last tap landed.
@@ -181,6 +184,9 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   }
 
   function pickResignDate(date: string) {
+    setMovedFrom((m) => resignDatesMovedFrom(m, plan.resignDate, date))
+    // The file in their downloads still carries the old date.
+    if (plan.resignDate != null && plan.resignDate !== date) setDownloaded(false)
     if (touched) {
       savePlan({ resignDate: date })
       setPlan(loadPlan())
@@ -228,6 +234,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     // The narrow door: the plan goes, the saved salary numbers six other tools
     // rely on stay. Erasing everything is the footer's control, not this one.
     erasePlan()
+    // The plan goes; a date already added to a calendar does not.
+    setMovedFrom((m) => resignDatesMovedFrom(m, plan.resignDate, undefined))
     setPlan({})
     setDownloaded(false)
     setReturning(false)
@@ -255,6 +263,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     today,
     touched,
     downloaded,
+    movedFrom,
     onExampleChip: goToQuestions,
     onDownload: downloadDates,
     onLooking: startLooking,
@@ -636,6 +645,8 @@ interface RecapProps {
   noticePeriodDays: number
   touched: boolean
   downloaded: boolean
+  /** Resign dates moved away from this visit, which a calendar may still hold. */
+  movedFrom: readonly string[]
   onExampleChip: () => void
   onDownload: () => void
   onLooking: () => void
@@ -666,11 +677,20 @@ function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePerio
 
 function CalendarButton({
   t,
+  fmt,
   onDownload,
   downloaded,
-}: Pick<RecapProps, 't' | 'onDownload' | 'downloaded'>) {
+  movedFrom,
+}: Pick<RecapProps, 't' | 'fmt' | 'onDownload' | 'downloaded' | 'movedFrom'>) {
   return (
     <div className="space-y-1.5">
+      {/* Above the button, so it is read before a second date goes in beside
+          the first. See resignDatesMovedFrom for why the file cannot fix it. */}
+      {movedFrom.length > 0 && (
+        <p className="text-[13px] font-semibold leading-snug text-alarm">
+          {t('plan.calendar.moved', { dates: movedFrom.map(fmt).join(', ') })}
+        </p>
+      )}
       <PrimaryButton onClick={onDownload}>{t('plan.calendar.cta')}</PrimaryButton>
       <p className="text-xs leading-relaxed text-ink-faint">{t('plan.calendar.note')}</p>
       {downloaded && (
@@ -761,7 +781,13 @@ function Recap(props: RecapProps) {
         />
       )}
       <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
-      <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
+      <CalendarButton
+        t={t}
+        fmt={props.fmt}
+        onDownload={props.onDownload}
+        downloaded={props.downloaded}
+        movedFrom={props.movedFrom}
+      />
       <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
       <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -807,7 +833,13 @@ function ReturnScreen(
             the only thing this product can do that survives the tab closing. */}
         <div className="space-y-1.5">
           <p className="text-[14px] font-bold">{t('plan.return.next')}</p>
-          <CalendarButton t={t} onDownload={props.onDownload} downloaded={props.downloaded} />
+          <CalendarButton
+            t={t}
+            fmt={props.fmt}
+            onDownload={props.onDownload}
+            downloaded={props.downloaded}
+            movedFrom={props.movedFrom}
+          />
         </div>
 
         <ReasonBox t={t} plan={plan} onReason={props.onReason} />
