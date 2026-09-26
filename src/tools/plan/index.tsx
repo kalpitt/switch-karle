@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import type { ReactNode, RefObject } from 'react'
 import {
   cliffs as computeCliffs,
+  gratuityResignFrom,
   hikeCliffDate,
   startApplyingByPassed,
+  stillAhead,
   switchCalendar,
   type Cliff,
   type Trade,
@@ -325,6 +327,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           workWeekDays={job.workWeekDays}
           coveredByAct={job.coveredByAct ?? true}
           hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+          noticePeriodDays={answers.noticePeriodDays}
+          today={today}
           touched={touched}
           onExampleChip={goToQuestions}
           onChooseWeek={chooseWeek}
@@ -429,6 +433,8 @@ function CliffScreen(props: {
   workWeekDays?: 5 | 6
   coveredByAct: boolean
   hikeLabel: string | null
+  noticePeriodDays: number
+  today: string
   touched: boolean
   onExampleChip: () => void
   onChooseWeek: (days: 5 | 6) => void
@@ -441,7 +447,8 @@ function CliffScreen(props: {
   const six = props.forkCliffs.find((c) => c.id === 'gratuity-6-day')
   const chosen = chosenGratuityCliff(props.cliffs, props.workWeekDays)
   const hike = props.cliffs.find((c) => c.id === 'hike')
-  const ahead = props.cliffs.filter((c) => !c.passed)
+  const ahead = props.cliffs.filter((c) => stillAhead(c, props.today, props.noticePeriodDays))
+  const resignFrom = chosen == null ? null : gratuityResignFrom(chosen.date, props.noticePeriodDays)
   const reachable = dateStepReachable(props.coveredByAct, five != null && six != null, props.workWeekDays)
   const [blocked, setBlocked] = useState(false)
 
@@ -501,6 +508,16 @@ function CliffScreen(props: {
               {chosen.passed
                 ? t('plan.gratuity.past', { date: fmt(chosen.date), days: -chosen.daysAway })
                 : t('plan.gratuity.ahead', { date: fmt(chosen.date), days: chosen.daysAway })}
+            </p>
+          )}
+          {/* Gratuity is judged on the last working day, so the date to wait
+              for is not the gratuity date but the notice before it. The risk
+              is said in the same breath: an early release undoes it. */}
+          {chosen != null && !chosen.passed && resignFrom != null && (
+            <p className="text-[14px] leading-snug text-ink-soft">
+              {resignFrom <= props.today
+                ? t('plan.gratuity.noticeNow', { date: fmt(chosen.date) })
+                : t('plan.gratuity.notice', { from: fmt(resignFrom), date: fmt(chosen.date) })}
             </p>
           )}
         </div>

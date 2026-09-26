@@ -232,25 +232,86 @@ export function cliffs(input: SwitchCalendarInput): Cliff[] {
   return out.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
 }
 
+function isGratuity(cliff: Cliff): boolean {
+  return cliff.id === 'gratuity-5-day' || cliff.id === 'gratuity-6-day'
+}
+
 /**
- * The first day on which nothing still ahead of the user is forfeited: the day
- * after the latest cliff that has not yet passed, or today when every cliff is
- * already behind them (or there are none at all).
+ * The first resign date whose last working day still reaches a gratuity date.
+ *
+ * Gratuity is judged on the day employment ends, and notice is employment.
+ * Code on Social Security, 2020 s.53(1): gratuity is payable "on the
+ * termination of his employment after he has rendered continuous service",
+ * resignation being one of the listed causes (India Code PDF of Act 36 of
+ * 2020, read 2026-09-27). The Payment of Gratuity Act, 1972 s.4(1) used the
+ * same words. `gratuity()` already takes the last working day as its exit
+ * date; the door
+ * compared the gratuity date with the resign date instead, and told someone on
+ * 90 days' notice to stay three months longer than the Act asks. The last
+ * working day is `lastWorkingDay()`, which counts the resignation day as day
+ * one of notice, so this is the gratuity date less the notice, plus one.
+ *
+ * Only for gratuity. The hike is lost by being on notice when it lands, and a
+ * bond or a clawback turns on its own contract's wording, so those three stay
+ * judged at the resign date.
+ */
+export function gratuityResignFrom(gratuityDate: string, noticePeriodDays: number): string {
+  // The inverse of lastWorkingDay(), guard included.
+  const n = Number.isInteger(noticePeriodDays) && noticePeriodDays >= 1 ? noticePeriodDays : 1
+  return addDays(gratuityDate, 1 - n)
+}
+
+/**
+ * Whether a cliff still holds someone who resigns today. A passed cliff does
+ * not, and neither does a gratuity date their notice already reaches.
+ */
+export function stillAhead(cliff: Cliff, today: string, noticePeriodDays: number): boolean {
+  if (cliff.passed) return false
+  return !(isGratuity(cliff) && gratuityResignFrom(cliff.date, noticePeriodDays) <= today)
+}
+
+/**
+ * The first resign date that gives up nothing still ahead: the day after the
+ * latest cliff not yet passed — or, for gratuity when the notice is known, the
+ * first date whose last working day reaches it — and never earlier than today.
+ * Today when every cliff is behind them, or there are none at all.
  *
  * Information on the date step, never a date the product picks for anyone.
  */
-export function earliestCleanDate(list: readonly Cliff[], today: string): string {
-  let latest: string | null = null
+export function earliestCleanDate(
+  list: readonly Cliff[],
+  today: string,
+  noticePeriodDays?: number,
+): string {
+  let latest = today
   for (const cliff of list) {
     if (cliff.passed) continue
-    if (latest === null || cliff.date > latest) latest = cliff.date
+    const clean =
+      noticePeriodDays !== undefined && isGratuity(cliff)
+        ? gratuityResignFrom(cliff.date, noticePeriodDays)
+        : addDays(cliff.date, 1)
+    if (clean > latest) latest = clean
   }
-  return latest === null ? today : addDays(latest, 1)
+  return latest
 }
 
-/** Per-cliff `forfeited`: true when the chosen resign date falls before the cliff. */
-export function markForfeited(list: readonly Cliff[], resignDate: string): Cliff[] {
-  return list.map((cliff) => ({ ...cliff, forfeited: resignDate < cliff.date }))
+/**
+ * Per-cliff `forfeited`: true when the chosen resign date gives the cliff up.
+ * Gratuity, when the notice is known, is judged at the last working day;
+ * everything else at the resign date.
+ */
+export function markForfeited(
+  list: readonly Cliff[],
+  resignDate: string,
+  noticePeriodDays?: number,
+): Cliff[] {
+  return list.map((cliff) => {
+    const judgedOn =
+      noticePeriodDays !== undefined && isGratuity(cliff)
+        ? lastWorkingDay(resignDate, noticePeriodDays)
+        : resignDate
+    return { ...cliff, forfeited: judgedOn < cliff.date }
+  })
 }
 
 function plannedDate(id: PlannedDateId, date: string, kind: DateKind, today: string): PlannedDate {
@@ -362,7 +423,7 @@ export function trades(input: SwitchCalendarInput): Trade[] {
     offerBufferDays: input.offerBufferDays ?? DEFAULT_OFFER_BUFFER_DAYS,
   }
   const list = cliffs(input)
-  const ahead = list.filter((c) => !c.passed)
+  const ahead = list.filter((c) => stillAhead(c, today, input.noticePeriodDays))
   const ownDate = tradeFor('own-date', null, null, today, conventions)
 
   if (ahead.length === 0) {
@@ -382,7 +443,13 @@ export function trades(input: SwitchCalendarInput): Trade[] {
   // The picker opens at today: leaving now gives up everything still ahead,
   // which is what this option is for. `earliestCleanDate` is the date it shows.
   out.push(
-    tradeFor('keep-what-is-earned', earliestCleanDate(list, today), today, today, conventions),
+    tradeFor(
+      'keep-what-is-earned',
+      earliestCleanDate(list, today, input.noticePeriodDays),
+      today,
+      today,
+      conventions,
+    ),
   )
   out.push(ownDate)
   return out
@@ -412,8 +479,8 @@ export function switchCalendar(input: SwitchCalendarInput): SwitchCalendarResult
   const resignDate = input.targetResignDate
   return {
     today,
-    cliffs: resignDate === undefined ? bare : markForfeited(bare, resignDate),
-    earliestCleanDate: earliestCleanDate(bare, today),
+    cliffs: resignDate === undefined ? bare : markForfeited(bare, resignDate, input.noticePeriodDays),
+    earliestCleanDate: earliestCleanDate(bare, today, input.noticePeriodDays),
     trades: trades(input),
     timeline:
       resignDate === undefined

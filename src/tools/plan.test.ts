@@ -162,12 +162,20 @@ describe('the week must be chosen before the dates, and each step opens at its t
 
 describe('the late warning follows the date in the box, and impossible answers cannot be submitted', () => {
   it('TradeOption computes the late line from startApplyingByPassed(value, today) for a card with a picker', () => {
-    expect(door).toMatch(
-      /import \{\s*\n?\s*cliffs as computeCliffs,\s*\n?\s*hikeCliffDate,\s*\n?\s*startApplyingByPassed,/,
-    )
+    const engineImport = door.match(/import \{[^}]*\} from '\.\.\/\.\.\/engine\/switchCalendar'/)?.[0] ?? ''
+    expect(engineImport).toMatch(/\bstartApplyingByPassed,/)
     const tradeOption = door.match(/function TradeOption\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
     expect(tradeOption).toMatch(/startApplyingByPassed\(value, props\.today\)/)
     expect(tradeOption).not.toMatch(/\{trade\.startApplyingByPassed && \(/)
+  })
+
+  it('the cliff screen judges "ahead" and the gratuity line the way the engine does, notice included', () => {
+    const screen = door.match(/function CliffScreen\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(screen).toMatch(/stillAhead\(c, props\.today, props\.noticePeriodDays\)/)
+    expect(screen).not.toMatch(/cliffs\.filter\(\(c\) => !c\.passed\)/)
+    expect(screen).toMatch(/gratuityResignFrom\(chosen\.date, props\.noticePeriodDays\)/)
+    expect(screen).toMatch(/plan\.gratuity\.notice/)
+    expect(en['plan.gratuity.notice']).toMatch(/you lose it/)
   })
 
   it('the join date cannot be set in the future', () => {

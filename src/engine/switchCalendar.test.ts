@@ -4,6 +4,7 @@ import {
   DEFAULT_OFFER_LEAD_WEEKS,
   cliffs,
   earliestCleanDate,
+  gratuityResignFrom,
   hikeCliffDate,
   markForfeited,
   outboundUnlocked,
@@ -13,6 +14,8 @@ import {
   trades,
 } from './switchCalendar'
 import type { Cliff } from './switchCalendar'
+import { addDays, lastWorkingDay } from './dates'
+import { gratuity } from './gratuity'
 
 /**
  * Goldens hand-worked from docs/DIRECTION.md Part 3 and Part 13.
@@ -229,10 +232,28 @@ describe('trades — options that name what each date keeps', () => {
       asOf: '2026-09-06',
       workWeekDays: 6,
     })
+    // The six-day cliff is 9 September 2026, three days away. This test used to
+    // expect "keep what is earned" from 10 September. But 90 days' notice from
+    // today ends employment on 4 December, past the cliff, and gratuity() on
+    // that exit date is eligible. Nothing is ahead to wait for: the runway case.
+    expect(options.map((o) => o.id)).toEqual([
+      'runway-3-months',
+      'runway-6-months',
+      'runway-financial-year-end',
+      'own-date',
+    ])
+  })
+
+  it('"keep what is earned" still shows when gratuity is further off than the notice', () => {
+    const options = trades({
+      joinDate: '2022-01-12',
+      noticePeriodDays: 90,
+      asOf: '2026-03-01',
+      workWeekDays: 6,
+    })
     expect(options.map((o) => o.id)).toEqual(['keep-what-is-earned', 'own-date'])
-    // The six-day cliff is 9 September 2026 and still ahead, so the clean date
-    // is the day after it — this is not the runway case.
-    expect(options[0]!.resignDate).toBe('2026-09-10')
+    // 9 September 2026 less 90 days' notice, plus one: 12 June 2026.
+    expect(options[0]!.resignDate).toBe('2026-06-12')
   })
 })
 
@@ -303,6 +324,72 @@ describe('forfeited — never silently dropped', () => {
       ['gratuity-5-day', false],
       ['hike', true],
     ])
+  })
+})
+
+/**
+ * Gratuity is judged on the day employment ends, not the day the letter goes
+ * in. `gratuity()` takes the last working day as its exit date, so the door
+ * has to agree with it: notice is service.
+ *
+ * Ravi on a five-day week, gratuity 21 July 2026, 90 days' notice. Resign
+ * 23 April 2026 and the last working day is 21 July 2026 (day one of notice is
+ * the resignation day), which reaches it. Resign a day earlier and it does not.
+ */
+describe('gratuity counts the notice period, because gratuity() does', () => {
+  const EARLY = { ...RAVI, workWeekDays: 5 as const, asOf: '2026-03-01' }
+
+  it('resigning inside the notice window before the gratuity date keeps it', () => {
+    const out = switchCalendar({ ...EARLY, targetResignDate: '2026-05-01' })
+    expect(byId(out.cliffs)['gratuity-5-day']!.forfeited).toBe(false)
+  })
+
+  it('the first resign date that keeps it is the gratuity date less the notice, plus one', () => {
+    expect(gratuityResignFrom('2026-07-21', 90)).toBe('2026-04-23')
+    const kept = byId(markForfeited(cliffs(EARLY), '2026-04-23', 90))
+    const lost = byId(markForfeited(cliffs(EARLY), '2026-04-22', 90))
+    expect(kept['gratuity-5-day']!.forfeited).toBe(false)
+    expect(lost['gratuity-5-day']!.forfeited).toBe(true)
+  })
+
+  it('agrees with gratuity() on every resign date around the line', () => {
+    for (let offset = -120; offset <= 10; offset++) {
+      const resign = addDays('2026-07-21', offset)
+      const door = byId(markForfeited(cliffs(EARLY), resign, RAVI.noticePeriodDays))['gratuity-5-day']!
+      const tool = gratuity({
+        joinDate: RAVI.joinDate,
+        exitDate: lastWorkingDay(resign, RAVI.noticePeriodDays),
+        workWeekDays: 5,
+        coveredByAct: true,
+        lastDrawnBasicDA: 50_000,
+      })
+      expect({ resign, forfeited: door.forfeited }).toEqual({ resign, forfeited: !tool.eligible })
+    }
+  })
+
+  it('moves the clean date for gratuity back by the notice, and leaves the hike alone', () => {
+    // Before the hike month is known, gratuity is the only cliff ahead.
+    const noHike = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-03-01' }
+    expect(switchCalendar(noHike).earliestCleanDate).toBe('2026-04-23')
+    // With the hike ahead too, the hike still decides, exactly as before.
+    expect(switchCalendar(EARLY).earliestCleanDate).toBe('2026-06-01')
+  })
+
+  it('a gratuity date the notice already covers is not a cliff to wait for', () => {
+    // 30 days before the gratuity date with 90 days' notice: resigning today keeps it.
+    const late = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-06-21' }
+    expect(switchCalendar(late).earliestCleanDate).toBe('2026-06-21')
+    expect(trades(late).map((o) => o.id)).toEqual([
+      'runway-3-months',
+      'runway-6-months',
+      'runway-financial-year-end',
+      'own-date',
+    ])
+  })
+
+  it('without a notice period it falls back to the resign date, as before', () => {
+    const judged = byId(markForfeited(cliffs(EARLY), '2026-05-01'))
+    expect(judged['gratuity-5-day']!.forfeited).toBe(true)
   })
 })
 
