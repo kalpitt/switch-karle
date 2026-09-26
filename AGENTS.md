@@ -69,7 +69,7 @@ do not silently pick one.
    required; *doing* it is not authorised.
 
 **Statutory citations (synced 2026-08-23).** The old s.157/"Act 2026" rebate
-defect is fixed on `quality/suite-pass` against the official Income-tax Act,
+defect is fixed against the official Income-tax Act,
 2025 PDF — see the `VERIFIED:` markers in `src/engine/tax.ts`. Standing rule
 unchanged: never touch a statutory number, citation, or legal claim without a
 primary source (Act / notification / circular), never a blog or another AI.
