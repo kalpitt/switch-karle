@@ -69,12 +69,20 @@ do not silently pick one.
    required; *doing* it is not authorised.
 
 **Statutory citations (synced 2026-08-23).** The old s.157/"Act 2026" rebate
-defect is fixed on `quality/suite-pass` against the official Income-tax Act,
+defect is fixed against the official Income-tax Act,
 2025 PDF — see the `VERIFIED:` markers in `src/engine/tax.ts`. Standing rule
 unchanged: never touch a statutory number, citation, or legal claim without a
 primary source (Act / notification / circular), never a blog or another AI.
 Unresolved constants stay marked `CANDIDATE` and wait for a human chartered
 accountant. Living status table: `docs/ARCHITECTURE.md`.
+
+## When to stop and ask
+
+When a step doesn't need Kalpit's input, keep going; put status notes in the same message
+as your next action. Stop and ask only when you can't continue without him, or before
+anything destructive or outward-facing: merging (merge = deploy), pushing to `main`,
+touching a statutory number without a primary source, deleting data or branches, or
+changing anything outside this repository.
 
 ## Commands
 
