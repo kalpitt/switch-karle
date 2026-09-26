@@ -164,7 +164,7 @@ per-field for them, because the old "finite number above zero" test dropped an
 ISO date for being a string and `coveredByAct: false` for being falsy. Adding
 optional fields is backward compatible and needs no key version bump. Basic and
 basic+DA never cross-seed — gratuity is on basic +
-DA (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
+DA as a floor of the Code's "wages" (source: the VERIFIED marker in `src/engine/gratuity.ts`), every other tool uses plain basic raw, and one shared field
 would hand a DA-drawing employee's wrong number to whichever tool read it.
 
 Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`
@@ -341,7 +341,9 @@ Ship with goldens. A constant's status lives beside its code:
 | Rebate citation s.156 ITA 2025 (was s.157/"Act 2026"); s.157 = arrears only | `src/engine/tax.ts`, i18n how-computed strings | **VERIFIED 2026-08-23** (ITA 2025 PDF) |
 | SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `src/engine/salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
 | FY 2026-27 slabs, rebate amounts, cess, surcharge | `src/engine/tax.ts` | Golden-tested; last verified 2026-07-20 |
-| Gratuity: eligibility §2A, payable years §4(2), ₹20L cap §4(3), 190/240-day rule | `src/engine/gratuity.ts` | VERIFIED 2026-08-23 (PGA 1972 PDF + S.O. 1420(E)) |
+| Gratuity: eligibility §53(1) + §54 (190/240-day rule), payable years §53(2) Expl.3, 10-employee First Schedule | `src/engine/gratuity.ts` | VERIFIED 2026-09-27 (Code on Social Security, 2020 PDF + S.O. 5319(E)). Was PGA 1972, repealed 21-Nov-2025 |
+| Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found; CA R1 |
+| Gratuity base: basic + DA, a floor of the Code's "wages" (§2(88) 50% add-back) | `src/engine/gratuity.ts` | Floor by construction; the tool says so. Wages from CTC parked for CA |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
 | EPF 12% / ₹15,000 wage ceiling | `src/engine/salary.ts` | Candidate |
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
@@ -353,6 +355,10 @@ Ship with goldens. A constant's status lives beside its code:
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.
+
+A `VERIFIED` marker records that a number matches a document. It does not
+record that the document is still law, and on 21 November 2025 one stopped
+being. `src/engine/repealedLaw.test.ts` guards that one repeal.
 
 ## Gates
 

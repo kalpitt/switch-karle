@@ -85,6 +85,15 @@ describe('gratuity — eligibility vs payable years (PGA s.2A / s.4(2))', () => 
     expect(r.notes.some((n) => n.id === 'ceiling-omitted')).toBe(false)
   })
 
+  it('an eligible figure says it is the floor under the Code, an ineligible one says nothing', () => {
+    // Code on Social Security, 2020 s.53(2) pays on "wages" (s.2(88)), which is
+    // basic + DA or more. The engine only ever sees basic + DA.
+    const paid = gratuity({ ...BASE, exitDate: '2025-02-17' })
+    expect(paid.notes.map((n) => n.id)).toContain('code-wages')
+    const short = gratuity({ ...BASE, exitDate: '2024-03-27' })
+    expect(short.notes.map((n) => n.id)).not.toContain('code-wages')
+  })
+
   it('not covered by Act → amount 0 with policy note', () => {
     const r = gratuity({ ...BASE, exitDate: '2024-08-01', coveredByAct: false })
     expect(r.amount).toBe(0)

@@ -4,6 +4,10 @@ import type { RedFlag, SalaryBreakdown } from './types'
  * Table-driven offer red-flag scanner. Every flag carries the legal/market
  * context in plain English and one concrete negotiation line.
  *
+ * UNVERIFIED since 21 Nov 2025: the Industrial Relations Code, 2020 took
+ * effect that day (PIB release 2192463) and is reported to replace the
+ * Industrial Disputes Act named below. Not re-checked against the Code's text.
+ *
  * Legal context sources (2026-07): no statute mandates a 90-day notice — the
  * contract governs (Industrial Disputes Act's 30-day floor applies to
  * "workmen", which typically excludes IT/managerial roles). Employment bonds
@@ -70,7 +74,7 @@ const RULES: Rule[] = [
       severity: 'info',
       title: 'Gratuity counted inside CTC',
       detail:
-        `₹${b.gratuityAnnual.toLocaleString('en-IN')}/year of your CTC is gratuity accrual — money you only receive if you stay 5 years (per the Payment of Gratuity Act). Leave in year 3 and this part of your "CTC" was never yours.`,
+        `₹${b.gratuityAnnual.toLocaleString('en-IN')}/year of your CTC is gratuity accrual — money you only receive if you stay 5 years (per the Code on Social Security, 2020). Leave in year 3 and this part of your "CTC" was never yours.`,
       negotiationTip:
         'Nothing to negotiate — just discount it mentally when comparing offers. Compare fixed cash, not CTC.',
     }),

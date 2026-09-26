@@ -37,9 +37,9 @@ export const en: Record<string, string> = {
   'plan.gratuity.noticeNow':
     'Notice counts as service. Resign today and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
   'plan.act.label': 'Fewer than ten people at your employer?',
-  'plan.act.hint': 'Then the Act does not cover you. Your employer may still pay gratuity anyway.',
+  'plan.act.hint': 'Then the Code on Social Security does not cover you for gratuity. Your employer may still pay it anyway.',
   'plan.act.none':
-    'With fewer than ten people, the Act sets no gratuity date for you. Nothing statutory is holding you here.',
+    'With fewer than ten people, the Code sets no gratuity date for you. Nothing statutory is holding you here.',
   'plan.hike.line': 'Your hike lands in {month}. Resigning before {date} means you never see it.',
   'plan.cliffs.none': 'Nothing is ahead of you. No date is holding you here.',
   'plan.cliffs.next': 'Next: pick a date',
@@ -377,23 +377,26 @@ export const en: Record<string, string> = {
   'gratuity.desc': 'Are you eligible, how much, and which date flips you over the line.',
   'gratuity.formTitle': 'Last drawn basic + DA',
   'gratuity.basic': 'Monthly basic + DA',
-  'gratuity.basicHint': 'Last drawn, not CTC. Dearness allowance counts; HRA does not.',
+  'gratuity.basicHint': 'Last drawn, not CTC. Basic plus dearness allowance; the note under the result says when more of your pay counts.',
   'gratuity.join': 'Join date',
   'gratuity.exit': 'Last working day',
   'gratuity.covered': 'Establishment has 10+ employees',
-  'gratuity.coveredHint': 'The Payment of Gratuity Act applies only if the establishment is covered. We ask; we do not assume.',
+  'gratuity.coveredHint': 'Gratuity under the Code on Social Security, 2020 applies only if the establishment is covered: ten or more employees. We ask; we do not assume.',
   'gratuity.week5.label': '5-day work week (Sat–Sun off)',
   'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 days into year five; a 6-day one needs 240.',
   'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
   'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-years-plus-190-or-240-day rule.',
   'gratuity.flip': 'The next date that changes this picture: {date}.',
   'gratuity.note.s42-rounding':
-    'Under PGA s.4(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
+    'Under the Code on Social Security, 2020 s.53(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
   'gratuity.note.act-may-not-apply':
-    'Payment of Gratuity Act may not apply (employer below 10-employee threshold). Company policy may still pay gratuity.',
+    'The Code on Social Security, 2020 may not cover this employer (below the 10-employee threshold). Company policy may still pay gratuity.',
   'gratuity.note.ineligible-service':
     'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
-  'gratuity.note.cap-applied': 'Capped at the statutory ₹20,00,000 ceiling (PGA s.4(3)).',
+  'gratuity.note.cap-applied':
+    'Capped at ₹20,00,000, the ceiling notified in 2018 under the old Act. The Code (s.53(3)) lets the government notify a new one; none had been found when this was checked.',
+  'gratuity.note.code-wages':
+    'Since 21 November 2025, gratuity is paid on “wages” as the Code on Social Security, 2020 defines them (s.2(88)): basic and DA, plus any amount by which the excluded parts of your pay, such as HRA and conveyance, exceed half of it. This uses basic + DA only, so treat it as the floor.',
 
   'leave-encashment.title': 'Leave encashment',
   'leave-encashment.desc': 'On a resignation, leave encashment is typically fully taxable as salary.',
@@ -459,7 +462,7 @@ export const en: Record<string, string> = {
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
   'fnf-checker.flag.gratuity-missing':
-    'No gratuity line on this sheet. On your service it works out to about ₹{amount} — if you are eligible under the Gratuity Act, ask HR (in writing) for it to be included in the settlement.',
+    'No gratuity line on this sheet. On your service it comes to at least ₹{amount}. If you are eligible under the Code on Social Security, 2020, ask HR in writing for it to be included in the settlement.',
 
   'form16-shock.title': 'Two Form-16 shock',
   'form16-shock.desc': 'Two employers both gave you the slab benefit. One return has to put them together.',

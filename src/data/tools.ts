@@ -319,7 +319,7 @@ export const TOOLS: ToolDef[] = [
     descKey: 'gratuity.desc',
     seoTitle: 'Gratuity + Flip Date',
     seoDescription:
-      'Payment of Gratuity Act eligibility, 15/26 estimate, and the date that flips you over the 4-year-240-day line. Provisional.',
+      'Gratuity eligibility under the Code on Social Security, 2020, the 15/26 estimate, and the date you cross the 4-years-plus-190-or-240-day line. Provisional.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.gratuity.v1',
