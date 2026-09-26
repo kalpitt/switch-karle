@@ -32,6 +32,10 @@ export const en: Record<string, string> = {
   'plan.gratuity.past':
     'Your gratuity was already safe on {date}, {days} days ago. That is one thing less holding you here.',
   'plan.gratuity.ahead': 'Your gratuity is safe from {date}, {days} days away.',
+  'plan.gratuity.notice':
+    'Notice counts as service. Resign on or after {from} and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
+  'plan.gratuity.noticeNow':
+    'Notice counts as service. Resign today and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
   'plan.act.label': 'Fewer than ten people at your employer?',
   'plan.act.hint': 'Then the Act does not cover you. Your employer may still pay gratuity anyway.',
   'plan.act.none':

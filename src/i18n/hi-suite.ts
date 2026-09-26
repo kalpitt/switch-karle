@@ -47,6 +47,10 @@ export const hiSuite: Record<string, string> = {
   'plan.gratuity.past':
     'आपकी gratuity {date} को ही safe हो चुकी थी, {days} दिन पहले। एक चीज़ कम हो गई जो आपको यहाँ रोक रही थी।',
   'plan.gratuity.ahead': 'आपकी gratuity {date} से safe है, {days} दिन बाद।',
+  'plan.gratuity.notice':
+    'Notice period भी service में गिना जाता है। {from} को या उसके बाद resign करें, तो आपका last working day {date} तक पहुँच जाता है। अगर early release या notice buyout से last day {date} से पहले आ गया, तो gratuity नहीं मिलेगी।',
+  'plan.gratuity.noticeNow':
+    'Notice period भी service में गिना जाता है। आज resign करें, तब भी आपका last working day {date} तक पहुँच जाता है। अगर early release या notice buyout से last day {date} से पहले आ गया, तो gratuity नहीं मिलेगी।',
   'plan.act.label': 'आपके employer के यहाँ दस से कम लोग हैं?',
   'plan.act.hint': 'तो Act आप पर लागू नहीं होता। फिर भी company अपनी policy से gratuity दे सकती है।',
   'plan.act.none':
