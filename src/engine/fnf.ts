@@ -16,6 +16,12 @@ export interface FnFInput {
   payslipLines: FnFPayslipLine[]
   recoveries: FnFPayslipLine[]
   gratuityEligible: boolean
+  /**
+   * 5 or 6, from the shared current-job record when the door has asked it.
+   * Unknown means the five-day reading: the user has said gratuity is due, and
+   * the six-day default would recompute four years and 200 days to ₹0.
+   */
+  workWeekDays?: 5 | 6
 }
 
 export interface FnFAuditLine {
@@ -91,6 +97,7 @@ export function auditFnF(input: FnFInput): FnFResult {
       joinDate: input.joinDate,
       exitDate: input.lastWorkingDay,
       coveredByAct: true,
+      workWeekDays: input.workWeekDays ?? 5,
     })
     recomputedById.set('gratuity', g.amount)
   }
@@ -123,6 +130,8 @@ export function auditFnF(input: FnFInput): FnFResult {
     // A gratuity the sheet never claimed is money NOT on the sheet: surface it
     // as a flag, never append it into the net (master plan §9.3).
     if (id === 'gratuity') {
+      // Nothing due on these dates is not a missing line. "About ₹0" is noise.
+      if (recomputed <= 0) continue
       gratuityNotOnSheet = recomputed
       flags.push({
         id: 'gratuity-missing',
