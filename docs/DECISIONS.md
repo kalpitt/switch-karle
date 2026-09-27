@@ -45,6 +45,7 @@ fifth year is the courts', not the section's own words — unchanged from the
 existing `VERIFIED` marker in `src/engine/gratuity.ts`.
 
 ---
+
 ## 2026-09-27 — Income-tax Rules, 2026 and the Rs 25,000 EPF ceiling
 
 **Found, not decided.** Two primary sources landed in the same session:
