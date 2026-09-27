@@ -125,3 +125,30 @@ describe('dictionary integrity', () => {
     expect(orphaned).toEqual([])
   })
 })
+
+/**
+ * PRODUCT.md rule 4: "Never a '42% hike!' headline above a 6% in-hand delta."
+ * The in-hand ({bank}) figure has to lead the sentence in both verdicts, in
+ * both languages — the paper ({paper}) figure comes second.
+ */
+describe('rule 4 — bad news first: in-hand leads, paper follows', () => {
+  const VERDICT_KEYS = ['real-hike.verdict', 'counter-offer.verdict.out'] as const
+
+  it('en: {bank} appears before {paper} in each verdict template', () => {
+    for (const key of VERDICT_KEYS) {
+      const template = dictionaries.en[key]
+      expect(template.indexOf('{bank}')).toBeGreaterThanOrEqual(0)
+      expect(template.indexOf('{paper}')).toBeGreaterThanOrEqual(0)
+      expect(template.indexOf('{bank}')).toBeLessThan(template.indexOf('{paper}'))
+    }
+  })
+
+  it('hi: {bank} appears before {paper} in each verdict template', () => {
+    for (const key of VERDICT_KEYS) {
+      const template = dictionaries.hi[key]
+      expect(template.indexOf('{bank}')).toBeGreaterThanOrEqual(0)
+      expect(template.indexOf('{paper}')).toBeGreaterThanOrEqual(0)
+      expect(template.indexOf('{bank}')).toBeLessThan(template.indexOf('{paper}'))
+    }
+  })
+})

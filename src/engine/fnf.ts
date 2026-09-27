@@ -22,6 +22,14 @@ export interface FnFInput {
    * the six-day default would recompute four years and 200 days to ₹0.
    */
   workWeekDays?: 5 | 6
+  /**
+   * Whether the Code on Social Security's gratuity chapter reaches this
+   * employer (the ten-employee threshold), from the shared current-job
+   * record. Unset means covered — matches `gratuity()`'s own default and
+   * this input's pre-existing behaviour for callers that never learned this
+   * field existed.
+   */
+  coveredByAct?: boolean
 }
 
 export interface FnFAuditLine {
@@ -96,7 +104,7 @@ export function auditFnF(input: FnFInput): FnFResult {
       lastDrawnBasicDA: input.monthlyBasic,
       joinDate: input.joinDate,
       exitDate: input.lastWorkingDay,
-      coveredByAct: true,
+      coveredByAct: input.coveredByAct ?? true,
       workWeekDays: input.workWeekDays ?? 5,
     })
     recomputedById.set('gratuity', g.amount)

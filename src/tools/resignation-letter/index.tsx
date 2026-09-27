@@ -1,7 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { addDays, epfoDateOverlap, lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, CopyButton, DateField, Disclaimer, NumberField, Select, TextField, VerdictBanner } from '../../components/ui'
+import {
+  Card,
+  CopyButton,
+  DateField,
+  Disclaimer,
+  NoticeMonthsNudge,
+  NumberField,
+  Select,
+  TextField,
+  VerdictBanner,
+} from '../../components/ui'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -145,6 +155,14 @@ function Body() {
           onChange={(v) => {
             set({ noticeDays: v })
             rememberCurrentJob({ noticePeriodDays: v })
+          }}
+        />
+        <NoticeMonthsNudge
+          value={draft.noticeDays}
+          t={t}
+          onUse={(days) => {
+            set({ noticeDays: days })
+            rememberCurrentJob({ noticePeriodDays: days })
           }}
         />
         <DateField

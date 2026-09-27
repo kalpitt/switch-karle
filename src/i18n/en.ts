@@ -15,7 +15,7 @@ export const en: Record<string, string> = {
   'plan.q.join': 'When did you join?',
   'plan.q.joinHint': 'The day you started at your current employer.',
   'plan.q.notice': 'What is your notice period?',
-  'plan.q.noticeHint': 'The number in your appointment letter.',
+  'plan.q.noticeHint': 'In days. If your letter says months, multiply by 30.',
   'plan.q.noticeSuffix': 'days',
   'plan.q.hike': 'Which month does the hike actually reach your account?',
   'plan.q.hikeHint':
@@ -141,6 +141,8 @@ export const en: Record<string, string> = {
   'ui.inherit': 'Basic, HRA and the PF split come from your saved Decoder offer — this tool only changes what it asks for.',
   'ui.inheritLink': 'Open Decoder',
   'ui.currentJob': 'Current-job figures — basic, gross, notice period — are shared across the exit tools. Change one here and it changes everywhere. Saved on this device only.',
+  'ui.noticeMonthsNudge': 'Is that {n} months? Notice counts in days here: {n} months is about {days} days.',
+  'ui.noticeMonthsUse': 'Use {days} days',
   'home.pinned': 'Start here',
   'home.cat.offer': 'The offer on the table',
   'home.cat.exit': 'The money on the way out',
@@ -206,7 +208,7 @@ export const en: Record<string, string> = {
   'real-hike.nextState': 'New state',
   'real-hike.haircut': 'Assume variable pays 70%',
   'real-hike.haircutHint': 'Average-year haircut. Off = treat quoted variable as certain.',
-  'real-hike.verdict': '{paper}% on paper, {bank}% in hand.',
+  'real-hike.verdict': '{bank}% more in hand. {paper}% on paper.',
   'real-hike.row.paper': 'CTC as quoted',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus is a one-off — it is not in this run-rate.',
@@ -463,6 +465,8 @@ export const en: Record<string, string> = {
   'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
+  'fnf-checker.weekAssumed':
+    'This assumes a five-day week. On a six-day week the same dates need 240 working days in year five, not 190, so gratuity may not be due yet. Answer the work-week question on the home page to check.',
   'fnf-checker.flag.gratuity-missing':
     'No gratuity line on this sheet. On your service it comes to at least ₹{amount}. If you are eligible under the Code on Social Security, 2020, ask HR in writing for it to be included in the settlement.',
 
@@ -575,7 +579,7 @@ export const en: Record<string, string> = {
   'counter-offer.outside': 'Outside offer',
   'counter-offer.promo': 'They promised a promotion / title',
   'counter-offer.team': 'The team is why I would stay',
-  'counter-offer.verdict.out': 'The outside offer is still {paper} higher on paper, about {bank}/month more in-hand on this structure.',
+  'counter-offer.verdict.out': 'About {bank}/month more in-hand from the outside offer. On paper it is {paper} higher.',
   'counter-offer.verdict.in': 'The counter matches or beats the outside CTC on this simplified structure. The non-rupee reasons still matter.',
   'counter-offer.honest':
     'People who accept a counter often leave within a year anyway — the trust is already cracked. That is a pattern, not a statistic I am inventing a percentage for. Treat a counter as a stay-or-go decision, not a bidding war.',

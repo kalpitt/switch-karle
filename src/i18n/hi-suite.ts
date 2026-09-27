@@ -18,6 +18,8 @@ export const hiSuite: Record<string, string> = {
   'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
   'ui.inheritLink': 'Decoder खोलें',
   'ui.currentJob': 'Current job के figures — basic, gross, notice period — exit tools के बीच shared हैं। यहाँ बदलो तो हर जगह बदलेगा। सिर्फ़ इसी device पर saved।',
+  'ui.noticeMonthsNudge': 'क्या यह {n} months है? यहाँ notice days में गिना जाता है: {n} months मतलब लगभग {days} days।',
+  'ui.noticeMonthsUse': '{days} days use करें',
 
   // ---- The plan: सामने का दरवाज़ा (docs/DIRECTION.md Part 3, 4, 13) ----
   'plan.tagline':
@@ -30,7 +32,7 @@ export const hiSuite: Record<string, string> = {
   'plan.q.join': 'आपने join कब किया था?',
   'plan.q.joinHint': 'जिस दिन आपने current employer के साथ शुरुआत की थी।',
   'plan.q.notice': 'आपका notice period कितना है?',
-  'plan.q.noticeHint': 'वही number जो आपके appointment letter में लिखा है।',
+  'plan.q.noticeHint': 'Days में डालें। अगर आपका letter months में है, तो 30 से multiply करें।',
   'plan.q.noticeSuffix': 'दिन',
   'plan.q.hike': 'Hike का पैसा किस महीने आपके account में आता है?',
   'plan.q.hikeHint':
@@ -174,7 +176,7 @@ export const hiSuite: Record<string, string> = {
   'real-hike.nextState': 'नया राज्य',
   'real-hike.haircut': 'मानें कि variable 70% pay होगा',
   'real-hike.haircutHint': 'Average-year haircut। Off करने पर quoted variable को पक्का मान लिया जाता है।',
-  'real-hike.verdict': 'कागज़ पर {paper}%, असल में {bank}% in-hand।',
+  'real-hike.verdict': 'In-hand में {bank}% ज़्यादा। कागज़ पर {paper}%।',
   'real-hike.row.paper': 'बताया गया CTC',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus एक बार मिलने वाला है — यह इस run-rate में शामिल नहीं है।',
@@ -461,6 +463,8 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
+  'fnf-checker.weekAssumed':
+    'यह 5-day week मानकर है। 6-day week पर इन्हीं dates के लिए पांचवें साल में 190 नहीं, 240 working days चाहिए, इसलिए gratuity शायद अभी due न हो। Check करने के लिए home page पर work week वाला सवाल answer करें।',
   'fnf-checker.flag.gratuity-missing':
     'इस sheet में gratuity की line नहीं है। आपकी service पर यह कम से कम ₹{amount} बनता है। अगर आप Code on Social Security, 2020 के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
 
@@ -581,7 +585,7 @@ export const hiSuite: Record<string, string> = {
   'counter-offer.promo': 'उन्होंने promotion / title का वादा किया',
   'counter-offer.team': 'रुकने की वजह Team है',
   'counter-offer.verdict.out':
-    'Outside offer कागज़ पर अभी भी {paper} ज़्यादा है, इस structure पर लगभग {bank}/month ज़्यादा in-hand।',
+    'Outside offer से लगभग {bank}/month ज़्यादा in-hand मिलता है। कागज़ पर यह {paper} ज़्यादा है।',
   'counter-offer.verdict.in': 'यह counter इस simplified structure पर outside CTC को match या beat करता है। Non-rupee reasons फिर भी matter करते हैं।',
   'counter-offer.honest':
     'Counter accept करने वाले लोग अक्सर एक साल के अंदर वैसे भी चले जाते हैं — trust पहले ही टूट चुका होता है। यह एक pattern है, कोई statistic नहीं जिसके लिए एक percentage बनाया जा रहा है। Counter को stay-or-go decision मानें, bidding war नहीं।',

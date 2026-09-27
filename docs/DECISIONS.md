@@ -10,6 +10,20 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-27 — Two calls on the discovery sweep
+
+**Decided by Kalpit.**
+
+- **Prompts stay in English on `/hi/` pages.** Prompt Studio's templates and
+  the offer-goes-cold prompt are text the user pastes into their own AI, and
+  they stay English. The page chrome around them is translated. This is a
+  choice, not a gap: a future parity sweep should not re-flag it.
+- **The F&F checker keeps the five-day reading when the work week is
+  unknown**, the one that agrees with a user who ticks "I believe I am
+  eligible". The gratuity tool's own default stays six. The checker now says
+  so in a line under the flags whenever the assumption changes the answer
+  (`fnf-checker.weekAssumed`).
+
 ## 2026-09-27 — Gratuity fast path counts days worked, not calendar days
 
 **Fixed, not decided.** s.54(B)(a): the employee "has actually worked under the
