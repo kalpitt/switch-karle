@@ -7,7 +7,6 @@ import {
   Disclaimer,
   ExampleNote,
   MoneyField,
-  NoticeMonthsNudge,
   NumberField,
   Select,
   ShareRow,
@@ -141,7 +140,6 @@ function Body() {
           value={draft.unservedDays}
           onChange={(v) => set({ unservedDays: v })}
         />
-        <NoticeMonthsNudge value={draft.unservedDays} t={t} onUse={(days) => set({ unservedDays: days })} />
         <NumberField
           label={t('notice-buyout.leaveDays')}
           hint={t('notice-buyout.leaveDaysHint')}
