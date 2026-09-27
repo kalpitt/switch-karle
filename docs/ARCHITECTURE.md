@@ -347,9 +347,9 @@ Ship with goldens. A constant's status lives beside its code:
 | Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found; CA R1 |
 | Gratuity base: basic + DA, a floor of the Code's "wages" (§2(88) 50% add-back) | `src/engine/gratuity.ts` | Floor by construction; the tool says so. Wages from CTC parked for CA |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
-| EPF 12% / ₹15,000 wage ceiling | `src/engine/salary.ts` | Candidate |
+| EPF 12% / ₹25,000 wage ceiling | `src/engine/salary.ts` | **VERIFIED 2026-09-27** (S.O. 5109(E), 17 Sep 2026) |
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
-| HRA exemption three limbs (Rule 2A) | `src/engine/salary.ts` `hraExemptionAnnual` | Candidate |
+| HRA exemption three limbs (Rule 279, Income-tax Rules, 2026) | `src/engine/salary.ts` `hraExemptionAnnual` | **VERIFIED 2026-09-27** (Income-tax Rules, 2026, G.S.R. 198(E)) |
 | Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
 | ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |
 | PF premature withdrawal TDS (s.192A / s.392(7)) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap flagged, transfer recommended |

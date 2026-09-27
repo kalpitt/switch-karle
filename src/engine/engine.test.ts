@@ -97,9 +97,43 @@ describe('decodeOffer — ₹24L CTC golden case (Karnataka, PF on full basic)',
 })
 
 describe('decodeOffer — PF wage ceiling cap', () => {
-  it('caps PF at ₹21,600/year when pfOnFullBasic is false', () => {
+  it('caps PF at ₹36,000/year when pfOnFullBasic is false (basic ₹9.6L > ₹3L ceiling)', () => {
+    // basic 960,000 > EPF_WAGE_CEILING_ANNUAL 300,000 → pfBase = 300,000
+    // employeePfAnnual = 12% * 300,000 = 36,000
     const b = decodeOffer({ ...baseOffer, pfOnFullBasic: false })
-    expect(b.employeePfAnnual).toBe(21_600)
+    expect(b.employeePfAnnual).toBe(36_000)
+  })
+
+  it('PF-capped golden: basic ₹40,000/month → employee PF ₹3,000/month (₹36,000/yr)', () => {
+    // basic = 40,000 * 12 = 480,000 annual; hraPercentOfBasic 50 → hra 240,000
+    // fixedCtc must be such that basicPercent 40% of fixedCtc = 480,000 → fixedCtc = 1,200,000
+    // pfBase = min(480,000, 300,000) = 300,000 → employeePfAnnual = 12% * 300,000 = 36,000 = ₹3,000/month
+    const b = decodeOffer({
+      ...baseOffer,
+      ctcAnnual: 1_200_000,
+      basicPercent: 40,
+      pfOnFullBasic: false,
+    })
+    expect(b.basic).toBe(480_000)
+    expect(b.employeePfAnnual).toBe(36_000)
+    expect(b.employeePfAnnual / 12).toBe(3_000)
+  })
+})
+
+describe('decodeOffer — HRA Bengaluru (KA) getting the 50% limb', () => {
+  it('KA with metro=true gets the 50% limb (Rule 279, Income-tax Rules, 2026)', () => {
+    // basic ₹9.6L, hra ₹4.8L, rent ₹1L/month = ₹12L/yr annual rent
+    // (a) actual HRA = 480,000
+    // (b) rent − 10% basic = 1,200,000 − 96,000 = 1,104,000
+    // (c) 50% of basic (metro) = 480,000
+    // least of the three = 480,000
+    const b = decodeOffer({
+      ...baseOffer,
+      state: 'KA',
+      old: { rentPaidMonthly: 100_000, metro: true, deduction80CExtra: 0, deduction80D: 0 },
+    })
+    expect(stateHasHraMetroCity('KA')).toBe(true)
+    expect(b.hraExemptionAnnual).toBe(480_000)
   })
 })
 
@@ -167,12 +201,14 @@ describe('decodeOffer — HRA exemption on old-regime taxable only', () => {
 })
 
 describe('HRA metro cities', () => {
-  it('only Delhi, Mumbai, Kolkata, Chennai state codes qualify', () => {
+  it('eight-city state codes qualify (Rule 279, Income-tax Rules, 2026)', () => {
     expect(stateHasHraMetroCity('DL')).toBe(true)
     expect(stateHasHraMetroCity('MH')).toBe(true)
     expect(stateHasHraMetroCity('WB')).toBe(true)
     expect(stateHasHraMetroCity('TN')).toBe(true)
-    expect(stateHasHraMetroCity('KA')).toBe(false)
+    expect(stateHasHraMetroCity('KA')).toBe(true)
+    expect(stateHasHraMetroCity('TG')).toBe(true)
+    expect(stateHasHraMetroCity('GJ')).toBe(true)
     expect(stateHasHraMetroCity('other')).toBe(false)
   })
 })

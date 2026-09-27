@@ -7,8 +7,11 @@ export interface EsopRealityInput {
   strike: number
   /**
    * Per-share fair market value at exercise. For unlisted shares the number
-   * that appears on Form 16 is a Rule-3 valuation, not the last funding round
-   * and not the employee’s guess. CANDIDATE: Rule 3 / merchant-banker FMV.
+   * that appears on Form 16 is a Rule-15 valuation, not the last funding
+   * round and not the employee’s guess. VERIFIED: 2026-09-27 | Source:
+   * Income-tax Rules, 2026 (G.S.R. 198(E))
+   * https://www.incometaxindia.gov.in/documents/81799/11848482/En-Notified-IT-Rules-2026-20-03-2026.pdf
+   * Rule 15 (replaces Rule 3 of the Income-tax Rules, 1962) | FY: 2026-27
    */
   fmv: number
   cliffMonths: number

@@ -52,8 +52,8 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
     expect(d.nationalSlabDeltaIsNil).toBe(true)
   })
 
-  it('KA metro=true is a user assertion the formula honours; KA is not a metro state', () => {
-    expect(stateHasHraMetroCity('KA')).toBe(false)
+  it('KA (Bengaluru) is now a metro state under Rule 279, Income-tax Rules, 2026', () => {
+    expect(stateHasHraMetroCity('KA')).toBe(true)
     const d = relocationDelta(baseOffer, {
       state: 'DL',
       metro: true,
