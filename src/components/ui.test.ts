@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { NumberField } from './ui'
+import { NoticeMonthsNudge, NumberField } from './ui'
 
 function getRenderedInput(vnode: any) {
   // NumberField returns <label><Label ... /><span ...><input ... />...</span></label>
@@ -55,5 +55,32 @@ describe('NumberField', () => {
 
     input.props.onChange({ target: { value: '0' } })
     expect(onChange).toHaveBeenCalledWith(1)
+  })
+})
+
+describe('NoticeMonthsNudge', () => {
+  const t = (key: string, vars?: Record<string, string | number>) =>
+    vars ? `${key}(${JSON.stringify(vars)})` : key
+
+  it('renders nothing when the value does not look like months', () => {
+    const onUse = vi.fn()
+    expect(NoticeMonthsNudge({ value: 90, t, onUse })).toBeNull()
+    expect(NoticeMonthsNudge({ value: 13, t, onUse })).toBeNull()
+  })
+
+  it('renders the nudge with 30x days when the value looks like months, and onUse fires with the day count', () => {
+    const onUse = vi.fn()
+    const vnode = NoticeMonthsNudge({ value: 3, t, onUse })
+    expect(vnode).not.toBeNull()
+    const message = vnode!.props.children[0]
+    expect(message).toContain('ui.noticeMonthsNudge')
+    expect(message).toContain('"n":3')
+    expect(message).toContain('"days":90')
+
+    // The button is the last child of the <p>; find it and click it.
+    const button = vnode!.props.children[2]
+    expect(button.props.children).toContain('ui.noticeMonthsUse')
+    button.props.onClick()
+    expect(onUse).toHaveBeenCalledWith(90)
   })
 })

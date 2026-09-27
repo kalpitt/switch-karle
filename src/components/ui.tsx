@@ -1,6 +1,7 @@
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { parseINRInput } from '../lib/money'
+import { noticeLooksLikeMonths, noticeMonthsToDays } from '../lib/noticeMonths'
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
@@ -56,6 +57,36 @@ export function NumberField(props: {
         {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-faint">{props.suffix}</span>}
       </span>
     </label>
+  )
+}
+
+/**
+ * Every notice-period-days field wires this the same way: Indian appointment
+ * letters state notice in months, and a user who types the letter's own
+ * number verbatim into a days field gets a last working day two days after
+ * resigning instead of ninety. One shared component so every field behaves
+ * identically — `t` is the caller's own `useT()` result, passed through
+ * rather than imported here, matching the rest of this file staying
+ * i18n-free. Renders nothing once the value stops looking like months.
+ */
+export function NoticeMonthsNudge(props: {
+  value: number
+  t: (key: string, vars?: Record<string, string | number>) => string
+  onUse: (days: number) => void
+}) {
+  if (!noticeLooksLikeMonths(props.value)) return null
+  const days = noticeMonthsToDays(props.value)
+  return (
+    <p className="-mt-1.5 rounded-xl border border-amberflag/30 bg-amberflag-soft px-3 py-2 text-xs leading-snug text-amberflag">
+      {props.t('ui.noticeMonthsNudge', { n: props.value, days })}{' '}
+      <button
+        type="button"
+        onClick={() => props.onUse(days)}
+        className="ml-1 inline-block cursor-pointer rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold hover:underline"
+      >
+        {props.t('ui.noticeMonthsUse', { days })}
+      </button>
+    </p>
   )
 }
 

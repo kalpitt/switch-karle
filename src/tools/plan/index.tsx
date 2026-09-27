@@ -19,7 +19,7 @@ import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
 import { doorEngineInput, questionsSubmittable, resignDatesMovedFrom } from './fork'
-import { Card, DateField, ExampleNote, NumberField, Select, TextArea } from '../../components/ui'
+import { Card, DateField, ExampleNote, NoticeMonthsNudge, NumberField, Select, TextArea } from '../../components/ui'
 import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
 import { hikeMonthOrder } from './hikeMonthOrder'
@@ -308,6 +308,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
             allowBlank
             onChange={(v) => answered({ noticePeriodDays: v })}
           />
+          <NoticeMonthsNudge value={answers.noticePeriodDays} t={t} onUse={(days) => answered({ noticePeriodDays: days })} />
           <Select
             label={t('plan.q.hike')}
             hint={t('plan.q.hikeHint')}

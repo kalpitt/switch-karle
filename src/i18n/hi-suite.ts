@@ -18,6 +18,8 @@ export const hiSuite: Record<string, string> = {
   'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
   'ui.inheritLink': 'Decoder खोलें',
   'ui.currentJob': 'Current job के figures — basic, gross, notice period — exit tools के बीच shared हैं। यहाँ बदलो तो हर जगह बदलेगा। सिर्फ़ इसी device पर saved।',
+  'ui.noticeMonthsNudge': 'क्या यह {n} months है? यहाँ notice days में गिना जाता है: {n} months मतलब लगभग {days} days।',
+  'ui.noticeMonthsUse': '{days} days use करें',
 
   // ---- The plan: सामने का दरवाज़ा (docs/DIRECTION.md Part 3, 4, 13) ----
   'plan.tagline':
@@ -30,7 +32,7 @@ export const hiSuite: Record<string, string> = {
   'plan.q.join': 'आपने join कब किया था?',
   'plan.q.joinHint': 'जिस दिन आपने current employer के साथ शुरुआत की थी।',
   'plan.q.notice': 'आपका notice period कितना है?',
-  'plan.q.noticeHint': 'वही number जो आपके appointment letter में लिखा है।',
+  'plan.q.noticeHint': 'Days में डालें। अगर आपका letter months में है, तो 30 से multiply करें।',
   'plan.q.noticeSuffix': 'दिन',
   'plan.q.hike': 'Hike का पैसा किस महीने आपके account में आता है?',
   'plan.q.hikeHint':

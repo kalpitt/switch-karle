@@ -15,7 +15,7 @@ export const en: Record<string, string> = {
   'plan.q.join': 'When did you join?',
   'plan.q.joinHint': 'The day you started at your current employer.',
   'plan.q.notice': 'What is your notice period?',
-  'plan.q.noticeHint': 'The number in your appointment letter.',
+  'plan.q.noticeHint': 'In days. If your letter says months, multiply by 30.',
   'plan.q.noticeSuffix': 'days',
   'plan.q.hike': 'Which month does the hike actually reach your account?',
   'plan.q.hikeHint':
@@ -141,6 +141,8 @@ export const en: Record<string, string> = {
   'ui.inherit': 'Basic, HRA and the PF split come from your saved Decoder offer — this tool only changes what it asks for.',
   'ui.inheritLink': 'Open Decoder',
   'ui.currentJob': 'Current-job figures — basic, gross, notice period — are shared across the exit tools. Change one here and it changes everywhere. Saved on this device only.',
+  'ui.noticeMonthsNudge': 'Is that {n} months? Notice counts in days here: {n} months is about {days} days.',
+  'ui.noticeMonthsUse': 'Use {days} days',
   'home.pinned': 'Start here',
   'home.cat.offer': 'The offer on the table',
   'home.cat.exit': 'The money on the way out',

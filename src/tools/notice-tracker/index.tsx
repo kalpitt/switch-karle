@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, ExampleNote, NumberField, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, NoticeMonthsNudge, NumberField, VerdictBanner } from '../../components/ui'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -106,6 +106,14 @@ function Body() {
           onChange={(v) => {
             set({ noticePeriodDays: v })
             rememberCurrentJob({ noticePeriodDays: v })
+          }}
+        />
+        <NoticeMonthsNudge
+          value={draft.noticePeriodDays}
+          t={t}
+          onUse={(days) => {
+            set({ noticePeriodDays: days })
+            rememberCurrentJob({ noticePeriodDays: days })
           }}
         />
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
