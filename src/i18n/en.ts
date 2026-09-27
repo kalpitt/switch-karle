@@ -465,6 +465,8 @@ export const en: Record<string, string> = {
   'fnf-checker.mail.signoff': 'Regards,\n{name}',
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
+  'fnf-checker.weekAssumed':
+    'This assumes a five-day week. On a six-day week the same dates need 240 working days in year five, not 190, so gratuity may not be due yet. Answer the work-week question on the home page to check.',
   'fnf-checker.flag.gratuity-missing':
     'No gratuity line on this sheet. On your service it comes to at least ₹{amount}. If you are eligible under the Code on Social Security, 2020, ask HR in writing for it to be included in the settlement.',
 

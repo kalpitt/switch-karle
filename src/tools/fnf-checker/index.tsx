@@ -240,6 +240,12 @@ function Body() {
             {t(`fnf-checker.flag.${f.id}`, f.params)}
           </p>
         ))}
+        {/* Decided 2026-09-27: an unknown work week takes the five-day reading,
+            the one that agrees with a user who says gratuity is due. Said out
+            loud, because on a six-day week the same dates may not qualify. */}
+        {workWeekDays === undefined && result != null && result.gratuityNotOnSheet > 0 && (
+          <p className="text-[13px] leading-snug text-ink-soft">{t('fnf-checker.weekAssumed')}</p>
+        )}
         {!isExample && result && (
           <Card className="space-y-3">
             <h3 className="text-sm font-bold">{t('fnf-checker.mailTitle')}</h3>
