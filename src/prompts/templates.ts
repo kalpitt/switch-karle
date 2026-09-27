@@ -226,7 +226,7 @@ Rules:
 - "basic_percent_of_fixed" = annual basic ÷ (CTC − variable − ESOP value) × 100, rounded to the nearest integer.
 - "employer_pf_in_ctc" is true if the employer's PF contribution appears as a line item inside the CTC/annexure total.
 - "gratuity_in_ctc" is true if gratuity appears as a line item inside the CTC total.
-- "pf_on_full_basic" is false if PF is capped at ₹1,800/month (₹15,000 wage ceiling), true if 12% of full basic.
+- "pf_on_full_basic" is false if PF is capped at ₹3,000/month (₹25,000 wage ceiling), true if 12% of full basic.
 - "state_code": the state of the work location, as one of KA MH TN TG AP WB GJ MP KL OD DL HR UP RJ, or null if unclear.
 
 After reading, respond with exactly two things:

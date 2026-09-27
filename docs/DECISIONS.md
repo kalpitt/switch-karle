@@ -45,6 +45,36 @@ fifth year is the courts', not the section's own words — unchanged from the
 existing `VERIFIED` marker in `src/engine/gratuity.ts`.
 
 ---
+## 2026-09-27 — Income-tax Rules, 2026 and the Rs 25,000 EPF ceiling
+
+**Found, not decided.** Two primary sources landed in the same session:
+
+- **HRA 50% limb now covers eight cities, not four.** The Income-tax Rules,
+  2026 (G.S.R. 198(E), 20 March 2026, in force 1 April 2026) replace Rule 2A
+  of the 1962 Rules / s.10(13A) of the 1961 Act. Rule 279(1)(c), Table Sl.No.
+  1, lists "Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad and
+  Bengaluru" at 50% of salary; "Any other place" is 40%. `HRA_METRO_STATE_CODES`
+  in `src/engine/salary.ts` now adds KA (Bengaluru), TG (Hyderabad) and GJ
+  (Ahmedabad) to DL/MH/WB/TN — state codes remain a city proxy, so this also
+  marks MH's Pune and KA/TG/GJ's non-qualifying towns as false positives, same
+  as before. `hraExemptionAnnual`'s least-of-three formula matches Rule 279(1)
+  (a)-(c) exactly and is now `VERIFIED`, not `CANDIDATE`.
+- **EPF wage ceiling is ₹25,000/month, not ₹15,000.** S.O. 5109(E), 17
+  September 2026, under s.2(89) of the Code on Social Security, 2020,
+  notifies "rupees twenty-five thousand (₹25,000) per month as the wage
+  ceiling for the purposes of Chapter III of the said Code, with effect from
+  the date of publication," superseding S.O. 2702(E) of 29 May 2026.
+  `src/engine/salary.ts` now exports `EPF_WAGE_CEILING_ANNUAL = 300_000` and
+  the capped-PF golden moved from ₹21,600/yr to ₹36,000/yr.
+- Also re-cited while in the file: multi-employer salary TDS declaration is
+  s.392(4)(a)(i) of the Income-tax Act, 2025 (not s.392(2), which is not a
+  subsection of that Act); the employee's evidence-of-claims declaration is
+  Rule 205 / Form No. 124 of the Income-tax Rules, 2026 under s.392(5)(b)
+  (replacing Rule 26C / Form 12BB); perquisite valuation is Rule 15 of the
+  Income-tax Rules, 2026 (replacing Rule 3 of the 1962 Rules — substance
+  unchanged).
+
+---
 
 ## 2026-09-27 — Gratuity re-cited to the Code on Social Security, 2020
 
@@ -380,8 +410,10 @@ executable spec for correct money math.
 - F&F is claimed-vs-recomputed. No dispute-mail feature.
 - Punjab ₹2,400 is State Development Tax (PSDT Act 2018). BR/JH/AS/CG/SK/ML/TR/PY
   stay ₹0 with `PT_AMOUNT_UNVERIFIED`. KA stays ₹2,400.
-- HRA keeps the four-city metro limb. No eight-city expansion — secondary sources
-  only.
+- HRA now keeps the eight-city metro limb (Mumbai, Kolkata, Delhi, Chennai,
+  Hyderabad, Pune, Ahmedabad, Bengaluru), primary-sourced 2026-09-27 to Rule
+  279 of the Income-tax Rules, 2026. State codes are a city proxy — see the
+  2026-09-27 entry above.
 - Gratuity: eligibility (Code on Social Security, 2020 s.53(1) with s.54 — 5y,
   or 4y + 190 / 240 days on a 5-day / 6-day week) is a separate test from
   payable years (s.53(2)). **Amended 2026-09-27:** the 190/240-day count is
@@ -415,9 +447,8 @@ answer arrives: one new PR, `VERIFIED` from that source.
 | C11 | Leave-encashment exemption / ₹25L cap | Retirement path already hidden |
 | C12 | Notice-period GST / tax / gross-up | Shown as disputed, not computed |
 | C13 | s.234B/C interest | Deliberately not modelled |
-| C14 | ESOP Rule-3 FMV | Awaiting review |
+| C14 | ESOP Rule-15 FMV | Awaiting review |
 | C15 | PF withdrawal TDS in rupees | Awaiting review |
-| — | HRA eight-city list | Secondary sources only |
 | — | Gratuity ceiling under Code s.53(3) | No notification under the Code found; ₹20L carries only if s.164(2)(a) saves the 2018 one |
 | — | Gratuity on the Code's "wages" (s.2(88)) from a CTC breakdown | Which components count toward the 50% add-back is contested |
 | — | real-hike rent wipe · clawback two-date · counter-offer in-hands | Unless Kalpit names them |

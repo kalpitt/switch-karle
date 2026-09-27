@@ -241,7 +241,7 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.strike': 'Strike price',
   'esop-reality.fmv': 'Exercise पर FMV',
   'esop-reality.fmvHint':
-    'Unlisted shares के लिए, Form 16 company की Rule 3 valuation इस्तेमाल करता है, आखिरी funding round नहीं। Eligible-startup TDS deferral यहां model नहीं किया गया है।',
+    'Unlisted shares के लिए, Form 16 company की Rule 15 valuation (Income-tax Rules, 2026) इस्तेमाल करता है, आखिरी funding round नहीं। Eligible-startup TDS deferral यहां model नहीं किया गया है।',
   'esop-reality.perShare': 'Per share',
   'esop-reality.cliff': 'Cliff',
   'esop-reality.vest': 'पूरी तरह vest होगी',
@@ -276,14 +276,14 @@ export const hiSuite: Record<string, string> = {
   'relocation.fromMetro': 'HRA के लिए metro से',
   'relocation.toState': 'किस राज्य में',
   'relocation.toMetro': 'HRA के लिए metro में',
-  'relocation.metroHint': 'Delhi, Mumbai, Kolkata, Chennai — basic का 50%। बाकी कहीं भी 40%। सिर्फ old regime में।',
+  'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad या Bengaluru — basic का 50% (Rule 279, Income-tax Rules, 2026)। बाकी कहीं भी 40%। सिर्फ old regime में।',
   'relocation.rent': 'आप जो rent देते हैं / महीना',
   'relocation.fromRent': 'यहां rent / महीना',
   'relocation.toRent': 'वहां rent / महीना',
   'relocation.rentHint':
     'HRA exemption के लिए असल rent चाहिए। 0 = कोई exemption नहीं। ₹1 lakh/साल से ऊपर rent पर employer आमतौर पर landlord का PAN मांगता है।',
   'relocation.metroWarn':
-    '{state} में HRA metro city नहीं है (सिर्फ Delhi, Mumbai, Kolkata, Chennai qualify करते हैं)। आपने जो 50% वाला limb on किया है, वह वहां apply नहीं होगा।',
+    '{state} में HRA metro city नहीं है (सिर्फ Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru qualify करते हैं, Income-tax Rules, 2026 के Rule 279 के अनुसार)। आपने जो 50% वाला limb on किया है, वह वहां apply नहीं होगा।',
   'relocation.ptApprox':
     'Professional tax approximate है। Bihar, Assam और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ old-regime comparison के लिए दिखाई गई है।',
@@ -739,7 +739,7 @@ export const hiSuite: Record<string, string> = {
   'tax-declaration.proof.form16-prev':
     'Previous employer का Form 16 अक्सर आपके जाने के हफ्तों बाद आता है। File करने के लिए आपको फिर भी चाहिए। इसे relieving letter जैसे chase करें।',
   'tax-declaration.proof.form12b':
-    'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। Rule 26A / s.192(2) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
+    'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। Income-tax Act, 2025 की s.392(4)(a)(i) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
 
   // ---- Notice tracker ----
   'notice-tracker.title': 'Notice Tracker',

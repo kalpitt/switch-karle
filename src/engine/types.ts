@@ -60,7 +60,7 @@ export interface OfferInput {
   employerPfInCtc: boolean
   /** Gratuity accrual (4.81% of basic) is counted inside the CTC figure. */
   gratuityInCtc: boolean
-  /** PF contributions computed on full basic, or capped at the ₹15,000/mo statutory wage ceiling (₹1,800/mo each side). */
+  /** PF contributions computed on full basic, or capped at the ₹25,000/mo statutory wage ceiling (₹3,000/mo each side). */
   pfOnFullBasic: boolean
   esop?: EsopGrant
   joiningBonus?: JoiningBonus
