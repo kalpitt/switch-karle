@@ -131,7 +131,7 @@ export function gratuity(input: GratuityInput): GratuityResult {
     notes.push({
       id: 'act-may-not-apply',
       detail:
-        'The Code on Social Security, 2020 may not cover this employer (below the 10-employee threshold). Company policy may still pay gratuity.',
+        'The Code on Social Security, 2020 may not cover this employer (it has never had ten or more employees). Company policy may still pay gratuity.',
     })
     return {
       completedYears: tenure.completedYears,
