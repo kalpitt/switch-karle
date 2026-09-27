@@ -174,7 +174,7 @@ export const hiSuite: Record<string, string> = {
   'real-hike.nextState': 'नया राज्य',
   'real-hike.haircut': 'मानें कि variable 70% pay होगा',
   'real-hike.haircutHint': 'Average-year haircut। Off करने पर quoted variable को पक्का मान लिया जाता है।',
-  'real-hike.verdict': 'कागज़ पर {paper}%, असल में {bank}% in-hand।',
+  'real-hike.verdict': 'In-hand में {bank}% ज़्यादा। कागज़ पर {paper}%।',
   'real-hike.row.paper': 'बताया गया CTC',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus एक बार मिलने वाला है — यह इस run-rate में शामिल नहीं है।',
@@ -581,7 +581,7 @@ export const hiSuite: Record<string, string> = {
   'counter-offer.promo': 'उन्होंने promotion / title का वादा किया',
   'counter-offer.team': 'रुकने की वजह Team है',
   'counter-offer.verdict.out':
-    'Outside offer कागज़ पर अभी भी {paper} ज़्यादा है, इस structure पर लगभग {bank}/month ज़्यादा in-hand।',
+    'Outside offer से लगभग {bank}/month ज़्यादा in-hand मिलता है। कागज़ पर यह {paper} ज़्यादा है।',
   'counter-offer.verdict.in': 'यह counter इस simplified structure पर outside CTC को match या beat करता है। Non-rupee reasons फिर भी matter करते हैं।',
   'counter-offer.honest':
     'Counter accept करने वाले लोग अक्सर एक साल के अंदर वैसे भी चले जाते हैं — trust पहले ही टूट चुका होता है। यह एक pattern है, कोई statistic नहीं जिसके लिए एक percentage बनाया जा रहा है। Counter को stay-or-go decision मानें, bidding war नहीं।',

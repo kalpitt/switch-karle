@@ -206,7 +206,7 @@ export const en: Record<string, string> = {
   'real-hike.nextState': 'New state',
   'real-hike.haircut': 'Assume variable pays 70%',
   'real-hike.haircutHint': 'Average-year haircut. Off = treat quoted variable as certain.',
-  'real-hike.verdict': '{paper}% on paper, {bank}% in hand.',
+  'real-hike.verdict': '{bank}% more in hand. {paper}% on paper.',
   'real-hike.row.paper': 'CTC as quoted',
   'real-hike.row.bank': 'Monthly run-rate',
   'real-hike.bonusNote': 'Joining bonus is a one-off — it is not in this run-rate.',
@@ -575,7 +575,7 @@ export const en: Record<string, string> = {
   'counter-offer.outside': 'Outside offer',
   'counter-offer.promo': 'They promised a promotion / title',
   'counter-offer.team': 'The team is why I would stay',
-  'counter-offer.verdict.out': 'The outside offer is still {paper} higher on paper, about {bank}/month more in-hand on this structure.',
+  'counter-offer.verdict.out': 'About {bank}/month more in-hand from the outside offer. On paper it is {paper} higher.',
   'counter-offer.verdict.in': 'The counter matches or beats the outside CTC on this simplified structure. The non-rupee reasons still matter.',
   'counter-offer.honest':
     'People who accept a counter often leave within a year anyway — the trust is already cracked. That is a pattern, not a statistic I am inventing a percentage for. Treat a counter as a stay-or-go decision, not a bidding war.',
