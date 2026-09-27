@@ -229,7 +229,9 @@ is their resign date.
 the trades, and the backward plan from a chosen date. Pure, UTC, ids not English,
 and it never sees a rupee. `gratuityEligibilityDate` in `src/engine/gratuity.ts`
 reuses the existing `FAST_PATH_DAYS` constant under the same VERIFIED marker —
-no second source and no new statutory number. `src/lib/ics.ts` is a pure string
+no second source and no new statutory number — but counts it in WORKING days
+(`nthWorkingDayFrom` in `src/engine/dates.ts`) from the fourth anniversary,
+since s.54(B)(a) counts days actually worked. `src/lib/ics.ts` is a pure string
 builder for `dates.ics`, all-day events, no `VALARM` (Google Calendar drops
 custom alarms on import), and its link comes from `SITE` + `BASE` rather than a
 literal.
@@ -341,7 +343,7 @@ Ship with goldens. A constant's status lives beside its code:
 | Rebate citation s.156 ITA 2025 (was s.157/"Act 2026"); s.157 = arrears only | `src/engine/tax.ts`, i18n how-computed strings | **VERIFIED 2026-08-23** (ITA 2025 PDF) |
 | SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `src/engine/salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
 | FY 2026-27 slabs, rebate amounts, cess, surcharge | `src/engine/tax.ts` | Golden-tested; last verified 2026-07-20 |
-| Gratuity: eligibility §53(1) + §54 (190/240-day rule), payable years §53(2) Expl.3, 10-employee First Schedule | `src/engine/gratuity.ts` | VERIFIED 2026-09-27 (Code on Social Security, 2020 PDF + S.O. 5319(E)). Was PGA 1972, repealed 21-Nov-2025 |
+| Gratuity: eligibility §53(1) + §54 (190/240-WORKING-day rule, days actually worked under §54(B)(a) and its Explanation, not calendar days), payable years §53(2) Expl.3, 10-employee First Schedule | `src/engine/gratuity.ts`, `src/engine/dates.ts` (`workingDaysBetween`, `nthWorkingDayFrom`) | VERIFIED 2026-09-27 (Code on Social Security, 2020 PDF + S.O. 5319(E)). Was PGA 1972, repealed 21-Nov-2025. Public holidays/unearned leave not modelled: date shown is the earliest possible |
 | Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found; CA R1 |
 | Gratuity base: basic + DA, a floor of the Code's "wages" (§2(88) 50% add-back) | `src/engine/gratuity.ts` | Floor by construction; the tool says so. Wages from CTC parked for CA |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |

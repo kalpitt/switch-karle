@@ -18,17 +18,20 @@ import { addDays, lastWorkingDay } from './dates'
 import { gratuity } from './gratuity'
 
 /**
- * Goldens hand-worked from docs/DIRECTION.md Part 3 and Part 13.
+ * Goldens hand-worked from docs/DIRECTION.md Part 3 and Part 13, updated for
+ * the s.54(B)(a) working-day fast path (2026-09-27): the 190/240 count is
+ * days actually worked, so it is counted Mon–Fri / Mon–Sat from the fourth
+ * anniversary, not calendar days.
  *
  * Ravi: joined 12 January 2022, 90 days' notice, hike money reaches his account
  * in May. Today is 6 September 2026.
- *   4y anniversary          12 Jan 2026
- *   + 190 days (5-day week) 21 Jul 2026   (already past — 47 days ago)
- *   + 240 days (6-day week)  9 Sep 2026   (3 days away)
- *   hike cliff              31 May 2027   (last day of the next May)
- *   keep the hike            1 Jun 2027   (the day after that cliff)
- *   offer in hand by        18 May 2027   (14 days before)
- *   start applying by       23 Mar 2027   (8 weeks = 56 days before that)
+ *   4y anniversary                    12 Jan 2026 (a Monday)
+ *   + 190 working days (5-day week)    2 Oct 2026  (still ahead of 6 Sep 2026)
+ *   + 240 working days (6-day week)   17 Oct 2026  (still ahead of 6 Sep 2026)
+ *   hike cliff                        31 May 2027   (last day of the next May)
+ *   keep the hike                      1 Jun 2027   (the day after that cliff)
+ *   offer in hand by                  18 May 2027   (14 days before)
+ *   start applying by                 23 Mar 2027   (8 weeks = 56 days before that)
  */
 const RAVI = {
   joinDate: '2022-01-12',
@@ -43,25 +46,31 @@ function byId(list: readonly Cliff[]): Record<string, Cliff> {
 
 describe('cliffs — dated, both work weeks until the user says which is theirs', () => {
   it('Ravi has three, the past one is kept, and neither week is labelled his', () => {
-    const found = byId(cliffs(RAVI))
+    // RAVI.asOf (6 Sep 2026) is now before BOTH readings once the fast path
+    // counts working days, so this test asks as of 10 Oct 2026 instead —
+    // between the two — to keep the "one past, one still ahead" shape the
+    // test is named for. gratuity-5-day: 2 Oct 2026, 8 days ago. gratuity-6-day:
+    // 17 Oct 2026, 7 days away.
+    const asOfBetweenTheTwo = { ...RAVI, asOf: '2026-10-10' }
+    const found = byId(cliffs(asOfBetweenTheTwo))
     expect(Object.keys(found).sort()).toEqual(['gratuity-5-day', 'gratuity-6-day', 'hike'])
     expect(found['gratuity-5-day']).toMatchObject({
-      date: '2026-07-21',
+      date: '2026-10-02',
       kind: 'statutory',
-      daysAway: -47,
+      daysAway: -8,
       passed: true,
       forfeited: null,
     })
     expect(found['gratuity-6-day']).toMatchObject({
-      date: '2026-09-09',
+      date: '2026-10-17',
       kind: 'statutory',
-      daysAway: 3,
+      daysAway: 7,
       passed: false,
     })
     expect(found['hike']).toMatchObject({
       date: '2027-05-31',
       kind: 'contractual',
-      daysAway: 267,
+      daysAway: 233,
       passed: false,
     })
   })
@@ -94,25 +103,29 @@ describe('cliffs — dated, both work weeks until the user says which is theirs'
   })
 
   it('someone already past both gratuity cliffs invents nothing ahead of them', () => {
+    // Joined 2018-01-12: the 4th anniversary, 2022-01-12, is a Wednesday.
+    // 190 working days (5-day week) from it is 2022-10-04; 240 (6-day) is
+    // 2022-10-18 — both years behind the 2026-09-06 asOf either way.
     const long = cliffs({ joinDate: '2018-01-12', noticePeriodDays: 60, asOf: '2026-09-06' })
-    expect(long.map((c) => c.date)).toEqual(['2022-07-21', '2022-09-09'])
+    expect(long.map((c) => c.date)).toEqual(['2022-10-04', '2022-10-18'])
     expect(long.every((c) => c.passed)).toBe(true)
     expect(earliestCleanDate(long, '2026-09-06')).toBe('2026-09-06')
   })
 
   it('inside the 240-day window on a six-day week, and clear of it on a five-day week', () => {
-    // Same person, same join date, 1 August 2026: safe on one schedule and
-    // 39 days short on the other. This is why the screen forks.
-    const on = { joinDate: '2022-01-12', noticePeriodDays: 90, asOf: '2026-08-01' }
+    // Same person, same join date, 10 October 2026: safe on the five-day
+    // reading (2 Oct 2026, 8 days behind) and still 7 working-days short on
+    // the six-day one (17 Oct 2026). This is why the screen forks.
+    const on = { joinDate: '2022-01-12', noticePeriodDays: 90, asOf: '2026-10-10' }
     expect(cliffs({ ...on, workWeekDays: 6 })[0]).toMatchObject({
-      date: '2026-09-09',
+      date: '2026-10-17',
       passed: false,
-      daysAway: 39,
+      daysAway: 7,
     })
     expect(cliffs({ ...on, workWeekDays: 5 })[0]).toMatchObject({
-      date: '2026-07-21',
+      date: '2026-10-02',
       passed: true,
-      daysAway: -11,
+      daysAway: -8,
     })
   })
 
@@ -162,7 +175,7 @@ describe('the hike cliff prints a year, and it is always a month still to come',
 })
 
 describe('earliestCleanDate — the day after the latest cliff still ahead', () => {
-  it("is Ravi's 1 June 2027, because the hike is his only cliff still ahead", () => {
+  it("is Ravi's 1 June 2027 — the gratuity cliff (2 Oct 2026) is also still ahead of 6 Sep 2026, but the hike is later still", () => {
     expect(earliestCleanDate(cliffs({ ...RAVI, workWeekDays: 5 }), RAVI.asOf)).toBe('2027-06-01')
   })
 
@@ -232,10 +245,10 @@ describe('trades — options that name what each date keeps', () => {
       asOf: '2026-09-06',
       workWeekDays: 6,
     })
-    // The six-day cliff is 9 September 2026, three days away. This test used to
-    // expect "keep what is earned" from 10 September. But 90 days' notice from
-    // today ends employment on 4 December, past the cliff, and gratuity() on
-    // that exit date is eligible. Nothing is ahead to wait for: the runway case.
+    // The six-day cliff is 17 October 2026, six weeks away. 90 days' notice
+    // from today ends employment on 4 December, past the cliff, and
+    // gratuity() on that exit date is eligible. Nothing is ahead to wait for:
+    // the runway case.
     expect(options.map((o) => o.id)).toEqual([
       'runway-3-months',
       'runway-6-months',
@@ -252,8 +265,8 @@ describe('trades — options that name what each date keeps', () => {
       workWeekDays: 6,
     })
     expect(options.map((o) => o.id)).toEqual(['keep-what-is-earned', 'own-date'])
-    // 9 September 2026 less 90 days' notice, plus one: 12 June 2026.
-    expect(options[0]!.resignDate).toBe('2026-06-12')
+    // 17 October 2026 less 90 days' notice, plus one: 20 July 2026.
+    expect(options[0]!.resignDate).toBe('2026-07-20')
   })
 })
 
@@ -332,29 +345,32 @@ describe('forfeited — never silently dropped', () => {
  * in. `gratuity()` takes the last working day as its exit date, so the door
  * has to agree with it: notice is service.
  *
- * Ravi on a five-day week, gratuity 21 July 2026, 90 days' notice. Resign
- * 23 April 2026 and the last working day is 21 July 2026 (day one of notice is
+ * Ravi on a five-day week, gratuity 2 October 2026, 90 days' notice. Resign
+ * 5 July 2026 and the last working day is 2 October 2026 (day one of notice is
  * the resignation day), which reaches it. Resign a day earlier and it does not.
  */
 describe('gratuity counts the notice period, because gratuity() does', () => {
   const EARLY = { ...RAVI, workWeekDays: 5 as const, asOf: '2026-03-01' }
 
   it('resigning inside the notice window before the gratuity date keeps it', () => {
-    const out = switchCalendar({ ...EARLY, targetResignDate: '2026-05-01' })
+    // 20 July 2026 plus 90 days' notice reaches 17 October 2026 as the last
+    // working day — past the 2 October 2026 gratuity date — while the
+    // resignation itself is still well before it.
+    const out = switchCalendar({ ...EARLY, targetResignDate: '2026-07-20' })
     expect(byId(out.cliffs)['gratuity-5-day']!.forfeited).toBe(false)
   })
 
   it('the first resign date that keeps it is the gratuity date less the notice, plus one', () => {
-    expect(gratuityResignFrom('2026-07-21', 90)).toBe('2026-04-23')
-    const kept = byId(markForfeited(cliffs(EARLY), '2026-04-23', 90))
-    const lost = byId(markForfeited(cliffs(EARLY), '2026-04-22', 90))
+    expect(gratuityResignFrom('2026-10-02', 90)).toBe('2026-07-05')
+    const kept = byId(markForfeited(cliffs(EARLY), '2026-07-05', 90))
+    const lost = byId(markForfeited(cliffs(EARLY), '2026-07-04', 90))
     expect(kept['gratuity-5-day']!.forfeited).toBe(false)
     expect(lost['gratuity-5-day']!.forfeited).toBe(true)
   })
 
   it('agrees with gratuity() on every resign date around the line', () => {
     for (let offset = -120; offset <= 10; offset++) {
-      const resign = addDays('2026-07-21', offset)
+      const resign = addDays('2026-10-02', offset)
       const door = byId(markForfeited(cliffs(EARLY), resign, RAVI.noticePeriodDays))['gratuity-5-day']!
       const tool = gratuity({
         joinDate: RAVI.joinDate,
@@ -370,15 +386,19 @@ describe('gratuity counts the notice period, because gratuity() does', () => {
   it('moves the clean date for gratuity back by the notice, and leaves the hike alone', () => {
     // Before the hike month is known, gratuity is the only cliff ahead.
     const noHike = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-03-01' }
-    expect(switchCalendar(noHike).earliestCleanDate).toBe('2026-04-23')
-    // With the hike ahead too, the hike still decides, exactly as before.
-    expect(switchCalendar(EARLY).earliestCleanDate).toBe('2026-06-01')
+    expect(switchCalendar(noHike).earliestCleanDate).toBe('2026-07-05')
+    // With the working-day fast path, gratuity's own clean date (5 Jul 2026)
+    // is now LATER than the hike's (1 Jun 2026), so gratuity decides here —
+    // the reverse of the old calendar-day reading, where the hike was always
+    // further out.
+    expect(switchCalendar(EARLY).earliestCleanDate).toBe('2026-07-05')
   })
 
   it('a gratuity date the notice already covers is not a cliff to wait for', () => {
-    // 30 days before the gratuity date with 90 days' notice: resigning today keeps it.
-    const late = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-06-21' }
-    expect(switchCalendar(late).earliestCleanDate).toBe('2026-06-21')
+    // Comfortably inside the 90-day notice window before the gratuity date:
+    // resigning today already reaches it.
+    const late = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-09-01' }
+    expect(switchCalendar(late).earliestCleanDate).toBe('2026-09-01')
     expect(trades(late).map((o) => o.id)).toEqual([
       'runway-3-months',
       'runway-6-months',
@@ -448,8 +468,9 @@ describe('the whole calculation, end to end', () => {
     })
     const found = byId(out.cliffs)
     // addMonths clamps into the target month, so the fourth anniversary of a
-    // 29 February join is 29 February 2024 — itself a leap year — plus 190 days.
-    expect(found['gratuity-5-day']!.date).toBe('2024-09-06')
+    // 29 February join is 29 February 2024 — itself a leap year, a Thursday.
+    // The 190th working day (Mon-Fri) counted forward from it is 2024-11-20.
+    expect(found['gratuity-5-day']!.date).toBe('2024-11-20')
     expect(found['hike']!.date).toBe('2028-02-29')
     expect(out.earliestCleanDate).toBe('2028-03-01')
   })

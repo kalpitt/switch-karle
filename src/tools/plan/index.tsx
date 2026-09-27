@@ -519,6 +519,12 @@ function CliffScreen(props: {
                 : t('plan.gratuity.ahead', { date: fmt(chosen.date), days: chosen.daysAway })}
             </p>
           )}
+          {/* s.54(B)(a) counts days actually worked, not calendar days, and
+              this engine does not model public holidays or unearned leave —
+              both only push the date later, never earlier. */}
+          {chosen != null && (
+            <p className="text-[13px] leading-snug text-ink-soft">{t('plan.gratuity.workingDays')}</p>
+          )}
           {/* Gratuity is judged on the last working day, so the date to wait
               for is not the gratuity date but the notice before it. The risk
               is said in the same breath: an early release undoes it. */}
