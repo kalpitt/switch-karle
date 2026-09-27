@@ -88,6 +88,25 @@ describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))'
     expect(r.amount).toBe(173_077)
   })
 
+  it('a 29 Feb joiner exiting exactly six months after the true anniversary does NOT bump (leap-day clamp bug)', () => {
+    // Join 2016-02-29. The true fifth anniversary is 2021-02-29, which does
+    // not exist in non-leap 2021, so addMonths clamps it to 2021-02-28. Anchoring
+    // the six-month test off that clamped date (addMonths(lastAnniversary, 6))
+    // gives 2021-08-28, one day short of the real six-month mark and wrongly
+    // bumping a stub that is exactly six months, not beyond it.
+    const r = gratuity({ lastDrawnBasicDA: 100_000, joinDate: '2016-02-29', exitDate: '2021-08-29', coveredByAct: true })
+    expect(r.completedYears).toBe(5)
+    expect(r.payableYears).toBe(5)
+    expect(r.amount).toBe(288_462)
+  })
+
+  it('a 29 Feb joiner exiting one day later (six months + 1 day) does bump', () => {
+    const r = gratuity({ lastDrawnBasicDA: 100_000, joinDate: '2016-02-29', exitDate: '2021-08-30', coveredByAct: true })
+    expect(r.completedYears).toBe(5)
+    expect(r.payableYears).toBe(6)
+    expect(r.amount).toBe(346_154)
+  })
+
   it('amount never exceeds the ₹20L statutory cap (s.4(3))', () => {
     const r = gratuity({
       ...BASE,

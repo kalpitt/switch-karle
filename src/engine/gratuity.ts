@@ -80,10 +80,22 @@ export const GRATUITY_CAP = 2_000_000
 
 const FAST_PATH_DAYS = { 5: 190, 6: 240 } as const
 
-/** s.53(2): a stub beyond six calendar months rounds up to a full payable year. */
+/**
+ * s.53(2): a stub beyond six calendar months rounds up to a full payable year.
+ *
+ * Anchored directly off `joinISO` with a single `completedYears * 12 + 6`
+ * offset, not via an intermediate last-anniversary date. A join date of 29
+ * February has no real anniversary in a non-leap year — `addMonths` clamps it
+ * to 28 February — so computing the six-month mark as
+ * `addMonths(addMonths(joinISO, completedYears * 12), 6)` clamped a day early
+ * and then added six months to the clamped date, landing one day short of the
+ * true six-month mark and wrongly bumping a stub that was exactly six months,
+ * not beyond it (join 2016-02-29, exit 2021-08-29 read as 6 payable years
+ * instead of 5). One offset applied to the real join date does not carry that
+ * intermediate clamp forward.
+ */
 function payableYearsFor(joinISO: string, exitISO: string, completedYears: number): number {
-  const lastAnniversary = addMonths(joinISO, completedYears * 12)
-  const stubBeyondSixMonths = exitISO > addMonths(lastAnniversary, 6)
+  const stubBeyondSixMonths = exitISO > addMonths(joinISO, completedYears * 12 + 6)
   return completedYears + (stubBeyondSixMonths ? 1 : 0)
 }
 
