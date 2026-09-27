@@ -36,10 +36,10 @@ export const en: Record<string, string> = {
     'Notice counts as service. Resign on or after {from} and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
   'plan.gratuity.noticeNow':
     'Notice counts as service. Resign today and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
-  'plan.act.label': 'Fewer than ten people at your employer?',
-  'plan.act.hint': 'Then the Code on Social Security does not cover you for gratuity. Your employer may still pay it anyway.',
+  'plan.act.label': 'Has your employer always had fewer than ten people?',
+  'plan.act.hint': 'Then the Code on Social Security does not cover you for gratuity. If it had ten or more on any day in the last twelve months, or ever came under the Code, it still does. Your employer may still pay gratuity anyway.',
   'plan.act.none':
-    'With fewer than ten people, the Code sets no gratuity date for you. Nothing statutory is holding you here.',
+    'For an employer the Code has never covered, it sets no gratuity date for you. Nothing statutory is holding you here.',
   'plan.hike.line': 'Your hike lands in {month}. Resigning before {date} means you never see it.',
   'plan.cliffs.none': 'Nothing is ahead of you. No date is holding you here.',
   'plan.cliffs.next': 'Next: pick a date',
@@ -380,8 +380,8 @@ export const en: Record<string, string> = {
   'gratuity.basicHint': 'Last drawn, not CTC. Basic plus dearness allowance; the note under the result says when more of your pay counts.',
   'gratuity.join': 'Join date',
   'gratuity.exit': 'Last working day',
-  'gratuity.covered': 'Establishment has 10+ employees',
-  'gratuity.coveredHint': 'Gratuity under the Code on Social Security, 2020 applies only if the establishment is covered: ten or more employees. We ask; we do not assume.',
+  'gratuity.covered': 'Establishment has, or once had, 10+ employees',
+  'gratuity.coveredHint': 'Gratuity under the Code on Social Security, 2020 covers an establishment with ten or more employees on any day of the last twelve months, and keeps covering it if numbers later fall (First Schedule item V; s.1(8)). We ask; we do not assume.',
   'gratuity.week5.label': '5-day work week (Sat–Sun off)',
   'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 days into year five; a 6-day one needs 240.',
   'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
@@ -390,7 +390,7 @@ export const en: Record<string, string> = {
   'gratuity.note.s42-rounding':
     'Under the Code on Social Security, 2020 s.53(2), any part of a year of service beyond six months counts as a full payable year; exactly six months does not.',
   'gratuity.note.act-may-not-apply':
-    'The Code on Social Security, 2020 may not cover this employer (below the 10-employee threshold). Company policy may still pay gratuity.',
+    'The Code on Social Security, 2020 may not cover this employer (it has never had ten or more employees). Company policy may still pay gratuity.',
   'gratuity.note.ineligible-service':
     'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
   'gratuity.note.cap-applied':

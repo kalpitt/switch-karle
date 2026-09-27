@@ -123,3 +123,21 @@ describe('gratuityEligibilityDate — the same s.2A date, answerable in the past
     expect(gratuityEligibilityDate('2022-01-12', 5, false)).toBeNull()
   })
 })
+
+/**
+ * Code on Social Security, 2020, First Schedule item V: ten or more employees
+ * "on any day of the preceding twelve months"; s.1(8): once covered, still
+ * covered if numbers later fall. "Fewer than ten people" today is not the test,
+ * and told a shrinking startup's staff that nothing statutory held them.
+ */
+describe('the ten-employee threshold is asked the way the Code states it', () => {
+  it('asks whether the employer has ALWAYS had fewer than ten, not whether it has now', async () => {
+    const { en } = await import('../i18n/en')
+    const { hiSuite } = await import('../i18n/hi-suite')
+    expect(en['plan.act.label']).toMatch(/always had fewer than ten/)
+    expect(en['gratuity.coveredHint']).toMatch(/any day of the last twelve months/)
+    expect(en['gratuity.coveredHint']).toMatch(/s\.1\(8\)/)
+    expect(hiSuite['plan.act.label']).toMatch(/हमेशा/)
+    expect(hiSuite['gratuity.coveredHint']).toMatch(/s\.1\(8\)/)
+  })
+})

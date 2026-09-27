@@ -51,10 +51,10 @@ export const hiSuite: Record<string, string> = {
     'Notice period भी service में गिना जाता है। {from} को या उसके बाद resign करें, तो आपका last working day {date} तक पहुँच जाता है। अगर early release या notice buyout से last day {date} से पहले आ गया, तो gratuity नहीं मिलेगी।',
   'plan.gratuity.noticeNow':
     'Notice period भी service में गिना जाता है। आज resign करें, तब भी आपका last working day {date} तक पहुँच जाता है। अगर early release या notice buyout से last day {date} से पहले आ गया, तो gratuity नहीं मिलेगी।',
-  'plan.act.label': 'आपके employer के यहाँ दस से कम लोग हैं?',
-  'plan.act.hint': 'तो gratuity के लिए Code on Social Security आप पर लागू नहीं होता। फिर भी company अपनी policy से gratuity दे सकती है।',
+  'plan.act.label': 'क्या आपके employer के यहाँ हमेशा दस से कम लोग रहे हैं?',
+  'plan.act.hint': 'तो gratuity के लिए Code on Social Security आप पर लागू नहीं होता। अगर पिछले बारह महीनों में किसी भी दिन दस या ज़्यादा लोग थे, या employer कभी Code के तहत आ चुका है, तो Code अब भी लागू है। फिर भी company अपनी policy से gratuity दे सकती है।',
   'plan.act.none':
-    'दस से कम लोग हों तो Code आपके लिए कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
+    'जिस employer पर Code कभी लागू नहीं हुआ, उसके लिए Code कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
   'plan.hike.line': 'आपका hike {month} में आता है। {date} से पहले resign किया तो वह कभी नहीं मिलेगा।',
   'plan.cliffs.none': 'आगे कुछ नहीं है। कोई date आपको यहाँ नहीं रोक रही।',
   'plan.cliffs.next': 'अगला: date चुनें',
@@ -375,8 +375,8 @@ export const hiSuite: Record<string, string> = {
   'gratuity.basicHint': 'Last drawn, CTC नहीं। Basic और dearness allowance; pay का और हिस्सा कब गिना जाता है, यह result के नीचे वाला note बताता है।',
   'gratuity.join': 'Join date',
   'gratuity.exit': 'Last working day',
-  'gratuity.covered': 'Establishment में 10+ employees हैं',
-  'gratuity.coveredHint': 'Code on Social Security, 2020 के तहत gratuity तभी apply होती है जब establishment covered हो: दस या ज़्यादा employees। हम पूछते हैं; मानकर नहीं चलते।',
+  'gratuity.covered': 'Establishment में 10+ employees हैं, या कभी रहे हैं',
+  'gratuity.coveredHint': 'Code on Social Security, 2020 के तहत gratuity उस establishment पर लागू होती है जहाँ पिछले बारह महीनों में किसी भी दिन दस या ज़्यादा employees रहे हों, और बाद में संख्या घटने पर भी लागू रहती है (First Schedule item V; s.1(8))। हम पूछते हैं; मानकर नहीं चलते।',
   'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
   'gratuity.week5.hint': '5-day establishment में पांचवें साल के 4 साल + 190 दिन पर qualify होते हैं; 6-day वाले को 240 दिन चाहिए।',
   'gratuity.verdict.yes': '{years} completed years की service के बाद eligible। Estimate {amount} (15/26 × last drawn × payable years)।',
@@ -385,7 +385,7 @@ export const hiSuite: Record<string, string> = {
   'gratuity.note.s42-rounding':
     'Code on Social Security, 2020 s.53(2) के तहत service के साल का कोई भी हिस्सा छह महीने से ज़्यादा हुआ तो पूरा साल गिना जाता है; ठीक छह महीने नहीं।',
   'gratuity.note.act-may-not-apply':
-    'Code on Social Security, 2020 शायद इस employer पर apply न हो (10-employee threshold से नीचे)। Company policy से फिर भी gratuity मिल सकती है।',
+    'Code on Social Security, 2020 शायद इस employer पर apply न हो (यहाँ कभी दस या ज़्यादा employees नहीं रहे)। Company policy से फिर भी gratuity मिल सकती है।',
   'gratuity.note.ineligible-service':
     'Service 5 completed years से कम है और 4-years-plus fast path से भी कम (5-day week पर 190 दिन, 6-day पर 240 दिन)।',
   'gratuity.note.cap-applied':
