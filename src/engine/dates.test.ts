@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, addMonths, completedYearsWithDayCount, daysBetween, epfoDateOverlap, isIsoDate, lastWorkingDay, monthsBetween } from './dates'
+import {
+  addDays,
+  addMonths,
+  completedYearsWithDayCount,
+  daysBetween,
+  epfoDateOverlap,
+  isIsoDate,
+  lastWorkingDay,
+  monthsBetween,
+  nthWorkingDayFrom,
+  workingDaysBetween,
+} from './dates'
 
 describe('daysBetween', () => {
   it('is 0 for the same day', () => {
@@ -128,6 +139,54 @@ describe('monthsBetween', () => {
 
   it('crosses a leap day without drifting', () => {
     expect(monthsBetween('2028-01-29', '2028-02-29')).toBe(1)
+  })
+})
+
+describe('workingDaysBetween — inclusive count of Mon–Fri / Mon–Sat days', () => {
+  it('Monday 5 Jan 2026 through Monday 12 Jan 2026: 6 on a 5-day week (Sat/Sun 10th/11th excluded)', () => {
+    expect(workingDaysBetween('2026-01-05', '2026-01-12', 5)).toBe(6)
+  })
+
+  it('the same span is 7 on a 6-day week (only Sunday the 11th excluded)', () => {
+    expect(workingDaysBetween('2026-01-05', '2026-01-12', 6)).toBe(7)
+  })
+
+  it('a weekend-only span is 0 on a 5-day week and 1 on a 6-day week (Saturday counts)', () => {
+    // 10 Jan 2026 is a Saturday, 11 Jan a Sunday.
+    expect(workingDaysBetween('2026-01-10', '2026-01-11', 5)).toBe(0)
+    expect(workingDaysBetween('2026-01-10', '2026-01-11', 6)).toBe(1)
+  })
+
+  it('a single working day counts as 1, inclusive of both ends', () => {
+    expect(workingDaysBetween('2026-01-05', '2026-01-05', 5)).toBe(1)
+  })
+
+  it('is 0 when the end precedes the start', () => {
+    expect(workingDaysBetween('2026-01-12', '2026-01-05', 5)).toBe(0)
+  })
+})
+
+describe('nthWorkingDayFrom — the ISO date the count reaches n', () => {
+  it('the 6th working day from Monday 5 Jan 2026 on a 5-day week is Monday 12 Jan', () => {
+    expect(nthWorkingDayFrom('2026-01-05', 6, 5)).toBe('2026-01-12')
+  })
+
+  it('the 7th working day from the same Monday on a 6-day week is also Monday 12 Jan', () => {
+    expect(nthWorkingDayFrom('2026-01-05', 7, 6)).toBe('2026-01-12')
+  })
+
+  it('n = 1 from a working day returns that day itself', () => {
+    expect(nthWorkingDayFrom('2026-01-05', 1, 5)).toBe('2026-01-05')
+  })
+
+  it('n = 1 from a Saturday skips to Monday on a 5-day week, but stays put on a 6-day week', () => {
+    expect(nthWorkingDayFrom('2026-01-10', 1, 5)).toBe('2026-01-12')
+    expect(nthWorkingDayFrom('2026-01-10', 1, 6)).toBe('2026-01-10')
+  })
+
+  it('agrees with the s.54(B)(a) fast-path goldens: joined 12 Jan 2022, anniversary Monday 12 Jan 2026', () => {
+    expect(nthWorkingDayFrom('2026-01-12', 190, 5)).toBe('2026-10-02')
+    expect(nthWorkingDayFrom('2026-01-12', 240, 6)).toBe('2026-10-17')
   })
 })
 

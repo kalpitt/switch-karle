@@ -47,6 +47,8 @@ export const hiSuite: Record<string, string> = {
   'plan.gratuity.past':
     'आपकी gratuity {date} को ही safe हो चुकी थी, {days} दिन पहले। एक चीज़ कम हो गई जो आपको यहाँ रोक रही थी।',
   'plan.gratuity.ahead': 'आपकी gratuity {date} से safe है, {days} दिन बाद।',
+  'plan.gratuity.workingDays':
+    'यह calendar days नहीं, working days गिनता है — weekly off नहीं गिनते। Public holidays और unpaid या unearned leave से यह date आगे खिसक सकती है, इसलिए इसे सबसे पहली मुमकिन date मानें। पूरे 5 साल वह date है जिस पर कोई बहस नहीं कर सकता।',
   'plan.gratuity.notice':
     'Notice period भी service में गिना जाता है। {from} को या उसके बाद resign करें, तो आपका last working day {date} तक पहुँच जाता है। अगर early release या notice buyout से last day {date} से पहले आ गया, तो gratuity नहीं मिलेगी।',
   'plan.gratuity.noticeNow':
@@ -378,7 +380,7 @@ export const hiSuite: Record<string, string> = {
   'gratuity.covered': 'Establishment में 10+ employees हैं',
   'gratuity.coveredHint': 'Code on Social Security, 2020 के तहत gratuity तभी apply होती है जब establishment covered हो: दस या ज़्यादा employees। हम पूछते हैं; मानकर नहीं चलते।',
   'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
-  'gratuity.week5.hint': '5-day establishment में पांचवें साल के 4 साल + 190 दिन पर qualify होते हैं; 6-day वाले को 240 दिन चाहिए।',
+  'gratuity.week5.hint': '5-day establishment में पांचवें साल के 4 साल + 190 working days पर qualify होते हैं; 6-day वाले को 240 working days चाहिए। Weekly off नहीं गिनते। यह सबसे पहली मुमकिन date है — public holidays और unpaid या unearned leave से यह आगे खिसक सकती है।',
   'gratuity.verdict.yes': '{years} completed years की service के बाद eligible। Estimate {amount} (15/26 × last drawn × payable years)।',
   'gratuity.verdict.no': 'अभी तक {years} completed years — 5-year / 4-years-plus-190-or-240-day rule के तहत अभी eligible नहीं।',
   'gratuity.flip': 'यह picture बदलने वाली अगली date: {date}।',
@@ -387,7 +389,7 @@ export const hiSuite: Record<string, string> = {
   'gratuity.note.act-may-not-apply':
     'Code on Social Security, 2020 शायद इस employer पर apply न हो (10-employee threshold से नीचे)। Company policy से फिर भी gratuity मिल सकती है।',
   'gratuity.note.ineligible-service':
-    'Service 5 completed years से कम है और 4-years-plus fast path से भी कम (5-day week पर 190 दिन, 6-day पर 240 दिन)।',
+    'Service 5 completed years से कम है और 4-years-plus fast path से भी कम (5-day week पर 190 working days, 6-day पर 240 working days — weekend नहीं गिनता)। पूरे 5 साल वह date है जिस पर कोई बहस नहीं कर सकता।',
   'gratuity.note.cap-applied':
     '₹20,00,000 पर capped है, वह ceiling जो 2018 में पुराने Act के तहत notify हुई थी। Code (s.53(3)) के तहत सरकार नई ceiling notify कर सकती है; check करते समय कोई नई नहीं मिली।',
   'gratuity.note.code-wages':

@@ -50,16 +50,19 @@ describe('auditFnF', () => {
 })
 
 /**
- * Joined 12 Jan 2022, left 31 Jul 2026 on a five-day week: four years and 200
- * days, past the 190-day line and short of the 240-day one. Gratuity is due,
- * ₹1,44,231 on ₹50,000 basic. The checker called gratuity() without a work
- * week, got the six-day default, recomputed ₹0, and told the user their
- * missing gratuity "works out to about ₹0" with nothing in the mail.
+ * Joined 12 Jan 2022, left 2 Oct 2026 on a five-day week: four years plus
+ * exactly the 190th working day (Mon-Fri) counted from the 12 Jan 2026
+ * anniversary — s.54(B)(a) counts days actually worked, not calendar days —
+ * past the 190-working-day line and short of the 240th (17 Oct 2026, the
+ * six-day reading). Gratuity is due, ₹1,44,231 on ₹50,000 basic. The checker
+ * called gratuity() without a work week, got the six-day default, recomputed
+ * ₹0, and told the user their missing gratuity "works out to about ₹0" with
+ * nothing in the mail.
  */
 describe('gratuity in the F&F checker follows the work week', () => {
   const FIVE_DAY_LEAVER = {
     joinDate: '2022-01-12',
-    lastWorkingDay: '2026-07-31',
+    lastWorkingDay: '2026-10-02',
     monthlyBasic: 50_000,
     monthlyGross: 100_000,
     unpaidLeaveDays: 0,

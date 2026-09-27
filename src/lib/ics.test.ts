@@ -8,7 +8,7 @@ const NOW = new Date(Date.UTC(2026, 8, 7, 4, 30, 0))
 /** Ravi's file: the check-in that can bring him back, his cliffs, and his date. */
 const RAVI: IcsEvent[] = [
   { uid: 'check-in', date: '2026-09-14', title: 'Check my dates' },
-  { uid: 'cliff-gratuity', date: '2026-07-21', title: 'Gratuity: safe from today' },
+  { uid: 'cliff-gratuity', date: '2026-10-02', title: 'Gratuity: safe from today' },
   { uid: 'cliff-hike', date: '2027-05-31', title: 'Hike lands this month' },
   { uid: 'resign', date: '2027-06-01', title: 'Resign today', description: 'Notice: 90 days' },
 ]

@@ -31,7 +31,10 @@ describe('a moved resign date is named so it can be deleted from a calendar', ()
   })
 })
 
-/** Ravi: 21 July 2026 on a five-day week, 9 September 2026 on a six-day one. */
+/**
+ * Ravi: 2 October 2026 on a five-day week, 17 October 2026 on a six-day one
+ * (s.54(B)(a) working days from the fourth anniversary, 2026-09-27).
+ */
 const RAVI = { joinDate: '2022-01-12', noticePeriodDays: 90, asOf: '2026-09-06' }
 
 describe('the work-week fork', () => {
@@ -44,9 +47,9 @@ describe('the work-week fork', () => {
   it('picks the answer, not the first of the two', () => {
     const both = cliffs(RAVI)
     // The five-day cliff sorts first, so `find(isGratuityCliff)` would hand a
-    // six-day employee 21 July — seven weeks before their real date.
-    expect(chosenGratuityCliff(both, 6)?.date).toBe('2026-09-09')
-    expect(chosenGratuityCliff(both, 5)?.date).toBe('2026-07-21')
+    // six-day employee 2 October — two weeks before their real date.
+    expect(chosenGratuityCliff(both, 6)?.date).toBe('2026-10-17')
+    expect(chosenGratuityCliff(both, 5)?.date).toBe('2026-10-02')
   })
 
   it('is null when the Act does not reach the employer at all', () => {

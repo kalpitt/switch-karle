@@ -124,6 +124,61 @@ export function epfoDateOverlap(lwd: string, newJoinDate: string): boolean {
   return daysBetween(lwd, newJoinDate) <= 0
 }
 
+/** UTC day of week for an ISO date: 0 = Sunday … 6 = Saturday. */
+function utcDayOfWeek(iso: string): number {
+  return new Date(toUtcMs(parts(iso))).getUTCDay()
+}
+
+/**
+ * True when `iso` is a working day on the given schedule: Monday–Friday on a
+ * 5-day week, Monday–Saturday on a 6-day week. Sunday is never a working day
+ * on either.
+ */
+function isWorkingDay(iso: string, weekDays: 5 | 6): boolean {
+  const dow = utcDayOfWeek(iso)
+  return weekDays === 5 ? dow >= 1 && dow <= 5 : dow >= 1 && dow <= 6
+}
+
+/**
+ * Count of working days from `startIso` to `endIso`, both inclusive, on the
+ * given week schedule. `endIso` before `startIso` returns 0 — this counts
+ * forward only, which is all the s.54(B)(a) fast path needs.
+ */
+export function workingDaysBetween(startIso: string, endIso: string, weekDays: 5 | 6): number {
+  const start = toUtcMs(parts(startIso))
+  const end = toUtcMs(parts(endIso))
+  if (end < start) return 0
+  let count = 0
+  let iso = startIso
+  let ms = start
+  while (ms <= end) {
+    if (isWorkingDay(iso, weekDays)) count += 1
+    ms += MS_PER_DAY
+    iso = addDays(iso, 1)
+  }
+  return count
+}
+
+/**
+ * The ISO date of the `n`th working day on or after `startIso` (inclusive,
+ * so `n = 1` can return `startIso` itself when it is a working day). `n` must
+ * be a positive integer.
+ */
+export function nthWorkingDayFrom(startIso: string, n: number, weekDays: 5 | 6): string {
+  if (!Number.isInteger(n) || n < 1) {
+    throw new Error(`dates: n must be a positive integer, got ${String(n)}`)
+  }
+  let iso = startIso
+  let count = 0
+  for (;;) {
+    if (isWorkingDay(iso, weekDays)) {
+      count += 1
+      if (count === n) return iso
+    }
+    iso = addDays(iso, 1)
+  }
+}
+
 export interface Tenure {
   completedYears: number
   /** Elapsed days since the last join-anniversary (0 on an exact anniversary). */

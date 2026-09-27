@@ -17,7 +17,7 @@ function localeFor(lang: string): string {
 }
 
 /**
- * A full date for a plan: "21 July 2026".
+ * A full date for a plan: "2 October 2026".
  *
  * The plan prints dates a user will type into a calendar and read back months
  * later, so the year is never dropped and the month is never abbreviated.

@@ -1,4 +1,4 @@
-import { addDays, addMonths, completedYearsWithDayCount } from './dates'
+import { addMonths, completedYearsWithDayCount, nthWorkingDayFrom, workingDaysBetween } from './dates'
 
 export interface GratuityInput {
   /** Monthly last-drawn basic + DA. */
@@ -41,12 +41,23 @@ export interface GratuityResult {
  *    years plus 240 days (6-day week) / 190 days (5-day week) into the fifth
  *    year. s.54(B)(a) sets the same 190-day (less-than-six-day week) and
  *    240-day deeming rule as the Act's s.2A; the 4-years-plus reading of it
- *    is the courts'.
+ *    is the courts', not cited in the section itself.
+ *
+ *    The count is days the employee "has actually worked under the employer"
+ *    (s.54(B)(a)), not calendar days. Its Explanation adds only four kinds of
+ *    absence back in: a lay-off, leave with full wages earned in the previous
+ *    year, an accident absence arising from the work, and maternity leave up
+ *    to 26 weeks. A weekly off is not on that list, so Saturdays and Sundays
+ *    (or just Sundays, on a 6-day week) do not count. This engine counts
+ *    Mon–Fri / Mon–Sat working days from the fourth anniversary and does not
+ *    model public holidays or unearned leave — both would only push the date
+ *    later — so `gratuityEligibilityDate()` is always the EARLIEST this test
+ *    can be met, never later than the real one.
  * 2. PAYABLE YEARS (s.53(2), Explanation 3): 15/26 × last-drawn monthly wages
  *    for every completed year, counting any part of a year IN EXCESS OF SIX
  *    MONTHS as a full year. Exactly six months does NOT bump.
  *
- * VERIFIED: 2026-09-27 | Source: Code on Social Security, 2020 (Act 36 of 2020) https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf §53(1) §53(2) Expl.3 §54 First Schedule item V; commencement S.O. 5319(E) 21-Nov-2025 https://egazette.gov.in/WriteReadData/2025/267882.pdf
+ * VERIFIED: 2026-09-27 | Source: Code on Social Security, 2020 (Act 36 of 2020) https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf §53(1) §53(2) Expl.3 §54(B)(a) and its Explanation, First Schedule item V; commencement S.O. 5319(E) 21-Nov-2025 https://egazette.gov.in/WriteReadData/2025/267882.pdf
  *
  * The rupee figure is a FLOOR since 21 November 2025. s.53(2) pays on
  * "wages", and s.2(88) defines wages as basic pay, DA and retaining allowance,
@@ -78,13 +89,17 @@ function payableYearsFor(joinISO: string, exitISO: string, completedYears: numbe
 
 /**
  * The calendar date on which s.54 eligibility is reached: four completed years
- * plus this establishment's fast-path days into the fifth (190 on a five-day
- * week, 240 on a six-day week). Both are shorter than a fifth full year, so
- * this is always the earliest date eligibility can arrive.
+ * plus this establishment's fast-path count of WORKING days into the fifth
+ * (190 on a five-day week, 240 on a six-day week) — s.54(B)(a) counts days
+ * "actually worked", not calendar days, so a weekly off does not count. Both
+ * day counts are shorter than a fifth full year, so this is always the
+ * earliest date eligibility can arrive, and it is the earliest full stop:
+ * public holidays and unpaid or unearned leave are unknown here and can only
+ * push it later.
  *
  * `gratuity().flipDate` answers the same question but only while the person is
  * still short of the line — it is null once they are eligible. The plan screen
- * needs the date even when it is in the past ("safe since 21 July 2026"), and
+ * needs the date even when it is in the past ("safe since 2 October 2026"), and
  * needs both work weeks' readings before the user has said which is theirs, so
  * it asks here instead. Same statute, same numbers, no second source.
  *
@@ -97,16 +112,20 @@ export function gratuityEligibilityDate(
   coveredByAct = true,
 ): string | null {
   if (!coveredByAct) return null
-  return addDays(addMonths(joinDate, 48), FAST_PATH_DAYS[workWeekDays])
+  const fourthAnniversary = addMonths(joinDate, 48)
+  return nthWorkingDayFrom(fourthAnniversary, FAST_PATH_DAYS[workWeekDays], workWeekDays)
 }
 
 function flipDateWhenIneligible(
   joinDate: string,
   tenure: ReturnType<typeof completedYearsWithDayCount>,
   fastPathDays: number,
+  workWeekDays: 5 | 6,
 ): string {
-  // First date eligibility can flip on: 4 years + the week's fast-path days.
-  if (tenure.completedYears < 5) return addDays(addMonths(joinDate, 48), fastPathDays)
+  // First date eligibility can flip on: the fastPathDays-th working day of year five.
+  if (tenure.completedYears < 5) {
+    return nthWorkingDayFrom(addMonths(joinDate, 48), fastPathDays, workWeekDays)
+  }
   return addMonths(joinDate, 60)
 }
 
@@ -150,15 +169,25 @@ export function gratuity(input: GratuityInput): GratuityResult {
 
   // Eligibility is its own test (s.53(1) with s.54). It must not reuse completedYears as
   // the multiplier — that is what underpaid the 4y+240d case before G1.
+  //
+  // s.54(B)(a) counts days actually worked, not calendar days, so the fast
+  // path into year five is measured in working days (Mon–Fri / Mon–Sat) from
+  // the fourth anniversary, not tenure.daysIntoCurrentYear (which is
+  // calendar days and would put this ~40–76 days too early).
+  const fourthAnniversary = addMonths(input.joinDate, 48)
+  const workingDaysIntoYearFive =
+    tenure.completedYears === 4
+      ? workingDaysBetween(fourthAnniversary, input.exitDate, workWeekDays)
+      : 0
   const eligible =
     tenure.completedYears >= 5 ||
-    (tenure.completedYears === 4 && tenure.daysIntoCurrentYear >= fastPathDays)
+    (tenure.completedYears === 4 && workingDaysIntoYearFive >= fastPathDays)
 
   if (!eligible) {
     notes.push({
       id: 'ineligible-service',
       detail:
-        'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
+        'Service below 5 completed years and below the 4-years-plus fast path (190 working days on a 5-day week, 240 on a 6-day week — weekly offs do not count). Public holidays and unpaid or unearned leave are not counted here either, so this reads early rather than late.',
     })
     return {
       completedYears: tenure.completedYears,
@@ -166,7 +195,7 @@ export function gratuity(input: GratuityInput): GratuityResult {
       eligible,
       payableYears: 0,
       amount: 0,
-      flipDate: flipDateWhenIneligible(input.joinDate, tenure, fastPathDays),
+      flipDate: flipDateWhenIneligible(input.joinDate, tenure, fastPathDays, workWeekDays),
       notes,
     }
   }

@@ -10,6 +10,42 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-27 — Gratuity fast path counts days worked, not calendar days
+
+**Fixed, not decided.** s.54(B)(a): the employee "has actually worked under the
+employer for not less than— (i) one hundred and ninety days, in the case of
+... an establishment which works for less than six days in a week; and (ii)
+two hundred and forty days, in any other case" — a count of days actually
+worked, not calendar days. Its Explanation adds back only four kinds of
+absence: a lay-off, leave with full wages earned in the previous year, an
+accident absence arising from the work, and maternity leave up to 26 weeks. A
+weekly off is not on that list. The
+engine was counting calendar days from the fourth anniversary, so it put the
+fast-path date 40–76 days too early depending on the work week — a user
+resigning on the date the product showed could actually still be short and
+lose gratuity.
+
+**What changed:** `src/engine/dates.ts` gained `workingDaysBetween()` and
+`nthWorkingDayFrom()` (Mon–Fri on a 5-day week, Mon–Sat on a 6-day week, UTC).
+`gratuityEligibilityDate()` and the s.54 fast-path check in `gratuity()` now
+count working days from the fourth anniversary instead of calendar days.
+Public holidays and unpaid or unearned leave are still not modelled, so the
+date shown is always the **earliest possible** — never later than the real
+one, which is the safe direction to be wrong in.
+
+**Ravi (joined 12 January 2022), before and after:**
+
+| Reading | Before (calendar days) | After (working days) |
+|---|---|---|
+| 5-day week | 21 July 2026 | 2 October 2026 |
+| 6-day week | 9 September 2026 | 17 October 2026 |
+
+**Not cited:** the four-years-plus reading of s.54(B)(a) as a fast path into a
+fifth year is the courts', not the section's own words — unchanged from the
+existing `VERIFIED` marker in `src/engine/gratuity.ts`.
+
+---
+
 ## 2026-09-27 — Gratuity re-cited to the Code on Social Security, 2020
 
 **Found, not decided.** The four Labour Codes took effect on 21 November 2025.
@@ -347,9 +383,13 @@ executable spec for correct money math.
 - HRA keeps the four-city metro limb. No eight-city expansion — secondary sources
   only.
 - Gratuity: eligibility (Code on Social Security, 2020 s.53(1) with s.54 — 5y,
-  or 4y + 190d on a 5-day week / 240d on a 6-day week) is a separate test from
-  payable years (s.53(2)). ₹20L cap is `CANDIDATE` under s.53(3). Was PGA
-  s.2A / s.4(2) / s.4(3) until the Act's repeal on 21 November 2025.
+  or 4y + 190 / 240 days on a 5-day / 6-day week) is a separate test from
+  payable years (s.53(2)). **Amended 2026-09-27:** the 190/240-day count is
+  WORKING days actually worked under s.54(B)(a) and its Explanation, not
+  calendar days — weekly offs excluded, public holidays and unearned leave
+  not modelled, so the date shown is the earliest possible. ₹20L cap is
+  `CANDIDATE` under s.53(3). Was PGA s.2A / s.4(2) / s.4(3) until the Act's
+  repeal on 21 November 2025.
 - Example detection uses each island's own fixture constant. Decoder-seeded
   values count as Entered, not Example. **Amended 2026-09-06 (PR #39):** the six
   tools on the current-job record compare against their boot state instead, so a

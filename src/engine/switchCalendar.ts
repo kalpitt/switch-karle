@@ -139,7 +139,7 @@ export interface SwitchCalendarResult {
   today: string
   /**
    * Every dated cliff, including ones already behind — the screen says "safe
-   * since 21 July 2026", which needs the past date. `forfeited` is filled in
+   * since 2 October 2026", which needs the past date. `forfeited` is filled in
    * only when `targetResignDate` is set.
    */
   cliffs: Cliff[]
@@ -193,13 +193,14 @@ function makeCliff(id: CliffId, date: string, kind: DateKind, today: string): Cl
  * Every dated cliff this person is standing between, earliest first.
  *
  * The gratuity cliff is returned for BOTH work weeks until `workWeekDays` says
- * which is theirs, because the two are 190 days and 240 days into year five and
- * for a January 2022 joiner that is 21 July 2026 against 9 September 2026.
- * Defaulting to six is how the screen invents a cliff seven weeks after the
+ * which is theirs, because the two are 190 and 240 WORKING days into year
+ * five (s.54(B)(a) counts days actually worked, weekly offs excluded) and for
+ * a January 2022 joiner that is 2 October 2026 against 17 October 2026.
+ * Defaulting to six is how the screen invents a cliff two weeks after the
  * real one has already passed.
  *
- * Cliffs already behind are kept, not dropped: "already safe on 21 July" is one
- * thing less holding the user here, and it is only sayable with the date.
+ * Cliffs already behind are kept, not dropped: "already safe on 2 October" is
+ * one thing less holding the user here, and it is only sayable with the date.
  */
 export function cliffs(input: SwitchCalendarInput): Cliff[] {
   const today = input.asOf

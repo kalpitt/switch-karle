@@ -32,6 +32,8 @@ export const en: Record<string, string> = {
   'plan.gratuity.past':
     'Your gratuity was already safe on {date}, {days} days ago. That is one thing less holding you here.',
   'plan.gratuity.ahead': 'Your gratuity is safe from {date}, {days} days away.',
+  'plan.gratuity.workingDays':
+    'This counts working days, not calendar days — weekly offs do not count. Public holidays and unpaid or unearned leave can push it later, so treat this as the earliest possible date. Five full years is the date no one can argue with.',
   'plan.gratuity.notice':
     'Notice counts as service. Resign on or after {from} and your last working day still reaches {date}. If early release or a notice buyout moves your last day before {date}, you lose it.',
   'plan.gratuity.noticeNow':
@@ -383,7 +385,7 @@ export const en: Record<string, string> = {
   'gratuity.covered': 'Establishment has 10+ employees',
   'gratuity.coveredHint': 'Gratuity under the Code on Social Security, 2020 applies only if the establishment is covered: ten or more employees. We ask; we do not assume.',
   'gratuity.week5.label': '5-day work week (Sat–Sun off)',
-  'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 days into year five; a 6-day one needs 240.',
+  'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 working days into year five; a 6-day one needs 240 working days. Weekly offs do not count. This is the earliest date — public holidays and unpaid or unearned leave push it later.',
   'gratuity.verdict.yes': 'Eligible after {years} completed years of service. Estimate {amount} (15/26 × last drawn × payable years).',
   'gratuity.verdict.no': '{years} completed years so far — not yet eligible under the 5-year / 4-years-plus-190-or-240-day rule.',
   'gratuity.flip': 'The next date that changes this picture: {date}.',
@@ -392,7 +394,7 @@ export const en: Record<string, string> = {
   'gratuity.note.act-may-not-apply':
     'The Code on Social Security, 2020 may not cover this employer (below the 10-employee threshold). Company policy may still pay gratuity.',
   'gratuity.note.ineligible-service':
-    'Service below 5 completed years and below the 4-years-plus fast path (190 days on a 5-day week, 240 on a 6-day week).',
+    'Service below 5 completed years and below the 4-years-plus fast path (190 working days on a 5-day week, 240 on a 6-day week — weekends do not count). Five full years is the date no one can argue with.',
   'gratuity.note.cap-applied':
     'Capped at ₹20,00,000, the ceiling notified in 2018 under the old Act. The Code (s.53(3)) lets the government notify a new one; none had been found when this was checked.',
   'gratuity.note.code-wages':

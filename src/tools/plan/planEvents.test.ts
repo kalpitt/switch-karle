@@ -5,14 +5,20 @@ import { planIcsEvents, CHECK_IN_DAYS } from './planEvents'
 
 /**
  * Ravi from docs/DIRECTION.md Part 3: joined 12 January 2022, 90 days' notice,
- * the hike money lands in May, five-day week, asking on 6 September 2026.
+ * the hike money lands in May, five-day week.
+ *
+ * The s.54(B)(a) working-day fast path (2026-09-27) puts his gratuity cliff at
+ * 2 October 2026, not the old calendar-day 21 July 2026, so "asking on
+ * 6 September 2026" would put that cliff still ahead rather than behind. This
+ * asks on 10 October 2026 instead, keeping the "already behind" cliff this
+ * describe block is testing for.
  */
 const RAVI = {
   joinDate: '2022-01-12',
   noticePeriodDays: 90,
   hikeCreditMonth: 5,
   workWeekDays: 5 as const,
-  asOf: '2026-09-06',
+  asOf: '2026-10-10',
 }
 
 /** Stands in for the i18n `t`: returns the key, so a test can see which ran. */
@@ -24,7 +30,7 @@ describe('planIcsEvents', () => {
 
   it('opens with a check-in seven days out, not with a date in 2027', () => {
     expect(events[0].uid).toBe('check-in')
-    expect(events[0].date).toBe('2026-09-13')
+    expect(events[0].date).toBe('2026-10-17')
     expect(CHECK_IN_DAYS).toBe(7)
   })
 
@@ -36,8 +42,8 @@ describe('planIcsEvents', () => {
       'resign',
     ])
     expect(events.map((e) => e.date)).toEqual([
-      '2026-09-13',
-      '2026-07-21',
+      '2026-10-17',
+      '2026-10-02',
       '2027-05-31',
       '2027-06-01',
     ])
@@ -45,7 +51,7 @@ describe('planIcsEvents', () => {
 
   it('keeps a cliff that is already behind, because the plan still turns on it', () => {
     const gratuity = events.find((e) => e.uid === 'cliff-gratuity-5-day')
-    expect(gratuity?.date).toBe('2026-07-21')
+    expect(gratuity?.date).toBe('2026-10-02')
   })
 
   it('has a title on every event and never an empty one', () => {
