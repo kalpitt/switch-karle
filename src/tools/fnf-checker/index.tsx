@@ -62,6 +62,10 @@ function Body() {
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
   // Read, never written here: the door asks it. Unknown is handled by the engine.
   const [workWeekDays, setWorkWeekDays] = useState<5 | 6 | undefined>(undefined)
+  // Same: read-only from the door's coveredByAct answer. A user who told the
+  // door their employer never had ten employees must not get a gratuity flag
+  // here that assumes the Code reaches them.
+  const [coveredByAct, setCoveredByAct] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
     // Basic is shared. Gross is seed-only: the field is what the F&F sheet
@@ -71,6 +75,7 @@ function Body() {
     // sheet against itself and report no gap.
     const job = loadCurrentJob()
     setWorkWeekDays(job.workWeekDays)
+    setCoveredByAct(job.coveredByAct)
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
     const fill = (d: Draft) =>
       fillFromCurrentJob(
@@ -113,8 +118,9 @@ function Body() {
           : [],
       gratuityEligible: draft.gratuityEligible,
       workWeekDays,
+      coveredByAct,
     }),
-    [draft, t, workWeekDays],
+    [draft, t, workWeekDays, coveredByAct],
   )
   const result = useMemo(() => {
     try {

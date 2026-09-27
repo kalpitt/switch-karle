@@ -89,6 +89,40 @@ describe('gratuity in the F&F checker follows the work week', () => {
   })
 })
 
+/**
+ * The door and the gratuity tool both ask "does the Code on Social Security
+ * reach this employer" (ten or more employees) and save the answer to the
+ * shared current-job record as `coveredByAct`. The F&F checker never read it:
+ * `auditFnF` called `gratuity()` with `coveredByAct: true` hardcoded, so a
+ * user who told the door their employer never had ten employees still got a
+ * "missing gratuity" flag and a claimed floor amount the Code does not
+ * actually guarantee them.
+ */
+describe('auditFnF respects the door\'s coveredByAct answer', () => {
+  const NOT_COVERED = {
+    joinDate: '2019-08-01',
+    lastWorkingDay: '2025-02-17',
+    monthlyBasic: 100_000,
+    monthlyGross: 100_000,
+    unpaidLeaveDays: 0,
+    payslipLines: [{ id: 'salary', label: 'Salary', amount: 100_000, kind: 'earning' as const }],
+    recoveries: [],
+    gratuityEligible: true,
+  }
+
+  it('coveredByAct: false → no gratuity on the sheet and no gratuity-missing flag', () => {
+    const r = auditFnF({ ...NOT_COVERED, coveredByAct: false })
+    expect(r.gratuityNotOnSheet).toBe(0)
+    expect(r.flags.map((f) => f.id)).not.toContain('gratuity-missing')
+  })
+
+  it('coveredByAct left unset still behaves as covered (default unchanged)', () => {
+    const r = auditFnF(NOT_COVERED)
+    expect(r.gratuityNotOnSheet).toBeGreaterThan(0)
+    expect(r.flags.map((f) => f.id)).toContain('gratuity-missing')
+  })
+})
+
 describe('disputeItems', () => {
   const base = {
     joinDate: '2021-08-01',
