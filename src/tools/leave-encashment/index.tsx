@@ -53,8 +53,8 @@ function Body() {
     const fill = (d: Draft) =>
       fillFromCurrentJob(d, job, { shared: { monthlyBasic: 'monthlyBasic' } }, saved != null)
     if (saved) {
-      // Retirement path is hidden (master plan 5.2): the switcher case is
-      // resignation — always fully taxable. Coerce any stored retirement draft.
+      // Retirement path is hidden (master plan 5.2): the switcher case this
+      // tool shows is resignation. Coerce any stored retirement draft.
       setDraft(fill({ ...saved, reason: 'resignation' }))
       setExample(null)
     } else {
@@ -73,7 +73,7 @@ function Body() {
   const result = useMemo(() => leaveEncash(draft), [draft])
   /** Nothing typed in this tool yet = worked example, even where the record filled the basic. */
   const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
-  const verdict = result.resignationFullyTaxable
+  const verdict = result.isResignation
     ? t('leave-encashment.verdict.resign', { amount: formatINR(result.gross) })
     : t('leave-encashment.verdict.retire', { amount: formatINR(result.gross) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
@@ -115,7 +115,7 @@ function Body() {
         {isExample ? (
           <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
         ) : (
-          <VerdictBanner tone={result.resignationFullyTaxable ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
+          <VerdictBanner tone={result.taxable > 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
         <Card className="space-y-1 tnum text-[13px]">
           <p>

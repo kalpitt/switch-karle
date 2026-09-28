@@ -403,7 +403,8 @@ export const en: Record<string, string> = {
     'Since 21 November 2025, gratuity is paid on “wages” as the Code on Social Security, 2020 defines them (s.2(88)): basic and DA, plus any amount by which the excluded parts of your pay, such as HRA and conveyance, exceed half of it. This uses basic + DA only, so treat it as the floor.',
 
   'leave-encashment.title': 'Leave encashment',
-  'leave-encashment.desc': 'On a resignation, leave encashment is typically fully taxable as salary.',
+  'leave-encashment.desc':
+    'On resignation or retirement, leave encashment is exempt up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025.',
   'leave-encashment.formTitle': 'Balance to encash',
   'leave-encashment.days': 'Leave days',
   'leave-encashment.basic': 'Monthly basic',
@@ -413,12 +414,15 @@ export const en: Record<string, string> = {
   'leave-encashment.reason': 'Why you are leaving',
   'leave-encashment.reason.resign': 'Resignation (the switch)',
   'leave-encashment.reason.retire': 'Retirement / superannuation',
-  'leave-encashment.verdict.resign': '{amount} gross, fully taxable as salary — the s.10(10AA) exemption is for retirement, not a switch.',
-  'leave-encashment.verdict.retire': '{amount} gross. Retirement exemption exists; the rupee cap is omitted until a CA reviews it.',
+  'leave-encashment.verdict.resign':
+    '{amount} gross, exempt up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025. The Bombay High Court held in CIT v. D.P. Malhotra that "retirement, whether on superannuation or otherwise" covers resignation too. Two limbs this tool cannot compute, 30 days of leave per year of service and 10 months\' average salary, can only lower this amount, never raise it. Confirm with a CA.',
+  'leave-encashment.verdict.retire':
+    '{amount} gross, exempt up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025. Two limbs this tool cannot compute, 30 days of leave per year of service and 10 months\' average salary, can only lower this amount, never raise it. Confirm with a CA.',
   'leave-encashment.gross': 'Gross',
   'leave-encashment.exempt': 'Exempt (this tool)',
   'leave-encashment.taxable': 'Taxable',
-  'leave-encashment.note': 'Provisional. Employer practice on 26 vs 30 varies. The exemption cap is not invented here.',
+  'leave-encashment.note':
+    'Provisional. Employer practice on 26 vs 30 varies. This tool applies only the ₹25,00,000 notified ceiling and the amount received; it does not model the leave-days or average-salary limbs.',
 
   'fnf-checker.title': 'F&F checker',
   'fnf-checker.desc': 'Recompute a full-and-final sheet: unpaid leave, notice recovery, gratuity, and whether you may owe them.',

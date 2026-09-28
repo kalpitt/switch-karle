@@ -346,7 +346,7 @@ export const TOOLS: ToolDef[] = [
     descKey: 'leave-encashment.desc',
     seoTitle: 'Leave Encashment',
     seoDescription:
-      'On resignation, leave encashment is typically fully taxable as salary. The s.10(10AA) exemption is for retirement.',
+      'Leave encashment is exempt up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025, on resignation as well as retirement. Two limbs this tool cannot compute can only lower that.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.leave.v1',

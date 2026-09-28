@@ -10,6 +10,24 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-09-28 — Leave encashment on resignation is exempt; Karnataka PT is ₹2,500
+
+**Fixed, not decided.** `src/engine/leaveEncash.ts` treated resignation as
+fully taxable and cited the repealed s.10(10AA). s.19(1) Table Sl. No. 14 of
+the Income-tax Act, 2025 exempts the cash equivalent of leave salary "at the
+time of his retirement, whether on superannuation or otherwise" as the least
+of four limbs: (a) leave at credit capped at 30 days per year of actual
+service, (b) 10 months' average salary, (c) the amount notified under
+s.536(2) — ₹25,00,000, per CBDT Notification No. 31/2023, S.O. 2276(E), 24 May
+2023, carried forward from the repealed 1961 Act — and (d) the amount actually
+received. "Retirement ... whether on superannuation or otherwise" reaches
+resignation: CIT v. D.P. Malhotra, Bombay High Court, 28 March 1997, held the
+phrase covers "all cases of retirement ... even on resignation by the
+employee". The tool now computes limbs (c) and (d) — `exempt = min(gross,
+₹25,00,000)` — for both resignation and retirement, and names the two limbs it
+cannot compute (they can only lower the exempt amount, never raise it) in the
+verdict copy. Every s.10(10AA) citation is removed.
+
 ## 2026-09-27 — Two calls on the discovery sweep
 
 **Decided by Kalpit.**
@@ -459,7 +477,6 @@ answer arrives: one new PR, `VERIFIED` from that source.
 | ID | Item | Why parked |
 |---|---|---|
 | C4 | Professional tax for BR/JH/AS/CG/SK/ML/TR/PY | No primary state-Act figure |
-| C11 | Leave-encashment exemption / ₹25L cap | Retirement path already hidden |
 | C12 | Notice-period GST / tax / gross-up | Shown as disputed, not computed |
 | C13 | s.234B/C interest | Deliberately not modelled |
 | C14 | ESOP Rule-15 FMV | Awaiting review |
