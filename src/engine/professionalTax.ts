@@ -13,6 +13,13 @@ import type { StateCode } from './types'
  * slab for salaried employees.
  * VERIFIED: 2026-08-23 | Source: Punjab State Development Tax Act, 2018 (official reading per master plan §4/D12) | FY: 2026-27
  *
+ * Karnataka's Schedule Sl. No. 1 was substituted effective 1 April 2025:
+ * ₹200/month except February, ₹300 in February, for salary >= ₹25,000/month
+ * = ₹2,500/year (200×11 + 300).
+ * VERIFIED: 2026-09-28 | Source: Karnataka Tax on Profession, Trades, Callings
+ * and Employments (Amendment) Act, 2025 (Karnataka Act No. 33 of 2025), Schedule
+ * Sl. No. 1, https://dpal.karnataka.gov.in/uploads/media_to_upload1751017993.pdf | FY: 2026-27
+ *
  * Codes in `PT_AMOUNT_UNVERIFIED` levy PT but have no primary-sourced amount
  * in this table — they are 0 and must be labelled approximate. Constitutional
  * ceiling is ₹2,500/year.
@@ -32,7 +39,7 @@ export const PT_AMOUNT_UNVERIFIED: readonly StateCode[] = [
 ]
 
 export const PROFESSIONAL_TAX_ANNUAL: Record<StateCode, number> = {
-  KA: 2_400,
+  KA: 2_500,
   MH: 2_500,
   TN: 2_190,
   TG: 2_400,

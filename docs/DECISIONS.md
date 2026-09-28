@@ -28,6 +28,16 @@ employee". The tool now computes limbs (c) and (d) — `exempt = min(gross,
 cannot compute (they can only lower the exempt amount, never raise it) in the
 verdict copy. Every s.10(10AA) citation is removed.
 
+## 2026-09-28 — Karnataka professional tax is ₹2,500, not ₹2,400
+
+**Fixed, not decided.** `src/engine/professionalTax.ts` had KA at ₹2,400.
+Karnataka Act No. 33 of 2025 (Karnataka Tax on Profession, Trades, Callings
+and Employments (Amendment) Act, 2025), in force 1 April 2025, substituted
+Schedule Sl. No. 1: ₹200/month except February, ₹300 in February, for salary
+>= ₹25,000/month — ₹2,500/year (200×11 + 300). Relocation and compare-offers
+goldens that used KA vs MH to show a state-PT delta needed a new pair since
+both are now ₹2,500; they now use TN (₹2,190).
+
 ## 2026-09-27 — Two calls on the discovery sweep
 
 **Decided by Kalpit.**
@@ -442,7 +452,8 @@ executable spec for correct money math.
   gross, GST and tax treatment shown as **disputed — not computed**.
 - F&F is claimed-vs-recomputed. No dispute-mail feature.
 - Punjab ₹2,400 is State Development Tax (PSDT Act 2018). BR/JH/AS/CG/SK/ML/TR/PY
-  stay ₹0 with `PT_AMOUNT_UNVERIFIED`. KA stays ₹2,400.
+  stay ₹0 with `PT_AMOUNT_UNVERIFIED`. KA is ₹2,500 (Karnataka Act No. 33 of
+  2025, in force 1 April 2025) — see the 2026-09-28 entry above.
 - HRA now keeps the eight-city metro limb (Mumbai, Kolkata, Delhi, Chennai,
   Hyderabad, Pune, Ahmedabad, Bengaluru), primary-sourced 2026-09-27 to Rule
   279 of the Income-tax Rules, 2026. State codes are a city proxy — see the

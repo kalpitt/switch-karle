@@ -17,4 +17,9 @@ describe('professional tax table', () => {
     expect(PROFESSIONAL_TAX_ANNUAL.PB).toBe(2_400)
     expect(PT_AMOUNT_UNVERIFIED).not.toContain('PB')
   })
+
+  it('Karnataka is ₹2,500/year (200×11 + 300 Feb) under Karnataka Act No. 33 of 2025', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.KA).toBe(2_500)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('KA')
+  })
 })

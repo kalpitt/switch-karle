@@ -75,20 +75,20 @@ describe('decodeOffer — ₹24L CTC golden case (Karnataka, PF on full basic)',
     expect(b.hra).toBe(480_000)
     expect(b.employeePfAnnual).toBe(115_200)
     expect(b.grossSalary).toBe(2_284_800)
-    expect(b.professionalTaxAnnual).toBe(2_400)
+    expect(b.professionalTaxAnnual).toBe(2_500)
     expect(b.hraExemptionAnnual).toBe(0)
   })
 
   it('new regime: taxable ₹22,09,800 → tax ₹2,62,548 → ₹1,58,721/month in hand', () => {
     expect(b.newRegime.taxableIncome).toBe(2_209_800)
     expect(b.newRegime.totalTax).toBe(262_548)
-    expect(b.inHandMonthlyNew).toBe(158_721)
+    expect(b.inHandMonthlyNew).toBe(158_713)
   })
 
-  it('old regime (no rent, PF-only 80C): tax ₹4,65,566 — new regime wins', () => {
-    expect(b.oldRegime.totalTax).toBe(465_566)
+  it('old regime (no rent, PF-only 80C): tax ₹4,65,535 — new regime wins', () => {
+    expect(b.oldRegime.totalTax).toBe(465_535)
     expect(b.recommendedRegime).toBe('new')
-    expect(b.inHandMonthly).toBe(158_721)
+    expect(b.inHandMonthly).toBe(158_713)
   })
 
   it('truth ratio: ₹24L CTC is ~79% in hand', () => {
