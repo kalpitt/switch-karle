@@ -22,9 +22,9 @@ describe('realHike', () => {
       variablePayout: 1,
     })
     expect(r.ctcHikePct).toBe(30)
-    expect(r.currentRunRateMonthly).toBe(158_721)
-    expect(r.nextRunRateMonthly).toBe(195_964)
-    expect(r.inHandHikePct).toBeCloseTo(23.464, 3)
+    expect(r.currentRunRateMonthly).toBe(158_713)
+    expect(r.nextRunRateMonthly).toBe(195_955)
+    expect(r.inHandHikePct).toBeCloseTo(23.465, 3)
     expect(r.regimeFlip).toBe(false)
     expect(r.haircutApplied).toBe(false)
     expect(r.joiningBonusExcluded).toBe(false)
@@ -42,8 +42,8 @@ describe('realHike', () => {
     })
     expect(r.joiningBonusExcluded).toBe(true)
     expect(r.ctcHikePct).toBe(30)
-    expect(r.currentRunRateMonthly).toBe(158_721)
-    expect(r.nextRunRateMonthly).toBe(195_964)
+    expect(r.currentRunRateMonthly).toBe(158_713)
+    expect(r.nextRunRateMonthly).toBe(195_955)
   })
 
   it('variable haircut at 70% lowers the in-hand hike versus treating variable as certain', () => {

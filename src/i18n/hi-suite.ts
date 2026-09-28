@@ -399,7 +399,8 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Leave encashment ----
   'leave-encashment.title': 'Leave Encashment',
-  'leave-encashment.desc': 'Resignation पर leave encashment आमतौर पर पूरी तरह salary की तरह taxable होता है।',
+  'leave-encashment.desc':
+    'Resignation हो या retirement, leave encashment Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक exempt है।',
   'leave-encashment.formTitle': 'Encash करने का balance',
   'leave-encashment.days': 'Leave दिन',
   'leave-encashment.basic': 'Monthly basic',
@@ -410,12 +411,14 @@ export const hiSuite: Record<string, string> = {
   'leave-encashment.reason.resign': 'Resignation (switch)',
   'leave-encashment.reason.retire': 'Retirement / superannuation',
   'leave-encashment.verdict.resign':
-    '{amount} gross, पूरी तरह salary की तरह taxable — s.10(10AA) की exemption retirement के लिए है, switch के लिए नहीं।',
-  'leave-encashment.verdict.retire': '{amount} gross। Retirement exemption मौजूद है; rupee cap तब तक omit किया गया है जब तक कोई CA review न करे।',
+    '{amount} gross, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक exempt। Bombay High Court ने CIT v. D.P. Malhotra में कहा था कि "retirement, whether on superannuation or otherwise" resignation को भी cover करता है। दो limbs जो यह tool compute नहीं करता, हर साल की service के 30 दिन leave और 10 महीनों की average salary, इस amount को सिर्फ घटा सकते हैं, बढ़ा नहीं सकते। किसी CA से confirm कर लें।',
+  'leave-encashment.verdict.retire':
+    '{amount} gross, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक exempt। दो limbs जो यह tool compute नहीं करता, हर साल की service के 30 दिन leave और 10 महीनों की average salary, इस amount को सिर्फ घटा सकते हैं, बढ़ा नहीं सकते। किसी CA से confirm कर लें।',
   'leave-encashment.gross': 'Gross',
   'leave-encashment.exempt': 'Exempt (यह tool)',
   'leave-encashment.taxable': 'Taxable',
-  'leave-encashment.note': 'Provisional है। 26 बनाम 30 पर employer की practice अलग-अलग होती है। Exemption cap यहां बनाई नहीं गई है।',
+  'leave-encashment.note':
+    'Provisional है। 26 बनाम 30 पर employer की practice अलग-अलग होती है। यह tool सिर्फ ₹25,00,000 की notified ceiling और मिली हुई amount apply करता है; leave-days या average-salary वाले limbs model नहीं करता।',
 
   // ---- F&F checker ----
   'fnf-checker.title': 'F&F Checker',

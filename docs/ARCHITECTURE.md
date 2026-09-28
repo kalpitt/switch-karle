@@ -347,8 +347,10 @@ Ship with goldens. A constant's status lives beside its code:
 | Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found; CA R1 |
 | Gratuity base: basic + DA, a floor of the Code's "wages" (§2(88) 50% add-back) | `src/engine/gratuity.ts` | Floor by construction; the tool says so. Wages from CTC parked for CA |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
+| Karnataka professional tax ₹2,500/year | `src/engine/professionalTax.ts` | **VERIFIED 2026-09-28** (Karnataka Act No. 33 of 2025, in force 1 April 2025) |
 | EPF 12% / ₹25,000 wage ceiling | `src/engine/salary.ts` | **VERIFIED 2026-09-27** (S.O. 5109(E), 17 Sep 2026) |
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
+| Leave encashment exempt to ₹25,00,000, resignation and retirement alike (s.19(1) Sl.14 + s.536(2) + Notification 31/2023); D.P. Malhotra (Bom HC) on "retirement ... or otherwise" covering resignation | `src/engine/leaveEncash.ts` | **VERIFIED 2026-09-28** (ITA 2025 PDF + CBDT Notification No. 31/2023). Two limbs (30 days/year of service; 10 months' average salary) not computed — named in the verdict, can only lower the exempt amount |
 | HRA exemption three limbs (Rule 279, Income-tax Rules, 2026) | `src/engine/salary.ts` `hraExemptionAnnual` | **VERIFIED 2026-09-27** (Income-tax Rules, 2026, G.S.R. 198(E)) |
 | Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
 | ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |

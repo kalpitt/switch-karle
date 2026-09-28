@@ -39,16 +39,16 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
     expect(d.nationalSlabDeltaIsNil).toBe(true)
   })
 
-  it('KA → MH: PT delta ₹100/a → −₹8/month in-hand (new regime)', () => {
+  it('KA → TN: PT delta −₹310/a → +₹26/month in-hand (new regime)', () => {
     const d = relocationDelta(baseOffer, {
-      state: 'MH',
+      state: 'TN',
       metro: true,
       rentPaidMonthly: 50_000,
     })
 
-    // PROFESSIONAL_TAX_ANNUAL: KA ₹2,400 vs MH ₹2,500
-    expect(d.ptDeltaAnnual).toBe(100)
-    expect(d.inHandDeltaMonthly).toBe(-8)
+    // PROFESSIONAL_TAX_ANNUAL: KA ₹2,500 vs TN ₹2,190
+    expect(d.ptDeltaAnnual).toBe(-310)
+    expect(d.inHandDeltaMonthly).toBe(26)
     expect(d.nationalSlabDeltaIsNil).toBe(true)
   })
 
