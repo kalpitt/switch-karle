@@ -39,17 +39,31 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
     expect(d.nationalSlabDeltaIsNil).toBe(true)
   })
 
-  it('KA → TN: PT delta −₹310/a → +₹26/month in-hand (new regime)', () => {
+  it('KA → TG: PT delta −₹100/a → +₹8/month in-hand (new regime)', () => {
+    const d = relocationDelta(baseOffer, {
+      state: 'TG',
+      metro: true,
+      rentPaidMonthly: 50_000,
+    })
+
+    // PROFESSIONAL_TAX_ANNUAL: KA ₹2,500 vs TG ₹2,400.
+    // Hand-derived: gross ₹22,84,800 (24L − employer PF ₹1,15,200); new-regime
+    // taxable ₹22,09,800 → tax ₹2,52,450 + 4% cess = ₹2,62,548 in both states.
+    // KA in-hand (22,84,800 − 2,62,548 − 1,15,200 − 2,500) / 12 = 1,58,712.67 → 1,58,713
+    // TG in-hand (22,84,800 − 2,62,548 − 1,15,200 − 2,400) / 12 = 1,58,721
+    expect(d.ptDeltaAnnual).toBe(-100)
+    expect(d.inHandDeltaMonthly).toBe(8)
+    expect(d.nationalSlabDeltaIsNil).toBe(true)
+  })
+
+  it('KA → TN (Chennai top slab ₹1,250 × 2): PT delta is nil', () => {
     const d = relocationDelta(baseOffer, {
       state: 'TN',
       metro: true,
       rentPaidMonthly: 50_000,
     })
-
-    // PROFESSIONAL_TAX_ANNUAL: KA ₹2,500 vs TN ₹2,190
-    expect(d.ptDeltaAnnual).toBe(-310)
-    expect(d.inHandDeltaMonthly).toBe(26)
-    expect(d.nationalSlabDeltaIsNil).toBe(true)
+    expect(d.ptDeltaAnnual).toBe(0)
+    expect(d.inHandDeltaMonthly).toBe(0)
   })
 
   it('KA (Bengaluru) is now a metro state under Rule 279, Income-tax Rules, 2026', () => {

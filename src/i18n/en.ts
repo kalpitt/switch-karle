@@ -298,7 +298,7 @@ export const en: Record<string, string> = {
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
   'relocation.metroWarn': '{state} has no HRA metro city (only Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad and Bengaluru qualify, per Rule 279 of the Income-tax Rules, 2026). The 50% limb you just switched on will not apply there.',
-  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
+  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Jharkhand and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Tamil Nadu shows Chennai’s rate; other Tamil Nadu towns set their own. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',

@@ -22,4 +22,27 @@ describe('professional tax table', () => {
     expect(PROFESSIONAL_TAX_ANNUAL.KA).toBe(2_500)
     expect(PT_AMOUNT_UNVERIFIED).not.toContain('KA')
   })
+
+  // Hand-derived from the primary schedules cited in professionalTax.ts (checked 2026-10-24).
+  it('Tamil Nadu is Chennai’s top slab: ₹1,250 per half-year × 2 = ₹2,500 (not the pre-2018 ₹2,190)', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.TN).toBe(1_250 * 2)
+  })
+
+  it('Odisha is ₹200 × 11 + ₹300 = ₹2,500 (not ₹2,400)', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.OD).toBe(200 * 11 + 300)
+  })
+
+  it('Telangana is ₹200 × 12 = ₹2,400', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.TG).toBe(200 * 12)
+  })
+
+  it('Assam is ₹208 × 12 = ₹2,496 and is no longer unverified', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.AS).toBe(208 * 12)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('AS')
+  })
+
+  it('Puducherry is ₹1,250 per half-year × 2 = ₹2,500 and is no longer unverified', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.PY).toBe(1_250 * 2)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('PY')
+  })
 })

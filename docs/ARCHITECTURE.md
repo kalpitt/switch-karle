@@ -355,7 +355,8 @@ Ship with goldens. A constant's status lives beside its code:
 | Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
 | ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |
 | PF premature withdrawal TDS (s.192A / s.392(7)) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap flagged, transfer recommended |
-| Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0) |
+| Tamil Nadu (Chennai) ₹2,500 · Odisha ₹2,500 · Telangana ₹2,400 · Assam ₹2,496 · Puducherry ₹2,500 professional tax | `src/engine/professionalTax.ts` | **VERIFIED 2026-10-24** (GCC press release 04.08.2026; odishatax.gov.in rate chart; tgct.gov.in First Schedule; Assam Taxation Dept. schedule w.e.f. 15-10-2014; Puducherry Act No. 4 of 2017 + G.O.Ms. 24/F3/2017). TN was ₹2,190, OD was ₹2,400, AS and PY were ₹0. TN is Chennai's rate; other TN local bodies set their own |
+| Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0: BR, JH, CG, SK, ML, TR, Other). MH, GJ, AP, WB, MP, KL figures not primary-verified; see the file header for what was and was not reached |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.
