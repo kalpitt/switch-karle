@@ -13,6 +13,7 @@ const baseOffer: OfferInput = {
   pfOnFullBasic: true,
   noticePeriodDays: 90,
   state: 'KA',
+  city: 'bengaluru',
   old: {
     rentPaidMonthly: 50_000,
     metro: true,
@@ -25,7 +26,7 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
   it('KA metro → non-metro same rent: HRA exemption drops, in-hand unchanged under new regime', () => {
     const d = relocationDelta(baseOffer, {
       state: 'KA',
-      metro: false,
+      city: 'other',
       rentPaidMonthly: 50_000,
     })
 
@@ -42,7 +43,7 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
   it('KA → TG: PT delta −₹100/a → +₹8/month in-hand (new regime)', () => {
     const d = relocationDelta(baseOffer, {
       state: 'TG',
-      metro: true,
+      city: 'hyderabad',
       rentPaidMonthly: 50_000,
     })
 
@@ -59,7 +60,7 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
   it('KA → TN (Chennai top slab ₹1,250 × 2): PT delta is nil', () => {
     const d = relocationDelta(baseOffer, {
       state: 'TN',
-      metro: true,
+      city: 'chennai',
       rentPaidMonthly: 50_000,
     })
     expect(d.ptDeltaAnnual).toBe(0)
@@ -70,10 +71,31 @@ describe('relocationDelta — hand-derived from decodeOffer', () => {
     expect(stateHasHraMetroCity('KA')).toBe(true)
     const d = relocationDelta(baseOffer, {
       state: 'DL',
-      metro: true,
+      city: 'delhi',
       rentPaidMonthly: 50_000,
     })
     expect(d.hraExemptionTo).toBe(480_000)
     expect(stateHasHraMetroCity('DL')).toBe(true)
+  })
+
+  it('Bengaluru → Nagpur (MH, not one of the eight): HRA limb drops to 40%', () => {
+    const d = relocationDelta(baseOffer, {
+      state: 'MH',
+      city: 'other',
+      rentPaidMonthly: 50_000,
+    })
+    // From Bengaluru 50% = ₹4.8L; to another MH city 40% = ₹3.84L.
+    expect(d.hraExemptionFrom).toBe(480_000)
+    expect(d.hraExemptionTo).toBe(384_000)
+  })
+
+  it('a city that does not match the target state is treated as "other"', () => {
+    const d = relocationDelta(baseOffer, {
+      state: 'KL',
+      city: 'mumbai',
+      rentPaidMonthly: 50_000,
+    })
+    expect(d.to.input.city).toBe('other')
+    expect(d.hraExemptionTo).toBe(384_000)
   })
 })

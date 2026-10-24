@@ -278,6 +278,8 @@ export const hiSuite: Record<string, string> = {
   'relocation.fromMetro': 'HRA के लिए metro से',
   'relocation.toState': 'किस राज्य में',
   'relocation.toMetro': 'HRA के लिए metro में',
+  'relocation.fromCity': 'किस शहर से',
+  'relocation.toCity': 'किस शहर में',
   'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad या Bengaluru — basic का 50% (Rule 279, Income-tax Rules, 2026)। बाकी कहीं भी 40%। सिर्फ old regime में।',
   'relocation.rent': 'आप जो rent देते हैं / महीना',
   'relocation.fromRent': 'यहां rent / महीना',

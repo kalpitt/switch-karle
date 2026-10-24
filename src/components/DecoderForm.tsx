@@ -1,7 +1,8 @@
 import type { OfferInput, StateCode } from '../engine/types'
 import { STATE_NAMES } from '../engine/professionalTax'
+import { cityChoicesFor, cityFromLegacyMetro, isHraMetro, normaliseCity, ptVariesByTown, type CityChoice } from '../engine/city'
 import { useT } from '../i18n'
-import { Card, Details, Label, NumberField, Toggle } from './ui'
+import { Card, Details, Label, NumberField, Select, Toggle } from './ui'
 
 const L = 100_000
 
@@ -15,6 +16,10 @@ export function DecoderForm({
   const t = useT()
   const set = (patch: Partial<OfferInput>) => onChange({ ...value, ...patch })
   const old = value.old ?? { rentPaidMonthly: 0, metro: false, deduction80CExtra: 0, deduction80D: 0 }
+  // Offers saved before the city field only carry the metro on/off answer.
+  const city = value.city !== undefined ? normaliseCity(value.state, value.city) : cityFromLegacyMetro(value.state, old.metro)
+  const setCity = (state: StateCode, next: CityChoice) =>
+    set({ state, city: next, old: { ...old, metro: isHraMetro(state, next) } })
 
   return (
     <Card className="space-y-4">
@@ -56,7 +61,10 @@ export function DecoderForm({
         <select
           className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
           value={value.state}
-          onChange={(e) => set({ state: e.target.value as StateCode })}
+          onChange={(e) => {
+            const state = e.target.value as StateCode
+            setCity(state, normaliseCity(state, city))
+          }}
         >
           {(Object.keys(STATE_NAMES) as StateCode[]).map((s) => (
             <option key={s} value={s}>
@@ -65,6 +73,20 @@ export function DecoderForm({
           ))}
         </select>
       </label>
+
+      <Select
+        label={t('city.label')}
+        hint={t('city.hint')}
+        value={city}
+        onChange={(v) => setCity(value.state, v)}
+        options={cityChoicesFor(value.state).map((c) => ({
+          value: c,
+          label: c === 'other' ? t('city.other', { state: t(`state.${value.state}`) }) : t(`city.${c}`),
+        }))}
+      />
+      {ptVariesByTown(value.state, city) && (
+        <p className="text-[13px] text-ink-soft">{t('city.ptTown', { state: t(`state.${value.state}`) })}</p>
+      )}
 
       <div className="space-y-2">
         <Toggle
@@ -161,12 +183,6 @@ export function DecoderForm({
           step={1000}
           value={old.rentPaidMonthly}
           onChange={(v) => set({ old: { ...old, rentPaidMonthly: v } })}
-        />
-        <Toggle
-          label={t('decoder.toggle.metro.label')}
-          hint={t('decoder.toggle.metro.hint')}
-          checked={old.metro}
-          onChange={(v) => set({ old: { ...old, metro: v } })}
         />
         <NumberField
           label={t('decoder.field.deduction80c.label')}

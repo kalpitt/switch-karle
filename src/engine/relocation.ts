@@ -1,10 +1,12 @@
 import type { OfferInput, SalaryBreakdown, StateCode } from './types'
 import { decodeOffer } from './salary'
 import { PROFESSIONAL_TAX_ANNUAL } from './professionalTax'
+import { isHraMetro, normaliseCity, type CityChoice } from './city'
 
 export interface RelocationTarget {
   state: StateCode
-  metro: boolean
+  /** One of the eight HRA metro cities, or "other". Decides the 50%/40% limb. */
+  city: CityChoice
   rentPaidMonthly: number
 }
 
@@ -29,9 +31,10 @@ function cloneForTarget(input: OfferInput, target: RelocationTarget): OfferInput
   return {
     ...input,
     state: target.state,
+    city: normaliseCity(target.state, target.city),
     old: {
       rentPaidMonthly: target.rentPaidMonthly,
-      metro: target.metro,
+      metro: isHraMetro(target.state, target.city),
       deduction80CExtra: old.deduction80CExtra,
       deduction80D: old.deduction80D,
     },
