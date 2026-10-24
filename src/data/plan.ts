@@ -23,9 +23,8 @@ export const PLAN_STORAGE_KEY = 'switchkarle.plan.v1' as const
  * on or after `startApplyingBy`, or `lookingSince` is set — see
  * `outboundUnlocked` in `src/engine/switchCalendar.ts`.
  *
- * The tick-boxes themselves are Phase 1. The ids are here now so that shipping
- * them needs no key version bump, and so the UI has one list to write i18n keys
- * against rather than inventing its own.
+ * Their order, minutes and where each is done live in `src/data/actions.ts`;
+ * the ids are here so the stored ticks need no key version bump.
  */
 export const ACTION_IDS = [
   'write-reason',
@@ -66,6 +65,11 @@ export interface Plan {
   ticks?: Partial<Record<ActionId, string>>
   /** The five companies they would say yes to. A plain list, no job titles. */
   companies?: string[]
+  /**
+   * Whether they said they have a bond or a joining bonus to pay back. Only a
+   * `true` the user chose, never inferred; it gates the bond-check action.
+   */
+  hasBond?: boolean
 }
 
 /**
@@ -84,6 +88,7 @@ const FIELDS = [
   'lookingSince',
   'ticks',
   'companies',
+  'hasBond',
 ] as const
 
 function nonEmptyString(v: unknown): v is string {
@@ -114,6 +119,7 @@ const CLEAN: { [K in (typeof FIELDS)[number]]: (v: unknown) => Plan[K] | undefin
   // silently discarding a sixth name the user typed is worse than showing it.
   companies: (v) =>
     Array.isArray(v) ? v.filter(nonEmptyString).map((name) => name.trim()) : undefined,
+  hasBond: (v) => (typeof v === 'boolean' ? v : undefined),
 }
 
 /** Keep only the known fields, and only values that pass that field's own test. */
@@ -172,6 +178,14 @@ export function savePlan(patch: PlanPatch): void {
 /** Record that `id` was ticked on `day`. */
 export function tickAction(id: ActionId, day: string): void {
   savePlan({ ticks: { [id]: day } })
+}
+
+/** Take a tick back off. Ticks merge per action, so this rewrites the map without `id`. */
+export function untickAction(id: ActionId): void {
+  const { [id]: _removed, ...rest } = loadPlan().ticks ?? {}
+  void _removed
+  savePlan({ ticks: null })
+  if (Object.keys(rest).length > 0) savePlan({ ticks: rest })
 }
 
 /**

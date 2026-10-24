@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { resetBootEchoForTests } from '../lib/storage'
-import { ACTION_IDS, PLAN_STORAGE_KEY, erasePlan, loadPlan, savePlan, tickAction } from './plan'
+import { ACTION_IDS, PLAN_STORAGE_KEY, erasePlan, loadPlan, savePlan, tickAction, untickAction } from './plan'
 
 class MemoryStorage {
   private readonly data = new Map<string, string>()
@@ -114,6 +114,24 @@ describe('the saved plan', () => {
     })
     savePlan({ ticks: null })
     expect(loadPlan().ticks).toBeUndefined()
+  })
+
+  it('unticks one action without losing the others', () => {
+    install()
+    tickAction('write-reason', '2026-09-07')
+    tickAction('name-five-companies', '2026-09-09')
+    untickAction('write-reason')
+    expect(loadPlan().ticks).toEqual({ 'name-five-companies': '2026-09-09' })
+    untickAction('name-five-companies')
+    expect(loadPlan().ticks).toBeUndefined()
+  })
+
+  it('keeps hasBond: false, the answer that must survive, and drops a non-boolean', () => {
+    install()
+    savePlan({ hasBond: false })
+    expect(loadPlan().hasBond).toBe(false)
+    mem.setItem(PLAN_STORAGE_KEY, JSON.stringify({ hasBond: 'yes' }))
+    expect(loadPlan().hasBond).toBeUndefined()
   })
 
   it('rejects an unknown action id and a tick that is not a date', () => {
