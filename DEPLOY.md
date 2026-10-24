@@ -54,3 +54,17 @@ URL.
   Pages' IPs — so no Cloudflare edge ever sees that traffic. Cloudflare zone
   analytics would only ever cover the Workers mirror, which real visitors
   won't be using.
+
+## Cutover to switchkarle.fyi (checklist)
+
+Verified 2026-10-24: with `SITE = 'https://switchkarle.fyi'` and `BASE = '/'`,
+build, `check:base`, `check:seo`, `check:csp` and all tests pass. The code side
+is one edit, in `site.config.mjs`. The rest is by hand:
+
+1. Edit `site.config.mjs`: `SITE` → `https://switchkarle.fyi`, `BASE` → `/`.
+2. GitHub → Settings → Pages → Custom domain: `switchkarle.fyi`, then tick Enforce HTTPS.
+3. Cloudflare DNS for the domain → GitHub Pages (the A/AAAA or CNAME records GitHub shows). Set the records to "DNS only" while GitHub issues the certificate.
+4. Merge to `main` (deploys). Open the site and install-test the PWA once.
+
+Users on the old `kalpit.me/switch-karle/` install keep their local data only on
+that origin; there is no redirect (ROADMAP, Settled).

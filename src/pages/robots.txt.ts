@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro'
+import { SITE } from '../../site.config.mjs'
 
 function siteRoot(): string {
-  const site = (import.meta.env.SITE || 'https://kalpit.me').replace(/\/$/, '')
+  const site = (import.meta.env.SITE || SITE).replace(/\/$/, '')
   const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
   return `${site}${base}`
 }
