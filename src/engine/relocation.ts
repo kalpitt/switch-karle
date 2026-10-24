@@ -43,8 +43,9 @@ function cloneForTarget(input: OfferInput, target: RelocationTarget): OfferInput
  * State PT changes; old-regime HRA exemption changes with metro/rent limbs.
  * New-regime tax is unchanged by metro (HRA exemption is 0 there).
  *
- * CANDIDATE: PT table is approximate (municipal notifications); HRA metro limb
- * is Rule 2A as implemented in `hraExemptionAnnual`. No cost-of-living index.
+ * CANDIDATE: PT table is approximate for the states its header does not mark
+ * VERIFIED; HRA metro limb is Rule 279 of the Income-tax Rules, 2026 (old
+ * Rule 2A) as implemented in `hraExemptionAnnual`. No cost-of-living index.
  */
 export function relocationDelta(input: OfferInput, to: RelocationTarget): RelocationDelta {
   const from = decodeOffer(input)

@@ -80,6 +80,13 @@ export interface DisputeItem {
 }
 
 // CANDIDATE: unpaid-leave recovery = (monthly gross / 30) × unpaid days. Contract may differ.
+// No statute fixes the /30 divisor. Code on Wages, 2019 s.20(2) caps an absence deduction: it may
+// not bear to the wage-period's wages "a larger proportion than the period for which he was absent
+// bears to the total period within such wage-period during which by the terms of his employment he
+// was required to work". s.18(3) caps all deductions in a wage period at 50% of wages. Gross/30 is
+// under the s.20(2) cap on a working-day count and can sit slightly above it in a 31-day month if
+// the contract counts calendar days. https://www.labour.gov.in/static/uploads/2025/06/c328da14bbb15fc4ad571dc33e7a4ab3.pdf
+// (checked 2026-10-24; in force 21-Nov-2025).
 
 const DAYS_IN_MONTH = 30
 

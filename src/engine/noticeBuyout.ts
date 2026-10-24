@@ -5,6 +5,7 @@ export interface NoticeBuyoutInput {
    * Accrued leave the employer agrees to set against unserved notice. Zero or
    * absent when they do not. CANDIDATE: whether leave may offset notice at all
    * is a matter of the appointment letter and company policy, never a statute.
+   * (2026-10-24: no statute found; appellate case law not searched exhaustively.)
    */
   leaveDaysApplied?: number
   monthlyBasic: number
@@ -27,7 +28,10 @@ export interface NoticeBuyoutResult {
   calendarDaysInMonth: 30
 }
 
-// CANDIDATE: buyout = (monthly basic|gross)/30 × unserved days. Contract governs; no statute mandates 30-day divisor. Not verified this session.
+// CANDIDATE: buyout = (monthly basic|gross)/30 × unserved days. Contract governs; no statute mandates 30-day divisor.
+// 2026-10-24: no statute found that fixes the basis or divisor for a white-collar notice buyout. The Code on Wages
+// s.20(2) proviso allows a notice-in-lieu deduction only for ten or more employees absenting in concert (up to
+// eight days' wages) — not an individual resignation. "Contract governs" stands.
 
 const DAYS_IN_MONTH = 30 as const
 

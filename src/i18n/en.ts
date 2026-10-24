@@ -487,7 +487,7 @@ export const en: Record<string, string> = {
   'form16-shock.tax': 'Tax if this were one employer',
   'form16-shock.tds': 'TDS already deducted',
   'form16-shock.stdNote': 'Each payroll likely gave you a full standard deduction. The return allows one.',
-  'form16-shock.omit234': 'Interest u/s 234B/234C is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
+  'form16-shock.omit234': 'Advance-tax interest (s.424/425 of the Income-tax Act, 2025 — the old 234B/234C) is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
   'form16-shock.form12bTitle': 'Form 12B text to hand employer 2',
   'form16-shock.form12b':
     'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B).',

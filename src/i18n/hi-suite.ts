@@ -486,7 +486,7 @@ export const hiSuite: Record<string, string> = {
   'form16-shock.tds': 'पहले से deduct हुआ TDS',
   'form16-shock.stdNote': 'हर payroll ने probably आपको पूरा standard deduction दिया। Return सिर्फ एक allow करता है।',
   'form16-shock.omit234':
-    's.234B/234C का interest तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
+    'Advance-tax interest (Income-tax Act, 2025 की s.424/425 — पुराने 234B/234C) तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
   'form16-shock.form12bTitle': 'Employer 2 को देने वाला Form 12B text',
   'form16-shock.form12b':
     'इस FY में previous employer: salary/gross {gross}, TDS {tds}। कृपया मेरी बाकी salary पर tax deduct करते समय इस income को ध्यान में रखें (Form 12B)।',
