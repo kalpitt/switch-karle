@@ -780,9 +780,9 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes आमतौर पर Contract Act s.27 के तहत void होते हैं। Employment के दौरान वाला सवाल अलग है।',
   'bond-scanner.flag.training-bond':
-    'Courts ने specialised training cost मांगा है, ordinary onboarding नहीं (*Sicpa India v. Manas Pratim Deb*)। Letter में लिखा number automatically owed नहीं है — किसी CA से confirm करें।',
+    'Bond की रकम एक ceiling है, price नहीं: employer को फिर भी असली training और actual loss दिखाना होता है। *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) में “training” trips असल में business trips थीं, और bond की रकम enforce नहीं हुई। Letter में लिखा number automatically owed नहीं है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.liquidated-damages':
-    'Liquidated damages एक ceiling हैं जिसके लिए फिर भी actual loss का proof चाहिए (*Kailash Nath Associates v. DDA*)। यह fact-specific है — किसी CA से confirm करें।',
+    'Liquidated damages एक ceiling हैं; जहां loss साबित किया जा सकता है, वहां actual loss का proof फिर भी चाहिए (*Kailash Nath Associates v. DDA*, Supreme Court, 2015)। यह fact-specific है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.probation-extend':
     'Discretion पर extendable probation का मतलब है confirmation कोई पक्की date नहीं है। Max extension writing में लें।',
   'bond-scanner.disclaimer':
@@ -818,7 +818,7 @@ export const hiSuite: Record<string, string> = {
     'साधारण भारतीय letters दोनों पक्षों को unserved notice pay करने देती हैं। यह कोई scam deposit नहीं है। Switch Karle का notice-buyout tool letter के /30 convention से cash estimate करता है।',
   'clause-library.bond-training.title': 'Training / Service Bond',
   'clause-library.bond-training.body':
-    'कोई rupee figure automatically payable नहीं है। Courts specialised training cost और actual loss देखते हैं। Clause को bond scanner में paste करें।',
+    'कोई rupee figure automatically payable नहीं है। Courts असली training और actual loss देखते हैं। Clause को bond scanner में paste करें।',
   'clause-library.variable-discretion.title': 'Company Discretion पर Variable',
   'clause-library.variable-discretion.body':
     'अगर payout "at discretion" है, तो CTC headline कोई promise नहीं है। 0 / 50 / 100% पर variable-reality tool इस्तेमाल करें।',

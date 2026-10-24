@@ -758,9 +758,9 @@ export const en: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
   'bond-scanner.flag.training-bond':
-    'Courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed — confirm with a CA.',
+    'A bond sum is a ceiling, not a price: the employer still has to show real training and actual loss. In *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) the “training” trips were business trips, and the bond sums were not enforced. A number in the letter is not automatically owed — confirm with a lawyer.',
   'bond-scanner.flag.liquidated-damages':
-    'Liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific — confirm with a CA.',
+    'Liquidated damages are a ceiling that still needs proof of actual loss where loss can be proved (*Kailash Nath Associates v. DDA*, Supreme Court, 2015). Fact-specific — confirm with a lawyer.',
   'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
@@ -793,7 +793,7 @@ export const en: Record<string, string> = {
     'Ordinary Indian letters let either side pay unserved notice. That is not a scam deposit. Switch Karle’s notice-buyout tool estimates the cash using the letter’s /30 convention.',
   'clause-library.bond-training.title': 'Training / service bond',
   'clause-library.bond-training.body':
-    'A rupee figure is not automatically payable. Courts have looked for specialised training cost and actual loss. Paste the clause into the bond scanner.',
+    'A rupee figure is not automatically payable. Courts have looked for real training and actual loss. Paste the clause into the bond scanner.',
   'clause-library.variable-discretion.title': 'Variable at company discretion',
   'clause-library.variable-discretion.body':
     'If payout is “at discretion”, the CTC headline is not a promise. Use the variable-reality tool at 0 / 50 / 100%.',
