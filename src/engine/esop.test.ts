@@ -1,10 +1,12 @@
 /**
- * PROVISIONAL — pending CA R3 review. ESOP perquisite rule is CANDIDATE only.
+ * Perquisite = (FMV on exercise − amount paid) × shares: Income-tax Act, 2025
+ * s.17(1)(d) with s.17(4)(h), VERIFIED 2026-10-24 (see esop.ts). FMV method
+ * for unlisted shares and start-up deferral are outside these goldens.
  */
 import { describe, expect, it } from 'vitest'
 import { esopReality } from './esop'
 
-describe('esopReality — provisional-pending-CA', () => {
+describe('esopReality — s.17(1)(d) / s.17(4)(h) perquisite', () => {
   it('1000 shares @ strike ₹10, FMV ₹110 → perq ₹1L; taxOnPerq at ₹18L new regime', () => {
     const r = esopReality({
       shares: 1_000,
