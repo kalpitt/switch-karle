@@ -67,7 +67,7 @@ export const hi: Record<string, string> = {
   'ui.copied': 'कॉपी हो गया ✓',
   'ui.exampleChip': 'उदाहरण',
   'ui.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
-  'ui.print': 'प्रिंट',
+  'ui.print': 'Print करें या PDF save करें',
   'ui.disclaimer':
     'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
   'ui.disclaimer.guide': 'यह सामान्य जानकारी है, कानूनी सलाह नहीं। आपका अपना letter और policy ही तय करते हैं।',
@@ -170,28 +170,29 @@ export const hi: Record<string, string> = {
     'सब कुछ आपके browser में चलता है। आपका offer कभी किसी server तक नहीं पहुंचता। यह एक estimate है, tax advice नहीं — आपके payroll की असल structure थोड़ी अलग हो सकती है।',
 
   // ---- Share card ----
-  'autofill.summary': '⚡ ये fields नहीं पता? अपने AI से offer letter पढ़वाएं',
+  'autofill.summary': 'Offer letter है? अपने AI से यह form भरवाएं',
   'autofill.explainer':
     'यह prompt copy करें, ChatGPT/Claude/Gemini में अपने पूरे offer letter के साथ paste करें, फिर जवाब यहां वापस paste करें — form अपने-आप भर जाएगा।',
-  'autofill.copyPrompt': 'Extractor prompt copy करें',
+  'autofill.copyPrompt': 'Prompt copy करें',
   'autofill.copied': 'Copy हो गया ✓',
   'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहां paste करें (इसमें एक JSON block होगा)…',
   'autofill.fillButton': 'Form भरें',
   'autofill.okFilled': 'भर दिया: {fields}',
-  'autofill.okMissing': '{n} field(s) आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
+  'autofill.okMissing': '{n} fields आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
+  'autofill.okMissingOne': '1 field आपके offer letter में नहीं थी — HR से पूछने का exact सवाल आपके AI ने लिख दिया है।',
   'autofill.error':
     'इसमें valid JSON block नहीं मिला। AI का पूरा जवाब paste करें, ```json``` वाला हिस्सा भी।',
   'autofill.privacyNote':
     'ध्यान दें: offer letter किसी AI chatbot में paste करने से वह उस AI provider के पास जाता है — आपकी मर्ज़ी, आपका account। यह app खुद कुछ भी upload नहीं करता।',
 
   'shareCard.cta.rendering': 'बन रहा है…',
-  'shareCard.cta.download': 'Truth card डाउनलोड करें ↓',
+  'shareCard.cta.download': 'Image के रूप में download करें',
   'shareCard.eyebrow': 'CTC की सच्चाई',
   'shareCard.ctcSounds': 'CTC {ctc} सुनने में {amount}/mo लगता है',
   'shareCard.butBank': 'लेकिन bank में पहुंचता है',
   'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',
-  'shareCard.footer': 'kalpit.me/switch-karle',
+  'shareCard.footer': 'switchkarle.fyi',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',

@@ -175,7 +175,7 @@ export const en: Record<string, string> = {
   'ui.copied': 'Copied ✓',
   'ui.exampleChip': 'Example',
   'ui.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
-  'ui.print': 'Print',
+  'ui.print': 'Print or save as PDF',
   'ui.disclaimer':
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
   'ui.disclaimer.guide': 'General guidance, not legal advice. Your own letter and policy decide.',
@@ -329,9 +329,10 @@ export const en: Record<string, string> = {
   'fake-offer.emailHint': 'Paste the full address if you have it — we keep only the domain.',
   'fake-offer.text': 'Offer text',
   'fake-offer.textHint': 'Paste the email or letter. It never leaves this device.',
-  'fake-offer.verdict.red': '{n} hard stop(s). Do not pay, and do not share documents until you verify the sender.',
+  'fake-offer.verdict.red': '{n} hard stops. Do not pay, and do not share documents until you verify the sender.',
+  'fake-offer.verdict.redOne': '1 hard stop. Do not pay, and do not share documents until you verify the sender.',
   'fake-offer.verdict.amber': 'Something looks off — often a free-mail recruiter or lookalike domain. Verify before you reply or share documents.',
-  'fake-offer.verdict.blank': 'Nothing has been checked yet. Paste the offer email or letter text above.',
+  'fake-offer.verdict.blank': 'Nothing has been checked yet. Paste the offer email or letter into Offer text.',
   'fake-offer.verdict.clean': 'No deposit ask found in the text. Clean text is not verification — confirm the sender and the company yourself before relying on it.',
   'fake-offer.flag.deposit-ask.title': 'Offer asks you to pay money upfront',
   'fake-offer.flag.deposit-ask.detail':
@@ -462,7 +463,8 @@ export const en: Record<string, string> = {
   'fnf-checker.mailBlocked': 'Add your name to copy the email.',
   'fnf-checker.mailNothing': 'Every line on the sheet matches the recomputation, so there is nothing to dispute. No mail is drafted.',
   'fnf-checker.mailNote': 'Read it before you send it. It asks for a basis; it does not accuse anyone of anything.',
-  'fnf-checker.mail.subject': 'Subject: Full and final settlement — request to reconcile {n} line(s)',
+  'fnf-checker.mail.subject': 'Subject: Full and final settlement — request to reconcile {n} lines',
+  'fnf-checker.mail.subjectOne': 'Subject: Full and final settlement — request to reconcile 1 line',
   'fnf-checker.mail.greeting': 'Dear {hr},',
   'fnf-checker.mail.hrTeam': 'HR team',
   'fnf-checker.mail.intro':
@@ -705,8 +707,10 @@ export const en: Record<string, string> = {
   'insurance-gap.join': 'New join date',
   'insurance-gap.personal': 'I already have a personal / parent floater',
   'insurance-gap.verdict.none': 'Next-day join. Group cover hands off with no calendar gap.',
-  'insurance-gap.verdict.gap': '{days} uncovered day(s) after {lwd}. Group mediclaim stops that evening.',
-  'insurance-gap.verdict.covered': '{days} day(s) between jobs, but you already have personal cover.',
+  'insurance-gap.verdict.gap': '{days} days without cover after {lwd}. Group mediclaim stops that evening.',
+  'insurance-gap.verdict.gapOne': '1 day without cover after {lwd}. Group mediclaim stops that evening.',
+  'insurance-gap.verdict.covered': '{days} days between jobs, but you already have personal cover.',
+  'insurance-gap.verdict.coveredOne': '1 day between jobs, but you already have personal cover.',
   'insurance-gap.overlap': 'Joining on or before LWD overlaps two employers on EPFO. That is a BGV/PF problem, not an insurance win.',
   'insurance-gap.factors': 'What changes the price of a family floater',
   'insurance-gap.factor.floater-waiting': 'Waiting periods on a new retail policy often do not cover the gap you have this month.',
@@ -760,9 +764,10 @@ export const en: Record<string, string> = {
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint':
     'Paste the bond or restraint paragraph. Saved on this device only, never uploaded.',
-  'bond-scanner.verdict.blank': 'Nothing has been checked yet. Paste the bond clause or appointment-letter text above.',
+  'bond-scanner.verdict.blank': 'Nothing has been checked yet. Paste the bond clause or appointment-letter text into the box.',
   'bond-scanner.verdict.clean': 'No bond, certificate-deposit or post-exit restraint pattern in this paste.',
-  'bond-scanner.verdict.flags': '{n} pattern(s) worth a lawyer, not a panic. Case law is fact-specific.',
+  'bond-scanner.verdict.flags': '{n} patterns worth a lawyer, not a panic. Case law is fact-specific.',
+  'bond-scanner.verdict.flagsOne': '1 pattern worth a lawyer, not a panic. Case law is fact-specific.',
   'bond-scanner.flag.original-certificates':
     'Retaining original degrees is widely treated as unlawful restraint. Do not hand over originals. (Not a substitute for a lawyer.)',
   'bond-scanner.flag.post-exit-noncompete':
@@ -888,7 +893,7 @@ export const en: Record<string, string> = {
   'results.reaches': 'of CTC reaches your bank · {amount}/year in-hand',
   'regime.new': 'New regime',
   'regime.old': 'Old regime',
-  'results.cheaper': 'CHEAPER',
+  'results.cheaper': 'Cheaper',
   'results.taxPerYear': 'tax {amount}/yr',
   'results.whereGoes': 'Where your CTC goes',
   'results.row.ctcQuoted': 'CTC as quoted',
@@ -906,9 +911,9 @@ export const en: Record<string, string> = {
   'results.flagsBadge': '{n} flag{plural}',
   'results.noAlarming': '✓ nothing alarming',
   'results.sayThis': 'Say this:',
-  'flagChip.red': 'RED FLAG',
-  'flagChip.amber': 'CAUTION',
-  'flagChip.info': 'KNOW THIS',
+  'flagChip.red': 'Red flag',
+  'flagChip.amber': 'Caution',
+  'flagChip.info': 'Know this',
   'results.howComputed': 'How we computed this (every number, no magic)',
   'results.howComputed.bullet1':
     'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 156 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
@@ -921,28 +926,28 @@ export const en: Record<string, string> = {
     'Everything runs in your browser. Your offer never touches a server. This is an estimate, not tax advice — your payroll\'s exact structure will differ a little.',
 
   // ---- Share card ----
-  'autofill.summary': "⚡ Don't know these fields? Let your AI read the offer letter",
+  'autofill.summary': 'Have the offer letter? Let your own AI fill this in',
   'autofill.explainer':
     'Copy this prompt, paste it into ChatGPT/Claude/Gemini along with your full offer letter, then paste the answer back here — the form fills itself.',
-  'autofill.copyPrompt': 'Copy the extractor prompt',
+  'autofill.copyPrompt': 'Copy the prompt',
   'autofill.copied': 'Copied ✓',
   'autofill.pastePlaceholder': "Paste your AI's full answer here (it contains a JSON block)…",
   'autofill.fillButton': 'Fill the form',
   'autofill.okFilled': 'Filled: {fields}',
-  'autofill.okMissing': "{n} field(s) weren't in your offer letter — your AI listed the exact questions to ask HR.",
-  'autofill.error':
-    "Couldn't find a valid JSON block in that. Paste the AI's complete answer, including the ```json``` part.",
+  'autofill.okMissing': '{n} fields were not in your offer letter. Your AI listed the exact questions to ask HR.',
+  'autofill.okMissingOne': '1 field was not in your offer letter. Your AI listed the exact question to ask HR.',
+  'autofill.error': 'Could not find a valid JSON block in that. Paste the AI\'s complete answer, including the ```json``` part.',
   'autofill.privacyNote':
     'Note: pasting your offer letter into an AI chatbot shares it with that AI provider — your choice, your account. This app itself still uploads nothing.',
 
   'shareCard.cta.rendering': 'Rendering…',
-  'shareCard.cta.download': 'Download the truth card ↓',
-  'shareCard.eyebrow': 'THE CTC TRUTH',
+  'shareCard.cta.download': 'Download as an image',
+  'shareCard.eyebrow': 'The CTC truth',
   'shareCard.ctcSounds': 'CTC {ctc} sounds like {amount}/mo',
   'shareCard.butBank': 'but the bank sees',
   'shareCard.reaches': '{pct}% of CTC reaches the bank',
   'shareCard.redFlags': '⚑ {n} red flag{plural} in this offer',
-  'shareCard.footer': 'kalpit.me/switch-karle',
+  'shareCard.footer': 'switchkarle.fyi',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',

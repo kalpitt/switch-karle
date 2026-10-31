@@ -82,7 +82,9 @@ export function AutoFill({
               {t('autofill.okFilled', { fields: status.filled.join(', ') })}
             </p>
             {status.missing.length > 0 && (
-              <p className="mt-1 text-ink-soft">{t('autofill.okMissing', { n: status.missing.length })}</p>
+              <p className="mt-1 text-ink-soft">{status.missing.length === 1
+                  ? t('autofill.okMissingOne')
+                  : t('autofill.okMissing', { n: status.missing.length })}</p>
             )}
           </div>
         )}

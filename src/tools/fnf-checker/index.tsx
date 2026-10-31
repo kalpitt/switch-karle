@@ -165,7 +165,7 @@ function Body() {
 
   const label = (id: string) => t(`fnf-checker.line.${id}`, { fallbackLabel: id })
   const mail = [
-    t('fnf-checker.mail.subject', { n: disputes.length }),
+    disputes.length === 1 ? t('fnf-checker.mail.subjectOne') : t('fnf-checker.mail.subject', { n: disputes.length }),
     '',
     t('fnf-checker.mail.greeting', { hr: draft.hrName.trim() || t('fnf-checker.mail.hrTeam') }),
     '',

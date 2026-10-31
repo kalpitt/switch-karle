@@ -308,10 +308,11 @@ export const hiSuite: Record<string, string> = {
   'fake-offer.emailHint': 'पूरा address paste करें अगर है — हम सिर्फ domain रखते हैं।',
   'fake-offer.text': 'Offer text',
   'fake-offer.textHint': 'Email या letter paste करें। यह कभी इस device से बाहर नहीं जाता।',
-  'fake-offer.verdict.red': '{n} hard stop। Sender verify होने तक payment न करें और documents share न करें।',
+  'fake-offer.verdict.red': '{n} hard stops। Sender verify होने तक payment न करें और documents share न करें।',
+  'fake-offer.verdict.redOne': '1 hard stop। Sender verify होने तक payment न करें और documents share न करें।',
   'fake-offer.verdict.amber':
     'कुछ ठीक नहीं लगता — अक्सर free-mail recruiter या lookalike domain होता है। Reply करने या documents share करने से पहले verify करें।',
-  'fake-offer.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर offer email या letter का text paste करें।',
+  'fake-offer.verdict.blank': 'अभी कुछ भी check नहीं हुआ। Offer email या letter का text, Offer text वाले box में paste करें।',
   'fake-offer.verdict.clean': 'Text में deposit की मांग नहीं मिली। Clean text verification नहीं है — भरोसा करने से पहले sender और company खुद confirm करें।',
   'fake-offer.flag.deposit-ask.title': 'Offer आपसे पहले पैसे मांगता है',
   'fake-offer.flag.deposit-ask.detail':
@@ -448,7 +449,8 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.mailBlocked': 'Email copy करने के लिए अपना नाम भरें।',
   'fnf-checker.mailNothing': 'Sheet की हर line recomputation से मिल रही है, तो dispute करने को कुछ नहीं है। कोई mail draft नहीं हुई।',
   'fnf-checker.mailNote': 'भेजने से पहले पढ़ लें। यह basis पूछती है, किसी पर इलज़ाम नहीं लगाती।',
-  'fnf-checker.mail.subject': 'Subject: Full and final settlement — {n} line(s) पर reconciliation की request',
+  'fnf-checker.mail.subject': 'Subject: Full and final settlement — {n} lines पर reconciliation की request',
+  'fnf-checker.mail.subjectOne': 'Subject: Full and final settlement — 1 line पर reconciliation की request',
   'fnf-checker.mail.greeting': 'Dear {hr},',
   'fnf-checker.mail.hrTeam': 'HR team',
   'fnf-checker.mail.intro':
@@ -711,8 +713,10 @@ export const hiSuite: Record<string, string> = {
   'insurance-gap.join': 'नई join date',
   'insurance-gap.personal': 'मेरे पास पहले से personal / parent floater है',
   'insurance-gap.verdict.none': 'Next-day join। Group cover बिना किसी calendar gap के hand off होता है।',
-  'insurance-gap.verdict.gap': '{lwd} के बाद {days} uncovered दिन। Group mediclaim उस शाम रुक जाता है।',
+  'insurance-gap.verdict.gap': '{lwd} के बाद {days} दिन बिना cover के। Group mediclaim उस शाम रुक जाता है।',
+  'insurance-gap.verdict.gapOne': '{lwd} के बाद 1 दिन बिना cover के। Group mediclaim उस शाम रुक जाता है।',
   'insurance-gap.verdict.covered': 'Jobs के बीच {days} दिन, लेकिन आपके पास पहले से personal cover है।',
+  'insurance-gap.verdict.coveredOne': 'Jobs के बीच 1 दिन, लेकिन आपके पास पहले से personal cover है।',
   'insurance-gap.overlap': 'LWD पर या उससे पहले join करने से EPFO पर दो employers overlap करते हैं। यह BGV/PF की problem है, insurance की जीत नहीं।',
   'insurance-gap.factors': 'Family floater की कीमत किन बातों से बदलती है',
   'insurance-gap.factor.floater-waiting': 'नई retail policy पर waiting periods अक्सर इस महीने के gap को cover नहीं करती।',
@@ -771,9 +775,10 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint':
     'Bond या restraint वाला paragraph paste करें। सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
-  'bond-scanner.verdict.blank': 'अभी कुछ भी check नहीं हुआ। ऊपर bond clause या appointment letter का text paste करें।',
+  'bond-scanner.verdict.blank': 'अभी कुछ भी check नहीं हुआ। Bond clause या appointment letter का text box में paste करें।',
   'bond-scanner.verdict.clean': 'इस paste में bond, certificate-deposit या post-exit restraint का pattern नहीं है।',
   'bond-scanner.verdict.flags': '{n} pattern lawyer से बात करने लायक हैं, panic करने की नहीं। Case law fact-specific होता है।',
+  'bond-scanner.verdict.flagsOne': '1 pattern lawyer से बात करने लायक है, panic करने की नहीं। Case law fact-specific होता है।',
   'bond-scanner.flag.original-certificates':
     'Original degrees रखना आमतौर पर unlawful restraint माना जाता है। Originals न दें। (यह किसी lawyer का substitute नहीं है।)',
   'bond-scanner.flag.post-exit-noncompete':
