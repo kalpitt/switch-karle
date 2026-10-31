@@ -295,10 +295,9 @@ export const hi: Record<string, string> = {
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
-  'promptStudio.description':
-    'एक context-rich prompt बनाएं, उसे ChatGPT/Claude/Gemini में copy करें, फिर जवाब यहां वापस paste करके अपनी tracked application के साथ save करें।',
-  'promptStudio.personalizeFor': 'किसके लिए personalize करें',
-  'promptStudio.genericOption': 'कोई application नहीं — generic',
+  'promptStudio.description': 'एक prompt चुनें और उसे अपने AI (ChatGPT, Claude या Gemini) में copy करें। जवाब यहां वापस paste करें ताकि वह उसी application के साथ रहे।',
+  'promptStudio.personalizeFor': 'किसकी details इस्तेमाल करें',
+  'promptStudio.genericOption': 'कोई application नहीं (general prompt)',
   'promptStudio.emptyTitle': 'इन prompts को personalize करने के लिए एक application track करें।',
   'promptStudio.emptyBody':
     'नीचे दिए prompts generically भी काम करते हैं — Tracker में company, role, CTC और notice period जोड़कर ज़्यादा sharp, नाम-specific prompts पाएं।',
@@ -318,22 +317,21 @@ export const hi: Record<string, string> = {
   'promptStudio.savedInsights': 'Save किए गए insights',
   'promptStudio.deleteInsightConfirm': 'यह saved insight delete करें? यह वापस नहीं हो सकता।',
 
-  'template.company-research.title': 'Company की due-diligence brief',
+  'template.company-research.title': 'Company के बारे में research करें',
   'template.company-research.description':
     'Funding, culture, comp bands, red flags — आगे बढ़ने से पहले एक structured brief।',
-  'template.jd-deconstruct.title': 'JD की गहराई से पड़ताल',
+  'template.jd-deconstruct.title': 'Job description समझें',
   'template.jd-deconstruct.description':
     'Job description paste करें — hidden expectations, keywords और seniority signals decode करें।',
-  'template.interview-prep.title': 'Stage के हिसाब से interview की तैयारी',
+  'template.interview-prep.title': 'Interview rounds की तैयारी करें',
   'template.interview-prep.description':
     'संभावित rounds, strong-answer outlines, एक STAR story bank, और पूछने लायक questions।',
-  'template.negotiation.title': 'Negotiation की रिहर्सल',
+  'template.negotiation.title': 'Salary की बात की practice करें',
   'template.negotiation.description': 'Counter-offers, हर red flag के लिए scripts, walk-away math, और email drafts।',
-  'template.outreach.title': 'Referral और recruiter outreach',
-  'template.outreach.description': 'छोटे, natural LinkedIn messages — connection note, InMail, और एक follow-up।',
-  'template.offer-compare.title': 'Offer comparison और decision framework',
-  'template.offer-compare.description':
-    'Total-comp truth table, risk-adjusted equity, notice friction — एक असली recommendation निकलवाता है।',
+  'template.outreach.title': 'Referral मांगें',
+  'template.outreach.description': 'छोटे LinkedIn messages: एक connection note, एक InMail और एक follow-up।',
+  'template.offer-compare.title': 'Offers में से चुनें',
+  'template.offer-compare.description': 'हर offer का पैसा, risk और growth एक साथ रखता है, फिर आपके AI से एक चुनवाता है।',
   'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
   'template.offer-extract.description':
     'पूरा offer letter paste करें — आपका AI Decoder के लिए ज़रूरी हर field निकाल देगा, वापस paste करने के लिए तैयार।',

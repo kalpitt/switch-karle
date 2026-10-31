@@ -77,7 +77,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={md} label={t('ui.copyNote')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">{t('handover-doc.copyBlocked')}</p>
             )}

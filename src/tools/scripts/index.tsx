@@ -57,7 +57,7 @@ function Body({ slug }: { slug: ScriptSlug }) {
 
   return (
     <div data-tool={slug} className="mx-auto max-w-2xl space-y-4">
-      <p className="text-[15px] text-ink-soft">{t('hr.lead')}</p>
+      <p className="text-[15px] text-ink-soft">{t(slug === 'manager-script' ? 'manager-script.lead' : 'hr.lead')}</p>
       <ScriptSwitcher current={slug} />
       {slug === 'manager-script' ? (
         <SpokenScript />
@@ -78,7 +78,7 @@ function StaticScript({ slug }: { slug: ScriptSlug }) {
     <Card>
       <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{body}</pre>
       <div className="mt-4">
-        <CopyButton text={body} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+        <CopyButton text={body} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
       </div>
     </Card>
   )
@@ -134,7 +134,7 @@ function ExpectedCtcScript() {
         <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{body}</pre>
         <div className="mt-4">
           {ready ? (
-            <CopyButton text={body} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+            <CopyButton text={body} label={t('ui.copyScript')} copiedLabel={t('ui.copied')} />
           ) : (
             <p className="text-[13px] font-semibold text-amberflag">{t('hr.expected-ctc.copyBlocked')}</p>
           )}
@@ -190,7 +190,7 @@ function SpokenScript() {
       <Card>
         <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{script}</pre>
         <div className="mt-4">
-          <CopyButton text={script} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+          <CopyButton text={script} label={t('ui.copyScript')} copiedLabel={t('ui.copied')} />
           {lwdMissing && <p className="mt-2 text-[13px] text-ink-soft">{t('manager-script.copyBlocked')}</p>}
         </div>
       </Card>

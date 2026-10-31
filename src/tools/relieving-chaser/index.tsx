@@ -112,7 +112,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">
                 {lwdReady ? t('relieving-chaser.fillFields') : t('relieving-chaser.setLwd')}

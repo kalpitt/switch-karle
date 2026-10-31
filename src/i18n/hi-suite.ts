@@ -137,6 +137,11 @@ export const hiSuite: Record<string, string> = {
   'nav.searchHint': 'Tools खोजें: gratuity, notice, PF, hike…',
   'nav.searchEmpty': '“{q}” से कुछ नहीं मिला। “notice”, “PF” या “in-hand” खोजकर देखें।',
   'ui.copyText': 'कॉपी करें',
+  'ui.copyResult': 'Result copy करें',
+  'ui.copyLetter': 'Letter copy करें',
+  'ui.copyEmail': 'Email copy करें',
+  'ui.copyNote': 'Note copy करें',
+  'ui.copyScript': 'Script copy करें',
 
   // ---- Offer comparison ----
   'offer-comparison.title': 'Offer तुलना',
@@ -532,8 +537,8 @@ export const hiSuite: Record<string, string> = {
   'manager-script.formTitle': 'जिस room में आप जा रहे हैं',
   'manager-script.preset': 'यह manager आमतौर पर कैसा है',
   'manager-script.preset.supportive': 'Supportive',
-  'manager-script.preset.counter-risk': 'Counter करने की संभावना है',
-  'manager-script.preset.hostile': 'Manager push-back',
+  'manager-script.preset.counter-risk': 'Counter कर सकते हैं',
+  'manager-script.preset.hostile': 'Push back कर सकते हैं',
   'manager-script.verdict.supportive': 'पहले thanks कहें, फिर date बताएं। नई role को ज़्यादा explain न करें।',
   'manager-script.verdict.counter-risk': 'Room में जाने से पहले decide कर लें। अगर फिर भी जाना है, तो एक बार साफ कह दें।',
   'manager-script.verdict.hostile': 'Short रखें, बाद में writing में confirm करें। Room में policy पर बहस न करें।',
@@ -546,7 +551,8 @@ export const hiSuite: Record<string, string> = {
     'यह resignation है। Letter inbox में है / यहां paper पर है। Notice के हिसाब से last working day [LWD] है। Handover पूरा किया जाएगा। इस meeting में decision पर बहस नहीं करनी। HR को कुछ चाहिए तो mail किया जा सकता है।',
 
   // ---- HR templates ----
-  'hr.lead': 'Copy करें, brackets भरें, अपने mail से भेजें। यहां से कुछ भी इस device से बाहर नहीं जाता।',
+  'hr.lead': 'इसे copy करें, [brackets] भरें और खुद भेजें। यहां से कुछ भी इस device से बाहर नहीं जाता।',
+  'manager-script.lead': 'आमने-सामने कहें, फिर writing में follow up करें।',
   'hr.disclaimer': 'Templates हैं, legal advice नहीं। भेजने से पहले इन्हें अपनी appointment letter से match करें।',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'जब recruiter band share करने से पहले एक number मांगे।',

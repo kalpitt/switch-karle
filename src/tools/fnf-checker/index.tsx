@@ -255,7 +255,7 @@ function Body() {
               <>
                 <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{mail}</pre>
                 {canSend ? (
-                  <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+                  <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
                 ) : (
                   <p className="text-[13px] font-semibold text-amberflag">{t('fnf-checker.mailBlocked')}</p>
                 )}
@@ -267,7 +267,7 @@ function Body() {
         {!isExample && result && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

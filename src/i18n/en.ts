@@ -174,6 +174,11 @@ export const en: Record<string, string> = {
 
   'ui.copy': 'Copy',
   'ui.copyText': 'Copy',
+  'ui.copyResult': 'Copy result',
+  'ui.copyLetter': 'Copy letter',
+  'ui.copyEmail': 'Copy email',
+  'ui.copyNote': 'Copy note',
+  'ui.copyScript': 'Copy script',
   'ui.copied': 'Copied ✓',
   'ui.exampleChip': 'Example',
   'ui.exampleNote': 'Worked example with sample numbers — nothing about you has been checked yet.',
@@ -544,8 +549,8 @@ export const en: Record<string, string> = {
   'manager-script.formTitle': 'The room you are walking into',
   'manager-script.preset': 'How this manager usually is',
   'manager-script.preset.supportive': 'Supportive',
-  'manager-script.preset.counter-risk': 'Will likely counter',
-  'manager-script.preset.hostile': 'Manager push-back',
+  'manager-script.preset.counter-risk': 'Likely to counter',
+  'manager-script.preset.hostile': 'Likely to push back',
   'manager-script.verdict.supportive': 'Lead with thanks, then the date. Do not over-explain the new role.',
   'manager-script.verdict.counter-risk': 'Decide before you walk in. If you will still leave, say so once.',
   'manager-script.verdict.hostile': 'Keep it short, in writing afterwards. Do not argue policy in the room.',
@@ -557,7 +562,8 @@ export const en: Record<string, string> = {
   'manager-script.body.hostile':
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
-  'hr.lead': 'Copy, fill the brackets, send from your own mail. Nothing here leaves this device.',
+  'hr.lead': 'Copy it, fill in the [brackets] and send it yourself. Nothing here leaves this device.',
+  'manager-script.lead': 'Say it in person, then follow up in writing.',
   'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'When the recruiter asks for a number before they share the band.',
@@ -1050,11 +1056,10 @@ export const en: Record<string, string> = {
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
-  'promptStudio.description':
-    'Generate a context-rich prompt, copy it into ChatGPT/Claude/Gemini, then paste the answer back here to save it against your tracked application.',
-  'promptStudio.personalizeFor': 'Personalize for',
-  'promptStudio.genericOption': 'No application — generic',
-  'promptStudio.emptyTitle': 'Track an application to personalize these prompts.',
+  'promptStudio.description': 'Pick a prompt and copy it into your own AI (ChatGPT, Claude or Gemini). Paste the answer back to keep it with that application.',
+  'promptStudio.personalizeFor': 'Use details from',
+  'promptStudio.genericOption': 'No application (general prompt)',
+  'promptStudio.emptyTitle': 'Track an application to personalise these prompts.',
   'promptStudio.emptyBody':
     'Prompts below still work generically — add company, role, CTC and notice period in the Tracker to get sharper, name-specific prompts.',
   'promptStudio.goToTracker': 'Go to Tracker',
@@ -1073,23 +1078,22 @@ export const en: Record<string, string> = {
   'promptStudio.savedInsights': 'Saved insights',
   'promptStudio.deleteInsightConfirm': 'Delete this saved insight? This cannot be undone.',
 
-  'template.company-research.title': 'Company due-diligence brief',
+  'template.company-research.title': 'Research a company',
   'template.company-research.description':
     'Funding, culture, comp bands, red flags — a structured brief before you go further.',
-  'template.jd-deconstruct.title': 'JD deconstructor',
+  'template.jd-deconstruct.title': 'Decode a job description',
   'template.jd-deconstruct.description':
     'Paste the job description — decode hidden expectations, keywords, and seniority signals.',
-  'template.interview-prep.title': 'Stage-aware interview prep plan',
+  'template.interview-prep.title': 'Prepare for the interview rounds',
   'template.interview-prep.description':
     'Likely rounds, strong-answer outlines, a STAR story bank, and questions to ask back.',
-  'template.negotiation.title': 'Negotiation rehearsal',
+  'template.negotiation.title': 'Practise the salary talk',
   'template.negotiation.description':
     'Counter-offers, scripts against every red flag, walk-away math, and email drafts.',
-  'template.outreach.title': 'Referral & recruiter outreach',
-  'template.outreach.description': 'Short, non-cringe LinkedIn messages — connection note, InMail, and a follow-up.',
-  'template.offer-compare.title': 'Offer comparison & decision framework',
-  'template.offer-compare.description':
-    'Total-comp truth table, risk-adjusted equity, notice friction — forces an actual recommendation.',
+  'template.outreach.title': 'Ask for a referral',
+  'template.outreach.description': 'Short LinkedIn messages: a connection note, an InMail and a follow-up.',
+  'template.offer-compare.title': 'Decide between offers',
+  'template.offer-compare.description': 'Lines up money, risk and growth for each offer, then makes your AI pick one.',
   'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
   'template.offer-extract.description':
     'Paste your full offer letter — your AI pulls out every field the Decoder needs, ready to paste back.',

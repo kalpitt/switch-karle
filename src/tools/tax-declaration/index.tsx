@@ -136,7 +136,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

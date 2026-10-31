@@ -196,7 +196,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={letter} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={letter} label={t('ui.copyLetter')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
             )}

@@ -93,7 +93,7 @@ function Body() {
           <div className="bg-sheet-dim p-3 rounded text-[13px] whitespace-pre-wrap font-mono text-ink-soft border border-sheet-edge">
             {promptText}
           </div>
-          <CopyButton text={promptText} label={t('ui.copyText')} copiedLabel={t('ui.copied')} />
+          <CopyButton text={promptText} label={t('promptStudio.copyPrompt')} copiedLabel={t('ui.copied')} />
         </Card>
 
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
