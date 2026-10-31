@@ -1,8 +1,21 @@
 @import '@fontsource-variable/inter';
 @import 'tailwindcss';
 
+/* Devanagari, self-hosted (CSP font-src 'self'). Only the Devanagari subset is declared:
+   Inter already covers Latin and ₹, so English pages never download this file, and the
+   service worker precaches one font file rather than three. */
+@font-face {
+  font-family: 'Noto Sans Devanagari Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/noto-sans-devanagari/files/noto-sans-devanagari-devanagari-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF;
+}
+
 @theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui, sans-serif;
 
   /* Chhalaang palette: warm paper, ink, saffron leap, truth-green, alarm-red */
   --color-paper: #faf7f2;
@@ -35,6 +48,41 @@ html {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Hindi typography. Devanagari hangs vowel signs above the headline and below the
+   baseline, so it needs taller lines than Latin; letter-spacing breaks the joined
+   headline; uppercase only shouts the Latin words in a code-mixed line; 10-12px
+   Devanagari is unreadable; and 800+ weights are faux-bolded on most devices.
+   Unlayered, so these win over the Tailwind utilities they correct. Anything marked
+   lang="en" (the wordmark, the EN toggle) keeps its Latin styling. */
+:lang(hi) body,
+:lang(hi) :is(p, li, dd, td) {
+  line-height: 1.7;
+}
+:lang(hi) .leading-relaxed {
+  line-height: 1.75;
+}
+:lang(hi) .leading-snug {
+  line-height: 1.5;
+}
+:lang(hi) :is(h1, h2, h3, .leading-tight) {
+  line-height: 1.35;
+}
+:lang(hi) [class*='tracking-'] {
+  letter-spacing: 0;
+}
+:lang(hi) .uppercase {
+  text-transform: none;
+}
+:lang(hi) :is(.text-\[10px\], .text-\[11px\], .text-\[12px\], .text-xs) {
+  font-size: 13px;
+}
+:lang(hi) .text-\[13px\] {
+  font-size: 14px;
+}
+:lang(hi) :is(.font-extrabold, .font-black) {
+  font-weight: 700;
 }
 
 /* Numeric alignment for money figures */
