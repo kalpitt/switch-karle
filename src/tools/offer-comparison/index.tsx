@@ -141,7 +141,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() =>
               setSlots((prev) => [
                 ...prev,
@@ -154,7 +154,7 @@ function CompareBody() {
         ) : (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() => setSlots((prev) => prev.slice(0, 2))}
           >
             {t('offer-comparison.removeThird')}

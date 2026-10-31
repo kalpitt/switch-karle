@@ -33,7 +33,7 @@ function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done:
   return (
     <a
       href={withLang(lang, slug)}
-      className="no-print shrink-0 rounded-full border border-line px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron"
+      className="no-print inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-line px-3 text-xs font-bold text-ink-soft transition-colors hover:border-saffron"
     >
       {t('notice-tracker.open', { tool: t(tool.titleKey) })}
     </a>

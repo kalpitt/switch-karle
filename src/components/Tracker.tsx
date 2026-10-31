@@ -248,7 +248,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => setFormMode('add')}
-              className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+              className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
             >
               {t('tracker.openAdd')}
             </button>
@@ -266,7 +266,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={handleExport}
-              className="rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
             >
               {t('tracker.export')}
             </button>
@@ -307,7 +307,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => setPendingBackup(null)}
-              className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
             >
               {t('tracker.restore.cancel')}
             </button>
@@ -330,7 +330,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={handleUndo}
-              className="rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
             >
               {t('tracker.restore.undo')}
             </button>
@@ -469,14 +469,14 @@ function ExportImportButtons({
       <button
         type="button"
         onClick={onExport}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.export')}
       </button>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.import')}
       </button>
@@ -484,7 +484,7 @@ function ExportImportButtons({
       <button
         type="button"
         onClick={onSweepToggle}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.sweep')}
       </button>
@@ -770,7 +770,7 @@ function ApplicationCard({
                           })
                       : undefined
                   }
-                  className={`inline-flex min-h-[28px] items-center rounded-full border bg-paper px-2.5 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
+                  className={`inline-flex min-h-[44px] items-center rounded-full border bg-paper px-3 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
                     isPrefilledThis ? 'border-saffron/50 text-saffron' : 'border-line text-ink-soft'
                   }`}
                 >

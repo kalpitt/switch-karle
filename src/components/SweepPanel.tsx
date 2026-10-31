@@ -96,7 +96,7 @@ export function SweepPanel({
             <button
               type="button"
               onClick={handleCopy}
-              className="rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
             >
               {copied ? t('sweep.copied') : t('sweep.copy')}
             </button>
@@ -201,7 +201,7 @@ export function SweepPanel({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
             >
               {t('tracker.restore.cancel')}
             </button>
@@ -224,7 +224,7 @@ export function SweepPanel({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+            className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
           >
             {t('tracker.restore.cancel')}
           </button>

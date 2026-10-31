@@ -133,7 +133,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
             <button
               type="button"
               onClick={onGoToTracker}
-              className="rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
             >
               {t('promptStudio.goToTracker')}
             </button>
@@ -239,7 +239,7 @@ function TemplateCard({
         <button
           type="button"
           onClick={() => onCopy(prompt)}
-          className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+          className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
         >
           {copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt')}
         </button>

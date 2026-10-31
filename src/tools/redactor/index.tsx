@@ -73,7 +73,7 @@ function Body() {
             type="button"
             onClick={download}
             disabled={busy || !result.redacted}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
           >
             {busy ? t('redactor.busy') : t('redactor.download')}
           </button>
