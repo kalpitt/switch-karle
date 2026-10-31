@@ -134,8 +134,11 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Nav / app shell / common ----
   'nav.search': 'टूल खोजें',
-  'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
-  'nav.searchEmpty': 'कोई tool match नहीं हुआ।',
+  'nav.searchHint': 'टाइप करें और सीधे वहाँ पहुँचें। बंद करने के लिए Esc दबाएं।',
+  'nav.searchEmpty': '“{q}” के लिए अभी कुछ नहीं। notice, gratuity, in-hand या resign आज़माएं।',
+  'nav.searchCount': 'नतीजे: {n}',
+  'nav.close': 'बंद करें',
+  'palette.plan.desc': 'तीन सवाल। आपकी gratuity date, hike का महीना और last working day।',
   'ui.copyText': 'कॉपी करें',
 
   // ---- Offer comparison ----

@@ -128,12 +128,16 @@ describe('palette', () => {
     const items = paletteItems(TOOLS, '/', (s) => `/${s}/`)
     const label = (k: string) => dictionaries.en[k] ?? k
 
-    // 'quit' and 'resign' reach resignation-letter, notice-buyout, notice-tracker
+    // 'quit' reaches the plan first (when to quit is its whole question), then the
+    // resignation letter, notice buyout, notice tracker and gratuity
     const quitSlugs = filterPalette(items, 'quit', label).map((i) => i.slug)
+    expect(quitSlugs[0]).toBe('home')
     expect(quitSlugs).toContain('resignation-letter')
     expect(quitSlugs).toContain('notice-buyout')
     expect(quitSlugs).toContain('notice-tracker')
-    expect(quitSlugs[0]).toBe('resignation-letter')
+    expect(quitSlugs).toContain('gratuity')
+    // …and not ESOP reality, whose keyword "equity" merely contains the letters
+    expect(quitSlugs).not.toContain('esop-reality')
 
     const resignSlugs = filterPalette(items, 'resign', label).map((i) => i.slug)
     expect(resignSlugs[0]).toBe('resignation-letter')
@@ -152,6 +156,21 @@ describe('palette', () => {
     expect(inHand1[0]).toBe('decoder')
     expect(inHand2).toEqual(inHand1)
     expect(inHand3).toEqual(inHand1)
+
+    // a word in a title beats a word in someone else's description
+    expect(filterPalette(items, 'fake', label)[0]!.slug).toBe('fake-offer')
+    expect(filterPalette(items, 'bond', label)[0]!.slug).toBe('bond-scanner')
+    expect(filterPalette(items, 'pf', label)[0]!.slug).toBe('epf-transfer')
+    // 'hr' no longer matches every description containing "three" or "through"
+    expect(filterPalette(items, 'hr', label).length).toBeLessThan(8)
+
+    // the plan is findable by what people call it
+    for (const q of ['plan', 'my dates', 'when to resign', 'join date', 'calendar']) {
+      expect(filterPalette(items, q, label)[0]!.slug, q).toBe('home')
+    }
+
+    // no resume promises: Prompt Studio has no resume template
+    expect(filterPalette(items, 'resume', label).map((i) => i.slug)).not.toContain('prompts')
 
     // 'job' returns a sensible set rather than every tool
     const jobSlugs = filterPalette(items, 'job', label).map((i) => i.slug)
