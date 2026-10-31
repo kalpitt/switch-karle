@@ -119,13 +119,13 @@ function ExpectedCtcScript() {
         />
         <MoneyField
           label={t('hr.expected-ctc.current')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={currentCtc}
           onChange={setCurrentCtc}
         />
         <MoneyField
           label={t('hr.expected-ctc.expected')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={expectedCtc}
           onChange={setExpectedCtc}
         />

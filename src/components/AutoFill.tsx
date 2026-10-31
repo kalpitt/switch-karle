@@ -76,6 +76,7 @@ export function AutoFill({
         >
           {t('autofill.fillButton')}
         </button>
+        {pasted.trim() === '' && <p className="text-[13px] text-ink-soft">{t('autofill.fillBlocked')}</p>}
         {status.kind === 'ok' && (
           <div className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
             <p className="font-bold text-leaf">

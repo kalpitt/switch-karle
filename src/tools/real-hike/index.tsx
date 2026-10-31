@@ -151,18 +151,18 @@ function Body() {
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('real-hike.formTitle')}</h2>
-        <MoneyField label={t('real-hike.currentCtc')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField
           label={t('real-hike.currentVariable')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.currentVariable}
           onChange={(v) => set({ currentVariable: v })}
         />
         <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
-        <MoneyField label={t('real-hike.nextCtc')} hint={t('ui.money.hint')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
+        <MoneyField label={t('real-hike.nextCtc')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
         <MoneyField
           label={t('real-hike.nextVariable')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.nextVariable}
           onChange={(v) => set({ nextVariable: v })}
         />

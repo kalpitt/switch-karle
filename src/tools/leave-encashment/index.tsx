@@ -97,7 +97,7 @@ function Body() {
         <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
         <MoneyField
           label={t('leave-encashment.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })

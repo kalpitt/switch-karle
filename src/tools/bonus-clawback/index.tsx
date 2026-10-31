@@ -158,7 +158,7 @@ function Body() {
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('bonus-clawback.formTitle')}</h2>
-        <MoneyField label={t('bonus-clawback.amount')} hint={t('ui.money.hint')} value={draft.amount} onChange={(v) => set({ amount: v })} />
+        <MoneyField label={t('bonus-clawback.amount')} placeholder={t('ui.money.placeholder')} value={draft.amount} onChange={(v) => set({ amount: v })} />
         <NumberField
           label={t('bonus-clawback.window')}
           suffix={t('unit.months')}

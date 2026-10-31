@@ -150,7 +150,7 @@ function Body() {
         />
         <MoneyField
           label={t('notice-buyout.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })
@@ -159,7 +159,7 @@ function Body() {
         />
         <MoneyField
           label={t('notice-buyout.gross')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyGross}
           onChange={(v) => {
             set({ monthlyGross: v })

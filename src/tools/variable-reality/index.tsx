@@ -91,10 +91,10 @@ function Body() {
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('variable-reality.formTitle')}</h2>
-        <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <MoneyField
           label={t('decoder.field.variable.label')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.variable}
           onChange={(v) => set({ variable: v })}
         />

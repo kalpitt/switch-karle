@@ -177,6 +177,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
           >
             {t('promptStudio.saveTo', { company: selectedApp.company })}
           </button>
+          {!insightContent.trim() && <p className="text-[13px] text-ink-soft">{t('promptStudio.saveBlocked')}</p>}
 
           {selectedApp.insights && selectedApp.insights.length > 0 && (
             <div className="space-y-2 border-t border-line pt-3">

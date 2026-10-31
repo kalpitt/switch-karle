@@ -74,6 +74,8 @@ export const hi: Record<string, string> = {
     'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
   'ui.disclaimer.guide': 'यह सामान्य जानकारी है, कानूनी सलाह नहीं। आपका अपना letter और policy ही तय करते हैं।',
   'ui.money.hint': '12L, 12,00,000 या 1200000',
+  'ui.money.placeholder': 'जैसे 12L या 12,00,000',
+  'ui.money.placeholderMonthly': 'हर महीने, जैसे 80,000',
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
@@ -179,6 +181,7 @@ export const hi: Record<string, string> = {
   'autofill.copied': 'Copy हो गया ✓',
   'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहां paste करें (इसमें एक JSON block होगा)…',
   'autofill.fillButton': 'Form भरें',
+  'autofill.fillBlocked': 'Form भरने के लिए ऊपर वाले box में अपने AI का जवाब paste करें।',
   'autofill.okFilled': 'भर दिया: {fields}',
   'autofill.okMissing': '{n} fields आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
   'autofill.okMissingOne': '1 field आपके offer letter में नहीं थी — HR से पूछने का exact सवाल आपके AI ने लिख दिया है।',
@@ -248,6 +251,7 @@ export const hi: Record<string, string> = {
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'बदलाव save करें',
   'tracker.submitAdd': 'Application जोड़ें',
+  'tracker.saveBlocked': 'Save करने के लिए company और role भरें।',
   'tracker.noApplicationsInStage': 'कोई application नहीं',
   'tracker.movePrev': 'पिछले stage पर ले जाएं',
   'tracker.moveNext': 'अगले stage पर ले जाएं',
@@ -270,6 +274,7 @@ export const hi: Record<string, string> = {
   'sweep.privacy': 'यहाँ से कुछ भी नहीं भेजा जाता। Search आप अपने ही account में चलाते हैं और जवाब खुद वापस paste करते हैं।',
   'sweep.step2': 'जो जवाब मिले उसे यहाँ paste करें',
   'sweep.read': 'पढ़ें',
+  'sweep.readBlocked': 'पढ़ने के लिए ऊपर जवाब paste करें।',
   'sweep.invalid': 'यह वैसा JSON नहीं लग रहा जैसा prompt माँगता है। पूरा जवाब paste करें, braces समेत।',
   'sweep.found': 'जोड़ने के लिए तैयार: {n}',
   'sweep.looksClosed': 'बंद लगती है',
@@ -280,6 +285,7 @@ export const hi: Record<string, string> = {
   'sweep.skipped.noCompany': 'Company का नाम नहीं: {n}',
   'sweep.incomplete': 'यह सब कुछ नहीं ढूँढ पाएगा। Job boards confirmation email में सीमित roles ही डालते हैं, और पुराने mail खोजना मुश्किल है। इसे पूरी record नहीं, शुरुआत मानें।',
   'sweep.add': 'चुनी हुई जोड़ें',
+  'sweep.addBlocked': 'जोड़ने के लिए कम से कम एक पर tick करें।',
   'sweep.added': '{n} आपके mailbox से जोड़ी गईं।',
   'sweep.nothing': 'यहाँ जोड़ने को कुछ नहीं है।',
   'coverage.never': 'इस board पर वही है जो आपने खुद जोड़ा है।',
@@ -314,6 +320,7 @@ export const hi: Record<string, string> = {
   'promptStudio.answerFor': 'यह जवाब किसके लिए है',
   'promptStudio.pasteLabel': 'AI का जवाब paste करें',
   'promptStudio.saveTo': '{company} में save करें',
+  'promptStudio.saveBlocked': 'Save करने के लिए ऊपर अपने AI का जवाब paste करें।',
   'promptStudio.savedInsights': 'Save किए गए insights',
   'promptStudio.deleteInsightConfirm': 'यह saved insight delete करें? यह वापस नहीं हो सकता।',
 

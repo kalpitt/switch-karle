@@ -195,14 +195,14 @@ function Body() {
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField
           label={t('fnf-checker.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })
             rememberCurrentJob({ monthlyBasic: v })
           }}
         />
-        <MoneyField label={t('fnf-checker.gross')} hint={t('ui.money.hint')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
+        <MoneyField label={t('fnf-checker.gross')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
