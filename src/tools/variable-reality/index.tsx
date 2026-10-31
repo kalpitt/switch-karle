@@ -99,6 +99,7 @@ function Body() {
           onChange={(v) => set({ variable: v })}
         />
         <NumberField
+          integer
           label={t('variable-reality.months')}
           hint={t('variable-reality.monthsHint')}
           suffix={t('unit.months')}

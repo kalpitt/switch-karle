@@ -565,7 +565,10 @@ function ApplicationFormPanel({
 
   return (
     <Card className="space-y-4">
-      <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
+      <div>
+        <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
+        <p className="mt-0.5 text-xs text-ink-soft">{t('tracker.form.requiredNote')}</p>
+      </div>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <TextField label={t('tracker.field.company.label')} value={form.company} onChange={(v) => set({ company: v })} required />
@@ -584,6 +587,7 @@ function ApplicationFormPanel({
             onChange={(v) => set({ ctcLPA: v })}
           />
           <NumberField
+            integer
             label={t('tracker.field.notice.label')}
             suffix={t('unit.days')}
             value={form.noticePeriodDays}
@@ -613,17 +617,18 @@ function ApplicationFormPanel({
         </div>
         <TextArea label={t('tracker.field.notes.label')} value={form.notes} onChange={(v) => set({ notes: v })} />
         <div className="flex gap-2">
+          {/* Never disabled: a disabled button leaves the tab order and explains nothing.
+              Pressing it with a blank Company or Role lets the browser point at the field. */}
           <button
             type="submit"
-            disabled={!canSave}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
           >
             {initial ? t('tracker.saveChanges') : t('tracker.submitAdd')}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-line px-4 py-2.5 text-[14px] font-semibold text-ink-soft"
+            className="min-h-[44px] rounded-xl border border-line px-4 py-2.5 text-[14px] font-semibold text-ink-soft"
           >
             {t('common.cancel')}
           </button>

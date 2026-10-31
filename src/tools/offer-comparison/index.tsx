@@ -172,7 +172,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <Card>
             <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>
-            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} />
+            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} rowHeader={t('offer-comparison.delta')} />
           </Card>
         ) : (
           <Card className="space-y-2">

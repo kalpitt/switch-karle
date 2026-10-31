@@ -98,11 +98,11 @@ function Body() {
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('esop-reality.formTitle')}</h2>
-        <NumberField label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
+        <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
         <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
         <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
-        <NumberField label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
-        <NumberField label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
+        <NumberField integer label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
+        <NumberField integer label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
         <Select
           label={t('esop-reality.cadence')}
           value={draft.vestCadence}

@@ -171,9 +171,9 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
           <TextArea label={t('promptStudio.pasteLabel')} value={insightContent} onChange={setInsightContent} rows={6} />
           <button
             type="button"
-            disabled={!insightContent.trim()}
+            aria-disabled={!insightContent.trim()}
             onClick={handleSaveInsight}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('promptStudio.saveTo', { company: selectedApp.company })}
           </button>

@@ -149,6 +149,7 @@ function Body() {
         />
         <DateField label={t('resignation-letter.date')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField
+          integer
           label={t('resignation-letter.notice')}
           suffix={t('unit.days')}
           value={draft.noticeDays}

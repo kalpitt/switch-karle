@@ -545,6 +545,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- HR templates ----
   'hr.lead': 'Copy करें, brackets भरें, अपने mail से भेजें। यहां से कुछ भी इस device से बाहर नहीं जाता।',
+  'hr.switcher': 'और scripts',
   'hr.disclaimer': 'Templates हैं, legal advice नहीं। भेजने से पहले इन्हें अपनी appointment letter से match करें।',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'जब recruiter band share करने से पहले एक number मांगे।',

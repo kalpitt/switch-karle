@@ -115,8 +115,8 @@ export function SweepPanel({
           <button
             type="button"
             onClick={handleRead}
-            disabled={text.trim() === ''}
-            className="rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] disabled:opacity-50"
+            aria-disabled={text.trim() === ''}
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('sweep.read')}
           </button>
@@ -207,9 +207,9 @@ export function SweepPanel({
             {result.accepted.length > 0 && (
               <button
                 type="button"
-                disabled={selected.size === 0}
+                aria-disabled={selected.size === 0}
                 onClick={handleAdd}
-                className="rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] disabled:opacity-50"
+                className="min-h-[44px] rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
               >
                 {t('sweep.add')}
               </button>

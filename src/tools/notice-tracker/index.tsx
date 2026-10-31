@@ -100,6 +100,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('notice-tracker.formTitle')}</h2>
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField
+          integer
           label={t('notice-tracker.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}

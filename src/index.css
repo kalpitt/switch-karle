@@ -24,6 +24,9 @@
   --color-ink-soft: #57534e;
   --color-ink-faint: #736d68; /* 4.77:1 on paper, 5.10:1 on white (WCAG AA); was #a8a29e at 2.35:1 */
   --color-line: #e7e0d8;
+  /* Borders of fields and the off state of a switch: 3.66:1 on paper, 3.91:1 on white,
+     so the edge of a control is visible (WCAG 1.4.11). `line` stays for card borders. */
+  --color-field: #85807a;
   --color-saffron: #e8590c;
   --color-saffron-soft: #fff0e6;
   --color-leaf: #2f7d32;
@@ -43,7 +46,28 @@ textarea {
   font-size: 16px;
 }
 
+/* One visible focus ring for everything a keyboard can reach. In the base layer, so a
+   component that draws its own ring (fields use focus-within:ring) can still opt out. */
+@layer base {
+  :where(a, button, summary, [role='switch'], [tabindex]:not([tabindex='-1'])):focus-visible {
+    outline: 2px solid var(--color-saffron);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html {
+  color-scheme: light;
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);

@@ -18,13 +18,16 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         {isExample && (
           <ExampleNote chip={t('results.exampleChip')} note={t('results.exampleNote')} className="mb-3" />
         )}
-        <p className="text-[13px] font-semibold text-ink-soft">
-          {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
-        </p>
-        <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
-          {formatINR(b.inHandMonthly)}
-          <span className="text-lg font-semibold text-ink-faint">{t('unit.perMonth')}</span>
-        </p>
+        {/* Announced on change: the in-hand figure recomputes as the form is edited. */}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          <p className="text-[13px] font-semibold text-ink-soft">
+            {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
+          </p>
+          <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
+            {formatINR(b.inHandMonthly)}
+            <span className="text-lg font-semibold text-ink-soft">{t('unit.perMonth')}</span>
+          </p>
+        </div>
         <p className="mt-1 text-[13px] text-ink-soft">
           {t('results.headlineSub', { amount: formatINR(ctcMonthlyIllusion) })}
         </p>

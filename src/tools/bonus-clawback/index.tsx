@@ -154,6 +154,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('bonus-clawback.formTitle')}</h2>
         <MoneyField label={t('bonus-clawback.amount')} hint={t('ui.money.hint')} value={draft.amount} onChange={(v) => set({ amount: v })} />
         <NumberField
+          integer
           label={t('bonus-clawback.window')}
           suffix={t('unit.months')}
           value={draft.clawbackMonths}
@@ -172,6 +173,7 @@ function Body() {
           onChange={(v) => set({ plannedLwd: v })}
         />
         <NumberField
+          integer
           label={t('bonus-clawback.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}

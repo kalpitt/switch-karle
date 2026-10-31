@@ -28,7 +28,7 @@ export const hi: Record<string, string> = {
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
-  'app.footer.verified': 'नियम last verified {date}',
+  'app.footer.verified': 'नियम आख़िरी बार {date} को जाँचे गए',
   'app.footer.feedback': 'कोई number गलत लगा या bug मिला? बताएं:',
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',
@@ -49,6 +49,7 @@ export const hi: Record<string, string> = {
   'erase.close': 'ठीक है',
 
   'nav.home': 'होम',
+  'nav.main': 'मुख्य',
   'home.kicker': 'हर application एक ही board पर। सही calculator सिर्फ़ एक tap दूर।',
   'home.allTools': 'सभी {n} tools',
   'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
@@ -70,7 +71,7 @@ export const hi: Record<string, string> = {
   'ui.print': 'प्रिंट',
   'ui.disclaimer':
     'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
-  'ui.money.hint': '12L, 12,00,000 या 1200000',
+  'ui.money.hint': 'पूरी रकम, जैसे 1200000',
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
@@ -175,6 +176,7 @@ export const hi: Record<string, string> = {
   'autofill.copyPrompt': 'Extractor prompt copy करें',
   'autofill.copied': 'Copy हो गया ✓',
   'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहां paste करें (इसमें एक JSON block होगा)…',
+  'autofill.pasteLabel': 'आपके AI का जवाब',
   'autofill.fillButton': 'Form भरें',
   'autofill.okFilled': 'भर दिया: {fields}',
   'autofill.okMissing': '{n} field(s) आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
@@ -231,6 +233,7 @@ export const hi: Record<string, string> = {
   'stage.decided': 'तय हो गया',
   'tracker.form.editTitle': 'Application edit करें',
   'tracker.form.addTitle': 'Application जोड़ें',
+  'tracker.form.requiredNote': '* ज़रूरी',
   'tracker.field.company.label': 'Company',
   'tracker.field.role.label': 'Role',
   'tracker.field.stage.label': 'Stage',

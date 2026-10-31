@@ -135,6 +135,7 @@ function Body() {
           ]}
         />
         <NumberField
+          integer
           label={t('notice-buyout.days')}
           suffix={t('unit.days')}
           value={draft.unservedDays}

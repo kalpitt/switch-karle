@@ -143,6 +143,7 @@ export const en: Record<string, string> = {
   'erase.close': 'Done',
 
   'nav.home': 'Home',
+  'nav.main': 'Main',
   'nav.search': 'Search tools',
   'nav.searchHint': 'Type to jump. Esc closes.',
   'nav.searchEmpty': 'No tool matches.',
@@ -178,7 +179,7 @@ export const en: Record<string, string> = {
   'ui.print': 'Print',
   'ui.disclaimer':
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
-  'ui.money.hint': '12L, 12,00,000 or 1200000',
+  'ui.money.hint': 'The full amount, e.g. 1200000',
 
   'offer-comparison.title': 'Offer comparison',
   'offer-comparison.desc': 'Two or three offers, side by side — in-hand, not headline CTC.',
@@ -551,6 +552,7 @@ export const en: Record<string, string> = {
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
   'hr.lead': 'Copy, fill the brackets, send from your own mail. Nothing here leaves this device.',
+  'hr.switcher': 'More scripts',
   'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
   'hr.expected-ctc.title': 'Expected CTC',
   'hr.expected-ctc.desc': 'When the recruiter asks for a number before they share the band.',
@@ -924,6 +926,7 @@ export const en: Record<string, string> = {
   'autofill.copyPrompt': 'Copy the extractor prompt',
   'autofill.copied': 'Copied ✓',
   'autofill.pastePlaceholder': "Paste your AI's full answer here (it contains a JSON block)…",
+  'autofill.pasteLabel': 'Your AI\'s answer',
   'autofill.fillButton': 'Fill the form',
   'autofill.okFilled': 'Filled: {fields}',
   'autofill.okMissing': "{n} field(s) weren't in your offer letter — your AI listed the exact questions to ask HR.",
@@ -980,6 +983,7 @@ export const en: Record<string, string> = {
   'stage.decided': 'Decided',
   'tracker.form.editTitle': 'Edit application',
   'tracker.form.addTitle': 'Add application',
+  'tracker.form.requiredNote': '* required',
   'tracker.field.company.label': 'Company',
   'tracker.field.role.label': 'Role',
   'tracker.field.stage.label': 'Stage',
