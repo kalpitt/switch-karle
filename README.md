@@ -6,7 +6,7 @@ From "I'm done here" — before you have applied anywhere — through the offer,
 resignation, ninety days of notice, and surviving the first three months at the
 new place.
 
-**Live: [kalpit.me/switch-karle](https://kalpit.me/switch-karle/)** · target origin: `switchkarle.fyi` (not serving yet)
+**Live: [switchkarle.fyi](https://switchkarle.fyi/)**
 
 Free and open source. Every number runs in your browser. Nothing is uploaded. No
 accounts, no analytics, no AI calls.

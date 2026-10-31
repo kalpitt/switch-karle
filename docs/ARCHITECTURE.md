@@ -8,8 +8,8 @@ Direction lives in `ROADMAP.md`. Do not add a second strategy document here.
 Astro static site, React islands, Tailwind 4 tokens in `src/index.css`. One
 `site` + `base` in `site.config.mjs` / `astro.config.mjs`. Today:
 
-- `site`: `https://kalpit.me`
-- `base`: `/switch-karle`
+- `site`: `https://switchkarle.fyi`
+- `base`: `/`
 
 Cutover to `https://switchkarle.fyi` with `base: '/'` is a later commit. The
 domain is bought and its DNS points at Cloudflare; Kalpit is holding the final
