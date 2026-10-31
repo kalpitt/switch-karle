@@ -6,6 +6,7 @@ import { RULES_LAST_VERIFIED } from '../data/rules'
 import { withLang } from '../lib/langPath'
 import { CommandPalette } from './CommandPalette'
 import { EraseData } from './EraseData'
+import { BackupData } from './BackupData'
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
   const t = useT()
@@ -102,7 +103,9 @@ export function Shell({ current, children }: { current: string; children: ReactN
           GitHub
         </a>
         <br />
-        <span className="mt-2 inline-block">
+        <span className="mt-2 inline-flex flex-wrap items-center gap-x-1.5">
+          <BackupData className="font-semibold text-ink-soft underline" />
+          <span aria-hidden>·</span>
           <EraseData className="font-semibold text-alarm underline" />
         </span>
       </footer>

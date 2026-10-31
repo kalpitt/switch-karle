@@ -141,6 +141,40 @@ export const en: Record<string, string> = {
   'erase.doneOne': 'Erased. The 1 saved item is gone from this browser.',
   'erase.failed': 'Could not erase {n} of them. This browser is blocking storage changes — clear this site’s data from your browser settings.',
   'erase.close': 'Done',
+  // Back up / restore every saved item (footer, next to Erase). All on this device.
+  'backup.button': 'Back up or restore',
+  'backup.title': 'Back up what this site has saved',
+  'backup.intro':
+    'One file holds everything Switch Karle saved in this browser: your dates, offers, board and drafts. The file is made on this device and saved to it. Nothing is uploaded.',
+  'backup.saved': 'Saved in this browser: {n} items.',
+  'backup.savedOne': 'Saved in this browser: 1 item.',
+  'backup.empty': 'Nothing is saved in this browser yet, so there is nothing to back up.',
+  'backup.download': 'Download backup file',
+  'backup.restoreHead': 'Restore from a backup file',
+  'backup.restoreHint': 'On a new phone or browser, choose the file you downloaded to bring your work back.',
+  'backup.choose': 'Choose a file',
+  'backup.found': 'This file has {n} saved items. {m} of them are already in this browser.',
+  'backup.restore': 'Restore',
+  'backup.keepMine': 'Add only what is missing',
+  'backup.keepMineHint': 'Keeps everything already in this browser.',
+  'backup.useFile': 'Use the file for all of them',
+  'backup.useFileHint': 'Replaces those {m} items with the copies in the file.',
+  'backup.cancel': 'Cancel',
+  'backup.done': 'Restored {n} saved items.',
+  'backup.doneOne': 'Restored 1 saved item.',
+  'backup.nothing': 'Nothing to add. Everything in the file is already here.',
+  'backup.failed': 'Could not save {n} of them. This browser is blocking storage.',
+  'backup.invalid': 'That file is not a Switch Karle backup.',
+  'backup.close': 'Done',
+  // Page-level notices rendered by the layout (Base.astro), not by a tool.
+  'app.update': 'A new version is ready.',
+  'app.updateReload': 'Reload',
+  'app.storageBlocked':
+    'This browser isn’t keeping your answers (private window or storage full). Add the dates to your calendar or take a screenshot before you close this tab.',
+  'app.dismiss': 'OK',
+  'app.noscript':
+    'Switch Karle calculates in your browser and needs JavaScript turned on. Nothing you type is sent anywhere.',
+  'app.ogImageAlt': 'Switch Karle: the whole job switch, from “I’m done here” to surviving notice and day 90.',
 
   'nav.home': 'Home',
   'nav.search': 'Search tools',
@@ -939,7 +973,7 @@ export const en: Record<string, string> = {
   'shareCard.butBank': 'but the bank sees',
   'shareCard.reaches': '{pct}% of CTC reaches the bank',
   'shareCard.redFlags': '⚑ {n} red flag{plural} in this offer',
-  'shareCard.footer': 'kalpit.me/switch-karle',
+  'shareCard.footer': 'switchkarle.fyi',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
