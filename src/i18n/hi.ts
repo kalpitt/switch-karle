@@ -16,6 +16,13 @@
  */
 export const hi: Record<string, string> = {
   // ---- App shell ----
+
+  'error.title': 'इस tool में दिक्कत आई और यह रुक गया।',
+  'error.body': 'आपका बाकी saved काम सुरक्षित है। Page reload करें, या सिर्फ़ यह tool reset करें।',
+  'error.reload': 'Reload करें',
+  'error.reset': 'यह tool reset करें',
+  'error.resetConfirm': 'इस device पर सिर्फ़ इस tool का saved data हटाएं? बाकी tools का data रहेगा।',
+  'error.report': 'बताएं क्या टूटा',
   'app.skipToContent': 'सीधे content पर जाएं',
   'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई नौकरी के day 90 तक।',
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',

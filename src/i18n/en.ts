@@ -110,6 +110,13 @@ export const en: Record<string, string> = {
   'home.trackerLink.cta': 'Applications',
 
   // ---- App shell ----
+
+  'error.title': 'This tool hit a problem and stopped.',
+  'error.body': 'Your other saved work is safe. Reload the page, or reset just this tool.',
+  'error.reload': 'Reload',
+  'error.reset': 'Reset this tool',
+  'error.resetConfirm': 'Clear what this one tool saved on this device? Other tools keep their data.',
+  'error.report': 'Tell me what broke',
   'app.skipToContent': 'Skip to content',
   'app.tagline': 'The whole job switch, from “I’m done here” to surviving notice and day 90.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
