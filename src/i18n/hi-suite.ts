@@ -201,13 +201,13 @@ export const hiSuite: Record<string, string> = {
   'variable-reality.monthsHint':
     'पहला साल अक्सर pro-rate होता है। 12 = पूरा साल। इस हिस्से पर tax फिर भी full-year CTC पर लगता है, जैसे यह job पूरे साल चली हो।',
   'variable-reality.verdict':
-    'CTC का {pct}% जोखिम में है। Fixed in-hand {fixed}/mo है; 100% payout {full}/mo तक जाता है।',
+    'CTC का {pct}% जोखिम में है। Fixed in-hand {fixed}/month है; 100% payout {full}/month तक जाता है।',
   'variable-reality.table': 'अगर variable इतना pay करे',
   'variable-reality.row': '{pct}% payout, monthly spread',
   'variable-reality.split': 'Fixed {fixed} · इस साल जोखिम में {risk}',
   'variable-reality.withheld':
     'अगर यह एक साथ मिले, तो tax के बाद आपके पास {amount} रहता है — तब तक monthly in-hand 0% वाले figure पर ही रहता है।',
-  'variable-reality.spread': 'अगर payroll इसे spread करे, तो 100% वाली row {amount}/mo है।',
+  'variable-reality.spread': 'अगर payroll इसे spread करे, तो 100% वाली row {amount}/month है।',
   'variable-reality.prorate':
     'First-year pro-rate on है: इस FY के सिर्फ {months} महीने, इसलिए जोखिम वाला हिस्सा भी कम हो जाता है। उस हिस्से पर tax फिर भी full-year taxable income पर calculate होता है (पिछले employer की income अक्सर बाकी साल भर देती है)।',
   'variable-reality.fullYearTax': 'Variable pro-rated होने पर भी, tax का base आपका full-year CTC ही रहता है।',

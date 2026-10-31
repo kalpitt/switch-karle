@@ -5,7 +5,8 @@ import { addDays } from '../../engine/dates'
 import { todayIso } from '../../lib/today'
 import { insuranceGap } from '../../engine/insurance'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
+import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.insurance.v1' as const
 
@@ -30,6 +31,7 @@ export default function InsuranceGapTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(skeleton)
   const [hydrated, setHydrated] = useState(false)
 
@@ -60,7 +62,7 @@ function Body() {
       : result.uncoveredDays === 0
         ? t('insurance-gap.verdict.none')
         : result.uncovered
-          ? t('insurance-gap.verdict.gap', { days: result.uncoveredDays, lwd: result.groupCoverEndsOn })
+          ? t('insurance-gap.verdict.gap', { days: result.uncoveredDays, lwd: formatLongDate(result.groupCoverEndsOn, lang) })
           : t('insurance-gap.verdict.covered', { days: result.uncoveredDays })
 
   return (

@@ -58,6 +58,7 @@ function useStageLabel(): Record<Stage, string> {
 
 export function Tracker() {
   const t = useT()
+  const { lang } = useLang()
   // Empty until mount so SSR HTML matches the first client render. Do not
   // save until hydrated — a save of [] would wipe real tracker data.
   const [list, setList] = useState<Application[]>([])
@@ -172,8 +173,8 @@ export function Tracker() {
     if (coverage.status === 'never') {
       return t('coverage.never')
     }
-    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom) : ''
-    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt) : ''
+    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom, lang) : ''
+    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt, lang) : ''
     const limits = t('coverage.limits')
 
     if (coverage.gapDays === 0) {
@@ -183,7 +184,7 @@ export function Tracker() {
       return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gapOne')} ${limits}`
     }
     return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gap', { n: coverage.gapDays })} ${limits}`
-  }, [coverage, t])
+  }, [coverage, t, lang])
 
   const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
     if (!pendingBackup) return
@@ -729,7 +730,7 @@ function ApplicationCard({
           {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
           {/* Last: money and terms are what the eye scans a card for; the date is context. */}
-          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
+          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn, lang) })}</Chip>}
           {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
       )}
@@ -740,7 +741,7 @@ function ApplicationCard({
           {app.nextAction}
           {app.nextActionDate && (
             <span className={`tnum ml-1 ${isOverdue ? 'font-bold text-alarm' : 'text-ink-faint'}`}>
-              ({formatDate(app.nextActionDate)})
+              ({formatDate(app.nextActionDate, lang)})
             </span>
           )}
         </p>
@@ -870,6 +871,7 @@ function ArchivedApplicationCard({
   onDelete: () => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const reason = app.closed?.reason
   const closedOn = app.closed?.closedOn
 
@@ -888,7 +890,7 @@ function ArchivedApplicationCard({
           )}
           {closedOn && (
             <span className="tnum rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-medium text-ink-faint">
-              {t('tracker.archive.closedDate', { date: formatDate(closedOn) })}
+              {t('tracker.archive.closedDate', { date: formatDate(closedOn, lang) })}
             </span>
           )}
         </div>

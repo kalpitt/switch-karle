@@ -17,7 +17,8 @@ import {
 } from '../../components/ui'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
+import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.fnf.v1' as const
 
@@ -56,6 +57,7 @@ export default function FnfCheckerTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
@@ -169,7 +171,7 @@ function Body() {
     '',
     t('fnf-checker.mail.greeting', { hr: draft.hrName.trim() || t('fnf-checker.mail.hrTeam') }),
     '',
-    t('fnf-checker.mail.intro', { lwd: draft.lastWorkingDay }),
+    t('fnf-checker.mail.intro', { lwd: formatLongDate(draft.lastWorkingDay, lang) }),
     '',
     ...disputes.map((item, i) =>
       t(`fnf-checker.mail.${item.kind}`, {

@@ -107,8 +107,8 @@ export const hi: Record<string, string> = {
   'decoder.field.hra.label': 'HRA (Basic का %)',
   'decoder.field.hra.value': 'Basic का {percent}%',
   'unit.days': 'दिन',
-  'unit.perMonth': '/महीना',
-  'unit.perMonthShort': '/माह',
+  'unit.perMonth': '/month',
+  'unit.perMonthShort': '/month',
   'unit.months': 'महीने',
 
   // ---- States ----
@@ -138,7 +138,7 @@ export const hi: Record<string, string> = {
   'regime.new': 'New regime',
   'regime.old': 'Old regime',
   'results.cheaper': 'सस्ता',
-  'results.taxPerYear': 'टैक्स {amount}/yr',
+  'results.taxPerYear': 'tax {amount}/year',
   'results.whereGoes': 'आपका CTC कहां जाता है',
   'results.row.ctcQuoted': 'बताया गया CTC',
   'results.row.variable': 'Variable (जोखिम में)',
@@ -188,7 +188,7 @@ export const hi: Record<string, string> = {
   'shareCard.cta.rendering': 'बन रहा है…',
   'shareCard.cta.download': 'Truth card डाउनलोड करें ↓',
   'shareCard.eyebrow': 'CTC की सच्चाई',
-  'shareCard.ctcSounds': 'CTC {ctc} सुनने में {amount}/mo लगता है',
+  'shareCard.ctcSounds': 'CTC {ctc} सुनने में {amount}/month लगता है',
   'shareCard.butBank': 'लेकिन bank में पहुंचता है',
   'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',

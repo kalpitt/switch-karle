@@ -3,7 +3,8 @@ import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
+import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.relieving.v1' as const
 /** Read-only pull from the resignation island's own key (allowed per D10). */
@@ -34,6 +35,7 @@ export default function RelievingChaserTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>({
     company: '',
     hr: '',
@@ -74,9 +76,9 @@ function Body() {
         hr: draft.hr.trim() || '[HR name]',
         company: draft.company.trim() || '[Company]',
         role: draft.role.trim() || '[Role]',
-        lwd: draft.lwd || '[LWD]',
+        lwd: draft.lwd ? formatLongDate(draft.lwd, lang) : '[LWD]',
       }),
-    [t, draft],
+    [t, draft, lang],
   )
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 

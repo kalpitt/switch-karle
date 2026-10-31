@@ -8,7 +8,7 @@ import {
   type RejectedRow,
 } from '../engine/ingest'
 import { SWEEP_PROMPT } from '../prompts/sweep'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
 import { Card, TextArea } from './ui'
 import { todayIso } from '../lib/today'
 import { extractJsonObject } from '../lib/extractJsonObject'
@@ -32,6 +32,7 @@ export function SweepPanel({
   onCancel: () => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const [copied, setCopied] = useState(false)
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -169,7 +170,7 @@ export function SweepPanel({
                           )}
                           {candidate.appliedOn && (
                             <span className="ml-1.5 text-xs text-ink-faint">
-                              ({formatDate(candidate.appliedOn)})
+                              ({formatDate(candidate.appliedOn, lang)})
                             </span>
                           )}
                         </div>
