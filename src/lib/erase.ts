@@ -1,9 +1,10 @@
 /**
  * Erasing everything Switch Karle has saved in this browser.
  *
- * Scoped by key prefix, never `localStorage.clear()`. The site ships from an
- * origin it does not own alone (`kalpit.me/switch-karle/`), where `clear()`
- * would take a neighbouring project's data with it. Scanning the prefix also
+ * Scoped by key prefix, never `localStorage.clear()`. Until 2026-10-31 the
+ * site shipped from an origin it did not own alone (`kalpit.me/switch-karle/`),
+ * where `clear()` would have taken a neighbouring project's data with it; on
+ * switchkarle.fyi the prefix sweep stays, so erase only ever touches our keys. Scanning the prefix also
  * means a tool added later is erased without anyone remembering to add its key
  * to a list here — a list like that drifts, and a key missed by a drifted list
  * is a saved salary number the user was told had been erased.
