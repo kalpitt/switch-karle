@@ -5,7 +5,7 @@
 > https://chhalaang.tiwari-kalpit.workers.dev/ (Cloudflare Pages, deployed
 > first, still on the old project name — kept running as a fallback).
 
-## Primary: kalpit.me/switch-karle (GitHub Pages)
+## Primary: switchkarle.fyi (GitHub Pages)
 
 kalpit.me is the custom domain of the `kalpitt.github.io` user site, so any
 public repo of Kalpit's with GitHub Pages enabled auto-serves at
