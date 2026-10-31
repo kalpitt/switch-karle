@@ -122,11 +122,17 @@ function Body() {
   const isExample = JSON.stringify(draft) === JSON.stringify(draftFrom(DEFAULT_OFFER))
   const tone = result.effectiveValueAtPlanned < 0 ? 'alarm' : result.repaymentIfLeaveAtPlanned > 0 ? 'amber' : 'leaf'
   const verdict = draft.netWording
-    ? t('bonus-clawback.verdict.net', {
-        net: formatINR(result.netReceived),
-        repay: formatINR(result.repaymentIfLeaveAtPlanned),
-        keep: formatINR(result.effectiveValueAtPlanned),
-      })
+    ? result.effectiveValueAtPlanned < 0
+      ? t('bonus-clawback.verdict.netLoss', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          loss: formatINR(-result.effectiveValueAtPlanned),
+        })
+      : t('bonus-clawback.verdict.net', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          keep: formatINR(result.effectiveValueAtPlanned),
+        })
     : t('bonus-clawback.verdict.gross', {
         gross: formatINR(draft.amount),
         repay: formatINR(result.repaymentIfLeaveAtPlanned),

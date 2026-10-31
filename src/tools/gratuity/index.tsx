@@ -13,8 +13,9 @@ import {
   VerdictBanner,
 } from '../../components/ui'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.gratuity.v1' as const
 
@@ -45,6 +46,7 @@ export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
@@ -92,7 +94,7 @@ function Body() {
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
   const copyText = result && verdict
-    ? [verdict, result.flipDate ? t('gratuity.flip', { date: result.flipDate }) : '', t('ui.disclaimer')]
+    ? [verdict, result.flipDate ? t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) }) : '', t('ui.disclaimer')]
         .filter(Boolean)
         .join('\n')
     : ''
@@ -132,7 +134,10 @@ function Body() {
         ) : result && verdict ? (
           <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
         ) : null}
-        {result?.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
+        {!isExample && result?.eligible && <p className="text-[13px] text-ink-soft">{t('gratuity.formula')}</p>}
+        {result?.flipDate && (
+          <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
+        )}
         {result?.notes.map((n) => (
           <p key={n.id} className="text-[13px] text-ink-soft">
             {t(`gratuity.note.${n.id}`)}
