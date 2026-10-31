@@ -1,7 +1,7 @@
 # Deploying Switch Karle
 
-> **Canonical URL: https://kalpit.me/switch-karle/** (GitHub Pages, live since
-> 2026-07-20, renamed from `chhalaang` same day). Mirror:
+> **Canonical URL: https://switchkarle.fyi/** (GitHub Pages; moved from
+> kalpit.me/switch-karle on 2026-10-31, no redirect). Mirror:
 > https://chhalaang.tiwari-kalpit.workers.dev/ (Cloudflare Pages, deployed
 > first, still on the old project name — kept running as a fallback).
 
