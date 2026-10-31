@@ -57,7 +57,9 @@ function Body() {
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={hitCount === 0 ? 'amber' : 'leaf'}>
-          {hitCount === 0 ? t('redactor.verdict.none') : t('redactor.verdict.hits', { n: hitCount })}
+          {hitCount === 0 ? t('redactor.verdict.none') : hitCount === 1
+              ? t('redactor.verdict.hitsOne')
+              : t('redactor.verdict.hits', { n: hitCount })}
         </VerdictBanner>
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('redactor.preview')}</h3>

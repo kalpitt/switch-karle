@@ -55,8 +55,9 @@ function Body() {
       draft.risks || t('handover-doc.md.risksHint'),
     ].join('\n')
   }, [draft, t])
-  /** Blank sections produce placeholder scaffold — never let it reach a paste. */
-  const canCopy = !md.includes('[Role]') && !md.includes('[Name]') && !md.includes('_Add ')
+  /** Blank fields produce placeholder scaffold — never let it reach a paste.
+   *  Checked on the fields, not the text, so it holds in Hindi too. */
+  const canCopy = draft.role.trim() !== '' && draft.owner.trim() !== '' && draft.projects.trim() !== ''
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 

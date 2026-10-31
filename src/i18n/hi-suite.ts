@@ -259,7 +259,7 @@ export const hiSuite: Record<string, string> = {
     'Monthly vest मानकर बनाया गया है: cliff निकलने के बाद shares × महीना ÷ vest period।',
   'esop-reality.vestAnnual':
     'बराबर सालाना tranches मानकर बनाया गया है — एक cliff पर, फिर हर anniversary पर। बीच में कुछ नहीं जुड़ता, चाहे आप कितना भी रुकें।',
-  'esop-reality.vestLetter': 'आपका grant letter तय करता है कि इनमें से क्या सही है। कोई भी reading उसे पढ़ती नहीं है।',
+  'esop-reality.vestLetter': 'इनमें से कौन-सा लागू है, यह आपका grant letter बताता है। यह tool उसे आपके लिए नहीं पढ़ सकता।',
   'esop-reality.saleNote': 'Sale एक अलग capital-gains event है। यह tool exercise तक ही जाता है।',
   'esop-reality.vestTitle': 'Vest Schedule',
   'esop-reality.vestRow': 'महीना {month}',
@@ -271,8 +271,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Relocation ----
   'relocation.title': 'Relocation',
-  'relocation.desc':
-    'शहर बदलने पर same CTC पर in-hand में असल में क्या बदलता है — professional tax और HRA, कोई नकली cost-of-living index नहीं।',
+  'relocation.desc': 'देखें कि वही CTC दूसरे शहर में जाने पर आपका in-hand कैसे बदलता है।',
   'relocation.formTitle': 'वही salary, नया शहर',
   'relocation.fromState': 'किस राज्य से',
   'relocation.fromMetro': 'HRA के लिए metro से',
@@ -445,7 +444,7 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.mailHr': 'HR contact का नाम',
   'fnf-checker.mailHrHint': 'खाली छोड़ेंगे तो mail "Dear HR team" से शुरू होगी।',
   'fnf-checker.mailYou': 'आपका नाम',
-  'fnf-checker.mailBlocked': 'Copy button खोलने के लिए अपना नाम भरें।',
+  'fnf-checker.mailBlocked': 'Email copy करने के लिए अपना नाम भरें।',
   'fnf-checker.mailNothing': 'Sheet की हर line recomputation से मिल रही है, तो dispute करने को कुछ नहीं है। कोई mail draft नहीं हुई।',
   'fnf-checker.mailNote': 'भेजने से पहले पढ़ लें। यह basis पूछती है, किसी पर इलज़ाम नहीं लगाती।',
   'fnf-checker.mail.subject': 'Subject: Full and final settlement — {n} line(s) पर reconciliation की request',
@@ -494,7 +493,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Resignation letter ----
   'resignation-letter.title': 'Resignation Letter',
-  'resignation-letter.desc': 'तीन tones। Last working day = resignation date + notice − एक calendar दिन।',
+  'resignation-letter.desc': 'तीन में से किसी एक tone में resignation letter लिखें, last working day के हिसाब के साथ।',
   'resignation-letter.formTitle': 'Letter',
   'resignation-letter.formHint': 'आपका draft सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
   'resignation-letter.company': 'Company',
@@ -510,10 +509,10 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.tone.firm': 'Firm और छोटा',
   'resignation-letter.verdict': 'पूरा notice serve करने पर last working day: {lwd}।',
   'resignation-letter.yourName': 'आपका नाम',
-  'resignation-letter.yourNameHint': 'Signature में जाएगा। यह भरने तक copy locked रहेगा।',
+  'resignation-letter.yourNameHint': 'Signature में जाएगा।',
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'सिर्फ इसी page पर रहता है।',
-  'resignation-letter.copyBlocked': 'Copy unlock करने के लिए company, role, manager और अपना नाम भरें।',
+  'resignation-letter.copyBlocked': 'Letter copy करने के लिए company, अपना role, अपने manager का नाम और अपना नाम भरें।',
   'resignation-letter.earliestJoin': 'EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी last working day के अगले दिन।',
   'resignation-letter.epfo':
     'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
@@ -539,7 +538,7 @@ export const hiSuite: Record<string, string> = {
     'आपको सबसे पहले बताना था। एक और role accept हो गई है। Decision पहले ही हो चुका है। पूरा notice serve करने पर last working day [LWD] होगा। इस हफ्ते handover लिख दिया जाएगा। यहां के काम के लिए आभार है, और अच्छे से जाना है।',
   'manager-script.body.counter-risk':
     'एक और offer accept हो गया है। Team का respect है, इसलिए यह बताया जा रहा है। Company कोई counter देना चाहे तो एक बार, writing में सुना जाएगा, लेकिन बात को एक हफ्ते की meetings में नहीं बदलना है। दोनों सूरत में handover साफ-सुथरा रहेगा।',
-  'manager-script.copyBlocked': 'इस script की last working day आपकी saved resignation letter से आती है — पहले वह बनाएं, फिर copy करें।',
+  'manager-script.copyBlocked': 'आपकी last working day की जगह [LWD] छोड़ा गया है। पहले resignation letter लिखें, फिर यह अपने-आप भर जाएगा।',
   'manager-script.body.hostile':
     'यह resignation है। Letter inbox में है / यहां paper पर है। Notice के हिसाब से last working day [LWD] है। Handover पूरा किया जाएगा। इस meeting में decision पर बहस नहीं करनी। HR को कुछ चाहिए तो mail किया जा सकता है।',
 
@@ -552,20 +551,20 @@ export const hiSuite: Record<string, string> = {
     'नमस्ते [Manager name],\n\nमैंने [date] को अपना resignation share किया था, notice के हिसाब से last working day [LWD] है।\n\nमुझे अपनी अगली job में [new joining date] को join करना है, इसलिए early release से मुझे समय पर शुरुआत करने में मदद मिलेगी। मैं एक written handover पूरा करूंगा और जाने के बाद भी सवालों के लिए उपलब्ध रहूंगा। क्या हम early release या बचे हुए notice का buyout देख सकते हैं, ताकि मेरा आखिरी दिन [proposed LWD] हो सके?\n\nजो appointment letter allow करती है, वही follow किया जाएगा। ध्यान देने के लिए धन्यवाद।',
   'hr.buyout-ask.body':
     'नमस्ते [HR name],\n\nक्या आप confirm कर सकते हैं कि मेरी letter में notice buyout कैसे काम करता है — basic पर या gross पर, और divisor 30 दिन है?\n\nमैं [proposed last day] को अपना last working day बनाना चाहता हूं। Buyout allowed हो तो कृपया amount और यह भी बताएं कि वह F&F से recover होगी या relieving से पहले मुझे देनी होगी।\n\nदोनों सूरत में handover पूरा किया जाएगा।',
-  'hr.decline-accepted.body':
-    'नमस्ते [Recruiter / HR name],\n\n[company] में [role] के offer के लिए फिर से धन्यवाद। परिवार के साथ सोच-विचार करने के बाद, मुझे अपनी acceptance वापस लेनी है। Decision पहले ही हो चुका है — मैं join नहीं कर रहा।\n\nदिक्कत के लिए माफी है। कृपया इस mail को मेरा formal decline मानें।\n\nआपके समय के लिए आभारी हूं, और team के लिए शुभकामनाएं।',
-  'hr.counter-offer-reply.body':
-    'नमस्ते [Manager name],\n\nCounter-offer के लिए और बात करने के लिए धन्यवाद।\n\nमैंने rupee gap और काम दोनों के बारे में सोचा है। मैं नई role के साथ आगे बढ़ रहा हूं।\n\nHandover साफ-सुथरा रखूंगा और तय हुए notice पर डटा रहूंगा। यहां के सालों के लिए धन्यवाद — अच्छे relations के साथ जा रहा हूं और उम्मीद है कि संपर्क बना रहेगा।',
+  'hr.decline-accepted.body': 'नमस्ते [Recruiter / HR name],\n\n[company] में [role] के offer के लिए फिर से धन्यवाद। अच्छी तरह सोचने के बाद, मुझे अपनी acceptance वापस लेनी है। Decision पहले ही हो चुका है — मैं join नहीं कर रहा।\n\nदिक्कत के लिए माफी है। कृपया इस mail को मेरा formal decline मानें।\n\nआपके समय के लिए आभारी हूं, और team के लिए शुभकामनाएं।',
+  'hr.counter-offer-reply.body': 'नमस्ते [Manager name],\n\nCounter-offer के लिए और बात करने के लिए धन्यवाद।\n\nमैंने इस पर अच्छी तरह सोच लिया है, और मेरा फ़ैसला नए role के साथ आगे बढ़ने का है।\n\nHandover साफ-सुथरा रखूंगा और तय हुए notice पर डटा रहूंगा। यहां के सालों के लिए धन्यवाद — अच्छे relations के साथ जा रहा हूं और उम्मीद है कि संपर्क बना रहेगा।',
   'hr.recruiter-followup.body':
     'नमस्ते [Name],\n\n[date] को discussion के अनुसार [company] में [role] को लेकर follow-up कर रहा हूं। मेरी interest बरकरार है और कोई भी extra document चाहिए तो भेज दूंगा।\n\nअगर timeline बदल गया है, तो एक line का update मुझे current employer के साथ notice plan करने में मदद करेगा। धन्यवाद।',
   'hr.expected-ctc.formTitle': 'आपके दो numbers',
   'hr.expected-ctc.role': 'Role',
-  'hr.expected-ctc.roleHint': 'Optional — पहली line में आता है।',
+  'hr.expected-ctc.roleHint': 'पहली line में जाएगा।',
   'hr.expected-ctc.current': 'Current CTC (सालाना)',
   'hr.expected-ctc.expected': 'Expected CTC (सालाना)',
   'hr.expected-ctc.body':
     '{role} role के लिए बातचीत के लिए धन्यवाद।\n\nमैं इस role को single headline number नहीं, total compensation और work के हिसाब से देख रहा हूं। मेरी current CTC सालाना {current} है, और similar scope के लिए मुझे लगभग {expected} target है। अगर आप इस level का band share कर दें, तो मैं तुरंत बता सकता हूं कि हम range में हैं या नहीं। Band आने के बाद structure — fixed vs variable, notice, joining bonus — पर बात करने में खुशी होगी।',
-  'hr.expected-ctc.copyBlocked': 'Copy unlock करने के लिए role और दोनों numbers भरें।',
+  'hr.expected-ctc.copyBlocked': 'Reply copy करने के लिए role और दोनों numbers भरें।',
+  'hr.expected-ctc.placeholderCurrent': '[आपका current CTC]',
+  'hr.expected-ctc.placeholderExpected': '[आपका expected CTC]',
   'hr.early-release.title': 'Early Release',
   'hr.early-release.desc': 'मौजूदा HR/manager से notice छोटा करने के लिए कहें।',
   'hr.buyout-ask.title': 'Buyout Ask',
@@ -590,8 +589,7 @@ export const hiSuite: Record<string, string> = {
   'counter-offer.verdict.out':
     'Outside offer से लगभग {bank}/month ज़्यादा in-hand मिलता है। कागज़ पर यह {paper} ज़्यादा है।',
   'counter-offer.verdict.in': 'यह counter इस simplified structure पर outside CTC को match या beat करता है। Non-rupee reasons फिर भी matter करते हैं।',
-  'counter-offer.honest':
-    'Counter accept करने वाले लोग अक्सर एक साल के अंदर वैसे भी चले जाते हैं — trust पहले ही टूट चुका होता है। यह एक pattern है, कोई statistic नहीं जिसके लिए एक percentage बनाया जा रहा है। Counter को stay-or-go decision मानें, bidding war नहीं।',
+  'counter-offer.honest': 'Counter-offer लेने वाले लोग अक्सर एक साल के अंदर वैसे भी चले जाते हैं, क्योंकि भरोसा पहले ही टूट चुका होता है। ऐसा कितनी बार होता है, इसका कोई भरोसेमंद आंकड़ा हमें नहीं मिला, इसलिए हम कोई आंकड़ा नहीं देते। Counter को stay-or-go decision मानें, bidding war नहीं।',
   'counter-offer.nonRupee': 'एक non-rupee reason on किया गया है। अगर रुकते हैं, तो promotion या team change को date के साथ writing में लें।',
 
   // ---- Handover doc ----
@@ -603,7 +601,7 @@ export const hiSuite: Record<string, string> = {
   'handover-doc.projects': 'Projects / status',
   'handover-doc.access': 'Access, repos, rotate करने वाली keys',
   'handover-doc.risks': 'अगर यह drop हो जाए तो क्या टूटेगा',
-  'handover-doc.verdict': 'Markdown copy करें। इसमें secrets न रखें — यह अभी भी सिर्फ इस device पर है।',
+  'handover-doc.verdict': 'इसे email या doc में copy करें। Passwords और keys इसमें न डालें।',
   'handover-doc.disclaimer': 'यह एक handover aid है, legal document नहीं। Passwords paste न करें।',
   'handover-doc.md.title': 'Handover — {role}',
   'handover-doc.md.owner': 'मेरे जाने के बाद owner: {owner}',
@@ -613,7 +611,7 @@ export const hiSuite: Record<string, string> = {
   'handover-doc.md.projectsHint': '_चल रहा काम, tickets, और किससे पूछना है, यहां लिखें।_',
   'handover-doc.md.accessHint': '_Repos, dashboards, rotate करनी हैं keys, docs।_',
   'handover-doc.md.risksHint': '_Dates, customers, audits।_',
-  'handover-doc.copyBlocked': 'Copy unlock करने के लिए ऊपर role और owner भरें (और जो sections चाहिए वे भी)।',
+  'handover-doc.copyBlocked': 'Note copy करने के लिए अपना role, अगले owner का नाम और projects भरें।',
 
   // ---- Relieving chaser ----
   'relieving-chaser.title': 'Relieving Chaser',
@@ -637,7 +635,7 @@ export const hiSuite: Record<string, string> = {
   'relieving-chaser.body.30':
     'Hi {hr},\n\n{company} में {role} के रूप में मेरे last working day ({lwd}) को 30 दिन हो गए हैं। मुझे अभी तक relieving letter नहीं मिली है।\n\nकृपया अभी का status और इस हफ्ते issue होने की एक date share करें। यह letter मेरी background verification block कर रही है, इसलिए यह time-sensitive है। मेरी तरफ से जो document pending है, वह भेज दूंगा।\n\nRegards',
   'relieving-chaser.setLwd': 'पहले बीत चुकी last working day set करें — LWD के बाद ही chase समझ आता है।',
-  'relieving-chaser.fillFields': 'Copy unlock करने के लिए company, HR का नाम और role भरें।',
+  'relieving-chaser.fillFields': 'Email copy करने के लिए company, HR contact का नाम और अपना role भरें।',
   // ---- EPF transfer ----
   'epf-transfer.title': 'EPF Transfer',
   'epf-transfer.desc': 'Online Form 13, unmarked date-of-exit, KYC mismatches, और जल्दी withdraw करना आमतौर पर क्यों ज़्यादा costly move है।',
@@ -715,7 +713,7 @@ export const hiSuite: Record<string, string> = {
   'insurance-gap.verdict.gap': '{lwd} के बाद {days} uncovered दिन। Group mediclaim उस शाम रुक जाता है।',
   'insurance-gap.verdict.covered': 'Jobs के बीच {days} दिन, लेकिन आपके पास पहले से personal cover है।',
   'insurance-gap.overlap': 'LWD पर या उससे पहले join करने से EPFO पर दो employers overlap करते हैं। यह BGV/PF की problem है, insurance की जीत नहीं।',
-  'insurance-gap.factors': 'Floater quote असल में किससे बदलता है (कोई premium बनाया नहीं जाता)',
+  'insurance-gap.factors': 'Family floater की कीमत किन बातों से बदलती है',
   'insurance-gap.factor.floater-waiting': 'नई retail policy पर waiting periods अक्सर इस महीने के gap को cover नहीं करती।',
   'insurance-gap.factor.pre-existing': 'नई retail policy में Pre-existing conditions और maternity आमतौर पर exclusions होते हैं।',
   'insurance-gap.factor.age-band': 'Family floater में सबसे बड़े member का age band quote को city से ज़्यादा बदलता है।',
@@ -796,7 +794,8 @@ export const hiSuite: Record<string, string> = {
   'redactor.textHint':
     'सिर्फ़ इस device पर save होता है, बिना mask किए — कभी upload नहीं होता। Masked page को PNG में download करें या print करें।',
   'redactor.verdict.none': 'कुछ भी match नहीं हुआ। ऐसा text paste करें जिसमें PAN, Aadhaar, फोन नंबर या ₹ amount हो।',
-  'redactor.verdict.hits': '{n} items mask किए गए। PNG download करें या print करें — pdf-lib इस्तेमाल नहीं होती।',
+  'redactor.verdict.hits': '{n} items mask हो गए। इसे image के रूप में download करें या print करें।',
+  'redactor.verdict.hitsOne': '1 item mask हो गया। इसे image के रूप में download करें या print करें।',
   'redactor.download': 'PNG Download करें',
   'redactor.busy': 'Render हो रहा है…',
   'redactor.preview': 'Masked Preview',

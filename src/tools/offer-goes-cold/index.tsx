@@ -96,7 +96,7 @@ function Body() {
           <CopyButton text={promptText} label={t('ui.copyText')} copiedLabel={t('ui.copied')} />
         </Card>
 
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

@@ -52,7 +52,7 @@ export const hi: Record<string, string> = {
   'home.kicker': 'हर application एक ही board पर। सही calculator सिर्फ़ एक tap दूर।',
   'home.allTools': 'सभी {n} tools',
   'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
-  'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
+  'home.tracker.desc': 'हर application, उसका CTC और next step एक private board पर रखें।',
   'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता.',
 
   'tab.decoder': 'डिकोडर',
@@ -70,6 +70,7 @@ export const hi: Record<string, string> = {
   'ui.print': 'प्रिंट',
   'ui.disclaimer':
     'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
+  'ui.disclaimer.guide': 'यह सामान्य जानकारी है, कानूनी सलाह नहीं। आपका अपना letter और policy ही तय करते हैं।',
   'ui.money.hint': '12L, 12,00,000 या 1200000',
 
   // ---- Decoder form ----

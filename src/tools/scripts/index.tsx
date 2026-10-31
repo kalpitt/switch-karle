@@ -4,6 +4,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, Disclaimer, MoneyField, Select, TextField, VerdictBanner } from '../../components/ui'
 import { SCRIPT_SLUGS, type ScriptSlug } from '../../data/hrScripts'
 import { TOOLS } from '../../data/tools'
+import { formatLongDate } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { readJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -85,7 +86,8 @@ function StaticScript({ slug }: { slug: ScriptSlug }) {
 
 /**
  * Expected CTC (PR 4.3): two money inputs drive the letter; copy stays locked
- * until both numbers are filled.
+ * until both numbers are filled. Until then the letter shows a bracket, never
+ * a ₹0 the page made up.
  */
 function ExpectedCtcScript() {
   const t = useT()
@@ -99,8 +101,8 @@ function ExpectedCtcScript() {
     () =>
       t('hr.expected-ctc.body', {
         role: role.trim() || '[Role]',
-        current: formatLakh(currentCtc),
-        expected: formatLakh(expectedCtc),
+        current: currentCtc > 0 ? formatLakh(currentCtc) : t('hr.expected-ctc.placeholderCurrent'),
+        expected: expectedCtc > 0 ? formatLakh(expectedCtc) : t('hr.expected-ctc.placeholderExpected'),
       }),
     [t, role, currentCtc, expectedCtc],
   )
@@ -145,6 +147,7 @@ function ExpectedCtcScript() {
 /** The one script you say out loud: tone instead of template. */
 function SpokenScript() {
   const t = useT()
+  const { lang } = useLang()
   const [preset, setPreset] = useState<Preset>('supportive')
   /** LWD from a stored resignation letter, if the user already made one. */
   const [lwd, setLwd] = useState('')
@@ -161,10 +164,12 @@ function SpokenScript() {
   }, [])
 
   const script = useMemo(
-    () => t(`manager-script.body.${preset}`).replaceAll('[LWD]', lwd || '[LWD]'),
-    [t, preset, lwd],
+    () => t(`manager-script.body.${preset}`).replaceAll('[LWD]', lwd ? formatLongDate(lwd, lang) : '[LWD]'),
+    [t, preset, lwd, lang],
   )
-  const canCopy = !script.includes('[')
+  /** Copy always works: an unfilled [LWD] is a visible bracket the user can
+   *  fill by hand, not a reason to lock the script. */
+  const lwdMissing = script.includes('[LWD]')
 
   return (
     <>
@@ -185,11 +190,8 @@ function SpokenScript() {
       <Card>
         <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{script}</pre>
         <div className="mt-4">
-          {canCopy ? (
-            <CopyButton text={script} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
-          ) : (
-            <p className="text-[13px] font-semibold text-amberflag">{t('manager-script.copyBlocked')}</p>
-          )}
+          <CopyButton text={script} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+          {lwdMissing && <p className="mt-2 text-[13px] text-ink-soft">{t('manager-script.copyBlocked')}</p>}
         </div>
       </Card>
     </>

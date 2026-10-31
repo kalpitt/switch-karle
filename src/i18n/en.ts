@@ -159,7 +159,7 @@ export const en: Record<string, string> = {
   'home.kicker': 'One board for every application. One tap to the right calculator.',
   'home.allTools': 'All {n} tools',
   'home.decoder.desc': 'CTC to real in-hand salary, plus a red-flag scanner for notice periods, bonds and variable pay.',
-  'home.tracker.desc': 'Kanban for your applications — CTC discussed, notice, next action. Stays on this device.',
+  'home.tracker.desc': 'Keep every application, its CTC and next step on one private board.',
   'home.prompts.desc': 'Copy a prompt into your own AI. This app never sends your data anywhere.',
 
   'tab.decoder': 'Decoder',
@@ -178,6 +178,7 @@ export const en: Record<string, string> = {
   'ui.print': 'Print',
   'ui.disclaimer':
     'Estimate, not tax or legal advice. FY 2026-27 rules. Your payroll’s exact structure will differ a little.',
+  'ui.disclaimer.guide': 'General guidance, not legal advice. Your own letter and policy decide.',
   'ui.money.hint': '12L, 12,00,000 or 1200000',
 
   'offer-comparison.title': 'Offer comparison',
@@ -284,7 +285,7 @@ export const en: Record<string, string> = {
   'esop-reality.cadence.annual': 'Annually',
   'esop-reality.vestLinear': 'Modelled as a monthly vest: shares × month ÷ vest period, once the cliff passes.',
   'esop-reality.vestAnnual': 'Modelled as equal annual tranches — one at the cliff, one on each anniversary after it. Nothing accrues in between, however long you stay.',
-  'esop-reality.vestLetter': 'Your grant letter decides which of these is true. Neither reading parses it.',
+  'esop-reality.vestLetter': 'Your grant letter says which one applies. This tool cannot read it for you.',
   'esop-reality.saleNote': 'Sale is a separate capital-gains event. This tool stops at exercise.',
   'esop-reality.vestTitle': 'Vest schedule',
   'esop-reality.vestRow': 'Month {month}',
@@ -294,7 +295,7 @@ export const en: Record<string, string> = {
   'esop-reality.provisional': 'Provisional, pending a chartered accountant’s review of the perquisite rule. Not tax advice.',
 
   'relocation.title': 'Relocation',
-  'relocation.desc': 'What actually changes in-hand when the same CTC moves city — professional tax and HRA, not a fake cost-of-living index.',
+  'relocation.desc': 'See how your in-hand changes when the same CTC moves to another city.',
   'relocation.formTitle': 'Same salary, new city',
   'relocation.fromState': 'From state',
   'relocation.fromMetro': 'From a metro for HRA',
@@ -456,7 +457,7 @@ export const en: Record<string, string> = {
   'fnf-checker.mailHr': "HR contact's name",
   'fnf-checker.mailHrHint': 'Left blank, the mail opens with "Dear HR team".',
   'fnf-checker.mailYou': 'Your name',
-  'fnf-checker.mailBlocked': 'Add your name to unlock the copy button.',
+  'fnf-checker.mailBlocked': 'Add your name to copy the email.',
   'fnf-checker.mailNothing': 'Every line on the sheet matches the recomputation, so there is nothing to dispute. No mail is drafted.',
   'fnf-checker.mailNote': 'Read it before you send it. It asks for a basis; it does not accuse anyone of anything.',
   'fnf-checker.mail.subject': 'Subject: Full and final settlement — request to reconcile {n} line(s)',
@@ -502,7 +503,7 @@ export const en: Record<string, string> = {
   'form16-shock.form12bNote': 'This is a plain summary, not the statutory form — payroll uses it to size your remaining TDS.',
 
   'resignation-letter.title': 'Resignation letter',
-  'resignation-letter.desc': 'Three tones. Last working day is resignation date plus notice minus one calendar day.',
+  'resignation-letter.desc': 'Write your resignation in one of three tones, with your last working day worked out.',
   'resignation-letter.formTitle': 'The letter',
   'resignation-letter.formHint': 'Your draft saves on this device only, never uploaded.',
   'resignation-letter.company': 'Company',
@@ -518,10 +519,10 @@ export const en: Record<string, string> = {
   'resignation-letter.tone.firm': 'Firm and short',
   'resignation-letter.verdict': 'Last working day if you serve the full notice: {lwd}.',
   'resignation-letter.yourName': 'Your name',
-  'resignation-letter.yourNameHint': 'Goes in the signature. Copy stays locked until it is filled.',
+  'resignation-letter.yourNameHint': 'Goes in the signature.',
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'Stays on this page only.',
-  'resignation-letter.copyBlocked': 'Fill company, role, manager and your name to unlock copy.',
+  'resignation-letter.copyBlocked': 'Add the company, your role, your manager and your name to copy the letter.',
   'resignation-letter.earliestJoin': 'Earliest join date with no EPFO overlap: {date} — the day after your last working day.',
   'resignation-letter.epfo':
     'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
@@ -546,7 +547,7 @@ export const en: Record<string, string> = {
     'I wanted to tell you first. I have accepted another role. My decision is made. My last working day, if I serve full notice, is [LWD]. I will write a handover this week. I am grateful for the work here and I want to leave well.',
   'manager-script.body.counter-risk':
     'I have accepted another offer. I am telling you because I respect the team. If the company wants to make a counter I will listen once, in writing, but I do not want this to become a week of meetings. I will still do a clean handover either way.',
-  'manager-script.copyBlocked': 'This script fills its last working day from your saved resignation letter — make one first, then copy.',
+  'manager-script.copyBlocked': 'Your last working day is left as [LWD]. Write your resignation letter first and we fill it in.',
   'manager-script.body.hostile':
     'I am resigning. The letter is in your inbox / here on paper. Last working day per my notice is [LWD]. I will complete the handover. I am not going to debate the decision in this meeting. If HR needs anything, they can mail me.',
 
@@ -558,20 +559,20 @@ export const en: Record<string, string> = {
     'Hi [Manager name],\n\nI have shared my resignation dated [date], with last working day [LWD] as per my notice.\n\nI am due to join my next employer on [new joining date], so an earlier release would help me start on time. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?\n\nI will follow whatever the appointment letter allows. Thank you for considering it.',
   'hr.buyout-ask.body':
     'Hi [HR name],\n\nCould you confirm how notice buyout works in my letter — is it on basic or on gross, and is the divisor 30 days?\n\nI am hoping to make [proposed last day] my last working day. If buyout is allowed, please share the amount and whether it will be recovered from F&F or paid by me before relieving.\n\nI will complete the handover either way.',
-  'hr.decline-accepted.body':
-    'Hi [Recruiter / HR name],\n\nThank you again for the offer for [role] at [company]. After thinking it through with my family, I need to withdraw my acceptance. My decision is made — I will not be joining.\n\nI am sorry for the disruption. Please treat this mail as my formal decline.\n\nI appreciate the time you spent, and I wish the team well.',
-  'hr.counter-offer-reply.body':
-    'Hi [Manager name],\n\nThank you for the counter-offer and for making time to talk.\n\nI have thought about the rupee gap and about the work itself. I am going to go ahead with the new role.\n\nI will keep the handover clean and stick to the notice we agreed. Thank you for the years here — I am leaving on good terms and I hope we stay in touch.',
+  'hr.decline-accepted.body': 'Hi [Recruiter / HR name],\n\nThank you again for the offer for [role] at [company]. After careful thought, I need to withdraw my acceptance. My decision is made — I will not be joining.\n\nI am sorry for the disruption. Please treat this mail as my formal decline.\n\nI appreciate the time you spent, and I wish the team well.',
+  'hr.counter-offer-reply.body': 'Hi [Manager name],\n\nThank you for the counter-offer and for making time to talk.\n\nI have thought it over, and I am going ahead with the new role.\n\nI will keep the handover clean and stick to the notice we agreed. Thank you for the years here — I am leaving on good terms and I hope we stay in touch.',
   'hr.recruiter-followup.body':
     'Hi [Name],\n\nChecking in on [role] at [company], as discussed on [date]. I remain interested and can share any extra document you need.\n\nIf the timeline has moved, a one-line update helps me plan notice with my current employer. Thank you.',
   'hr.expected-ctc.formTitle': 'Your two numbers',
   'hr.expected-ctc.role': 'Role',
-  'hr.expected-ctc.roleHint': 'Optional — used in the first line.',
+  'hr.expected-ctc.roleHint': 'Goes in the first line.',
   'hr.expected-ctc.current': 'Current CTC (per year)',
   'hr.expected-ctc.expected': 'Expected CTC (per year)',
   'hr.expected-ctc.body':
     'Thank you for the conversation about the {role} role.\n\nI am looking at this role on total compensation and the work, not one headline number. My current CTC is {current} per year, and for a similar scope I am targeting around {expected}. If you can share the band for this level, I can tell you quickly whether we are in range. Happy to talk structure — fixed vs variable, notice, joining bonus — once the band is on the table.',
-  'hr.expected-ctc.copyBlocked': 'Fill the role and both numbers to unlock copy.',
+  'hr.expected-ctc.copyBlocked': 'Add the role and both numbers to copy the reply.',
+  'hr.expected-ctc.placeholderCurrent': '[your current CTC]',
+  'hr.expected-ctc.placeholderExpected': '[your expected CTC]',
   'hr.early-release.title': 'Early release',
   'hr.early-release.desc': 'Ask current HR/manager to shorten notice.',
   'hr.buyout-ask.title': 'Buyout ask',
@@ -593,8 +594,7 @@ export const en: Record<string, string> = {
   'counter-offer.team': 'The team is why I would stay',
   'counter-offer.verdict.out': 'About {bank}/month more in-hand from the outside offer. On paper it is {paper} higher.',
   'counter-offer.verdict.in': 'The counter matches or beats the outside CTC on this simplified structure. The non-rupee reasons still matter.',
-  'counter-offer.honest':
-    'People who accept a counter often leave within a year anyway — the trust is already cracked. That is a pattern, not a statistic I am inventing a percentage for. Treat a counter as a stay-or-go decision, not a bidding war.',
+  'counter-offer.honest': 'People who take a counter-offer often leave within a year anyway, because the trust is already cracked. We know of no reliable figure for how often, so we do not give one. Treat a counter as a stay-or-go decision, not a bidding war.',
   'counter-offer.nonRupee': 'You turned on a non-rupee reason. If you stay, get the promotion or team change in writing with a date.',
 
   'handover-doc.title': 'Handover doc',
@@ -605,7 +605,7 @@ export const en: Record<string, string> = {
   'handover-doc.projects': 'Projects / status',
   'handover-doc.access': 'Access, repos, keys to rotate',
   'handover-doc.risks': 'What breaks if this is dropped',
-  'handover-doc.verdict': 'Copy the markdown. Keep secrets out of it — this still sits on this device only.',
+  'handover-doc.verdict': 'Copy it into an email or a doc. Leave out passwords and keys.',
   'handover-doc.disclaimer': 'A handover aid, not a legal document. Do not paste passwords.',
   'handover-doc.md.title': 'Handover — {role}',
   'handover-doc.md.owner': 'Owner after I leave: {owner}',
@@ -615,7 +615,7 @@ export const en: Record<string, string> = {
   'handover-doc.md.projectsHint': '_Add running work, tickets, and who to ask._',
   'handover-doc.md.accessHint': '_Repos, dashboards, keys to rotate, docs._',
   'handover-doc.md.risksHint': '_Dates, customers, audits._',
-  'handover-doc.copyBlocked': 'Fill role and owner above (and any section you want to include) to unlock copy.',
+  'handover-doc.copyBlocked': 'Add your role, the next owner and your projects to copy the note.',
 
   'relieving-chaser.title': 'Relieving chaser',
   'relieving-chaser.desc': 'Day 7, 14 and 30 mails if the relieving letter has not arrived.',
@@ -638,7 +638,7 @@ export const en: Record<string, string> = {
   'relieving-chaser.body.30':
     'Hi {hr},\n\nIt has been 30 days since my last working day ({lwd}) as {role} at {company}. I still do not have my relieving letter.\n\nPlease share the current status and an issue-by date this week. This letter is blocking my background verification, so it is time-sensitive. I will send any document still pending from my side.\n\nRegards',
   'relieving-chaser.setLwd': 'Set a past last-working-day first — a chase makes sense only after it.',
-  'relieving-chaser.fillFields': 'Fill company, HR name and role to unlock copy.',
+  'relieving-chaser.fillFields': 'Add the company, the HR contact and your role to copy the email.',
 
   'epf-transfer.title': 'EPF transfer',
   'epf-transfer.desc': 'Form 13 online, unmarked date-of-exit, KYC mismatches, and why withdrawing early is usually the expensive move.',
@@ -706,7 +706,7 @@ export const en: Record<string, string> = {
   'insurance-gap.verdict.gap': '{days} uncovered day(s) after {lwd}. Group mediclaim stops that evening.',
   'insurance-gap.verdict.covered': '{days} day(s) between jobs, but you already have personal cover.',
   'insurance-gap.overlap': 'Joining on or before LWD overlaps two employers on EPFO. That is a BGV/PF problem, not an insurance win.',
-  'insurance-gap.factors': 'What actually moves a floater quote (we do not invent a premium)',
+  'insurance-gap.factors': 'What changes the price of a family floater',
   'insurance-gap.factor.floater-waiting': 'Waiting periods on a new retail policy often do not cover the gap you have this month.',
   'insurance-gap.factor.pre-existing': 'Pre-existing conditions and maternity are the usual exclusions on a fresh retail policy.',
   'insurance-gap.factor.age-band': 'Age band of the oldest member on a family floater moves the quote more than city.',
@@ -780,7 +780,8 @@ export const en: Record<string, string> = {
   'redactor.textHint':
     'Saved on this device, unmasked — never uploaded. Download a PNG or print the masked page.',
   'redactor.verdict.none': 'Nothing matched. Paste text that includes PAN, Aadhaar, a phone, or a ₹ amount.',
-  'redactor.verdict.hits': 'Masked {n} item(s). Download a PNG or print — pdf-lib is not used.',
+  'redactor.verdict.hits': 'Masked {n} items. Download it as an image or print it.',
+  'redactor.verdict.hitsOne': 'Masked 1 item. Download it as an image or print it.',
   'redactor.download': 'Download PNG',
   'redactor.busy': 'Rendering…',
   'redactor.preview': 'Masked preview',

@@ -6,6 +6,7 @@ import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
+import { formatLongDate } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -126,9 +127,9 @@ function Body() {
             {result
               ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
                   days: Math.max(0, result.daysLeftOnNotice),
-                  lwd: result.lastWorkingDay,
+                  lwd: formatLongDate(result.lastWorkingDay, lang),
                 })
-              : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
+              : t('notice-tracker.verdict.served', { lwd: formatLongDate(draft.resignDate, lang) })}
           </VerdictBanner>
         )}
         <Card className="space-y-2">
@@ -141,7 +142,7 @@ function Body() {
                   <span className={checked ? 'text-ink-faint line-through' : ''}>
                     {t(`notice-tracker.item.${m.id}`)}
                     <span className="mt-0.5 block tnum text-ink-soft">
-                      {t('notice-tracker.due', { date: m.dueDate })}
+                      {t('notice-tracker.due', { date: formatLongDate(m.dueDate, lang) })}
                     </span>
                   </span>
                 </label>

@@ -62,7 +62,7 @@ function Body() {
           </Card>
         )}
         <p className="text-[13px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )
