@@ -17,12 +17,8 @@ function Body() {
   const promptText = t('offer-goes-cold.prompt.text')
   
   return (
-    <div data-tool="offer-goes-cold" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card>
-        <h2 className="text-base font-bold">{t('offer-goes-cold.title')}</h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">{t('offer-goes-cold.desc')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+    <div data-tool="offer-goes-cold" className="mx-auto max-w-3xl">
+      <div className="space-y-4">
         <VerdictBanner>{t('offer-goes-cold.verdict')}</VerdictBanner>
         
         <Card className="space-y-2">

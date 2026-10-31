@@ -110,6 +110,7 @@ export const en: Record<string, string> = {
   'home.trackerLink.cta': 'Applications',
 
   // ---- App shell ----
+  'app.skipToContent': 'Skip to content',
   'app.tagline': 'The whole job switch, from “I’m done here” to surviving notice and day 90.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
   'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source ·',

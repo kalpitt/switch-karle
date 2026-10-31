@@ -14,12 +14,8 @@ export default function ClauseLibraryTool({ lang = 'en' }: { lang?: Lang }) {
 function Body() {
   const t = useT()
   return (
-    <div data-tool="clause-library" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card>
-        <h2 className="text-base font-bold">{t('clause-library.title')}</h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">{t('clause-library.desc')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+    <div data-tool="clause-library" className="mx-auto max-w-3xl">
+      <div className="space-y-4">
         <VerdictBanner>{t('clause-library.verdict')}</VerdictBanner>
         {CLAUSES.map((c) => {
           const body = t(`clause-library.${c.id}.body`)

@@ -16,6 +16,7 @@
  */
 export const hi: Record<string, string> = {
   // ---- App shell ----
+  'app.skipToContent': 'सीधे content पर जाएं',
   'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई नौकरी के day 90 तक।',
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',

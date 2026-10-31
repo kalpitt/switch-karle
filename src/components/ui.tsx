@@ -14,8 +14,10 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 export function Label({ children, hint }: { children: ReactNode; hint?: string }) {
   return (
     <span className="block">
-      <span className="text-[13px] font-semibold text-ink">{children}</span>
-      {hint && <span className="mt-0.5 block text-xs leading-snug text-ink-faint">{hint}</span>}
+      {/* block + leading-snug: an inline 13px span inside a 16px/24px line box left wrapped
+          labels with 24px gaps between their lines. */}
+      <span className="block text-[13px] font-semibold leading-snug text-ink">{children}</span>
+      {hint && <span className="mt-0.5 block text-[13px] leading-snug text-ink-faint">{hint}</span>}
     </span>
   )
 }

@@ -29,6 +29,10 @@ export default defineConfig({
         // the home shell. Precache-all HTML + no SPA fallback = each URL is itself.
         navigateFallback: undefined,
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,webmanifest,xml,txt}'],
+        // GitHub Pages serves 404.html for unknown paths but answers /404/ itself with
+        // HTTP 404. A precache entry that is not 200 makes Workbox abort the whole
+        // install ("bad-precaching-response"), so offline never worked in production.
+        globIgnores: ['404.html'],
         cleanupOutdatedCaches: true,
       },
       experimental: {
