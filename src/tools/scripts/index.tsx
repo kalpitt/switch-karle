@@ -27,13 +27,13 @@ function ScriptSwitcher({ current }: { current: ScriptSlug }) {
   const { lang } = useLang()
   const titleKey = (slug: ScriptSlug) => TOOLS.find((tool) => tool.slug === slug)?.titleKey ?? slug
   return (
-    <nav className="no-print flex flex-wrap gap-2">
+    <nav aria-label={t('hr.switcher')} className="no-print flex flex-wrap gap-2">
       {SCRIPT_SLUGS.map((slug) =>
         slug === current ? (
           <span
             key={slug}
             aria-current="page"
-            className="rounded-full border border-saffron bg-saffron px-3 py-1.5 text-[13px] font-bold text-white"
+            className="inline-flex min-h-[44px] items-center rounded-full border border-saffron bg-saffron px-4 text-[13px] font-bold text-white"
           >
             {t(titleKey(slug))}
           </span>
@@ -41,7 +41,7 @@ function ScriptSwitcher({ current }: { current: ScriptSlug }) {
           <a
             key={slug}
             href={withLang(lang, slug)}
-            className="rounded-full border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron"
+            className="inline-flex min-h-[44px] items-center rounded-full border border-line px-4 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron"
           >
             {t(titleKey(slug))}
           </a>
