@@ -157,6 +157,14 @@ export function checkCspHtml(html, rel = 'page.html') {
     }
   }
 
+  // A style="" attribute in prerendered HTML is dropped by our CSP (no 'unsafe-inline' for
+  // styles), so whatever it set silently never applies. This once drew the Decoder's
+  // 73% in-hand bar at 100%. Use a class, or an SVG presentation attribute.
+  const styleAttrs = stripHtmlComments(html).match(/<[a-z][^>]*\sstyle\s*=\s*["'][^"']*["']/gi) || []
+  for (const tag of styleAttrs) {
+    errors.push(`check-csp: FAIL — ${rel} inline style attribute is blocked by CSP: ${tag.slice(0, 120)}`)
+  }
+
   // Check for off-origin subresources: <script src>, <link rel="stylesheet" href>, <img src>
   const cleanHtml = stripHtmlComments(html)
   const scriptTags = cleanHtml.match(/<script\b[^>]*>/gi) || []

@@ -30,9 +30,11 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         </p>
 
         <div className="mt-4">
-          <div className="h-3 w-full overflow-hidden rounded-full bg-line">
-            <div className="h-full rounded-full bg-leaf" style={{ width: `${Math.min(100, pct)}%` }} />
-          </div>
+          {/* SVG width attribute, not an inline style: the CSP has no 'unsafe-inline' for
+              styles, so a server-rendered style="width:…" is dropped and the bar draws full. */}
+          <svg className="block h-3 w-full overflow-hidden rounded-full bg-line" aria-hidden="true">
+            <rect className="fill-leaf" height="100%" rx="6" width={`${Math.max(0, Math.min(100, pct))}%`} />
+          </svg>
           <p className="mt-1.5 text-xs font-medium text-ink-soft">
             <span className="font-bold text-leaf">{pct}%</span>{' '}
             {t('results.reaches', { pct, amount: formatCompact(b.inHandMonthly * 12) })}

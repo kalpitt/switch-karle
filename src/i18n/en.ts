@@ -1072,6 +1072,9 @@ export const en: Record<string, string> = {
   'template.offer-compare.title': 'Offer comparison & decision framework',
   'template.offer-compare.description':
     'Total-comp truth table, risk-adjusted equity, notice friction — forces an actual recommendation.',
+  'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
+  'template.offer-extract.description':
+    'Paste your full offer letter — your AI pulls out every field the Decoder needs, ready to paste back.',
 
   // ---- Offer Goes Cold Guide ----
     'offer-goes-cold.title': 'When the new offer goes quiet',

@@ -193,3 +193,17 @@ describe('check-csp: directive validation holes', () => {
     expect(result.errors.some((e: string) => e.includes('duplicate CSP directive "script-src"'))).toBe(true)
   })
 })
+
+describe('check-csp: inline style attributes', () => {
+  it('fails on a prerendered style="" attribute, which the CSP silently drops', () => {
+    const html = VALID_PAGE.replace('<body>', '<body><div class="bar" style="width:73%"></div>')
+    const result = checkCspHtml(html, 'decoder/index.html')
+    expect(result.ok).toBe(false)
+    expect(result.errors.some((e) => e.includes('inline style attribute is blocked by CSP'))).toBe(true)
+  })
+
+  it('accepts an SVG width attribute, which is not a style', () => {
+    const html = VALID_PAGE.replace('<body>', '<body><svg><rect width="73%" height="100%"></rect></svg>')
+    expect(checkCspHtml(html, 'decoder/index.html').ok).toBe(true)
+  })
+})

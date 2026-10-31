@@ -322,6 +322,9 @@ export const hi: Record<string, string> = {
   'template.offer-compare.title': 'Offer comparison और decision framework',
   'template.offer-compare.description':
     'Total-comp truth table, risk-adjusted equity, notice friction — एक असली recommendation निकलवाता है।',
+  'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
+  'template.offer-extract.description':
+    'पूरा offer letter paste करें — आपका AI Decoder के लिए ज़रूरी हर field निकाल देगा, वापस paste करने के लिए तैयार।',
 
   // ---- Red-flag overrides (UI layer only; engine strings stay canonical English) ----
   'flag.notice-period.title': '{days} दिन का notice period',
