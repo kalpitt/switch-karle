@@ -18,10 +18,10 @@ export const hi: Record<string, string> = {
   // ---- App shell ----
 
   'error.title': 'इस tool में दिक्कत आई और यह रुक गया।',
-  'error.body': 'आपका बाकी saved काम सुरक्षित है। Page reload करें, या सिर्फ़ यह tool reset करें।',
+  'error.body': 'आपका बाक़ी saved काम सुरक्षित है। Page reload करें, या सिर्फ़ यह tool reset करें।',
   'error.reload': 'Reload करें',
   'error.reset': 'यह tool reset करें',
-  'error.resetConfirm': 'इस device पर सिर्फ़ इस tool का saved data हटाएं? बाकी tools का data रहेगा।',
+  'error.resetConfirm': 'इस device पर सिर्फ़ इस tool का saved data हटाएं? बाक़ी tools का data रहेगा।',
   'error.report': 'बताएं क्या टूटा',
   'app.skipToContent': 'सीधे content पर जाएं',
   'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई नौकरी के day 90 तक।',
@@ -29,7 +29,7 @@ export const hi: Record<string, string> = {
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
   'app.footer.verified': 'नियम आख़िरी बार {date} को जाँचे गए',
-  'app.footer.feedback': 'कोई number गलत लगा या bug मिला? बताएं:',
+  'app.footer.feedback': 'कोई number ग़लत लगा या bug मिला? मुझे बताएं:',
   'app.footer.feedbackEmail': 'Email',
   'app.langToggle.label': 'भाषा',
 
@@ -40,7 +40,7 @@ export const hi: Record<string, string> = {
   'erase.savedOne': 'इस browser में Switch Karle का 1 saved item है।',
   'erase.empty': 'Switch Karle ने इस browser में कुछ save नहीं किया है। मिटाने को कुछ नहीं है।',
   'erase.warning': 'मिटाने के बाद वापस नहीं आएगा। अपना board रखना है तो पहले backup export कर लें।',
-  'erase.historyNote': 'यह सिर्फ वही मिटाता है जो Switch Karle ने save किया था। आपकी browser history यह नहीं मिटाता — वह अपने browser से clear करें।',
+  'erase.historyNote': 'यह सिर्फ़ वही मिटाता है जो Switch Karle ने save किया था। यह आपकी browser history नहीं मिटाता — उसे अपने browser से clear करें।',
   'erase.confirm': 'सब कुछ मिटाएं',
   'erase.cancel': 'रहने दें',
   'erase.done': 'मिट गया। {n} saved items अब इस browser में नहीं हैं।',
@@ -52,9 +52,9 @@ export const hi: Record<string, string> = {
   'nav.main': 'मुख्य',
   'home.kicker': 'हर application एक ही board पर। सही calculator सिर्फ़ एक tap दूर।',
   'home.allTools': 'सभी {n} tools',
-  'home.decoder.desc': 'CTC से असल in-hand, plus notice period, bond और variable pay के red flags.',
+  'home.decoder.desc': 'CTC से असल in-hand कितना बनता है, और notice period, bond व variable pay के red flags।',
   'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
-  'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता.',
+  'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता।',
 
   'tab.decoder': 'डिकोडर',
   'tab.tracker': 'ट्रैकर',
@@ -65,30 +65,29 @@ export const hi: Record<string, string> = {
   'common.cancel': 'रद्द करें',
 
   'ui.copy': 'कॉपी करें',
-  'ui.copied': 'कॉपी हो गया ✓',
+  'ui.copied': 'कॉपी हो गई ✓',
   'ui.exampleChip': 'उदाहरण',
-  'ui.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
+  'ui.exampleNote': 'ये sample numbers हैं — अभी आपके बारे में कुछ जाँचा नहीं गया है।',
   'ui.print': 'प्रिंट',
-  'ui.disclaimer':
-    'अनुमान हैं, tax या कानूनी सलाह नहीं. FY 2026-27 के नियम. आपके payroll की exact structure थोड़ी अलग होगी.',
+  'ui.disclaimer': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। FY 2026-27 के नियम। आपके payroll की exact structure थोड़ी अलग होगी।',
   'ui.money.hint': 'पूरी रकम, जैसे 1200000',
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
   'decoder.seeded':
-    'CTC और notice period एक tracker card से आए हैं। बाकी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
+    'CTC और notice period एक tracker card से आए हैं। बाक़ी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
   'decoder.field.ctc.label': 'Total CTC',
   'decoder.field.variable.label': 'CTC में Variable',
   'decoder.field.basic.label': 'Basic',
   'decoder.field.basic.hint': 'fixed pay का %',
   'decoder.field.notice.label': 'Notice period',
-  'decoder.field.state.label': 'राज्य (Work state)',
+  'decoder.field.state.label': 'आपका work state',
   'decoder.toggle.employerPf.label': 'CTC के अंदर Employer PF',
-  'decoder.toggle.employerPf.hint': 'लगभग हमेशा yes होता है — annexure चेक करें',
+  'decoder.toggle.employerPf.hint': 'ज़्यादातर offers में यह शामिल होता है — annexure में देख लें',
   'decoder.toggle.gratuity.label': 'CTC के अंदर Gratuity',
-  'decoder.toggle.gratuity.hint': 'यह पैसा सिर्फ 5 साल बाद मिलता है',
+  'decoder.toggle.gratuity.hint': 'यह पैसा सिर्फ़ 5 साल बाद मिलता है',
   'decoder.toggle.pfFull.label': 'पूरे Basic पर PF',
-  'decoder.toggle.pfFull.hint': 'Off = ₹3,000/month पर capped',
+  'decoder.toggle.pfFull.hint': 'Off हो तो PF ₹3,000/month पर ही रुक जाता है',
   'decoder.details.extras': 'ESOPs, joining bonus, bond',
   'decoder.field.esopValue.label': 'CTC में सालाना ESOPs',
   'decoder.field.esopCliff.label': 'ESOP cliff',
@@ -131,20 +130,20 @@ export const hi: Record<string, string> = {
   // ---- Results ----
   'results.headline': 'आपका {ctc} CTC असल में देता है',
   'results.exampleChip': 'उदाहरण',
-  'results.exampleNote': 'Sample numbers के साथ बनाया गया example — अभी आपके बारे में कुछ check नहीं हुआ है।',
-  'decoder.fixedPayNote': 'In-hand सिर्फ fixed pay पर count होता है। Tax सिर्फ fixed pay पर, variable पर नहीं। Old-regime तुलना age 60 से कम मानकर है।',
+  'results.exampleNote': 'ये sample numbers हैं — अभी आपके बारे में कुछ जाँचा नहीं गया है।',
+  'decoder.fixedPayNote': 'In-hand सिर्फ़ fixed pay पर count होता है। Tax सिर्फ़ fixed pay पर, variable पर नहीं। Old-regime तुलना age 60 से कम मानकर है।',
   'results.headlineSub': 'उतना नहीं जितना CTC नंबर से {amount}/month लगता है।',
   'results.reaches': 'आपके bank तक पहुंचता है · सालाना {amount} in-hand',
   'regime.new': 'New regime',
   'regime.old': 'Old regime',
-  'results.cheaper': 'सस्ता',
+  'results.cheaper': 'कम tax',
   'results.taxPerYear': 'tax {amount}/year',
-  'results.whereGoes': 'आपका CTC कहां जाता है',
+  'results.whereGoes': 'आपका CTC कहाँ जाता है',
   'results.row.ctcQuoted': 'बताया गया CTC',
   'results.row.variable': 'Variable (जोखिम में)',
   'results.row.esop': 'ESOPs (कागज़ी)',
   'results.row.employerPf': 'Employer PF (exit/retirement तक locked)',
-  'results.row.gratuity': 'Gratuity (सिर्फ 5 साल बाद)',
+  'results.row.gratuity': 'Gratuity (सिर्फ़ 5 साल बाद)',
   'results.row.grossSalary': 'Cash salary (gross)',
   'results.row.incomeTax': 'Income tax ({regime})',
   'results.row.employeePf': 'आपका PF योगदान',
@@ -153,16 +152,16 @@ export const hi: Record<string, string> = {
   'results.row.inHand': 'सालाना आपके bank में',
   'results.offerCheck': 'Offer जांच',
   'results.flagsBadge': '{n} flag',
-  'results.noAlarming': '✓ कुछ भी चिंता की बात नहीं',
+  'results.noAlarming': '✓ चिंता की कोई बात नहीं',
   'results.sayThis': 'यह कहें:',
   'flagChip.red': 'रेड फ्लैग',
   'flagChip.amber': 'सावधानी',
   'flagChip.info': 'यह जान लें',
-  'results.howComputed': 'यह कैसे calculate किया (हर नंबर, बिना किसी जादू के)',
+  'results.howComputed': 'यह कैसे calculate हुआ (हर number, बिना किसी जादू के)',
   'results.howComputed.bullet1':
     'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 156 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
   'results.howComputed.bullet2':
-    'In-hand में सिर्फ fixed pay गिना जाता है। Variable और ESOPs जोखिम वाला पैसा हैं — इन्हें अलग दिखाया जाता है, monthly figure में कभी नहीं। इन पर tax तभी लगता है जब असल में payout मिलता है।',
+    'In-hand में सिर्फ़ fixed pay गिना जाता है। Variable और ESOPs जोखिम वाला पैसा हैं — इन्हें अलग दिखाया जाता है, monthly figure में कभी नहीं। इन पर tax तभी लगता है जब असल में payout मिलता है।',
   'results.howComputed.bullet3': 'PF: Basic का 12%, दोनों तरफ से। Gratuity accrual: CTC में होने पर Basic का 4.81%।',
   'results.howComputed.bullet4':
     'Professional tax आपके state के published slab पर आधारित है (approximate — municipal notification से थोड़ा बदल सकता है)।',
@@ -172,10 +171,10 @@ export const hi: Record<string, string> = {
   // ---- Share card ----
   'autofill.summary': '⚡ ये fields नहीं पता? अपने AI से offer letter पढ़वाएं',
   'autofill.explainer':
-    'यह prompt copy करें, ChatGPT/Claude/Gemini में अपने पूरे offer letter के साथ paste करें, फिर जवाब यहां वापस paste करें — form अपने-आप भर जाएगा।',
+    'यह prompt copy करें, ChatGPT/Claude/Gemini में अपने पूरे offer letter के साथ paste करें, फिर जवाब यहाँ वापस paste करें — form अपने-आप भर जाएगा।',
   'autofill.copyPrompt': 'Extractor prompt copy करें',
   'autofill.copied': 'Copy हो गया ✓',
-  'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहां paste करें (इसमें एक JSON block होगा)…',
+  'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहाँ paste करें (इसमें एक JSON block होगा)…',
   'autofill.pasteLabel': 'आपके AI का जवाब',
   'autofill.fillButton': 'Form भरें',
   'autofill.okFilled': 'भर दिया: {fields}',
@@ -196,7 +195,7 @@ export const hi: Record<string, string> = {
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
-  'tracker.trackedCount': '{n} track की गईं',
+  'tracker.trackedCount': '{n} application track हो रही हैं',
   'tracker.export': 'Export',
   'tracker.import': 'Import',
   'tracker.sweep': 'Email से भरें',
@@ -204,7 +203,7 @@ export const hi: Record<string, string> = {
   'tracker.empty.title': 'अभी कोई application नहीं — अपनी job search track करना शुरू करें।',
   'tracker.empty.cta': 'अपनी पहली application जोड़ें',
   'tracker.example.title': 'कुछ applications जोड़ने के बाद आपका board ऐसा दिखेगा',
-  'tracker.example.action.referral': 'कोई ऐसा ढूंढें जो refer कर सके',
+  'tracker.example.action.referral': 'कोई ऐसा ढूँढें जो refer कर सके',
   'tracker.example.action.chase': '30 दिन से कोई reply नहीं — chase करें या close करें',
   'tracker.example.action.round2': 'Hiring manager के साथ round 2',
   'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
@@ -295,7 +294,7 @@ export const hi: Record<string, string> = {
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
   'promptStudio.description':
-    'एक context-rich prompt बनाएं, उसे ChatGPT/Claude/Gemini में copy करें, फिर जवाब यहां वापस paste करके अपनी tracked application के साथ save करें।',
+    'एक context-rich prompt बनाएं, उसे ChatGPT/Claude/Gemini में copy करें, फिर जवाब यहाँ वापस paste करके अपनी tracked application के साथ save करें।',
   'promptStudio.personalizeFor': 'किसके लिए personalize करें',
   'promptStudio.genericOption': 'कोई application नहीं — generic',
   'promptStudio.emptyTitle': 'इन prompts को personalize करने के लिए एक application track करें।',
@@ -346,7 +345,7 @@ export const hi: Record<string, string> = {
 
   'flag.bond.title': 'Service bond: {months} महीनों के लिए ₹{amount}',
   'flag.bond.detail':
-    'Courts bond को सिर्फ training cost के एक genuine pre-estimate के तौर पर enforce करती हैं (Contract Act s.74) — मनमानी penalty राशि enforceable नहीं है, और आपको छोड़ने के बाद competitor join करने से रोकने वाली clauses void हैं (s.27)। पर practical दर्द असली है: यह राशि आपके final settlement से काटी जा सकती है और relieving letter रोका जा सकता है, जो background checks में दिक्कत करता है।',
+    'Courts bond को सिर्फ़ training cost के एक genuine pre-estimate के तौर पर enforce करती हैं (Contract Act s.74) — मनमानी penalty राशि enforceable नहीं है, और आपको छोड़ने के बाद competitor join करने से रोकने वाली clauses void हैं (s.27)। पर practical दर्द असली है: यह राशि आपके final settlement से काटी जा सकती है और relieving letter रोका जा सकता है, जो background checks में दिक्कत करता है।',
   'flag.bond.tip':
     'पूछें कि bond किस specific training को cover करता है और राशि को महीनों के हिसाब से pro-rate करने को कहें। अगर कोई असली training program नहीं है, तो bond हटाने को कहें।',
 
@@ -377,15 +376,15 @@ export const hi: Record<string, string> = {
   'flag.esop-illiquid.detail':
     'इस offer का ₹{amount}/साल एक ऐसी company की equity है जहां कोई liquidity event नहीं हुआ — आप इसे बेच नहीं सकते, और ज़्यादातर startup ESOPs या तो worthless expire हो जाते हैं या dilute हो जाते हैं। एक tax trap भी है: options exercise करने पर उन paper gains पर tax लगता है जो आपने cash में realize नहीं किए।',
   'flag.esop-illiquid.tip':
-    'Decision लेते समय unlisted ESOPs की value zero मानें। पूछें: आखिरी 409A/valuation क्या थी, buyback history क्या रही, और exit के बाद exercise window कितनी है (90 दिन hostile है; 5+ साल founder-friendly है)।',
+    'Decision लेते समय unlisted ESOPs की value zero मानें। पूछें: आख़िरी 409A/valuation क्या थी, buyback history क्या रही, और exit के बाद exercise window कितनी है (90 दिन hostile है; 5+ साल founder-friendly है)।',
 
   'flag.esop-cliff.title': '{months}-महीने का ESOP cliff',
   'flag.esop-cliff.detail':
     'Standard vesting cliff 12 महीने का होता है। लंबा cliff मतलब उसके vest होने से पहले छोड़ने पर पूरी equity forfeit हो जाती है — यह notice period और bond के ऊपर एक और retention lock की तरह काम करता है।',
   'flag.esop-cliff.tip': 'Standard 12-महीने के cliff के लिए पूछें, उसके बाद monthly या quarterly vesting के साथ।',
 
-  'flag.low-basic.title': 'Basic fixed pay का सिर्फ {percent}% है',
+  'flag.low-basic.title': 'Basic fixed pay का सिर्फ़ {percent}% है',
   'flag.low-basic.detail':
     'कम Basic employer PF और gratuity को घटाता है (दोनों Basic पर calculate होते हैं) — यह आपकी नहीं, company की cost optimize करता है। कुछ structures इसका इस्तेमाल in-hand को बड़ा दिखाने और retirement money को छोटा रखने के लिए करते हैं।',
-  'flag.low-basic.tip': 'Sign करने से पहले salary structure sheet मांगें और check करें कि Basic fixed pay का कम-से-कम 40% हो।',
+  'flag.low-basic.tip': 'Sign करने से पहले salary structure sheet माँगें और check करें कि Basic fixed pay का कम-से-कम 40% हो।',
 }
