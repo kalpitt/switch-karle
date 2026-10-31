@@ -16,7 +16,8 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:csp": "node scripts/check-csp.mjs",
     "new-tool": "node scripts/new-tool.mjs",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
