@@ -122,11 +122,11 @@ export const hiSuite: Record<string, string> = {
   'plan.ics.resign': 'जो date मैंने चुनी है',
   'plan.ics.resign.note': 'जो दिन मैंने चुना है।',
 
-  'home.trackerLink': 'पहले से apply कर रहे हैं? आपका board यहाँ है:',
-  'home.trackerLink.cta': 'Applications',
+  'home.trackerLink': 'पहले से apply कर रहे हैं?',
+  'home.trackerLink.cta': 'अपना application tracker खोलें →',
 
   // ---- Home: the journey ----
-  'home.pinned': 'यहाँ से शुरू करें',
+  'home.pinned': 'Offer मिल गया है? इनसे शुरू करें',
   'home.cat.offer': 'सामने रखा offer',
   'home.cat.exit': 'निकलते वक़्त का पैसा',
   'home.cat.documents': 'जो आपको लिखना है',
@@ -134,8 +134,8 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Nav / app shell / common ----
   'nav.search': 'टूल खोजें',
-  'nav.searchHint': 'टाइप करें और jump करें। Esc से बंद होगा।',
-  'nav.searchEmpty': 'कोई tool match नहीं हुआ।',
+  'nav.searchHint': 'Tools खोजें: gratuity, notice, PF, hike…',
+  'nav.searchEmpty': '“{q}” से कुछ नहीं मिला। “notice”, “PF” या “in-hand” खोजकर देखें।',
   'ui.copyText': 'कॉपी करें',
 
   // ---- Offer comparison ----

@@ -63,7 +63,7 @@ export function CommandPalette() {
               className="w-full border-b border-line bg-transparent px-4 py-3 text-[15px] outline-none"
             />
             <ul className="max-h-80 overflow-y-auto p-2">
-              {shown.length === 0 && <li className="px-3 py-2 text-[13px] text-ink-soft">{t('nav.searchEmpty')}</li>}
+              {shown.length === 0 && <li className="px-3 py-2 text-[13px] text-ink-soft">{t('nav.searchEmpty', { q: query.trim() })}</li>}
               {shown.map((item) => (
                 <li key={item.slug}>
                   <a

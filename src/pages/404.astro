@@ -18,5 +18,17 @@ import Base from '../layouts/Base.astro'
     >
       Go to the home page
     </a>
+    <div lang="hi" class="mt-10 border-t border-line pt-8">
+      <h2 class="text-xl font-bold">Page नहीं मिला</h2>
+      <p class="mx-auto mt-2 max-w-md text-[15px] leading-relaxed text-[var(--color-ink-soft, #57534e)]">
+        यह URL मौजूद नहीं है। हर tool home page से एक tap दूर है — और सब कुछ अब भी पूरी तरह आपके browser में चलता है।
+      </p>
+      <a
+        href={`${import.meta.env.BASE_URL}hi/`}
+        class="mt-6 inline-block rounded-full bg-saffron px-6 py-2.5 text-sm font-bold text-white transition-transform active:scale-[0.98]"
+      >
+        Hindi home page पर जाएं
+      </a>
+    </div>
   </main>
 </Base>

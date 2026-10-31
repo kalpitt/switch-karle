@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
 import { RULES_LAST_VERIFIED } from '../data/rules'
+import { formatLongDate } from '../lib/formatDate'
 import { withLang } from '../lib/langPath'
 import { CommandPalette } from './CommandPalette'
 import { EraseData } from './EraseData'
@@ -85,7 +86,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
         <br />
         <span className="mt-1 inline-flex items-center rounded-full border border-line bg-card px-2.5 py-0.5 font-semibold text-ink-soft">
-          {t('app.footer.verified', { date: RULES_LAST_VERIFIED })}
+          {t('app.footer.verified', { date: formatLongDate(RULES_LAST_VERIFIED, lang) })}
         </span>
         <br />
         {t('app.footer.feedback')}{' '}
