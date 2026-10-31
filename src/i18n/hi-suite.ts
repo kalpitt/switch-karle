@@ -138,6 +138,12 @@ export const hiSuite: Record<string, string> = {
   'nav.searchEmpty': '“{q}” के लिए अभी कुछ नहीं। notice, gratuity, in-hand या resign आज़माएं।',
   'nav.searchCount': 'नतीजे: {n}',
   'nav.close': 'बंद करें',
+  'notFound.docTitle': 'Page नहीं मिला — Switch Karle',
+  'notFound.title': 'यह page मौजूद नहीं है।',
+  'notFound.body': 'Link पुराना या ग़लत हो सकता है। आपने जो भी save किया है, वह इसी device पर है।',
+  'notFound.home': 'होम page पर जाएं',
+  'notFound.otherHome': 'English home',
+  'notFound.searchHint': 'कोई tool ढूँढ रहे हैं? ऊपर “टूल खोजें” का इस्तेमाल करें।',
   'palette.plan.desc': 'तीन सवाल। आपकी gratuity date, hike का महीना और last working day।',
   'ui.copyText': 'कॉपी करें',
 
