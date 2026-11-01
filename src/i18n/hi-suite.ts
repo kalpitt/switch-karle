@@ -876,7 +876,7 @@ export const hiSuite: Record<string, string> = {
   'offer-goes-cold.prompt.text': 'Draft a calm, professional follow-up email to [Recruiter name] and [Hiring manager name] at [Company name], about the [Role] offer dated [Offer date]. I resigned on [Resignation date] based on this offer. I have not heard back in [Number of days] days, despite [Number of follow-ups] follow-ups. My last working day at my current employer is [Last working day], and I need to tell them if anything changes before then. Ask for two things in writing: a confirmed joining date and the current BGV status. Give my last working day as the reason for asking now. Include a subject line. Keep it short, polite and firm. No desperation, no threats.',
 
   // ── Trust: receipts, the privacy line, and the pages about the site ──────
-  'receipt.label': 'Sources:',
+  'receipt.label': 'स्रोत:',
   'receipt.checked': '{items} ({date} को check किया)',
   'receipt.convention': 'Convention है, कानून नहीं: {text}',
   'receipt.awaiting-ca': 'अभी chartered accountant ने check नहीं किया: {text}',

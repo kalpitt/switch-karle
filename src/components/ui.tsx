@@ -630,7 +630,8 @@ export function Receipt({ ids, className = '' }: { ids: readonly string[]; class
       </p>
       {open.length > 0 && (
         <details className="mt-1">
-          <summary className="inline-flex min-h-[44px] cursor-pointer items-center font-semibold text-ink">
+          <summary className="inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 font-semibold text-ink">
+            <span aria-hidden>▸</span>
             {t(open.length === 1 ? 'receipt.openOne' : 'receipt.open', { n: open.length })}
           </summary>
           <ul className="list-disc space-y-1 pl-4">
