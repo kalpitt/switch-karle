@@ -1,70 +1,100 @@
 # Deploying Switch Karle
 
-> **Canonical URL: https://switchkarle.fyi/** (GitHub Pages; moved from
-> kalpit.me/switch-karle on 2026-10-31, no redirect). Mirror:
-> https://chhalaang.tiwari-kalpit.workers.dev/ (Cloudflare Pages, deployed
-> first, still on the old project name — kept running as a fallback).
+> **Canonical URL: https://switchkarle.fyi/** (GitHub Pages, custom domain,
+> since 2026-10-31).
 
-## Primary: switchkarle.fyi (GitHub Pages)
+## How a deploy happens
 
-kalpit.me is the custom domain of the `kalpitt.github.io` user site, so any
-public repo of Kalpit's with GitHub Pages enabled auto-serves at
-`kalpit.me/<repo>` (the saavdhan pattern). The Astro build sets `site` +
-`base: '/switch-karle'` once in `astro.config.mjs` (via `site.config.mjs`).
-The Workers root-URL mirror will 404 assets until the domain cutover flips
-`base` to `/`. The GitHub Pages subpath is the canonical deploy.
-
-Owner steps to activate (already done for this repo):
-1. Make this repo public (required for free-plan Pages).
-2. GitHub → switch-karle → Settings → Pages → Source: **GitHub Actions**.
-3. Push to main (or Actions → "Deploy to GitHub Pages (kalpit.me/switch-karle)" → Run workflow).
-   `.github/workflows/pages.yml` builds, tests, and deploys.
-4. Verify https://kalpit.me/switch-karle/ loads.
+Merging to `main` deploys. `.github/workflows/pages.yml` ("Deploy to GitHub
+Pages (switchkarle.fyi)") runs on every push to `main`: it re-runs every check
+from `ci.yml` (lint, typecheck, tests, build, `check:base`, `check:seo`,
+`check:csp`, the private-path scan), uploads `dist/` and deploys it. Then its
+`smoke` job opens the live site (see below). It can also be started by hand:
+Actions → "Deploy to GitHub Pages (switchkarle.fyi)" → Run workflow.
 
 The app is a static site: `npm run build` → everything in `dist/`. No server,
 no environment variables, no secrets.
 
-## Secondary: Cloudflare Pages mirror
+Settings that make this work (already done):
+1. The repo is public (required for free-plan Pages).
+2. Settings → Pages → Source: **GitHub Actions**; Custom domain:
+   `switchkarle.fyi`, Enforce HTTPS on.
+3. DNS for `switchkarle.fyi` is on Cloudflare in "DNS only" mode (grey cloud):
+   the apex A records point at GitHub Pages, `www` is a CNAME to
+   `kalpitt.github.io`. Cloudflare answers DNS only; page requests go straight
+   to GitHub.
 
-Still live at the old `chhalaang.tiwari-kalpit.workers.dev` project name —
-Cloudflare Pages projects aren't renamable via API without a token, so
-renaming it (or pointing a fresh `switch-karle.<subdomain>` project at the
-same repo, then retiring the old one) is a manual dashboard step whenever
-Kalpit wants to do it. Not urgent: it's a fallback mirror, not the canonical
-URL.
+`site.config.mjs` holds `SITE = 'https://switchkarle.fyi'` and `BASE = '/'`.
+`astro.config.mjs` and `scripts/check-base-build.mjs` both read it.
+
+## Knowing when production breaks
+
+`scripts/smoke-prod.mjs` opens the live site in a fresh headless browser and
+fails if any of these is wrong:
+
+- `robots.txt`, `sitemap.xml` and the manifest return 200; a missing page
+  returns 404.
+- Every page in the live sitemap (both languages) returns 200, hydrates with
+  no page error and no console error (a blocked style or script is a console
+  error), and has an `<h1>`.
+- The home page's three questions lead to the next step; the Decoder shows a ₹
+  figure and its bar is not drawn 100% full.
+- The service worker installs and activates, and `/gratuity/`, never opened
+  before, still loads with the network off.
+
+It runs twice over:
+
+- **After every deploy**, as the `smoke` job in `pages.yml`. If it fails,
+  GitHub emails whoever pushed to `main` (the person who merged).
+- **Every day at 09:00 IST**, from `.github/workflows/smoke.yml`, so a
+  certificate, DNS or GitHub Pages problem shows up even when nothing was
+  merged. When a scheduled run fails, GitHub emails the person who last
+  changed that workflow's `cron` line, which is whoever merged it.
+
+For the email to arrive, GitHub → Settings → Notifications → Actions must have
+email on for failed workflows (the default). GitHub pauses scheduled workflows
+after 60 days with no repository activity and says so on the Actions tab;
+re-enable it there.
+
+The smoke test sends ordinary page requests from an empty browser. No user
+data exists in it and nothing is posted anywhere. Run it yourself with
+`node scripts/smoke-prod.mjs` (or pass another origin, such as a local
+server, as the first argument).
+
+## Rollback
+
+If a deploy breaks the site:
+
+- **Fastest (about 3 minutes):** Actions → "Deploy to GitHub Pages
+  (switchkarle.fyi)" → open the last green run *before* the bad one → "Re-run
+  all jobs". A re-run builds the commit that run was for, so the old version
+  goes live again. `main` still holds the bad change, so do the next step too.
+- **Permanent:** open the merged pull request on GitHub → "Revert" → merge the
+  revert pull request. That deploys `main` without the change.
+
+Visitors pick up a rollback the same way they pick up any deploy: on their
+next visit the page says "A new version is ready. Reload".
 
 ## Notes
 
-- **GitHub Pages caveat**: project pages serve under `/switch-karle/`. Asset
-  URLs are `/switch-karle/_astro/...`. `npm run check:base` fails the build
-  if any prerendered HTML points outside that prefix. Don't reintroduce
-  root-absolute `/assets/...` paths.
 - The service worker is Workbox `generateSW` (precache-all HTML, **no** SPA
   navigateFallback). Offline reload of `/decoder/` must render the decoder,
-  never the home grid. `@vite-pwa/astro` defaults fallback to `base` if we
-  forget to set `navigateFallback: undefined` — the smoke check greps for
-  `createHandlerBoundToURL` so that cannot land silently.
-- Analytics: none, by design — no client-side tracker; "nothing is uploaded"
-  is a product promise. For traffic numbers on the **canonical URL**, use
-  GitHub repo Insights → Traffic (visits/uniques/referrers, 14-day rolling,
-  no script, no cookies — works because the canonical URL is served straight
-  from GitHub Pages). The earlier note here about using Cloudflare's
-  server-side analytics was wrong for the canonical URL: `kalpit.me`'s
-  nameservers are on Porkbun, not Cloudflare, and resolve straight to GitHub
-  Pages' IPs — so no Cloudflare edge ever sees that traffic. Cloudflare zone
-  analytics would only ever cover the Workers mirror, which real visitors
-  won't be using.
-
-## Cutover to switchkarle.fyi (checklist)
-
-Verified 2026-10-24: with `SITE = 'https://switchkarle.fyi'` and `BASE = '/'`,
-build, `check:base`, `check:seo`, `check:csp` and all tests pass. The code side
-is one edit, in `site.config.mjs`. The rest is by hand:
-
-1. Edit `site.config.mjs`: `SITE` → `https://switchkarle.fyi`, `BASE` → `/`.
-2. GitHub → Settings → Pages → Custom domain: `switchkarle.fyi`, then tick Enforce HTTPS.
-3. Cloudflare DNS for the domain → GitHub Pages (the A/AAAA or CNAME records GitHub shows). Set the records to "DNS only" while GitHub issues the certificate.
-4. Merge to `main` (deploys). Open the site and install-test the PWA once.
-
-Users on the old `kalpit.me/switch-karle/` install keep their local data only on
-that origin; there is no redirect (ROADMAP, Settled).
+  never the home page. `@vite-pwa/astro` defaults the fallback to `base` if
+  `navigateFallback: undefined` is ever dropped; `check:base` greps `sw.js`
+  for `createHandlerBoundToURL` so that cannot land silently. It also fails if
+  any precached URL has no file in `dist/`: one such URL (`404/`) stopped the
+  service worker installing at all until 2026-10-31.
+- After a deploy, a returning visitor's service worker updates in the
+  background and the page shows "A new version is ready. Reload" rather than
+  reloading itself.
+- Analytics: none, by design (`PRIVACY.md`). GitHub repo Insights → Traffic
+  counts visits to the repository on github.com, not visits to the site.
+- The old address `kalpit.me/switch-karle/` now answers with a 301 to
+  `https://switchkarle.fyi/`. GitHub does this by itself once a repo has a
+  custom domain; nothing in this repo sets it up. Saved data does not move
+  with it: browser storage belongs to an origin, so someone who used the old
+  address starts empty here unless they bring a backup file (footer → "Back up
+  or restore").
+- The Cloudflare Pages project `chhalaang.tiwari-kalpit.workers.dev`, a mirror
+  from before the cutover, returned 404 on 2026-10-31. It is not a fallback.
+  Whether to delete it is Kalpit's call.

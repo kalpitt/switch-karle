@@ -12,6 +12,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -90,9 +91,10 @@ function Body() {
     <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('counter-offer.formTitle')}</h2>
-        <MoneyField label={t('counter-offer.current')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
-        <MoneyField label={t('counter-offer.counter')} hint={t('ui.money.hint')} value={draft.counterCtc} onChange={(v) => set({ counterCtc: v })} />
-        <MoneyField label={t('counter-offer.outside')} hint={t('ui.money.hint')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />
+        <PrivacyLine />
+        <MoneyField label={t('counter-offer.current')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <MoneyField label={t('counter-offer.counter')} placeholder={t('ui.money.placeholder')} value={draft.counterCtc} onChange={(v) => set({ counterCtc: v })} />
+        <MoneyField label={t('counter-offer.outside')} placeholder={t('ui.money.placeholder')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />
         <Toggle label={t('counter-offer.promo')} checked={draft.promisedPromo} onChange={(v) => set({ promisedPromo: v })} />
         <Toggle label={t('counter-offer.team')} checked={draft.teamStay} onChange={(v) => set({ teamStay: v })} />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
@@ -110,7 +112,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

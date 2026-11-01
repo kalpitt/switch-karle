@@ -9,11 +9,14 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -98,11 +101,12 @@ function Body() {
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('esop-reality.formTitle')}</h2>
-        <NumberField label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
+        <PrivacyLine />
+        <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
         <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
         <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
-        <NumberField label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
-        <NumberField label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
+        <NumberField integer label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
+        <NumberField integer label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
         <Select
           label={t('esop-reality.cadence')}
           value={draft.vestCadence}
@@ -121,6 +125,7 @@ function Body() {
         ) : (
           <VerdictBanner tone={result.postExitWindowNote ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['esop-reality']} />
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('esop-reality.vestTitle')}</h3>
           {result.vestTable.map((row, i) => (
@@ -144,7 +149,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

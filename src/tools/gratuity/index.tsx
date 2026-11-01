@@ -8,13 +8,17 @@ import {
   Disclaimer,
   ExampleNote,
   MoneyField,
+  Receipt,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.gratuity.v1' as const
 
@@ -29,8 +33,8 @@ interface Draft {
 
 const DEFAULT_DRAFT: Draft = {
   lastDrawnBasicDA: 100_000,
-  joinDate: '2019-08-01',
-  exitDate: '2024-08-01',
+  joinDate: '2021-08-01',
+  exitDate: '2026-08-31',
   coveredByAct: true,
   workWeekDays: 6,
 }
@@ -45,6 +49,7 @@ export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
@@ -56,7 +61,14 @@ function Body() {
     const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     const fill = (d: Draft) =>
-      fillFromCurrentJob(d, job, { shared: { monthlyBasicDA: 'lastDrawnBasicDA' } }, saved != null)
+      fillFromCurrentJob(
+        d,
+        job,
+        // The work week is shared too: the home plan and the F&F checker read it,
+        // and the same person must not be 6-day here and 5-day there.
+        { shared: { monthlyBasicDA: 'lastDrawnBasicDA', workWeekDays: 'workWeekDays' } },
+        saved != null,
+      )
     if (saved) {
       setDraft(fill(saved))
       setExample(null)
@@ -92,7 +104,7 @@ function Body() {
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
   const copyText = result && verdict
-    ? [verdict, result.flipDate ? t('gratuity.flip', { date: result.flipDate }) : '', t('ui.disclaimer')]
+    ? [verdict, result.flipDate ? t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) }) : '', t('ui.disclaimer')]
         .filter(Boolean)
         .join('\n')
     : ''
@@ -101,6 +113,7 @@ function Body() {
     <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('gratuity.formTitle')}</h2>
+        <PrivacyLine />
         <MoneyField
           label={t('gratuity.basic')}
           hint={t('gratuity.basicHint')}
@@ -122,7 +135,11 @@ function Body() {
           label={t('gratuity.week5.label')}
           hint={t('gratuity.week5.hint')}
           checked={draft.workWeekDays === 5}
-          onChange={(v) => set({ workWeekDays: v ? 5 : 6 })}
+          onChange={(v) => {
+            const workWeekDays = v ? 5 : 6
+            set({ workWeekDays })
+            rememberCurrentJob({ workWeekDays })
+          }}
         />
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
@@ -132,7 +149,11 @@ function Body() {
         ) : result && verdict ? (
           <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
         ) : null}
-        {result?.flipDate && <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: result.flipDate })}</p>}
+        <Receipt ids={TOOL_SOURCES['gratuity']} />
+        {!isExample && result?.eligible && <p className="text-[13px] text-ink-soft">{t('gratuity.formula')}</p>}
+        {result?.flipDate && (
+          <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
+        )}
         {result?.notes.map((n) => (
           <p key={n.id} className="text-[13px] text-ink-soft">
             {t(`gratuity.note.${n.id}`)}
@@ -141,7 +162,7 @@ function Body() {
         {!isExample && result && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

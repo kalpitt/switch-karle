@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, ExampleNote, NoticeMonthsNudge, NumberField, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, NoticeMonthsNudge, NumberField, Receipt, VerdictBanner } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
+import { formatLongDate } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -32,7 +34,7 @@ function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done:
   return (
     <a
       href={withLang(lang, slug)}
-      className="no-print shrink-0 rounded-full border border-line px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron"
+      className="no-print inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-line px-3 text-xs font-bold text-ink-soft transition-colors hover:border-saffron"
     >
       {t('notice-tracker.open', { tool: t(tool.titleKey) })}
     </a>
@@ -100,6 +102,7 @@ function Body() {
         <h2 className="text-base font-bold">{t('notice-tracker.formTitle')}</h2>
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField
+          integer
           label={t('notice-tracker.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}
@@ -126,11 +129,12 @@ function Body() {
             {result
               ? t(result.served ? 'notice-tracker.verdict.served' : 'notice-tracker.verdict.left', {
                   days: Math.max(0, result.daysLeftOnNotice),
-                  lwd: result.lastWorkingDay,
+                  lwd: formatLongDate(result.lastWorkingDay, lang),
                 })
-              : t('notice-tracker.verdict.served', { lwd: draft.resignDate })}
+              : t('notice-tracker.verdict.served', { lwd: formatLongDate(draft.resignDate, lang) })}
           </VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['notice-tracker']} />
         <Card className="space-y-2">
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)
@@ -141,7 +145,7 @@ function Body() {
                   <span className={checked ? 'text-ink-faint line-through' : ''}>
                     {t(`notice-tracker.item.${m.id}`)}
                     <span className="mt-0.5 block tnum text-ink-soft">
-                      {t('notice-tracker.due', { date: m.dueDate })}
+                      {t('notice-tracker.due', { date: formatLongDate(m.dueDate, lang) })}
                     </span>
                   </span>
                 </label>
@@ -150,7 +154,7 @@ function Body() {
             )
           })}
         </Card>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
       </div>
     </div>
   )

@@ -6,11 +6,14 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { taxDeclaration } from '../../engine/taxDeclaration'
 import { formatINR } from '../../engine/format'
 import { STATE_NAMES } from '../../engine/professionalTax'
@@ -78,6 +81,7 @@ function Body() {
     <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('tax-declaration.formTitle')}</h2>
+        <PrivacyLine />
         <p className="text-[13px] leading-relaxed text-ink-soft">{t('tax-declaration.profileHint')}</p>
         <p className="text-[13px]">
           <a href={withLang(lang, 'decoder')} className="font-semibold underline">
@@ -123,6 +127,7 @@ function Body() {
             {t(result.recommendedRegime === 'new' ? 'tax-declaration.verdict.new' : 'tax-declaration.verdict.old')}
           </VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['tax-declaration']} />
         <Card className="space-y-2">
           <p className="tnum text-[13px]">{t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) })}</p>
           {result.recommendedRegime === 'new' && <p className="text-[13px] text-ink-soft">{t('tax-declaration.hraUseless')}</p>}
@@ -136,7 +141,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

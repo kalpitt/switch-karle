@@ -123,6 +123,8 @@ export interface SalaryBreakdown {
   inHandMonthlyOld: number
   /** Best-case monthly in-hand (recommended regime). */
   inHandMonthly: number
+  /** Annual in-hand (recommended regime), rounded once: the rows of the breakdown add up to it. */
+  inHandAnnual: number
   /** in-hand annual / CTC — the "truth ratio". */
   inHandRatio: number
 }

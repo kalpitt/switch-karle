@@ -56,6 +56,7 @@ export function releaseBootEcho(key: string): void {
 export function resetBootEchoForTests(): void {
   readOnce.clear()
   bootEcho.clear()
+  storageBlockedNoted = false
 }
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
@@ -95,17 +96,36 @@ export function readJson<T>(key: StorageKey, fallback: T): T {
   }
 }
 
+/**
+ * Fired on `window` the first time a real user write fails to land (storage
+ * blocked, private window, quota full). The layout listens and tells the user
+ * once that their answers will not be kept. Carries no data.
+ */
+export const STORAGE_BLOCKED_EVENT = 'switchkarle:storage-blocked'
+let storageBlockedNoted = false
+
+function noteStorageBlocked(): void {
+  if (storageBlockedNoted || typeof window === 'undefined') return
+  storageBlockedNoted = true
+  window.dispatchEvent(new Event(STORAGE_BLOCKED_EVENT))
+}
+
 export function writeJson(key: StorageKey, value: unknown): boolean {
+  // Skip the boot echo — see the comment above `readOnce`. Returning false
+  // is the truth: nothing is stored. Re-check `getItem` rather than trusting
+  // the mark alone, in case the key gained a real value since the boot read
+  // (another tab, an import) that this write would otherwise clobber.
+  const echo = isBootEchoWrite(key)
   try {
-    // Skip the boot echo — see the comment above `readOnce`. Returning false
-    // is the truth: nothing is stored. Re-check `getItem` rather than trusting
-    // the mark alone, in case the key gained a real value since the boot read
-    // (another tab, an import) that this write would otherwise clobber.
-    if (isBootEchoWrite(key) && localStorage.getItem(key) == null) return false
+    if (echo && localStorage.getItem(key) == null) return false
     localStorage.setItem(key, JSON.stringify(value))
-    return localStorage.getItem(key) != null
+    const landed = localStorage.getItem(key) != null
+    if (!landed) noteStorageBlocked()
+    return landed
   } catch {
-    /* private mode / quota — tool just will not persist */
+    /* private mode / quota — tool just will not persist. A failed boot echo
+       is not something the user did, so only a real write raises the notice. */
+    if (!echo) noteStorageBlocked()
     return false
   }
 }

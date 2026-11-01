@@ -11,11 +11,14 @@ import {
   ExampleNote,
   InheritNote,
   MoneyField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -130,6 +133,7 @@ function CompareBody() {
   return (
     <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <div className="space-y-4 lg:sticky lg:top-6">
+        <PrivacyLine />
         {slots.map((s, i) => (
           <MiniOffer
             key={s.label}
@@ -141,7 +145,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() =>
               setSlots((prev) => [
                 ...prev,
@@ -154,7 +158,7 @@ function CompareBody() {
         ) : (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() => setSlots((prev) => prev.slice(0, 2))}
           >
             {t('offer-comparison.removeThird')}
@@ -169,10 +173,11 @@ function CompareBody() {
         ) : (
           <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={[...TOOL_SOURCES['offer-comparison'], ...slots.map((s) => ptSourceId(s.offer.state))]} />
         {slots.length === 2 ? (
           <Card>
             <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>
-            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} />
+            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} rowHeader={t('offer-comparison.delta')} />
           </Card>
         ) : (
           <Card className="space-y-2">
@@ -227,13 +232,13 @@ function MiniOffer({
       <h2 className="text-base font-bold">{title}</h2>
       <MoneyField
         label={t('decoder.field.ctc.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
       <MoneyField
         label={t('decoder.field.variable.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.variableAnnual}
         onChange={(v) => set({ variableAnnual: v })}
       />

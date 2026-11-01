@@ -2,7 +2,8 @@ import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
-import { Card, Details, Disclaimer, ExampleNote, ShareRow } from './ui'
+import { Card, Details, Disclaimer, ExampleNote, Receipt, ShareRow } from './ui'
+import { ptSourceId, TOOL_SOURCES } from '../data/sources'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -18,13 +19,16 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         {isExample && (
           <ExampleNote chip={t('results.exampleChip')} note={t('results.exampleNote')} className="mb-3" />
         )}
-        <p className="text-[13px] font-semibold text-ink-soft">
-          {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
-        </p>
-        <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
-          {formatINR(b.inHandMonthly)}
-          <span className="text-lg font-semibold text-ink-faint">{t('unit.perMonth')}</span>
-        </p>
+        {/* Announced on change: the in-hand figure recomputes as the form is edited. */}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          <p className="text-[13px] font-semibold text-ink-soft">
+            {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
+          </p>
+          <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
+            {formatINR(b.inHandMonthly)}
+            <span className="text-lg font-semibold text-ink-soft">{t('unit.perMonth')}</span>
+          </p>
+        </div>
         <p className="mt-1 text-[13px] text-ink-soft">
           {t('results.headlineSub', { amount: formatINR(ctcMonthlyIllusion) })}
         </p>
@@ -37,7 +41,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
           </svg>
           <p className="mt-1.5 text-xs font-medium text-ink-soft">
             <span className="font-bold text-leaf">{pct}%</span>{' '}
-            {t('results.reaches', { pct, amount: formatCompact(b.inHandMonthly * 12) })}
+            {t('results.reaches', { pct, amount: formatCompact(b.inHandAnnual) })}
           </p>
         </div>
 
@@ -55,11 +59,12 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
+        <Receipt className="mt-3" ids={[...TOOL_SOURCES.decoder, ptSourceId(b.input.state)]} />
 
         <div className="mt-4 space-y-3">
           <ShareRow
             copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />
@@ -96,7 +101,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
               value={-b.professionalTaxAnnual}
             />
           )}
-          <Row label={t('results.row.inHand')} value={b.inHandMonthly * 12} strong divider accent />
+          <Row label={t('results.row.inHand')} value={b.inHandAnnual} strong divider accent />
         </div>
       </Card>
 
@@ -158,7 +163,7 @@ function RegimePill({
       <p className="flex items-center gap-1.5 text-xs font-bold">
         {name}
         {recommended && (
-          <span className="rounded-full bg-leaf px-1.5 py-px text-[10px] font-bold text-white">
+          <span className="rounded-full bg-leaf px-1.5 py-px text-[10px] font-bold uppercase text-white">
             {t('results.cheaper')}
           </span>
         )}
@@ -246,7 +251,7 @@ function FlagCard({ f, b }: { f: RedFlag; b: SalaryBreakdown }) {
   return (
     <div className={`rounded-xl border ${tone.border} ${tone.bg} p-3.5`}>
       <p className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${tone.chip}`}>
+        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${tone.chip}`}>
           {tone.word}
         </span>
         {title}

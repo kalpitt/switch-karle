@@ -8,11 +8,15 @@ import {
   Disclaimer,
   ExampleNote,
   MoneyField,
+  Receipt,
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { decodeOffer } from '../../engine/salary'
-import { DECODER_STORAGE_KEY, DEFAULT_OFFER, loadOffer } from '../../data/defaults'
+import { DECODER_STORAGE_KEY, loadOffer } from '../../data/defaults'
+import { computeTax, STANDARD_DEDUCTION } from '../../engine/tax'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -25,12 +29,18 @@ interface Draft {
   employer2Tds: number
 }
 
-/** What first paint shows when neither storage nor the Decoder seeds the fields. */
+/**
+ * What first paint shows when neither storage nor the Decoder seeds the fields:
+ * a real two-employer year. Employer 1 paid ₹10,00,000 from April to September,
+ * employer 2 pays ₹13,00,000 from October to March, and each withheld tax as if
+ * it were the only one. The gap that leaves is the lesson (golden in
+ * `src/engine/form16.test.ts`). Employer 2 is still never cloned from employer 1.
+ */
 const FIXTURE: Draft = {
-  employer1Gross: decodeOffer(DEFAULT_OFFER).grossSalary,
-  employer1Tds: 0,
-  employer2Gross: 0,
-  employer2Tds: 0,
+  employer1Gross: 1_000_000,
+  employer1Tds: computeTax(1_000_000 - STANDARD_DEDUCTION.new, 'new').totalTax,
+  employer2Gross: 1_300_000,
+  employer2Tds: computeTax(1_300_000 - STANDARD_DEDUCTION.new, 'new').totalTax,
 }
 
 export default function Form16ShockTool({ lang = 'en' }: { lang?: Lang }) {
@@ -57,10 +67,14 @@ function Body() {
       /* storage unavailable */
     }
     const b = decodeOffer(loadOffer())
-    setRegime(b.recommendedRegime)
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    // The worked example is a new-regime year; a decoded offer brings its own regime.
+    setRegime(saved || decoderHasData ? b.recommendedRegime : 'new')
     // Employer 2 is never cloned from employer 1's figures (master plan 3.3).
-    setDraft(saved ?? { employer1Gross: b.grossSalary, employer1Tds: 0, employer2Gross: 0, employer2Tds: 0 })
+    setDraft(
+      saved ??
+        (decoderHasData ? { employer1Gross: b.grossSalary, employer1Tds: 0, employer2Gross: 0, employer2Tds: 0 } : FIXTURE),
+    )
     setOrigin(saved ? 'saved' : decoderHasData ? 'decoder' : 'example')
     setHydrated(true)
   }, [])
@@ -95,10 +109,11 @@ function Body() {
     <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('form16-shock.formTitle')}</h2>
-        <MoneyField label={t('form16-shock.e1gross')} hint={t('ui.money.hint')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
-        <MoneyField label={t('form16-shock.e1tds')} hint={t('ui.money.hint')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
-        <MoneyField label={t('form16-shock.e2gross')} hint={t('ui.money.hint')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
-        <MoneyField label={t('form16-shock.e2tds')} hint={t('ui.money.hint')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
+        <PrivacyLine />
+        <MoneyField label={t('form16-shock.e1gross')} placeholder={t('ui.money.placeholder')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
+        <MoneyField label={t('form16-shock.e1tds')} placeholder={t('ui.money.placeholder')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
+        <MoneyField label={t('form16-shock.e2gross')} placeholder={t('ui.money.placeholder')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
+        <MoneyField label={t('form16-shock.e2tds')} placeholder={t('ui.money.placeholder')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
@@ -106,6 +121,7 @@ function Body() {
         ) : (
           <VerdictBanner tone={result.shock > 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['form16-shock']} />
         <Card className="space-y-1 tnum text-[13px]">
           <p>
             {t('form16-shock.taxable')}: {formatINR(result.combinedTaxableApprox)}
@@ -130,7 +146,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

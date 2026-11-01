@@ -8,13 +8,16 @@ import {
   Disclaimer,
   NoticeMonthsNudge,
   NumberField,
+  Receipt,
   Select,
   TextField,
   VerdictBanner,
 } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.resignation.v1' as const
 
@@ -48,6 +51,7 @@ export default function ResignationLetterTool({ lang = 'en' }: { lang?: Lang }) 
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>({
     company: '',
     manager: '',
@@ -118,7 +122,7 @@ function Body() {
     }
   }, [lwd])
 
-  const letter = useMemo(() => buildLetter(draft, lwd, t), [draft, lwd, t])
+  const letter = useMemo(() => buildLetter(draft, lwd, t, lang), [draft, lwd, t, lang])
   const canCopy =
     draft.yourName.trim() !== '' &&
     draft.manager.trim() !== '' &&
@@ -149,6 +153,7 @@ function Body() {
         />
         <DateField label={t('resignation-letter.date')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField
+          integer
           label={t('resignation-letter.notice')}
           suffix={t('unit.days')}
           value={draft.noticeDays}
@@ -183,18 +188,24 @@ function Body() {
         />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        <VerdictBanner>{t('resignation-letter.verdict', { lwd })}</VerdictBanner>
+        <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
+        {earliestSafeJoin !== '' && (
+          <p className="text-[13px] text-ink-soft">
+            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
+          </p>
+        )}
+        <Receipt ids={TOOL_SOURCES['resignation-letter']} />
         {overlap && <p className="text-[13px] text-amberflag">{t('resignation-letter.epfo')}</p>}
         {earliestSafeJoin !== '' && (
           <p className="tnum text-[13px] text-ink-soft">
-            {t('resignation-letter.earliestJoin', { date: earliestSafeJoin })}
+            {t('resignation-letter.earliestJoin', { date: formatLongDate(earliestSafeJoin, lang) })}
           </p>
         )}
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={letter} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={letter} label={t('ui.copyLetter')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
             )}
@@ -206,11 +217,23 @@ function Body() {
   )
 }
 
-function buildLetter(d: Draft, lwd: string, t: (k: string, v?: Record<string, string | number>) => string): string {
+/** Dates go into the letter as "28 January 2027", never ISO: it is sent to a person. */
+function buildLetter(
+  d: Draft,
+  lwd: string,
+  t: (k: string, v?: Record<string, string | number>) => string,
+  lang: Lang,
+): string {
   const company = d.company.trim() || '[Company]'
   const manager = d.manager.trim() || '[Manager name]'
   const role = d.role.trim() || '[Role]'
-  const opening = t(`resignation-letter.body.${d.tone}`, { manager, company, role, date: d.resignDate, lwd })
+  const opening = t(`resignation-letter.body.${d.tone}`, {
+    manager,
+    company,
+    role,
+    date: formatLongDate(d.resignDate, lang),
+    lwd: formatLongDate(lwd, lang),
+  })
   const empIdLine = d.empId.trim() ? `\nEmployee ID: ${d.empId.trim()}` : ''
   return `${opening}\n${d.yourName.trim()}${empIdLine}`
 }

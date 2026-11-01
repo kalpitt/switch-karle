@@ -133,7 +133,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
             <button
               type="button"
               onClick={onGoToTracker}
-              className="rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
             >
               {t('promptStudio.goToTracker')}
             </button>
@@ -171,12 +171,13 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
           <TextArea label={t('promptStudio.pasteLabel')} value={insightContent} onChange={setInsightContent} rows={6} />
           <button
             type="button"
-            disabled={!insightContent.trim()}
+            aria-disabled={!insightContent.trim()}
             onClick={handleSaveInsight}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('promptStudio.saveTo', { company: selectedApp.company })}
           </button>
+          {!insightContent.trim() && <p className="text-[13px] text-ink-soft">{t('promptStudio.saveBlocked')}</p>}
 
           {selectedApp.insights && selectedApp.insights.length > 0 && (
             <div className="space-y-2 border-t border-line pt-3">
@@ -239,7 +240,7 @@ function TemplateCard({
         <button
           type="button"
           onClick={() => onCopy(prompt)}
-          className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+          className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
         >
           {copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt')}
         </button>

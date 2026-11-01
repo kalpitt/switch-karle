@@ -11,11 +11,14 @@ import {
   InheritNote,
   MoneyField,
   NumberField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -142,8 +145,8 @@ function Body() {
 
   const copyText = [
     verdict,
+    `${t('real-hike.row.bank')}: ${formatINR(result.currentRunRateMonthly)} → ${formatINR(result.nextRunRateMonthly)} (${bank}%)`,
     `${t('real-hike.row.paper')}: ${formatLPA(result.currentCtc)} → ${formatLPA(result.nextCtc)} (${paper}%)`,
-    `${t('real-hike.row.bank')}: ${formatINR(result.currentRunRateMonthly)} → ${formatINR(result.nextRunRateMonthly)}/mo (${bank}%)`,
     t('ui.disclaimer'),
   ].join('\n')
 
@@ -151,18 +154,19 @@ function Body() {
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('real-hike.formTitle')}</h2>
-        <MoneyField label={t('real-hike.currentCtc')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <PrivacyLine />
+        <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField
           label={t('real-hike.currentVariable')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.currentVariable}
           onChange={(v) => set({ currentVariable: v })}
         />
         <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
-        <MoneyField label={t('real-hike.nextCtc')} hint={t('ui.money.hint')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
+        <MoneyField label={t('real-hike.nextCtc')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
         <MoneyField
           label={t('real-hike.nextVariable')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.nextVariable}
           onChange={(v) => set({ nextVariable: v })}
         />
@@ -190,12 +194,13 @@ function Body() {
         ) : (
           <VerdictBanner tone={bank < paper ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['real-hike']} />
         <Card className="space-y-2">
           <p className="tnum text-[13px]">
-            {t('real-hike.row.paper')}: {formatLPA(result.currentCtc)} → {formatLPA(result.nextCtc)} ({paper}%)
+            {t('real-hike.row.bank')}: {formatINR(result.currentRunRateMonthly)} → {formatINR(result.nextRunRateMonthly)} ({bank}%)
           </p>
           <p className="tnum text-[13px]">
-            {t('real-hike.row.bank')}: {formatINR(result.currentRunRateMonthly)} → {formatINR(result.nextRunRateMonthly)}/mo ({bank}%)
+            {t('real-hike.row.paper')}: {formatLPA(result.currentCtc)} → {formatLPA(result.nextCtc)} ({paper}%)
           </p>
           {result.joiningBonusExcluded && <p className="text-[13px] text-ink-soft">{t('real-hike.bonusNote')}</p>}
           {result.regimeFlip && <p className="text-[13px] text-amberflag">{t('real-hike.regimeFlip')}</p>}
@@ -204,7 +209,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />
