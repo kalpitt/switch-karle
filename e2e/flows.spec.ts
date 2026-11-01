@@ -63,11 +63,11 @@ test('decoder: changing the CTC changes the in-hand figure, and the bar matches 
 
 test('language toggle keeps you on the same tool', async ({ page }) => {
   await open(page, '/gratuity/')
-  await page.getByRole('button', { name: 'हिं' }).click()
+  await page.getByRole('link', { name: 'हिन्दी (Hindi)' }).click()
   await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/gratuity\/$/)
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
   await expect(page.locator('astro-island[ssr]')).toHaveCount(0)
-  await page.getByRole('button', { name: 'EN' }).click()
+  await page.getByRole('link', { name: 'English' }).click()
   await expect(page).toHaveURL(/^http:\/\/[^/]+\/gratuity\/$/)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 })
