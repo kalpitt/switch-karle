@@ -141,7 +141,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() =>
               setSlots((prev) => [
                 ...prev,
@@ -154,7 +154,7 @@ function CompareBody() {
         ) : (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() => setSlots((prev) => prev.slice(0, 2))}
           >
             {t('offer-comparison.removeThird')}
@@ -172,7 +172,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <Card>
             <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>
-            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} />
+            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} rowHeader={t('offer-comparison.delta')} />
           </Card>
         ) : (
           <Card className="space-y-2">
@@ -227,13 +227,13 @@ function MiniOffer({
       <h2 className="text-base font-bold">{title}</h2>
       <MoneyField
         label={t('decoder.field.ctc.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
       <MoneyField
         label={t('decoder.field.variable.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.variableAnnual}
         onChange={(v) => set({ variableAnnual: v })}
       />

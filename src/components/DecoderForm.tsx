@@ -49,6 +49,7 @@ export function DecoderForm({
           onChange={(v) => set({ basicPercent: Math.min(100, v) })}
         />
         <NumberField
+          integer
           label={t('decoder.field.notice.label')}
           suffix={t('unit.days')}
           value={value.noticePeriodDays}
@@ -59,7 +60,7 @@ export function DecoderForm({
       <label className="block">
         <Label>{t('decoder.field.state.label')}</Label>
         <select
-          className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
+          className="mt-1.5 w-full rounded-xl border border-field bg-paper px-3 py-3 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
           value={value.state}
           onChange={(e) => {
             const state = e.target.value as StateCode
@@ -127,6 +128,7 @@ export function DecoderForm({
         {value.esop && (
           <>
             <NumberField
+              integer
               label={t('decoder.field.esopCliff.label')}
               suffix={t('unit.months')}
               value={value.esop.cliffMonths}
@@ -153,6 +155,7 @@ export function DecoderForm({
         />
         {value.joiningBonus && (
           <NumberField
+            integer
             label={t('decoder.field.clawback.label')}
             suffix={t('unit.months')}
             value={value.joiningBonus.clawbackMonths}
@@ -168,6 +171,7 @@ export function DecoderForm({
         />
         {value.bond && (
           <NumberField
+            integer
             label={t('decoder.field.bondMonths.label')}
             suffix={t('unit.months')}
             value={value.bond.months}
@@ -211,7 +215,7 @@ export function DecoderForm({
           onChange={(e) => set({ hraPercentOfBasic: Number(e.target.value) })}
           className="mt-2 w-full accent-saffron"
         />
-        <span className="tnum text-xs font-medium text-ink-faint">
+        <span className="tnum text-xs font-medium text-ink-soft">
           {t('decoder.field.hra.value', { percent: value.hraPercentOfBasic })}
         </span>
       </label>

@@ -57,7 +57,9 @@ function Body() {
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner tone={hitCount === 0 ? 'amber' : 'leaf'}>
-          {hitCount === 0 ? t('redactor.verdict.none') : t('redactor.verdict.hits', { n: hitCount })}
+          {hitCount === 0 ? t('redactor.verdict.none') : hitCount === 1
+              ? t('redactor.verdict.hitsOne')
+              : t('redactor.verdict.hits', { n: hitCount })}
         </VerdictBanner>
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('redactor.preview')}</h3>
@@ -73,7 +75,7 @@ function Body() {
             type="button"
             onClick={download}
             disabled={busy || !result.redacted}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
           >
             {busy ? t('redactor.busy') : t('redactor.download')}
           </button>

@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { NoticeMonthsNudge, NumberField } from './ui'
 
 function getRenderedInput(vnode: any) {
-  // NumberField returns <label><Label ... /><span ...><input ... />...</span></label>
-  return vnode.props.children[1].props.children[0]
+  // NumberField returns <Field>{(aria) => <span ...><input ... />...</span>}</Field>
+  return vnode.props.children({}).props.children[0]
 }
 
 describe('NumberField', () => {

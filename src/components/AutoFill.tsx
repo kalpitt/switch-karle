@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { OfferInput } from '../engine/types'
 import { TEMPLATES } from '../prompts/templates'
 import { parseAiOffer } from '../prompts/offerImport'
@@ -19,6 +19,7 @@ export function AutoFill({
   const t = useT()
   const [pasted, setPasted] = useState('')
   const [copied, setCopied] = useState(false)
+  const pasteRef = useRef<HTMLTextAreaElement>(null)
   const [status, setStatus] = useState<
     | { kind: 'idle' }
     | { kind: 'ok'; filled: string[]; missing: string[] }
@@ -34,6 +35,12 @@ export function AutoFill({
   }
 
   const fill = () => {
+    // The button stays reachable when the box is empty (a disabled button drops out
+    // of the tab order and says nothing); pressing it then sends you to the box.
+    if (pasted.trim() === '') {
+      pasteRef.current?.focus()
+      return
+    }
     try {
       const r = parseAiOffer(pasted)
       onChange({ ...offer, ...r.patch })
@@ -56,38 +63,43 @@ export function AutoFill({
           <button
             type="button"
             onClick={copyPrompt}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
           >
-            {copied ? t('autofill.copied') : t('autofill.copyPrompt')}
+            <span aria-live="polite">{copied ? t('autofill.copied') : t('autofill.copyPrompt')}</span>
           </button>
         </div>
         <textarea
+          ref={pasteRef}
           value={pasted}
           onChange={(e) => setPasted(e.target.value)}
           placeholder={t('autofill.pastePlaceholder')}
+          aria-label={t('autofill.pasteLabel')}
           rows={4}
-          className="w-full rounded-xl border border-line bg-card px-3 py-2.5 text-[13px] font-medium outline-none focus:border-saffron"
+          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
         />
         <button
           type="button"
           onClick={fill}
-          disabled={pasted.trim() === ''}
-          className="rounded-xl border border-saffron px-4 py-2.5 text-[13px] font-bold text-saffron transition-transform active:scale-[0.98] disabled:opacity-40"
+          aria-disabled={pasted.trim() === ''}
+          className="min-h-[44px] rounded-xl border border-saffron px-4 py-2.5 text-[13px] font-bold text-saffron transition-transform active:scale-[0.98] aria-disabled:opacity-60"
         >
           {t('autofill.fillButton')}
         </button>
+        {pasted.trim() === '' && <p className="text-[13px] text-ink-soft">{t('autofill.fillBlocked')}</p>}
         {status.kind === 'ok' && (
-          <div className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
+          <div role="status" className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
             <p className="font-bold text-leaf">
               {t('autofill.okFilled', { fields: status.filled.join(', ') })}
             </p>
             {status.missing.length > 0 && (
-              <p className="mt-1 text-ink-soft">{t('autofill.okMissing', { n: status.missing.length })}</p>
+              <p className="mt-1 text-ink-soft">{status.missing.length === 1
+                  ? t('autofill.okMissingOne')
+                  : t('autofill.okMissing', { n: status.missing.length })}</p>
             )}
           </div>
         )}
         {status.kind === 'error' && (
-          <p className="rounded-xl bg-alarm-soft p-3 text-[13px] font-semibold text-alarm">
+          <p role="alert" className="rounded-xl bg-alarm-soft p-3 text-[13px] font-semibold text-alarm">
             {t('autofill.error')}
           </p>
         )}

@@ -49,7 +49,9 @@ function Body() {
           <VerdictBanner tone={flags.length === 0 ? 'leaf' : flags.some((f) => f.severity === 'red') ? 'alarm' : 'amber'}>
             {flags.length === 0
               ? t('bond-scanner.verdict.clean')
-              : t('bond-scanner.verdict.flags', { n: flags.length })}
+              : flags.length === 1
+                ? t('bond-scanner.verdict.flagsOne')
+                : t('bond-scanner.verdict.flags', { n: flags.length })}
           </VerdictBanner>
         )}
         {!isBlank && flags.length > 0 && (
@@ -62,7 +64,7 @@ function Body() {
           </Card>
         )}
         <p className="text-[13px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

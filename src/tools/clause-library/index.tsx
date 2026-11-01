@@ -30,7 +30,7 @@ function Body() {
             </Card>
           )
         })}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

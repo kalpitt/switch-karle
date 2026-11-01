@@ -293,6 +293,19 @@ export function parseBackup(json: string): BackupBundle {
   } catch {
     throw new Error('Invalid backup file: not valid JSON.')
   }
+  // The footer's full backup (version 2) holds the same two keys among the
+  // rest; read them out so either file restores the board here.
+  const o = parsed as { version?: unknown; app?: unknown; keys?: Record<string, unknown> } | null
+  if (o && o.version === 2 && o.app === 'switch-karle' && o.keys && typeof o.keys === 'object') {
+    const raw = (k: string) => (typeof o.keys![k] === 'string' ? (o.keys![k] as string) : null)
+    try {
+      const tracker = raw(STORAGE_KEY)
+      const decoder = raw(DECODER_STORAGE_KEY)
+      parsed = { version: 1, tracker: tracker ? JSON.parse(tracker) : [], decoder: decoder ? JSON.parse(decoder) : null }
+    } catch {
+      throw new Error('Invalid backup file: unexpected structure.')
+    }
+  }
   if (!isBackupBundle(parsed)) {
     throw new Error('Invalid backup file: unexpected structure.')
   }
