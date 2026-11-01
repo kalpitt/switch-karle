@@ -373,7 +373,7 @@ Ship with goldens. A constant's status lives beside its code:
 | SD + PT deduction §19 · 80C cap §123 · new regime §202 | `src/engine/tax.ts`, `src/engine/salary.ts` comments | VERIFIED 2026-08-23 (ITA 2025 PDF) |
 | FY 2026-27 slabs, rebate amounts, cess, surcharge | `src/engine/tax.ts` | Golden-tested; last verified 2026-07-20 |
 | Gratuity: eligibility §53(1) + §54 (190/240-WORKING-day rule, days actually worked under §54(B)(a) and its Explanation, not calendar days), payable years §53(2) Expl.3, 10-employee First Schedule | `src/engine/gratuity.ts`, `src/engine/dates.ts` (`workingDaysBetween`, `nthWorkingDayFrom`) | VERIFIED 2026-09-27 (Code on Social Security, 2020 PDF + S.O. 5319(E)). Was PGA 1972, repealed 21-Nov-2025. Public holidays/unearned leave not modelled: date shown is the earliest possible |
-| Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found; CA R1 |
+| Gratuity ₹20L cap (Code §53(3), "as may be notified") | `src/engine/gratuity.ts` `GRATUITY_CAP` | Candidate; no notification under the Code found. 2026-10-24: Code §164(2)(a) carries old notifications over on its words, and MoLE's Labour Codes FAQ (30.12.2025, Q12) says "currently ₹ 20 lakhs"; S.O. 1420(E) not re-read. CA R1. Also for the CA: ITA 2025 §19 Table Sl. 5 still points at the repealed 1972 Act |
 | Gratuity base: basic + DA, a floor of the Code's "wages" (§2(88) 50% add-back) | `src/engine/gratuity.ts` | Floor by construction; the tool says so. Wages from CTC parked for CA |
 | Punjab State Development Tax ₹2,400 | `src/engine/professionalTax.ts` | VERIFIED 2026-08-23 (PSDT Act 2018); other listed states stay ₹0 + `PT_AMOUNT_UNVERIFIED` by design |
 | Karnataka professional tax ₹2,500/year | `src/engine/professionalTax.ts` | **VERIFIED 2026-09-28** (Karnataka Act No. 33 of 2025, in force 1 April 2025) |
@@ -381,10 +381,11 @@ Ship with goldens. A constant's status lives beside its code:
 | Gratuity accrual 4.81% of basic | `src/engine/salary.ts` | Candidate |
 | Leave encashment exempt to ₹25,00,000, resignation and retirement alike (s.19(1) Sl.14 + s.536(2) + Notification 31/2023); D.P. Malhotra (Bom HC) on "retirement ... or otherwise" covering resignation | `src/engine/leaveEncash.ts` | **VERIFIED 2026-09-28** (ITA 2025 PDF + CBDT Notification No. 31/2023). Two limbs (30 days/year of service; 10 months' average salary) not computed — named in the verdict, can only lower the exempt amount |
 | HRA exemption three limbs (Rule 279, Income-tax Rules, 2026) | `src/engine/salary.ts` `hraExemptionAnnual` | **VERIFIED 2026-09-27** (Income-tax Rules, 2026, G.S.R. 198(E)) |
-| Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual |
-| ESOP perquisite at exercise | `src/engine/esop.ts` | Candidate; CA R3 |
-| PF premature withdrawal TDS (s.192A / s.392(7)) | `src/engine/epf.ts` | Candidate; **no TDS rupee computed** — trap flagged, transfer recommended |
-| Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0) |
+| Joining-bonus tax delta (gross-repay convention) | `src/engine/clawback.ts` | Candidate; contractual. Bonus is salary under ITA 2025 §18(1)(b)(i); same-year TDS adjustment §392(5)(c); no later-year relief found — CA |
+| ESOP perquisite at exercise: (FMV on exercise − amount paid) × shares, s.17(1)(d) + s.17(4)(h) ITA 2025 | `src/engine/esop.ts` | **VERIFIED 2026-10-24** (ITA 2025 as enacted, Gazette 21-Aug-2025, ICAI copy; FA 2026 text not re-read). Start-up deferral s.392(3)/s.289(3) — 60 months, sale, or leaving the job — not modelled |
+| PF five-year rule (Sch. XI Pt A para 8, earlier transferred service counts under para 8(2)) · TDS 10% at ₹50,000+ (s.392(7)), 20% without PAN (s.397(2)(b)) | `src/engine/epf.ts` | **VERIFIED 2026-10-24** (ITA 2025 as enacted). **No TDS rupee computed.** Interest after exit: Candidate, CA. Tenure counts this employer only |
+| Tamil Nadu (Chennai) ₹2,500 · Odisha ₹2,500 · Telangana ₹2,400 · Assam ₹2,496 · Puducherry ₹2,500 professional tax | `src/engine/professionalTax.ts` | **VERIFIED 2026-10-24** (GCC press release 04.08.2026; odishatax.gov.in rate chart; tgct.gov.in First Schedule; Assam Taxation Dept. schedule w.e.f. 15-10-2014; Puducherry Act No. 4 of 2017 + G.O.Ms. 24/F3/2017). TN was ₹2,190, OD was ₹2,400, AS and PY were ₹0. TN is Chennai's rate; other TN local bodies set their own |
+| Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0: BR, JH, CG, SK, ML, TR, Other). MH, GJ, AP, WB, MP, KL figures not primary-verified; see the file header for what was and was not reached |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
 Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.

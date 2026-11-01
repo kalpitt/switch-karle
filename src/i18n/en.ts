@@ -355,13 +355,15 @@ export const en: Record<string, string> = {
   'relocation.fromMetro': 'From a metro for HRA',
   'relocation.toState': 'To state',
   'relocation.toMetro': 'To a metro for HRA',
+  'relocation.fromCity': 'From city',
+  'relocation.toCity': 'To city',
   'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad or Bengaluru — 50% of basic (Rule 279, Income-tax Rules, 2026). Anywhere else, 40%. Old regime only.',
   'relocation.rent': 'Rent you pay / month',
   'relocation.fromRent': 'Rent here / month',
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
   'relocation.metroWarn': '{state} has no HRA metro city (only Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad and Bengaluru qualify, per Rule 279 of the Income-tax Rules, 2026). The 50% limb you just switched on will not apply there.',
-  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Assam and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
+  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Jharkhand and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Tamil Nadu shows Chennai’s rate; other Tamil Nadu towns set their own. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',
@@ -553,7 +555,7 @@ export const en: Record<string, string> = {
   'form16-shock.tax': 'Tax if this were one employer',
   'form16-shock.tds': 'TDS already deducted',
   'form16-shock.stdNote': 'Each payroll likely gave you a full standard deduction. The return allows one.',
-  'form16-shock.omit234': 'Interest u/s 234B/234C is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
+  'form16-shock.omit234': 'Advance-tax interest (s.424/425 of the Income-tax Act, 2025 — the old 234B/234C) is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
   'form16-shock.form12bTitle': 'Form 12B text to hand employer 2',
   'form16-shock.form12b':
     'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B).',
@@ -828,9 +830,9 @@ export const en: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
   'bond-scanner.flag.training-bond':
-    'Courts have required specialised training cost, not ordinary onboarding (*Sicpa India v. Manas Pratim Deb*). A number in the letter is not automatically owed — confirm with a CA.',
+    'A bond sum is a ceiling, not a price: the employer still has to show real training and actual loss. In *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) the “training” trips were business trips, and the bond sums were not enforced. A number in the letter is not automatically owed — confirm with a lawyer.',
   'bond-scanner.flag.liquidated-damages':
-    'Liquidated damages are a ceiling that still needs proof of actual loss (*Kailash Nath Associates v. DDA*). Fact-specific — confirm with a CA.',
+    'Liquidated damages are a ceiling that still needs proof of actual loss where loss can be proved (*Kailash Nath Associates v. DDA*, Supreme Court, 2015). Fact-specific — confirm with a lawyer.',
   'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
@@ -864,7 +866,7 @@ export const en: Record<string, string> = {
     'Ordinary Indian letters let either side pay unserved notice. That is not a scam deposit. Switch Karle’s notice-buyout tool estimates the cash using the letter’s /30 convention.',
   'clause-library.bond-training.title': 'Training / service bond',
   'clause-library.bond-training.body':
-    'A rupee figure is not automatically payable. Courts have looked for specialised training cost and actual loss. Paste the clause into the bond scanner.',
+    'A rupee figure is not automatically payable. Courts have looked for real training and actual loss. Paste the clause into the bond scanner.',
   'clause-library.variable-discretion.title': 'Variable at company discretion',
   'clause-library.variable-discretion.body':
     'If payout is “at discretion”, the CTC headline is not a promise. Use the variable-reality tool at 0 / 50 / 100%.',
@@ -938,6 +940,18 @@ export const en: Record<string, string> = {
   'state.TR': 'Tripura',
   'state.PY': 'Puducherry',
   'state.other': 'Other / not sure',
+  'city.label': 'Work city',
+  'city.hint': 'Only Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad and Bengaluru get the 50%-of-basic HRA limb (Rule 279, Income-tax Rules, 2026). Anywhere else is 40%. Old regime only.',
+  'city.mumbai': 'Mumbai',
+  'city.pune': 'Pune',
+  'city.kolkata': 'Kolkata',
+  'city.delhi': 'Delhi',
+  'city.chennai': 'Chennai',
+  'city.hyderabad': 'Hyderabad',
+  'city.ahmedabad': 'Ahmedabad',
+  'city.bengaluru': 'Bengaluru',
+  'city.other': 'Elsewhere in {state}',
+  'city.ptTown': 'Professional tax in {state} is set by each town or municipality, so the figure shown may not match yours.',
 
   // ---- Results ----
   'results.headline': 'Your {ctc} CTC actually pays',

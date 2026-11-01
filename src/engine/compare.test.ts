@@ -42,11 +42,11 @@ describe('compareOffers', () => {
     expect(r.flags.asymmetricPfCeiling).toBe(true)
   })
 
-  it('state PT shows up in in-hand (KA ₹2,500 vs TN ₹2,190)', () => {
-    const tn: OfferInput = { ...base, state: 'TN' }
-    const r = compareOffers([base, tn])
+  it('state PT shows up in in-hand (KA ₹2,500 vs TG ₹2,400)', () => {
+    const tg: OfferInput = { ...base, state: 'TG' }
+    const r = compareOffers([base, tg])
     expect(r.breakdowns[0]!.professionalTaxAnnual).toBe(2_500)
-    expect(r.breakdowns[1]!.professionalTaxAnnual).toBe(2_190)
+    expect(r.breakdowns[1]!.professionalTaxAnnual).toBe(2_400)
     expect(r.verdictIndex).toBe(1)
   })
 

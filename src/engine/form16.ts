@@ -19,7 +19,9 @@ export interface Form16ShockResult {
   sections234Omitted: true
 }
 
-// CANDIDATE: ignores other deductions/exemptions and §234B/§234C interest; one standard deduction on combined salary, not per employer.
+// CANDIDATE: ignores other deductions/exemptions and advance-tax interest; one standard deduction on combined salary, not per employer.
+// Interest citations for FY 2026-27 are s.424 (default in advance tax, old §234B: 1% a month when advance tax paid is below
+// 90% of assessed tax) and s.425 (deferment, old §234C) of the Income-tax Act, 2025 as enacted (Gazette 21-Aug-2025, ICAI copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf). Whether to model them is open (parked C13, CA).
 
 export function form16Shock(input: Form16ShockInput): Form16ShockResult {
   const combinedGross =

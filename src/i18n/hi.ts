@@ -163,6 +163,18 @@ export const hi: Record<string, string> = {
   'state.UP': 'उत्तर प्रदेश',
   'state.RJ': 'राजस्थान',
   'state.other': 'अन्य / पता नहीं',
+  'city.label': 'शहर (Work city)',
+  'city.hint': 'सिर्फ़ Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru को basic का 50% HRA limb मिलता है (Rule 279, Income-tax Rules, 2026)। बाक़ी कहीं भी 40%। सिर्फ़ old regime में।',
+  'city.mumbai': 'मुंबई',
+  'city.pune': 'पुणे',
+  'city.kolkata': 'कोलकाता',
+  'city.delhi': 'दिल्ली',
+  'city.chennai': 'चेन्नई',
+  'city.hyderabad': 'हैदराबाद',
+  'city.ahmedabad': 'अहमदाबाद',
+  'city.bengaluru': 'बेंगलुरु',
+  'city.other': '{state} में कहीं और',
+  'city.ptTown': '{state} में professional tax हर शहर या नगर पालिका खुद तय करती है, इसलिए दिखाया गया आंकड़ा आपके शहर से अलग हो सकता है।',
 
   // ---- Results ----
   'results.headline': 'आपका {ctc} CTC असल में देता है',

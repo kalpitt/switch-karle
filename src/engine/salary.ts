@@ -1,12 +1,14 @@
 import type { OfferInput, Regime, SalaryBreakdown, StateCode } from './types'
 import { computeTax, STANDARD_DEDUCTION } from './tax'
 import { PROFESSIONAL_TAX_ANNUAL } from './professionalTax'
+import { isHraMetro } from './city'
 
 /**
  * Cities that qualify for the 50%-of-basic HRA limb: Mumbai, Kolkata, Delhi,
  * Chennai, Hyderabad, Pune, Ahmedabad and Bengaluru. Every other city is 40%.
- * State codes are a proxy for cities (MH contains Mumbai *and* Pune; KA, TG
- * and GJ each contain one qualifying city plus non-qualifying places).
+ * At state level this only says a state *has* a qualifying city (MH contains
+ * Mumbai *and* Pune; KA, TG and GJ each contain one qualifying city plus
+ * non-qualifying places). The exact limb comes from the city: see `city.ts`.
  * VERIFIED: 2026-09-27 | Source: Income-tax Rules, 2026 (G.S.R. 198(E))
  * https://www.incometaxindia.gov.in/documents/81799/11848482/En-Notified-IT-Rules-2026-20-03-2026.pdf
  * Rule 279(1)(c) | FY: 2026-27
@@ -86,7 +88,8 @@ export function decodeOffer(input: OfferInput): SalaryBreakdown {
 
   // Old regime: standard deduction + PT + HRA exemption + 80C + 80D.
   const old = input.old ?? { rentPaidMonthly: 0, metro: false, deduction80CExtra: 0, deduction80D: 0 }
-  const hraExemption = hraExemptionAnnual(basic, hra, old.rentPaidMonthly, old.metro)
+  const metro = input.city !== undefined ? isHraMetro(input.state, input.city) : old.metro
+  const hraExemption = hraExemptionAnnual(basic, hra, old.rentPaidMonthly, metro)
   const ded80C = Math.min(150_000, employeePfAnnual + old.deduction80CExtra)
   const oldTaxable = Math.max(
     0,

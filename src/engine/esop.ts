@@ -100,9 +100,25 @@ function vestedAtMonth(
 /**
  * ESOP exercise economics: perquisite at exercise, tax, vest schedule.
  *
- * CANDIDATE: perquisite (FMV−strike)×shares at exercise (s.17(2)(vi) recollection).
+ * Perquisite at exercise = (FMV on the exercise date − amount actually paid)
+ * × shares, taxed as salary at slab rates. s.17(1)(d) makes "the value of any
+ * specified security or sweat equity shares allotted or transferred ... free
+ * of cost or at concessional rate" a perquisite; s.17(4)(h) values it at "the
+ * fair market value ... on the date on which the option is exercised by the
+ * assessee, as reduced by the amount actually paid by, or recovered from, the
+ * assessee". (Old Act: s.17(2)(vi) — the earlier recollection cited that.)
+ * VERIFIED: 2026-10-24 | Source: Income-tax Act, 2025 (No. 30 of 2025) as enacted, Gazette of India Extraordinary Part II s.1 No. 35, 21-Aug-2025 (CG-DL-E-22082025-265620), read from ICAI's copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf §17(1)(d) §17(4)(h) | FY: 2026-27
+ * Not re-read against the Finance Act 2026-amended PDF on incometaxindia.gov.in,
+ * which refused this session's requests (HTTP 403).
+ *
  * Stops at exercise — sale is a separate capital-gains event. Eligible-startup
- * TDS deferral (s.192(1C) recollection) is not modelled. Primary source pending CA R3.
+ * deferral is NOT modelled. Under s.392(3) with s.289(3) (old s.192(1C)) an
+ * eligible start-up under s.140 pays the tax, at the rates of the year of
+ * allotment, within fourteen days of the earliest of (a) "the expiry of sixty
+ * months from the end of the relevant tax year", (b) the sale of the shares,
+ * or (c) "the assessee ceasing to be the employee". It changes when the tax is
+ * due, not how much: and leaving the job is itself a trigger, so for a job
+ * switcher the deferral ends on exit. Same source, §392(3) §289(3) §391(2).
  */
 export function esopReality(input: EsopRealityInput): EsopRealityResult {
   const shares = clampNonNeg(input.shares)

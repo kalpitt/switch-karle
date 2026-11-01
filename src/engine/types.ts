@@ -1,5 +1,7 @@
 /** All amounts are annual ₹ unless a field name says Monthly. */
 
+import type { CityChoice } from './city'
+
 export type Regime = 'new' | 'old'
 
 /** States we have a PT slot for; unverified-levy codes are ₹0 and flagged approximate. */
@@ -67,11 +69,17 @@ export interface OfferInput {
   bond?: Bond
   noticePeriodDays: number
   state: StateCode
+  /**
+   * Work city: one of the eight HRA metro cities or "other". When set it
+   * decides the HRA limb and `old.metro` is ignored. Absent on data saved
+   * before the field existed; then `old.metro` still applies.
+   */
+  city?: CityChoice
   /** Old-regime inputs; ignored under the new regime. */
   old?: {
     /** Monthly rent actually paid (for HRA exemption). 0 = no rent. */
     rentPaidMonthly: number
-    /** Lives in a metro (Delhi/Mumbai/Kolkata/Chennai) → 50% basic HRA limb, else 40%. */
+    /** Legacy metro answer, used only when `city` is absent: 50% basic HRA limb, else 40%. */
     metro: boolean
     /** 80C investments EXCLUDING employee PF (we add PF ourselves, cap ₹1.5L total). */
     deduction80CExtra: number
