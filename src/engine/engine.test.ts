@@ -137,6 +137,33 @@ describe('decodeOffer — HRA Bengaluru (KA) getting the 50% limb', () => {
   })
 })
 
+describe('decodeOffer — the city decides the HRA limb when it is set', () => {
+  // basic ₹9.6L, hra ₹4.8L, rent ₹50k/month = ₹6L/yr
+  // (b) rent − 10% basic = 600,000 − 96,000 = 504,000
+  // 50% limb = 480,000; 40% limb = 384,000
+  const rentOld = { rentPaidMonthly: 50_000, deduction80CExtra: 0, deduction80D: 0 }
+
+  it('Pune gets 50% even when the old metro answer says no', () => {
+    const b = decodeOffer({ ...baseOffer, state: 'MH', city: 'pune', old: { ...rentOld, metro: false } })
+    expect(b.hraExemptionAnnual).toBe(480_000)
+  })
+
+  it('another Karnataka town gets 40% even when the old metro answer says yes', () => {
+    const b = decodeOffer({ ...baseOffer, state: 'KA', city: 'other', old: { ...rentOld, metro: true } })
+    expect(b.hraExemptionAnnual).toBe(384_000)
+  })
+
+  it('a city outside the chosen state does not count', () => {
+    const b = decodeOffer({ ...baseOffer, state: 'KA', city: 'mumbai', old: { ...rentOld, metro: true } })
+    expect(b.hraExemptionAnnual).toBe(384_000)
+  })
+
+  it('no city saved yet: the old metro answer still applies', () => {
+    const b = decodeOffer({ ...baseOffer, state: 'KA', old: { ...rentOld, metro: true } })
+    expect(b.hraExemptionAnnual).toBe(480_000)
+  })
+})
+
 describe('scanRedFlags', () => {
   it('flags a hostile offer: 90-day notice, bond, 30% variable, low basic', () => {
     const b = decodeOffer({

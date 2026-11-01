@@ -1,10 +1,11 @@
 import { EPFO_MEMBER_PORTAL } from '../engine/epf'
 
 /**
- * CANDIDATE: mirrors epf.ts's primary-source-pending 5-year claim
- * (recollection Fourth Schedule continuous service; s.192A / s.392(7)).
- * JSON-LD is the highest-authority surface for this sentence — keep it
- * hedged the same way as the engine. Q2 is portal behaviour, not a statute.
+ * Mirrors epf.ts: the five-year rule is Income-tax Act, 2025 Schedule XI
+ * Part A para 8, and the TDS is s.392(7) — VERIFIED 2026-10-24, see the
+ * marker in `src/engine/epf.ts`. JSON-LD is the highest-authority surface for
+ * this sentence — keep it hedged the same way as the engine. Q2 is portal
+ * behaviour, not a statute.
  */
 export function epfFaqJsonLd(): Record<string, unknown> {
   return {

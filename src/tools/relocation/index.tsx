@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { OfferInput, StateCode } from '../../engine/types'
 import { STATE_NAMES } from '../../engine/professionalTax'
-import { stateHasHraMetroCity } from '../../engine/salary'
+import { cityChoicesFor, cityFromLegacyMetro, isHraMetro, normaliseCity, type CityChoice } from '../../engine/city'
 import { relocationDelta } from '../../engine/relocation'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
@@ -13,7 +13,6 @@ import {
   MoneyField,
   Select,
   ShareRow,
-  Toggle,
   VerdictBanner,
 } from '../../components/ui'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
@@ -26,51 +25,66 @@ const STORAGE_KEY = 'switchkarle.relocation.v1' as const
 interface Draft {
   ctc: number
   fromState: StateCode
-  fromMetro: boolean
+  fromCity: CityChoice
   fromRent: number
   toState: StateCode
-  toMetro: boolean
+  toCity: CityChoice
   toRent: number
+}
+
+/** Drafts saved before the city field carried `fromMetro` / `toMetro` instead. */
+type SavedDraft = Partial<Draft> & {
+  ctc: number
+  fromState: StateCode
+  toState: StateCode
+  fromMetro?: boolean
+  toMetro?: boolean
+  rentPaidMonthly?: number
 }
 
 /** What first paint shows when the Decoder has not seeded anything. */
 const FIXTURE: Draft = {
   ctc: DEFAULT_OFFER.ctcAnnual,
   fromState: 'KA',
-  fromMetro: false,
+  fromCity: 'bengaluru',
   fromRent: 40_000,
   toState: 'MH',
-  toMetro: false,
+  toCity: 'mumbai',
   toRent: 40_000,
 }
 
 function fromDecoder(): Draft {
   const o = loadOffer()
   const rent = o.old?.rentPaidMonthly || 40_000
+  const toState: StateCode = o.state === 'KA' ? 'MH' : 'KA'
   return {
     ctc: o.ctcAnnual,
     fromState: o.state,
-    fromMetro: o.old?.metro ?? false,
+    fromCity: o.city !== undefined ? normaliseCity(o.state, o.city) : cityFromLegacyMetro(o.state, o.old?.metro ?? false),
     fromRent: rent,
-    toState: o.state === 'KA' ? 'MH' : 'KA',
-    toMetro: false,
+    toState,
+    toCity: cityChoicesFor(toState)[0],
     toRent: rent,
   }
 }
 
-function migrateDraft(saved: Draft | (Draft & { rentPaidMonthly?: number }) | null): Draft | null {
+function migrateDraft(saved: SavedDraft | null): Draft | null {
   if (!saved) return null
-  const legacy = saved as Draft & { rentPaidMonthly?: number }
-  if (typeof legacy.fromRent === 'number' && typeof legacy.toRent === 'number') return saved
-  const shared = typeof legacy.rentPaidMonthly === 'number' ? legacy.rentPaidMonthly : 40_000
+  const shared = typeof saved.rentPaidMonthly === 'number' ? saved.rentPaidMonthly : 40_000
   return {
     ctc: saved.ctc,
     fromState: saved.fromState,
-    fromMetro: saved.fromMetro,
-    fromRent: shared,
+    fromCity:
+      saved.fromCity !== undefined
+        ? normaliseCity(saved.fromState, saved.fromCity)
+        : cityFromLegacyMetro(saved.fromState, saved.fromMetro ?? false),
+    fromRent: typeof saved.fromRent === 'number' ? saved.fromRent : shared,
     toState: saved.toState,
-    toMetro: saved.toMetro,
-    toRent: shared,
+    toCity:
+      saved.toCity !== undefined
+        ? normaliseCity(saved.toState, saved.toCity)
+        : cityFromLegacyMetro(saved.toState, saved.toMetro ?? false),
+    toRent: typeof saved.toRent === 'number' ? saved.toRent : shared,
   }
 }
 
@@ -92,7 +106,7 @@ function Body() {
   useEffect(() => {
     const offer = loadOffer()
     setTemplate(offer)
-    const saved = readJson<Draft | null>(STORAGE_KEY, null)
+    const saved = readJson<SavedDraft | null>(STORAGE_KEY, null)
     setDraft(migrateDraft(saved) ?? fromDecoder())
     setHydrated(true)
   }, [])
@@ -107,9 +121,10 @@ function Body() {
       ...template,
       ctcAnnual: draft.ctc,
       state: draft.fromState,
+      city: draft.fromCity,
       old: {
         rentPaidMonthly: draft.fromRent,
-        metro: draft.fromMetro,
+        metro: isHraMetro(draft.fromState, draft.fromCity),
         deduction80CExtra: template.old?.deduction80CExtra ?? 0,
         deduction80D: template.old?.deduction80D ?? 0,
       },
@@ -121,10 +136,10 @@ function Body() {
     () =>
       relocationDelta(fromOffer, {
         state: draft.toState,
-        metro: draft.toMetro,
+        city: draft.toCity,
         rentPaidMonthly: draft.toRent,
       }),
-    [fromOffer, draft.toState, draft.toMetro, draft.toRent],
+    [fromOffer, draft.toState, draft.toCity, draft.toRent],
   )
 
   const delta = result.inHandDeltaMonthly
@@ -139,8 +154,11 @@ function Body() {
         })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const states = (Object.keys(STATE_NAMES) as StateCode[]).map((s) => ({ value: s, label: t(`state.${s}`) }))
-  const fromMetroWarn = draft.fromMetro && !stateHasHraMetroCity(draft.fromState)
-  const toMetroWarn = draft.toMetro && !stateHasHraMetroCity(draft.toState)
+  const cities = (state: StateCode) =>
+    cityChoicesFor(state).map((c) => ({
+      value: c,
+      label: c === 'other' ? t('city.other', { state: t(`state.${state}`) }) : t(`city.${c}`),
+    }))
   const hraIsDisplayOnly = result.from.recommendedRegime === 'new' && result.to.recommendedRegime === 'new'
 
   const copyText = [
@@ -156,11 +174,21 @@ function Body() {
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('relocation.formTitle')}</h2>
         <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
-        <Select label={t('relocation.fromState')} value={draft.fromState} onChange={(v) => set({ fromState: v })} options={states} />
-        <Toggle label={t('relocation.fromMetro')} hint={t('relocation.metroHint')} checked={draft.fromMetro} onChange={(v) => set({ fromMetro: v })} />
+        <Select
+          label={t('relocation.fromState')}
+          value={draft.fromState}
+          onChange={(v) => set({ fromState: v, fromCity: normaliseCity(v, draft.fromCity) })}
+          options={states}
+        />
+        <Select label={t('relocation.fromCity')} hint={t('relocation.metroHint')} value={draft.fromCity} onChange={(v) => set({ fromCity: v })} options={cities(draft.fromState)} />
         <MoneyField label={t('relocation.fromRent')} hint={t('relocation.rentHint')} value={draft.fromRent} onChange={(v) => set({ fromRent: v })} />
-        <Select label={t('relocation.toState')} value={draft.toState} onChange={(v) => set({ toState: v })} options={states} />
-        <Toggle label={t('relocation.toMetro')} hint={t('relocation.metroHint')} checked={draft.toMetro} onChange={(v) => set({ toMetro: v })} />
+        <Select
+          label={t('relocation.toState')}
+          value={draft.toState}
+          onChange={(v) => set({ toState: v, toCity: normaliseCity(v, draft.toCity) })}
+          options={states}
+        />
+        <Select label={t('relocation.toCity')} hint={t('relocation.metroHint')} value={draft.toCity} onChange={(v) => set({ toCity: v })} options={cities(draft.toState)} />
         <MoneyField label={t('relocation.toRent')} hint={t('relocation.rentHint')} value={draft.toRent} onChange={(v) => set({ toRent: v })} />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
@@ -182,13 +210,6 @@ function Body() {
             {t('relocation.row.hra')}: {formatINR(result.hraExemptionFrom)} → {formatINR(result.hraExemptionTo)}
           </p>
           {hraIsDisplayOnly && <p className="text-[13px] text-ink-soft">{t('relocation.hraNewRegime')}</p>}
-          {(fromMetroWarn || toMetroWarn) && (
-            <p className="text-[13px] text-amberflag">
-              {t('relocation.metroWarn', {
-                state: t(`state.${fromMetroWarn ? draft.fromState : draft.toState}`),
-              })}
-            </p>
-          )}
           <p className="text-[13px] text-ink-soft">{t('relocation.ptApprox')}</p>
           <p className="text-[13px] text-ink-soft">{t('relocation.slabsNil')}</p>
           <p className="text-[13px] text-ink-soft">{t('relocation.noCol')}</p>

@@ -49,11 +49,33 @@ const TRANSFER_STEPS = [
 /**
  * EPF/UAN switch guide: transfer (Form 13) vs premature withdrawal.
  *
- * CANDIDATE: tax on premature withdrawal of a recognised provident fund
- * (recollection: s.192A / now s.392(7) of the 2025 Act; Fourth Schedule
- * five-year continuous-service rule; interest after leaving employment).
- * No TDS rupee is computed — primary source pending CA R3. Transfer is the
- * non-taxable path this tool recommends whenever service is under 5 years.
+ * The five-year rule is Schedule XI, Part A, para 8 of the Income-tax Act,
+ * 2025 (old Fourth Schedule, Part A, rule 8): the accumulated balance is
+ * excluded from income "(a) if the employee has rendered continuous service
+ * with his employer for five years or more", or (b) if service ended through
+ * ill-health, the employer's contraction or closure, or another cause beyond
+ * the employee's control, or (c) to the extent it is transferred to the new
+ * employer's recognised fund. Para 8(2): when the balance includes a transfer
+ * from a previous employer's fund, the service with that employer COUNTS
+ * toward the five years. Para 9: if para 8 does not apply, tax is recomputed
+ * for each year as if the fund had never been recognised.
+ *
+ * TDS (old s.192A): s.392(7) — the EPF trustees "deduct income-tax thereon at
+ * the rate of 10%, where the aggregate amount of such payment is ₹ 50000 or
+ * more" and para 8 does not apply. Without a valid PAN, s.397(2)(b)(i) takes
+ * the higher of that rate and 20%.
+ * VERIFIED: 2026-10-24 | Source: Income-tax Act, 2025 (No. 30 of 2025) as enacted, Gazette of India Extraordinary Part II s.1 No. 35, 21-Aug-2025 (CG-DL-E-22082025-265620), read from ICAI's copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf Schedule XI Part A paras 8, 9, 10; §392(7); §397(2)(b)(i) | FY: 2026-27
+ * Not re-read against the Finance Act 2026-amended PDF (incometaxindia.gov.in
+ * refused this session, HTTP 403).
+ *
+ * CANDIDATE (still open, CA): tax on interest credited after leaving
+ * employment is not in the Act's text; it is case law and CBDT practice.
+ *
+ * Known gap: `completedYears` counts this employer only. Para 8(2) also counts
+ * an earlier employer's service whose PF was transferred in, so someone this
+ * tool calls "under 5 years" may already be past the line. The error is on the
+ * safe side: it recommends a transfer. No TDS rupee is computed. Transfer is
+ * the non-taxable path this tool recommends whenever service is under 5 years.
  */
 export function epfGuide(input: EpfGuideInput): EpfGuideResult {
   const tenure = completedYearsWithDayCount(input.joinDate, input.exitDate)

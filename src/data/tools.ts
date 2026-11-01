@@ -401,7 +401,7 @@ export const TOOLS: ToolDef[] = [
     descKey: 'form16-shock.desc',
     seoTitle: 'Two Form-16 Shock',
     seoDescription:
-      'Two employers both gave you the slab benefit. Combine them with one standard deduction and see the tax gap. 234B/234C omitted.',
+      'Two employers both gave you the slab benefit. Combine them with one standard deduction and see the tax gap. Advance-tax interest omitted.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.form16.v1',

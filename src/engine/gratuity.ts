@@ -75,6 +75,22 @@ export interface GratuityResult {
  * 8 May 2026, https://egazette.gov.in/WriteReadData/2026/272366.pdf) set none.
  * ₹20L is S.O. 1420(E) of 29 March 2018 under the repealed Act's s.4(3); it
  * carries over only if s.164(2)(a) saves it. CA R1.
+ * 2026-10-24 check: s.164(2)(a) of the Code (indiacode PDF above) deems "any
+ * rule, regulation, notification ... made thereunder" under the repealed Acts
+ * to be made "under the corresponding provisions of this Code", in force "to
+ * the extent they are not contrary" until repealed — which on its words
+ * carries S.O. 1420(E) over to s.53(3). The Ministry of Labour's FAQs on Labour
+ * Codes (dated 30.12.2025, Q12) say "The maximum gratuity is as notified by the
+ * Central Government which is currently ₹ 20 lakhs"
+ * (https://www.labour.gov.in/static/uploads/2026/01/de4758d5bfeffc456d7de97a801891b0.pdf;
+ * the FAQ says it is not a legal document). Still CANDIDATE: S.O. 1420(E)
+ * itself was not re-read (egazette.gov.in unreachable from here) and the
+ * absence of a later s.53(3) notification is not provable from here.
+ * Separate point for the CA: the Income-tax Act, 2025 as enacted, s.19(1)
+ * Table Sl. 5, still exempts "Gratuity received under the Payment of Gratuity
+ * Act, 1972" up to the amount under "section 4(2) and (3) of the said Act" —
+ * an Act repealed on 21-Nov-2025. Not modelled here (this file is the
+ * payable amount, not its tax).
  */
 export const GRATUITY_CAP = 2_000_000
 
