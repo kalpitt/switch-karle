@@ -43,7 +43,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
       {/* One compact bar (VIS-04): mark and name, then the tabs, then search and language.
           On a phone the tabs take a second 44px row; from md up it is one 56px row that
           stays at the top while the page scrolls. */}
-      <header className="no-print z-30 border-b border-line bg-card/95 backdrop-blur md:sticky md:top-0">
+      <header className="no-print relative z-30 border-b border-line bg-card md:sticky md:top-0">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 px-4 sm:px-6">
           <a href={withLang(lang)} className="order-1 -ml-1 inline-flex h-14 items-center gap-2 px-1">
             <LogoMark size={24} />
