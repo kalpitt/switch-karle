@@ -11,11 +11,14 @@ import {
   InheritNote,
   MoneyField,
   NumberField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -151,6 +154,7 @@ function Body() {
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('real-hike.formTitle')}</h2>
+        <PrivacyLine />
         <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField
           label={t('real-hike.currentVariable')}
@@ -190,6 +194,7 @@ function Body() {
         ) : (
           <VerdictBanner tone={bank < paper ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['real-hike']} />
         <Card className="space-y-2">
           <p className="tnum text-[13px]">
             {t('real-hike.row.bank')}: {formatINR(result.currentRunRateMonthly)} → {formatINR(result.nextRunRateMonthly)} ({bank}%)

@@ -278,7 +278,7 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.vested': '{n} vested',
   'esop-reality.illiquid':
     'यह private-company का paper है। Exit के बाद exercise window छोटी होती है, और buyer मिलना ज़रूरी नहीं।',
-  'esop-reality.provisional': 'Provisional है, perquisite rule पर chartered accountant की review बाक़ी है। यह tax advice नहीं है।',
+  'esop-reality.provisional': 'अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
 
   // ---- Relocation ----
   'relocation.title': 'Relocation',
@@ -506,7 +506,7 @@ export const hiSuite: Record<string, string> = {
 
   // ---- Resignation letter ----
   'resignation-letter.title': 'Resignation Letter',
-  'resignation-letter.desc': 'तीन में से किसी एक tone में resignation letter लिखें, last working day के हिसाब के साथ।',
+  'resignation-letter.desc': 'तीन में से किसी एक tone में resignation letter लिखें, last working day दोनों तरह से गिनकर, जैसे letters गिनते हैं।',
   'resignation-letter.formTitle': 'Letter',
   'resignation-letter.formHint': 'आपका draft सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
   'resignation-letter.company': 'Company का नाम',
@@ -679,7 +679,7 @@ export const hiSuite: Record<string, string> = {
   'epf-transfer.step.form13': 'Date of exit mark होने के बाद नए member ID के against online transfer claim (Form 13) file करें।',
   'epf-transfer.step.track-claim': 'Claim track करें। अगर यह अटक जाए, तो usual blocker unmarked date of exit या KYC mismatch होता है।',
   'epf-transfer.portal': 'EPFO Member Portal',
-  'epf-transfer.provisional': 'Provisional है। PF withdrawal पर tax किसी chartered accountant की review का इंतज़ार कर रहा है। यह tax advice नहीं है।',
+  'epf-transfer.provisional': 'PF withdrawal पर tax का अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
 
   // ---- BGV prep ----
   'bgv-prep.title': 'BGV Prep',
@@ -874,4 +874,221 @@ export const hiSuite: Record<string, string> = {
   'offer-goes-cold.prompt.title': 'Follow-up email prompt',
   'offer-goes-cold.prompt.desc': 'एक शांत, professional follow-up email draft करने के लिए इस prompt को अपने AI assistant (जैसे ChatGPT) में copy करें।',
   'offer-goes-cold.prompt.text': 'Draft a calm, professional follow-up email to [Recruiter name] and [Hiring manager name] at [Company name], about the [Role] offer dated [Offer date]. I resigned on [Resignation date] based on this offer. I have not heard back in [Number of days] days, despite [Number of follow-ups] follow-ups. My last working day at my current employer is [Last working day], and I need to tell them if anything changes before then. Ask for two things in writing: a confirmed joining date and the current BGV status. Give my last working day as the reason for asking now. Include a subject line. Keep it short, polite and firm. No desperation, no threats.',
+
+  // ── Trust: receipts, the privacy line, and the pages about the site ──────
+  'receipt.label': 'Sources:',
+  'receipt.checked': '{items} ({date} को check किया)',
+  'receipt.convention': 'Convention है, कानून नहीं: {text}',
+  'receipt.awaiting-ca': 'अभी chartered accountant ने check नहीं किया: {text}',
+  'receipt.awaiting-lawyer': 'अभी lawyer ने check नहीं किया: {text}',
+  'receipt.link': 'हम numbers कैसे check करते हैं',
+  'ui.privacyLine': 'आप जो type करते हैं, वह कहीं नहीं भेजा जाता। यह इसी browser में save होता है ताकि दोबारा न लिखना पड़े।',
+  'ui.privacyErase': 'मिटाएं',
+  'ui.privacyCheck': 'कैसे check करें',
+  'ui.disclaimerContract': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। आपका अपना contract और letters ही तय करते हैं।',
+  'resignation-letter.verdictNext':
+    'यह resignation वाले दिन को पहला दिन गिनता है। अगर letter में notice उस date “से” गिना जाता है, तो यह {lwdNext} हो सकता है। आपके letter की wording जो date दे, वही लिखें।',
+
+  'app.footer.madeBy': 'Kalpit Tiwari ने बनाया।',
+  'app.footer.reportGithub': 'GitHub पर बताएं',
+  'app.footer.pages': 'इस site के बारे में',
+  'app.footer.sourceCode': 'Source code (MIT licence)',
+  'info.about.link': 'परिचय',
+  'info.sources.link': 'हम numbers कैसे check करते हैं',
+  'info.privacy.link': 'Privacy',
+  'info.terms.link': 'शर्तें',
+  'info.updated': 'आख़िरी बार {date} को update किया।',
+  'info.contact': 'कोई number ग़लत लगा या bug मिला?',
+  'info.contactEmail': '{email} पर email करें',
+  'info.contactGithub': 'GitHub पर issue खोलें',
+
+  'about.title': 'Switch Karle के बारे में',
+  'about.description': 'Switch Karle कौन बनाता है, इसकी कीमत क्या है, और इसका code कहाँ है।',
+  'about.who': 'Switch Karle को Kalpit Tiwari बनाते हैं।',
+  'about.free':
+    'यह free है। कोई paid version नहीं, कोई account नहीं बनाना, कोई backend server नहीं और कोई analytics नहीं। Tools आपके browser में चलते हैं।',
+  'about.advice': 'यह अनुमान देता है, tax या कानूनी सलाह नहीं।',
+  'about.code': 'Source code public है, MIT licence के तहत।',
+  'about.codeLink': 'GitHub पर source code पढ़ें',
+  'about.more': 'Site के बारे में और',
+
+  'sources.title': 'हम numbers कैसे check करते हैं',
+  'sources.description':
+    'Switch Karle के tools जो भी नियम इस्तेमाल करते हैं, वह किस document से आया, आख़िरी बार कब check हुआ, क्या अभी बाक़ी है, और हमने क्या सुधारा।',
+  'sources.intro': 'Tools जो भी नियम इस्तेमाल करते हैं, वह किस document से आया, और आख़िरी बार कब check हुआ।',
+  'sources.how.title': 'हम कैसे check करते हैं',
+  'sources.how.p1':
+    'कोई भी नियम सिर्फ़ primary document से आता है: Act, उसके तहत बने Rules, gazette notification, सरकारी rate chart या circular, या court का फ़ैसला। Tax blog से कभी नहीं, और AI के जवाब से कभी नहीं।',
+  'sources.how.p2':
+    '“Check किया” का मतलब है कि उस date पर number को उसी document से मिलाया गया। इसका मतलब यह नहीं कि किसी chartered accountant ने review किया है। जिन नियमों का review अभी बाक़ी है, वे यह बात यहाँ भी कहते हैं और tool के जवाब के नीचे भी।',
+  'sources.how.p3':
+    'कुछ numbers कानून हैं ही नहीं, बस ज़्यादातर employers और letters ऐसे ही करते हैं। उन पर लिखा है “convention है, कानून नहीं”, और आपका अपना contract ही तय करता है।',
+  'sources.how.code': 'हर source उस code के पास भी लिखा है जो उसे इस्तेमाल करता है, और code public है।',
+  'sources.checked.title': 'Source से check किए गए',
+  'sources.open.title': 'अभी check होना बाक़ी',
+  'sources.open.intro':
+    'ये नियम इस्तेमाल हो रहे हैं, पर अभी किसी chartered accountant या lawyer ने इन पर मुहर नहीं लगाई है। इन पर टिके number को provisional मानें।',
+  'sources.conventions.title': 'Convention है, कानून नहीं',
+  'sources.conventions.intro': 'कोई कानून इन्हें तय नहीं करता। ज़्यादातर employers और letters ऐसे ही करते हैं। आपका अपना contract ही तय करता है।',
+  'sources.corrections.title': 'सुधार',
+  'sources.corrections.intro': 'इस site ने जो numbers और citations कभी ग़लत दिखाए, और हर एक किस date को ठीक हुआ।',
+  'sources.checkedOn': '{date} को check किया',
+  'sources.lookedOn': 'आख़िरी बार {date} को देखा',
+  'sources.labelledOn': '{date} को label किया',
+  'sources.openDoc': 'Document खोलें',
+  'sources.usedBy': 'इनमें इस्तेमाल: {tools}',
+  'sources.status.verified': 'Source से check किया',
+  'sources.status.awaiting-ca': 'अभी chartered accountant ने check नहीं किया',
+  'sources.status.awaiting-lawyer': 'अभी lawyer ने check नहीं किया',
+  'sources.status.convention': 'Convention है, कानून नहीं',
+
+  'source.ita-new-regime': 'नया tax regime',
+  'source.ita-rebate': 'Rebate: ₹12 lakh taxable income तक कोई tax नहीं, उसके ठीक ऊपर marginal relief के साथ',
+  'source.ita-salary-deductions': 'Salary से कटने वाले standard deduction और professional tax',
+  'source.ita-deduction-cap': 'पुराने 80C वाले deductions पर ₹1.5 lakh की सीमा, आपके PF समेत',
+  'source.tax-slabs': 'FY 2026-27 के tax slab rates, 4% cess और surcharge',
+  'source.hra-rule-279': 'HRA exemption, और वे आठ शहर जिन्हें basic का 50% मिलता है',
+  'source.epf-wage-ceiling': 'Basic का 12% PF, और ₹25,000 महीने की wage ceiling',
+  'source.gratuity-accrual': 'CTC के अंदर gratuity, basic का 4.81% (15/26 ÷ 12)',
+  'source.pt-KA': 'Karnataka का professional tax',
+  'source.pt-PB': 'Punjab State Development Tax, professional tax की जगह',
+  'source.pt-TN': 'Tamil Nadu का professional tax (Chennai का rate)',
+  'source.pt-OD': 'Odisha का professional tax',
+  'source.pt-TG': 'Telangana का professional tax',
+  'source.pt-AS': 'Assam का professional tax',
+  'source.pt-PY': 'Puducherry का professional tax',
+  'source.pt-other': 'बाक़ी states का professional tax',
+  'source.gratuity-eligibility': 'Gratuity की eligibility: 5 साल, और 190 / 240 working days की गिनती',
+  'source.gratuity-amount': 'Gratuity की रक़म: हर साल के लिए monthly wages का 15/26, छह महीने से ज़्यादा का हिस्सा पूरा साल गिना जाता है',
+  'source.gratuity-four-years-plus': '4 साल और 190 / 240 working days को 5 साल गिनना, जैसा courts ने s.54 को पढ़ा है',
+  'source.gratuity-wages': 'Gratuity के लिए pay के कौन से हिस्से “wages” गिने जाते हैं (हम basic + DA लेते हैं, इसलिए हमारा figure कम से कम इतना है)',
+  'source.gratuity-cap': 'Gratuity की ₹20 lakh की सीमा',
+  'source.leave-encashment-exempt': 'Resignation या retirement पर leave encashment, ₹25 lakh तक tax-free',
+  'source.leave-daily-rate': 'Leave का daily rate: ÷ 26 या ÷ 30, यह आपके employer की policy है',
+  'source.notice-buyout-divisor': 'Notice buyout: monthly pay ÷ 30 × बाक़ी दिन',
+  'source.unpaid-leave-divisor': 'Unpaid leave की recovery: monthly gross ÷ 30 × दिन',
+  'source.last-working-day':
+    'Last working day: हम resignation वाले दिन को पहला दिन गिनते हैं। किसी date “से” चलने वाला notice एक दिन बाद ख़त्म हो सकता है।',
+  'source.clawback-gross': 'Joining bonus clawback: letters आम तौर पर gross रक़म वापस माँगते हैं',
+  'source.clawback-later-year': 'Bonus अगले tax year में लौटाने पर tax वापस मिलना',
+  'source.esop-perquisite': 'Exercise पर ESOP tax: market value में से आपका दिया पैसा घटाकर, salary की तरह tax',
+  'source.esop-fmv-rule-15': 'Unlisted shares की value कैसे तय होती है',
+  'source.form16-combined': 'दो Form-16: पूरी salary पर एक standard deduction, बाक़ी deductions छोड़े गए',
+  'source.advance-tax-interest': 'कम advance tax पर interest (हिसाब नहीं किया जाता)',
+  'source.epf-five-years': '5 साल की service के बाद PF withdrawal tax-free है',
+  'source.epf-tds': 'PF withdrawal पर TDS: ₹50,000 या ज़्यादा पर 10%, PAN न हो तो 20%',
+  'source.epf-interest-after-exit': 'Job छोड़ने के बाद जुड़े PF interest पर tax',
+  'source.declaration-rule-205': 'नए employer को HRA proofs और landlord का PAN (Form No. 124)',
+
+  'corrections.pt-tn-od':
+    'Tamil Nadu का professional tax ₹2,190 साल दिखाया गया था (2018 से पहले का rate) और Odisha का ₹2,400। दोनों ₹2,500 हैं; Tamil Nadu का rate Chennai का है।',
+  'corrections.pt-as-py':
+    'Assam और Puducherry का professional tax ₹0 छोड़ा गया था। हर एक के published schedule के हिसाब से ये ₹2,496 और ₹2,500 साल हैं।',
+  'corrections.form16-interest':
+    'Form-16 tool ने कम advance tax पर interest को s.234B और 234C कहा था, जो repealed 1961 Act के numbers हैं। Income-tax Act, 2025 में ये s.424 और s.425 हैं।',
+  'corrections.sicpa':
+    'Bond scanner ने कहा था कि Delhi High Court के एक case (Sicpa, 2011) ने specialised training और आम onboarding में फ़र्क़ किया। ऐसा नहीं था। Court ने कहा कि bond की रक़म सिर्फ़ एक ऊपरी सीमा है, और employer को असली नुक़सान साबित करना होता है।',
+  'corrections.hra-city':
+    'HRA का 50% वाला हिस्सा आपके state से तय होता था, इसलिए Nagpur को Mumbai जैसा और Mysuru को Bengaluru जैसा गिना गया। Decoder और Relocation अब आपका शहर पूछते हैं।',
+  'corrections.leave-resignation':
+    'Resignation पर leave encashment को पूरी तरह taxable दिखाया गया था, एक repealed section के हवाले से। Income-tax Act, 2025 के s.19(1) के तहत यह ₹25 lakh तक exempt है, retirement की तरह ही।',
+  'corrections.pt-ka': 'Karnataka का professional tax ₹2,400 साल दिखाया गया था। 1 April 2025 से यह ₹2,500 है (February में ₹300)।',
+  'corrections.gratuity-code':
+    'Gratuity को 1972 के पुराने gratuity कानून के हवाले से बताया गया था, जो 21 November 2025 को repeal हो गया। अब यह Code on Social Security, 2020 के हवाले से है, और रक़म को कम से कम इतनी दिखाया जाता है।',
+  'corrections.gratuity-working-days':
+    'Gratuity की 190 / 240 दिन की गिनती calendar days से हो रही थी। Code असल में काम किए दिन गिनता है, इसलिए दिखाई गई date 40 से 76 दिन पहले थी। अब working days गिने जाते हैं।',
+  'corrections.hra-eight-cities':
+    'HRA का 50% वाला हिस्सा चार metros पर लागू था। Income-tax Rules, 2026 का Rule 279 आठ शहर गिनाता है: Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru।',
+  'corrections.epf-ceiling': 'PF की wage ceiling ₹15,000 महीना थी। 17 September 2026 के S.O. 5109(E) ने इसे ₹25,000 कर दिया।',
+  'corrections.rebate-156':
+    'नए regime के rebate को एक “Act 2026” का s.157 बताया गया था, जो Act है ही नहीं। यह Income-tax Act, 2025 का s.156 है। Official PDF से मिलाने पर यह पकड़ा गया।',
+
+  'privacy.title': 'Privacy',
+  'privacy.description': 'Switch Karle क्या save करता है, वह कहाँ रहता है, क्या कभी नहीं लिया जाता, और उसे कैसे मिटाएं।',
+  'privacy.short.title': 'छोटे में',
+  'privacy.short.1': 'आप जो type करते हैं, वह कहीं नहीं भेजा जाता।',
+  'privacy.short.2': 'यह इसी browser में save होता है, ताकि दोबारा न लिखना पड़े।',
+  'privacy.short.3': 'आप इसे कभी भी मिटा सकते हैं, हर page के नीचे एक button से।',
+  'privacy.saved.title': 'क्या save होता है, और कहाँ',
+  'privacy.saved.p1':
+    'आप जो numbers, dates और drafts type करते हैं, वे इस browser के local storage में “switchkarle” से शुरू होने वाले नामों के तहत save होते हैं। Tool खोलने से कुछ save नहीं होता: tool तभी save करता है जब आप कुछ type करें या बदलें।',
+  'privacy.saved.p2':
+    'एक साझा record आपकी current basic, gross, notice period, join date और work week रखता है, ताकि exit tools दोबारा न पूछें। इसमें employer का नाम नहीं होता।',
+  'privacy.saved.p3': 'भाषा चुनने पर वह चुनाव भी save होता है।',
+  'privacy.never.title': 'क्या कभी नहीं लिया जाता',
+  'privacy.never.p1':
+    'कोई account नहीं, कोई analytics नहीं, कोई backend server नहीं और कोई AI call नहीं। जब कोई tool आपको prompt देता है, तो उसे आप ख़ुद अपने AI में paste करते हैं।',
+  'privacy.host.title': 'Web host क्या देखता है',
+  'privacy.host.p1':
+    'यह site GitHub Pages से चलती है। हर web host की तरह, page load होने पर GitHub को request की आम जानकारी मिलती है, जैसे आपका IP address और browser। Tool में आप जो type करते हैं, वह उसे कभी नहीं मिलता।',
+  'privacy.host.link': 'GitHub का privacy statement',
+  'privacy.out.title': 'क्या सिर्फ़ आपके चाहने पर बाहर जाता है',
+  'privacy.out.p1':
+    'Copy button text को आपके clipboard पर रखता है। Download (calendar file, image card, backup file, या print किया PDF) आपके device पर file save करता है। AI में paste किया prompt उसी AI तक जाता है। हर चीज़ तभी होती है जब आप button दबाएं, और सिर्फ़ वहीं जाती है जहाँ आप भेजें।',
+  'privacy.erase.title': 'इसे कैसे मिटाएं',
+  'privacy.erase.p1':
+    'किसी भी page के नीचे “Saved data मिटाएं” दबाएं। यह Switch Karle का इस browser में save किया सब कुछ हटाता है और बताता है कि क्या हटाया। Applications रखनी हों तो पहले “Backup या restore” दबाएं।',
+  'privacy.erase.p2':
+    'दो चीज़ें रहती हैं: आपकी browser history, जिसे आप browser से clear करें, और site के अपने pages की offline copy, जिसमें आपका typed कुछ नहीं होता।',
+  'privacy.check.title': 'ख़ुद कैसे check करें',
+  'privacy.check.p1':
+    'Browser के developer tools खोलें, Network tab पर जाएं, और किसी भी tool में type करें: कोई request बाहर नहीं जाती। Page की security policy उसे सिर्फ़ इसी site से जुड़ने देती है, और code public है।',
+  'privacy.change.title': 'अगर यह कभी बदले',
+  'privacy.change.p1':
+    'अगर किसी feature को कभी आपका data बाहर ले जाना पड़े, तो वह ऐसा feature होगा जिसे आप ख़ुद, नाम से, चालू करें। Data सिर्फ़ उस जगह जाएगा जो Kalpit के नियंत्रण में हो, सिर्फ़ तब तक जब तक feature चालू है, और सिर्फ़ उसी feature के लिए। उसे बंद करने पर उसका जमा किया data मिट जाता है।',
+  'privacy.change.p2':
+    'आपका data कभी बेचा या किसी से share नहीं किया जाता, और advertising, profiling या AI models की training में कभी इस्तेमाल नहीं होता।',
+  'privacy.rule': 'पूरा नियम source code में PRIVACY.md में है।',
+
+  'terms.title': 'शर्तें',
+  'terms.description': 'Switch Karle अनुमान देता है, सलाह नहीं। इसका मतलब क्या है, और फ़ैसला कौन करता है।',
+  'terms.estimates':
+    'यहाँ सब कुछ अनुमान है, tax, कानूनी या financial सलाह नहीं। किसी अहम फ़ैसले से पहले chartered accountant या lawyer से check करें।',
+  'terms.contract':
+    'आपका अपना contract, offer letter और payroll ही तय करते हैं। जहाँ कोई tool convention इस्तेमाल करता है, जैसे notice pay ÷ 30, leave ÷ 26 या ÷ 30, या last working day कैसे गिना जाए, वहाँ आपके documents ही मान्य हैं।',
+  'terms.fy': 'Tax के नियम FY 2026-27 के हैं। कुछ provisional हैं या अभी chartered accountant ने check नहीं किए, और “हम numbers कैसे check करते हैं” page उन्हें गिनाता है।',
+  'terms.drafts': 'Letters, scripts और prompts drafts हैं। उन्हें आप edit करते हैं, भेजते हैं, और उनकी ज़िम्मेदारी आपकी है।',
+  'terms.asis':
+    'यह site free है और जैसी है वैसी दी जाती है, बिना किसी warranty के। Code MIT licence के तहत है, जो software के लिए यही कहता है। जवाब का क्या करना है, यह आप तय करते हैं, और उस पर क़दम भी आप ख़ुद उठाते हैं।',
+  'terms.errors': 'सुधार “हम numbers कैसे check करते हैं” page पर दर्ज हैं।',
+
+  // Sources registry: what each rule without a plain citation rests on.
+  'sourceNote.tax-slabs':
+    "Budget 2026 ने slab rates, rebate, surcharge और cess नहीं बदले। हमारा code Act का नाम लेता है, पर slab table का section अभी तय नहीं करता।",
+  'sourceNote.gratuity-accrual':
+    "कोई कानून इसे तय नहीं करता। यह 15/26 ÷ 12 है, जिस तरह payroll साल की gratuity को बारह महीनों में बाँटता है।",
+  'sourceNote.pt-TN':
+    "Chennai का rate। Tamil Nadu के दूसरे शहर अपना rate ख़ुद तय करते हैं।",
+  'sourceNote.pt-other':
+    "अभी primary source से check नहीं हुआ: Maharashtra, Gujarat, Andhra Pradesh, West Bengal, Madhya Pradesh और Kerala की रक़म। Delhi, Haryana, Uttar Pradesh और Rajasthan में ₹0 दिखता है क्योंकि कोई professional-tax Act नहीं मिला, पर इससे साबित नहीं होता कि कोई है ही नहीं। Bihar, Jharkhand, Chhattisgarh, Sikkim, Meghalaya, Tripura और बाक़ी states ₹0 पर छोड़े गए हैं।",
+  'sourceNote.gratuity-four-years-plus':
+    "Section 190 / 240 दिन की गिनती तय करता है। इसे पाँचवें साल में जाने का रास्ता मानना courts की reading है, और हमारे code में अभी कोई फ़ैसला नाम से दर्ज नहीं है।",
+  'sourceNote.gratuity-wages':
+    "“Wages” basic + DA से शुरू होती हैं और कुल pay के आधे से ऊपर का हिस्सा वापस जोड़ती हैं। Tool सिर्फ़ basic + DA लेता है, इसलिए उसका figure कम से कम इतना है।",
+  'sourceNote.gratuity-cap':
+    "s.53(3) gratuity को उस रक़म तक सीमित करता है जो Central Government notify करे। Code के तहत कोई notification नहीं मिला। ₹20 lakh 2018 से तभी आगे चलता है जब saving clause उसे बचाए।",
+  'sourceNote.leave-daily-rate':
+    "कोई कानून daily rate तय नहीं करता। आपके employer की leave policy तय करती है।",
+  'sourceNote.notice-buyout-divisor':
+    "कोई कानून basis या ÷ 30 तय नहीं करता। Code on Wages का proviso दस या ज़्यादा employees के एक साथ ग़ैरहाज़िर होने पर लागू है, एक व्यक्ति के resignation पर नहीं। आपका contract तय करता है।",
+  'sourceNote.unpaid-leave-divisor':
+    "कोई कानून ÷ 30 तय नहीं करता। Code on Wages ग़ैरहाज़िरी की कटौती को ग़ैरहाज़िर दिनों के अनुपात तक, और सारी कटौतियों को wages के 50% तक सीमित करता है।",
+  'sourceNote.last-working-day':
+    "Resignation notice पर कोई कानून लागू नहीं होता। Section 9 Central Acts पर लागू है, contracts पर नहीं। Supreme Court ने Haru Das Gupta में किसी date “से” गिनी जाने वाली अवधि का पहला दिन छोड़ दिया था। आपके letter की wording तय करती है।",
+  'sourceNote.clawback-gross':
+    "कोई कानून वापसी तय नहीं करता: gross रक़म माँगना contract का चलन है। Joining bonus पर salary की तरह tax लगता है।",
+  'sourceNote.clawback-later-year':
+    "आपका employer उसी tax year में TDS adjust कर सकता है। अगले साल लौटाने पर राहत देने वाला कोई provision नहीं मिला।",
+  'sourceNote.esop-perquisite':
+    "Act के enacted text से पढ़ा गया (ICAI की copy)। Finance Act 2026 का text दोबारा नहीं पढ़ा गया।",
+  'sourceNote.form16-combined':
+    "Tool पूरी salary पर एक standard deduction लेता है और बाक़ी deductions और exemptions छोड़ देता है।",
+  'sourceNote.advance-tax-interest':
+    "ये पुराने 234B और 234C हैं। Interest का हिसाब नहीं किया जाता; इसे model करना है या नहीं, यह chartered accountant के जवाब पर टिका है।",
+  'sourceNote.epf-five-years':
+    "Act के enacted text से पढ़ा गया (ICAI की copy)। पिछले employer की service गिनी जाती है अगर उसका PF transfer होकर आया हो।",
+  'sourceNote.epf-tds':
+    "Act के enacted text से पढ़ा गया (ICAI की copy)। Tool TDS की रक़म नहीं निकालता।",
+  'sourceNote.epf-interest-after-exit':
+    "Act का text इसे cover नहीं करता। यह case law और CBDT के चलन पर टिका है।",
 };

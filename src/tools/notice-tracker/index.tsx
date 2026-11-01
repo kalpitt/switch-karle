@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, ExampleNote, NoticeMonthsNudge, NumberField, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, NoticeMonthsNudge, NumberField, Receipt, VerdictBanner } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -133,6 +134,7 @@ function Body() {
               : t('notice-tracker.verdict.served', { lwd: formatLongDate(draft.resignDate, lang) })}
           </VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['notice-tracker']} />
         <Card className="space-y-2">
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)
@@ -152,7 +154,7 @@ function Body() {
             )
           })}
         </Card>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
       </div>
     </div>
   )

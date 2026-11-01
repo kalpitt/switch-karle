@@ -1,8 +1,10 @@
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useId, useState } from 'react'
 import { formatINR } from '../engine/format'
-import { useLang } from '../i18n'
+import { useLang, useT } from '../i18n'
+import { sourceById, type SourceEntry } from '../data/sources'
 import { formatLongDate } from '../lib/formatDate'
+import { withLang } from '../lib/langPath'
 import { parseINRInput } from '../lib/money'
 import { noticeLooksLikeMonths, noticeMonthsToDays } from '../lib/noticeMonths'
 
@@ -571,6 +573,58 @@ export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel
       {text}{' '}
       <a href={href} className="font-semibold text-saffron underline">
         {linkLabel}
+      </a>
+    </p>
+  )
+}
+
+/**
+ * The receipt under a verdict (PRODUCT.md rule 3): which document each rule
+ * comes from and the date it was checked, a convention named as one, and an
+ * open item said plainly. Built only from `src/data/sources.ts`, so the line
+ * under the answer and the "How we check numbers" page can never disagree.
+ */
+export function Receipt({ ids, className = '' }: { ids: readonly string[]; className?: string }) {
+  const t = useT()
+  const { lang } = useLang()
+  const entries = [...new Set(ids)].map(sourceById).filter((e): e is SourceEntry => e !== undefined)
+
+  // Verified rules: one clause per checked date, documents within it in first-seen order.
+  const byDate = new Map<string, Map<string, string[]>>()
+  for (const e of entries) {
+    if (e.status !== 'verified') continue
+    const docs = byDate.get(e.checked) ?? new Map<string, string[]>()
+    const sections = docs.get(e.doc) ?? []
+    if (e.section) sections.push(e.section)
+    docs.set(e.doc, sections)
+    byDate.set(e.checked, docs)
+  }
+  const parts: string[] = [...byDate].map(([date, docs]) =>
+    t('receipt.checked', {
+      items: [...docs].map(([doc, sections]) => (sections.length ? `${doc} ${sections.join(', ')}` : doc)).join('; '),
+      date: formatLongDate(date, lang),
+    }),
+  )
+  for (const e of entries) {
+    if (e.status === 'convention') parts.push(t('receipt.convention', { text: t(`source.${e.id}`) }))
+  }
+  for (const status of ['awaiting-lawyer', 'awaiting-ca'] as const) {
+    const open = entries.filter((e) => e.status === status)
+    if (open.length) parts.push(t(`receipt.${status}`, { text: open.map((e) => t(`source.${e.id}`)).join('; ') }))
+  }
+
+  return (
+    <p data-receipt className={`text-xs leading-relaxed text-ink-soft ${className}`}>
+      <span className="font-semibold">{t('receipt.label')}</span>{' '}
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 && ' · '}
+          {part}
+        </span>
+      ))}
+      {' · '}
+      <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
+        {t('receipt.link')}
       </a>
     </p>
   )

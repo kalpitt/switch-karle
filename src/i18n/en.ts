@@ -122,9 +122,9 @@ export const en: Record<string, string> = {
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
   'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source ·',
   'app.footer.privacy': 'your data never leaves this device',
-  'app.footer.verified': 'rules last verified {date}',
+  'app.footer.verified': 'Sources checked {from} – {to}',
   'app.footer.feedback': 'Found a wrong number or a bug? Tell me:',
-  'app.footer.feedbackEmail': 'Email',
+  'app.footer.feedbackEmail': 'Email me',
   'app.langToggle.label': 'Language',
 
   // ---- Erase saved data ----
@@ -346,7 +346,7 @@ export const en: Record<string, string> = {
   'esop-reality.cliffed': 'Still cliffed — zero vested',
   'esop-reality.vested': '{n} vested',
   'esop-reality.illiquid': 'This is private-company paper. Post-exit exercise windows are short, and there may be no buyer.',
-  'esop-reality.provisional': 'Provisional, pending a chartered accountant’s review of the perquisite rule. Not tax advice.',
+  'esop-reality.provisional': 'Not yet reviewed by a chartered accountant. Treat this as provisional, not tax advice.',
 
   'relocation.title': 'Relocation',
   'relocation.desc': 'See how your in-hand changes when the same CTC moves to another city.',
@@ -562,7 +562,7 @@ export const en: Record<string, string> = {
   'form16-shock.form12bNote': 'This is a plain summary, not the statutory form — payroll uses it to size your remaining TDS.',
 
   'resignation-letter.title': 'Resignation letter',
-  'resignation-letter.desc': 'Write your resignation in one of three tones, with your last working day worked out.',
+  'resignation-letter.desc': 'Write your resignation in one of three tones, with your last working day counted both ways a letter can count it.',
   'resignation-letter.formTitle': 'The letter',
   'resignation-letter.formHint': 'Your draft saves on this device only, never uploaded.',
   'resignation-letter.company': 'Company',
@@ -732,7 +732,7 @@ export const en: Record<string, string> = {
   'epf-transfer.step.form13': 'File the online transfer claim (Form 13) against the new member ID once date of exit is marked.',
   'epf-transfer.step.track-claim': 'Track the claim. If it sits, the usual blocker is unmarked date of exit or a KYC mismatch.',
   'epf-transfer.portal': 'EPFO member portal',
-  'epf-transfer.provisional': 'Provisional. PF withdrawal tax waits on a chartered accountant’s review. Not tax advice.',
+  'epf-transfer.provisional': 'PF withdrawal tax is not yet reviewed by a chartered accountant. Treat this as provisional, not tax advice.',
 
   'bgv-prep.title': 'BGV prep',
   'bgv-prep.desc': 'What a background check will see — gaps, dual PF, a pending relieving letter — and what to pack, by company type.',
@@ -985,10 +985,11 @@ export const en: Record<string, string> = {
   'flagChip.info': 'Know this',
   'results.howComputed': 'How we computed this (every number, no magic)',
   'results.howComputed.bullet1':
-    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 156 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, 80C (your PF auto-counted, capped ₹1.5L), 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
+    'FY 2026-27 rules. New regime: slabs 0–4L nil rising to 30% above ₹24L, ₹75,000 standard deduction, rebate u/s 156 (zero tax to ₹12L taxable, with marginal relief). Old regime: ₹50,000 standard deduction, HRA exemption, s.123, the old 80C (your PF auto-counted, capped ₹1.5L), the old 80D, professional tax deduction. 4% cess on both; surcharge above ₹50L.',
   'results.howComputed.bullet2':
     'In-hand counts fixed pay only. Variable and ESOPs are at-risk money — shown separately, never in the monthly figure. Tax on them applies when they actually pay out.',
-  'results.howComputed.bullet3': 'PF: 12% of basic, both sides. Gratuity accrual: 4.81% of basic when in CTC.',
+  'results.howComputed.bullet3':
+    'PF: 12% of basic, both sides (EPF wage ceiling ₹25,000 a month, S.O. 5109(E)). Gratuity accrual: 4.81% of basic when in CTC — that is 15/26 ÷ 12, a payroll convention, not a statute.',
   'results.howComputed.bullet4':
     "Professional tax uses your state's published slab (approximate — municipal notifications change it slightly).",
   'results.howComputed.bullet5':
@@ -1192,4 +1193,221 @@ export const en: Record<string, string> = {
   'offer-goes-cold.prompt.title': 'Follow-up email prompt',
   'offer-goes-cold.prompt.desc': 'Copy this prompt to your AI assistant (like ChatGPT) to draft a calm, professional follow-up email.',
   'offer-goes-cold.prompt.text': 'Draft a calm, professional follow-up email to [Recruiter name] and [Hiring manager name] at [Company name], about the [Role] offer dated [Offer date]. I resigned on [Resignation date] based on this offer. I have not heard back in [Number of days] days, despite [Number of follow-ups] follow-ups. My last working day at my current employer is [Last working day], and I need to tell them if anything changes before then. Ask for two things in writing: a confirmed joining date and the current BGV status. Give my last working day as the reason for asking now. Include a subject line. Keep it short, polite and firm. No desperation, no threats.',
+
+  // ── Trust: receipts, the privacy line, and the pages about the site ──────
+  'receipt.label': 'Sources:',
+  'receipt.checked': '{items} (checked {date})',
+  'receipt.convention': 'Convention, not law: {text}',
+  'receipt.awaiting-ca': 'Not yet checked by a chartered accountant: {text}',
+  'receipt.awaiting-lawyer': 'Not yet checked by a lawyer: {text}',
+  'receipt.link': 'How we check numbers',
+  'ui.privacyLine': 'Nothing you type is sent anywhere. It is saved in this browser so you do not retype it.',
+  'ui.privacyErase': 'Erase',
+  'ui.privacyCheck': 'How to check',
+  'ui.disclaimerContract': 'Estimate, not tax or legal advice. Your own contract and letters decide.',
+  'resignation-letter.verdictNext':
+    'This counts the resignation day as day one. If your letter says notice runs “from” that date, it may be {lwdNext}. Put the date your letter’s wording gives.',
+
+  'app.footer.madeBy': 'Made by Kalpit Tiwari.',
+  'app.footer.reportGithub': 'Report on GitHub',
+  'app.footer.pages': 'About this site',
+  'app.footer.sourceCode': 'Source code (MIT licence)',
+  'info.about.link': 'About',
+  'info.sources.link': 'How we check numbers',
+  'info.privacy.link': 'Privacy',
+  'info.terms.link': 'Terms',
+  'info.updated': 'Last updated {date}.',
+  'info.contact': 'Found a wrong number or a bug?',
+  'info.contactEmail': 'Email {email}',
+  'info.contactGithub': 'open an issue on GitHub',
+
+  'about.title': 'About Switch Karle',
+  'about.description': 'Who makes Switch Karle, what it costs, and where its code lives.',
+  'about.who': 'Switch Karle is made by Kalpit Tiwari.',
+  'about.free':
+    'It is free. There is no paid version, no account to make, no backend server and no analytics. The tools run in your browser.',
+  'about.advice': 'It gives estimates, not tax or legal advice.',
+  'about.code': 'The source code is public, under the MIT licence.',
+  'about.codeLink': 'Read the source code on GitHub',
+  'about.more': 'More about the site',
+
+  'sources.title': 'How we check numbers',
+  'sources.description':
+    'Every rule the Switch Karle tools use, the document it comes from, when it was last checked, what is still open, and what we have corrected.',
+  'sources.intro': 'Every rule the tools use, the document it comes from, and the date it was last checked.',
+  'sources.how.title': 'How we check',
+  'sources.how.p1':
+    'A rule comes only from a primary document: an Act, the Rules under it, a gazette notification, an official rate chart or circular, or a court judgment. Never from a tax blog, and never from an AI’s answer.',
+  'sources.how.p2':
+    '“Checked” means the number was matched against that document on that date. It does not mean a chartered accountant has reviewed it. Rules still waiting for that review say so, here and under the tool’s answer.',
+  'sources.how.p3':
+    'Some numbers are not law at all, only how most employers and letters do it. Those say “convention, not law”, and your own contract decides.',
+  'sources.how.code': 'Each source is also written next to the code that uses it, and the code is public.',
+  'sources.checked.title': 'Checked against the source',
+  'sources.open.title': 'Still being checked',
+  'sources.open.intro':
+    'These rules are in use, but no chartered accountant or lawyer has signed them off yet. Treat a number that rests on one as provisional.',
+  'sources.conventions.title': 'Conventions, not law',
+  'sources.conventions.intro': 'No statute fixes these. They are how most employers and letters do it. Your own contract decides.',
+  'sources.corrections.title': 'Corrections',
+  'sources.corrections.intro': 'Numbers and citations this site once showed wrong, and the date each was fixed.',
+  'sources.checkedOn': 'Checked {date}',
+  'sources.lookedOn': 'Last looked at {date}',
+  'sources.labelledOn': 'Labelled {date}',
+  'sources.openDoc': 'Open the document',
+  'sources.usedBy': 'Used in: {tools}',
+  'sources.status.verified': 'Checked against the source',
+  'sources.status.awaiting-ca': 'Not yet checked by a chartered accountant',
+  'sources.status.awaiting-lawyer': 'Not yet checked by a lawyer',
+  'sources.status.convention': 'Convention, not law',
+
+  'source.ita-new-regime': 'The new tax regime',
+  'source.ita-rebate': 'Rebate: no tax up to ₹12 lakh of taxable income, with marginal relief just above it',
+  'source.ita-salary-deductions': 'Standard deduction and professional tax, deducted from salary',
+  'source.ita-deduction-cap': 'The ₹1.5 lakh cap on the old 80C deductions, your PF included',
+  'source.tax-slabs': 'Tax slab rates, 4% cess and surcharge for FY 2026-27',
+  'source.hra-rule-279': 'HRA exemption, and the eight cities that get 50% of basic',
+  'source.epf-wage-ceiling': 'PF at 12% of basic, and the ₹25,000 a month wage ceiling',
+  'source.gratuity-accrual': 'Gratuity inside a CTC at 4.81% of basic (15/26 ÷ 12)',
+  'source.pt-KA': 'Karnataka professional tax',
+  'source.pt-PB': 'Punjab State Development Tax, in place of professional tax',
+  'source.pt-TN': 'Tamil Nadu professional tax (Chennai’s rate)',
+  'source.pt-OD': 'Odisha professional tax',
+  'source.pt-TG': 'Telangana professional tax',
+  'source.pt-AS': 'Assam professional tax',
+  'source.pt-PY': 'Puducherry professional tax',
+  'source.pt-other': 'Professional tax in the other states',
+  'source.gratuity-eligibility': 'Gratuity eligibility: 5 years, and the 190 / 240 working-day count',
+  'source.gratuity-amount': 'Gratuity amount: 15/26 of monthly wages per year, a part-year over six months counted as a year',
+  'source.gratuity-four-years-plus': 'Counting 4 years plus 190 / 240 working days as 5 years, as courts have read s.54',
+  'source.gratuity-wages': 'Which parts of pay count as “wages” for gratuity (we use basic + DA, so our figure is a floor)',
+  'source.gratuity-cap': 'The ₹20 lakh gratuity cap',
+  'source.leave-encashment-exempt': 'Leave encashment on resignation or retirement, tax-free up to ₹25 lakh',
+  'source.leave-daily-rate': 'Daily rate for leave: ÷ 26 or ÷ 30 is your employer’s policy',
+  'source.notice-buyout-divisor': 'Notice buyout: monthly pay ÷ 30 × unserved days',
+  'source.unpaid-leave-divisor': 'Unpaid-leave recovery: monthly gross ÷ 30 × days',
+  'source.last-working-day':
+    'Last working day: we count the resignation day as day one. Notice that runs “from” a date may end a day later.',
+  'source.clawback-gross': 'Joining-bonus clawback: letters usually ask for the gross amount back',
+  'source.clawback-later-year': 'Getting tax back when you repay a bonus in a later tax year',
+  'source.esop-perquisite': 'ESOP tax at exercise: market value minus what you pay, taxed as salary',
+  'source.esop-fmv-rule-15': 'How unlisted shares are valued',
+  'source.form16-combined': 'Two Form-16s: one standard deduction on the combined salary, other deductions left out',
+  'source.advance-tax-interest': 'Interest for short advance tax (not computed)',
+  'source.epf-five-years': 'PF withdrawal is tax-free after 5 years of service',
+  'source.epf-tds': 'TDS on a PF withdrawal: 10% at ₹50,000 or more, 20% without a PAN',
+  'source.epf-interest-after-exit': 'Tax on PF interest credited after you leave',
+  'source.declaration-rule-205': 'HRA proofs and landlord PAN for your new employer (Form No. 124)',
+
+  'corrections.pt-tn-od':
+    'Tamil Nadu professional tax was shown as ₹2,190 a year (the rate before 2018) and Odisha’s as ₹2,400. Both are ₹2,500; Tamil Nadu’s is Chennai’s rate.',
+  'corrections.pt-as-py':
+    'Assam and Puducherry professional tax were left at ₹0. They are ₹2,496 and ₹2,500 a year, from each one’s published schedule.',
+  'corrections.form16-interest':
+    'The Form-16 tool named the interest on short advance tax as s.234B and 234C, numbers from the repealed 1961 Act. In the Income-tax Act, 2025 they are s.424 and s.425.',
+  'corrections.sicpa':
+    'The bond scanner said a Delhi High Court case (Sicpa, 2011) drew a line between specialised training and ordinary onboarding. It did not. It held that a bond sum is only a ceiling, and the employer must prove actual loss.',
+  'corrections.hra-city':
+    'The 50% HRA limb was decided by your state, so Nagpur counted like Mumbai and Mysuru like Bengaluru. The Decoder and Relocation now ask for your city.',
+  'corrections.leave-resignation':
+    'Leave encashment on resignation was shown as fully taxable, citing a repealed section. Under s.19(1) of the Income-tax Act, 2025 it is exempt up to ₹25 lakh, the same as on retirement.',
+  'corrections.pt-ka': 'Karnataka professional tax was shown as ₹2,400 a year. Since 1 April 2025 it is ₹2,500 (₹300 in February).',
+  'corrections.gratuity-code':
+    'Gratuity was cited to the old 1972 gratuity law, which was repealed on 21 November 2025. It is now cited to the Code on Social Security, 2020, and the amount is shown as a floor.',
+  'corrections.gratuity-working-days':
+    'The 190 / 240-day gratuity count used calendar days. The Code counts days actually worked, so the date shown was 40 to 76 days too early. It now counts working days.',
+  'corrections.hra-eight-cities':
+    'The 50% HRA limb covered four metros. Rule 279 of the Income-tax Rules, 2026 lists eight cities: Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad and Bengaluru.',
+  'corrections.epf-ceiling': 'The PF wage ceiling was ₹15,000 a month. S.O. 5109(E) of 17 September 2026 made it ₹25,000.',
+  'corrections.rebate-156':
+    'The new-regime rebate was cited as s.157 of an “Act 2026” that does not exist. It is s.156 of the Income-tax Act, 2025. A check against the official PDF caught it.',
+
+  'privacy.title': 'Privacy',
+  'privacy.description': 'What Switch Karle saves, where it stays, what it never collects, and how to erase it.',
+  'privacy.short.title': 'In short',
+  'privacy.short.1': 'Nothing you type is sent anywhere.',
+  'privacy.short.2': 'It is saved in this browser, so you do not have to type it again.',
+  'privacy.short.3': 'You can erase it any time, with one button at the foot of every page.',
+  'privacy.saved.title': 'What is saved, and where',
+  'privacy.saved.p1':
+    'The numbers, dates and drafts you type are saved in this browser’s local storage, under names that start with “switchkarle”. Opening a tool saves nothing: a tool saves only after you type or change something.',
+  'privacy.saved.p2':
+    'One shared record keeps your current basic, gross, notice period, join date and work week, so the exit tools do not ask twice. It holds no employer name.',
+  'privacy.saved.p3': 'Picking a language saves that choice too.',
+  'privacy.never.title': 'What is never collected',
+  'privacy.never.p1':
+    'There are no accounts, no analytics, no backend server and no AI calls. When a tool gives you a prompt, you paste it into your own AI yourself.',
+  'privacy.host.title': 'What the web host sees',
+  'privacy.host.p1':
+    'The site is served by GitHub Pages. Like any web host, GitHub receives the usual details of a page request, such as your IP address and browser, when a page loads. It never receives what you type into a tool.',
+  'privacy.host.link': 'GitHub’s privacy statement',
+  'privacy.out.title': 'What leaves only when you choose',
+  'privacy.out.p1':
+    'A copy button puts text on your clipboard. A download (a calendar file, an image card, a backup file, or a PDF you print) saves a file on your device. A prompt you paste into an AI goes to that AI. Each happens only when you press the button, and goes only where you send it.',
+  'privacy.erase.title': 'How to erase it',
+  'privacy.erase.p1':
+    'Press “Erase saved data” at the foot of any page. It removes everything Switch Karle saved in this browser and tells you what it removed. To keep your applications, press “Back up or restore” first.',
+  'privacy.erase.p2':
+    'Two things stay: your browser history, which you clear from your browser, and the site’s offline copy of its own pages, which holds nothing you typed.',
+  'privacy.check.title': 'How to check this yourself',
+  'privacy.check.p1':
+    'Open your browser’s developer tools, go to the Network tab, and type into any tool: no request goes out. The page’s security policy lets it connect only to this site, and the code is public.',
+  'privacy.change.title': 'If this ever changes',
+  'privacy.change.p1':
+    'If a feature ever needs to move your data, it will be one you turn on yourself, by name. The data goes only to a place Kalpit controls, only while the feature is on, and only for that feature. Turning it off deletes what it collected.',
+  'privacy.change.p2':
+    'Your data is never sold or shared with anyone, and never used for advertising, profiling or training AI models.',
+  'privacy.rule': 'The full rule is PRIVACY.md in the source code.',
+
+  'terms.title': 'Terms',
+  'terms.description': 'Switch Karle gives estimates, not advice. What that means, and who decides.',
+  'terms.estimates':
+    'Everything here is an estimate, not tax, legal or financial advice. For a decision that matters, check it with a chartered accountant or a lawyer.',
+  'terms.contract':
+    'Your own contract, offer letter and payroll decide. Where a tool uses a convention, such as notice pay ÷ 30, leave ÷ 26 or ÷ 30, or how the last working day is counted, your documents override it.',
+  'terms.fy': 'Tax rules are for FY 2026-27. Some are provisional or not yet checked by a chartered accountant, and “How we check numbers” lists them.',
+  'terms.drafts': 'Letters, scripts and prompts are drafts. You edit them, send them, and stand behind them yourself.',
+  'terms.asis':
+    'The site is free and comes as it is, without any warranty. The code is under the MIT licence, which says the same for the software. You decide what to do with an answer, and you act on it yourself.',
+  'terms.errors': 'Corrections are listed on “How we check numbers”.',
+
+  // Sources registry: what each rule without a plain citation rests on.
+  'sourceNote.tax-slabs':
+    "Budget 2026 left the slab rates, rebate, surcharge and cess unchanged. Our code names the Act but does not yet pin the section of the slab table.",
+  'sourceNote.gratuity-accrual':
+    "No statute sets this. It is 15/26 ÷ 12, the way payroll spreads a year’s gratuity over twelve months.",
+  'sourceNote.pt-TN':
+    "Chennai’s rate. Other Tamil Nadu towns set their own.",
+  'sourceNote.pt-other':
+    "Not checked against a primary source yet: the Maharashtra, Gujarat, Andhra Pradesh, West Bengal, Madhya Pradesh and Kerala amounts. Delhi, Haryana, Uttar Pradesh and Rajasthan show ₹0 because no professional-tax Act was found, which does not prove there is none. Bihar, Jharkhand, Chhattisgarh, Sikkim, Meghalaya, Tripura and other states are left at ₹0.",
+  'sourceNote.gratuity-four-years-plus':
+    "The section sets the 190 / 240-day count. Reading it as a way into the fifth year is the courts’ reading, and no judgment is named in our code yet.",
+  'sourceNote.gratuity-wages':
+    "“Wages” start from basic + DA and add back pay above half of the total. The tool uses basic + DA only, so its figure is a floor.",
+  'sourceNote.gratuity-cap':
+    "s.53(3) caps gratuity at an amount the Central Government notifies. No notification under the Code was found. ₹20 lakh carries over from 2018 only if the saving clause keeps it.",
+  'sourceNote.leave-daily-rate':
+    "No statute fixes the daily rate. Your employer’s leave policy decides.",
+  'sourceNote.notice-buyout-divisor':
+    "No statute fixes the basis or the ÷ 30. The Code on Wages proviso covers ten or more employees absent together, not one person resigning. Your contract decides.",
+  'sourceNote.unpaid-leave-divisor':
+    "No statute fixes the ÷ 30. The Code on Wages caps a deduction for absence in proportion to the days absent, and all deductions at 50% of wages.",
+  'sourceNote.last-working-day':
+    "No statute governs a resignation notice. Section 9 binds Central Acts, not contracts. The Supreme Court in Haru Das Gupta left out the first day of a period counted “from” a date. Your letter’s wording decides.",
+  'sourceNote.clawback-gross':
+    "No statute sets the repayment: asking for the gross amount is contract practice. A joining bonus is taxed as salary.",
+  'sourceNote.clawback-later-year':
+    "Your employer can adjust TDS within the same tax year. No provision was found that gives relief when the repayment falls in a later year.",
+  'sourceNote.esop-perquisite':
+    "Read from the Act as enacted (ICAI’s copy). The Finance Act 2026 text was not re-read.",
+  'sourceNote.form16-combined':
+    "The tool takes one standard deduction on the combined salary and leaves out other deductions and exemptions.",
+  'sourceNote.advance-tax-interest':
+    "These are the old 234B and 234C. The interest is not computed; whether to model it waits for a chartered accountant.",
+  'sourceNote.epf-five-years':
+    "Read from the Act as enacted (ICAI’s copy). Service with an earlier employer counts when its PF was transferred in.",
+  'sourceNote.epf-tds':
+    "Read from the Act as enacted (ICAI’s copy). The tool does not compute a TDS amount.",
+  'sourceNote.epf-interest-after-exit':
+    "The Act’s text does not cover it. It rests on case law and CBDT practice.",
 }

@@ -17,7 +17,7 @@ import { useDialog } from './useDialog'
  * re-save the numbers we just removed; the reload is what makes the erase
  * hold. Nothing is written before the reload — it re-mounts on empty storage.
  */
-export function EraseData({ className }: { className?: string }) {
+export function EraseData({ className, label }: { className?: string; label?: string }) {
   const t = useT()
   const { lang } = useLang()
   const [open, setOpen] = useState(false)
@@ -60,7 +60,7 @@ export function EraseData({ className }: { className?: string }) {
         onClick={openDialog}
         className={className ?? 'py-1 font-semibold underline'}
       >
-        {t('erase.button')}
+        {label ?? t('erase.button')}
       </button>
       {open && (
         <div

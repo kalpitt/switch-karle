@@ -8,10 +8,12 @@ import {
   Disclaimer,
   NoticeMonthsNudge,
   NumberField,
+  Receipt,
   Select,
   TextField,
   VerdictBanner,
 } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
@@ -187,6 +189,12 @@ function Body() {
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
+        {earliestSafeJoin !== '' && (
+          <p className="text-[13px] text-ink-soft">
+            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
+          </p>
+        )}
+        <Receipt ids={TOOL_SOURCES['resignation-letter']} />
         {overlap && <p className="text-[13px] text-amberflag">{t('resignation-letter.epfo')}</p>}
         {earliestSafeJoin !== '' && (
           <p className="tnum text-[13px] text-ink-soft">

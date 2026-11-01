@@ -388,7 +388,10 @@ Ship with goldens. A constant's status lives beside its code:
 | Relocation PT table | `src/engine/professionalTax.ts`, `src/engine/relocation.ts` | Incomplete by design (unverified states → ₹0: BR, JH, CG, SK, ML, TR, Other). MH, GJ, AP, WB, MP, KL figures not primary-verified; see the file header for what was and was not reached |
 | Decoder in-hand (uses the engine) | `/decoder/` | Shipped; inherits row statuses above |
 
-Rules-last-verified chip: `src/data/rules.ts` → footer. Stale engine should look stale.
+What the user sees of this table comes from `src/data/sources.ts`: one entry per rule, copied from the
+markers above, rendered as the receipt under each statutory verdict (`Receipt` in `src/components/ui.tsx`),
+the footer chip (oldest and newest verified date) and `/sources/`. Change a marker, then its entry;
+`src/data/sources.test.ts` fails if a statutory tool has none. Stale engine should look stale.
 
 A `VERIFIED` marker records that a number matches a document. It does not
 record that the document is still law, and on 21 November 2025 one stopped

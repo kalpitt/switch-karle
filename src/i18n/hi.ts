@@ -28,9 +28,9 @@ export const hi: Record<string, string> = {
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
-  'app.footer.verified': 'नियम आख़िरी बार {date} को जाँचे गए',
+  'app.footer.verified': 'Sources {from} से {to} के बीच check किए गए',
   'app.footer.feedback': 'कोई number ग़लत लगा या bug मिला? मुझे बताएं:',
-  'app.footer.feedbackEmail': 'Email',
+  'app.footer.feedbackEmail': 'Email करें',
   'app.langToggle.label': 'भाषा',
 
   // ---- Erase saved data ----
@@ -208,10 +208,11 @@ export const hi: Record<string, string> = {
   'flagChip.info': 'यह जान लें',
   'results.howComputed': 'यह कैसे calculate हुआ (हर number, बिना किसी जादू के)',
   'results.howComputed.bullet1':
-    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 156 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
+    'FY 2026-27 के नियम। New regime: स्लैब 0–4L पर nil, ₹24L से ऊपर 30% तक; ₹75,000 standard deduction; धारा 156 का rebate (₹12L taxable तक zero tax, marginal relief के साथ)। Old regime: ₹50,000 standard deduction, HRA exemption, s.123, यानी पुराना 80C (आपका PF अपने-आप गिना जाता है, cap ₹1.5L), पुराना 80D, professional tax deduction। दोनों पर 4% cess; ₹50L से ऊपर surcharge।',
   'results.howComputed.bullet2':
     'In-hand में सिर्फ़ fixed pay गिना जाता है। Variable और ESOPs जोखिम वाला पैसा हैं — इन्हें अलग दिखाया जाता है, monthly figure में कभी नहीं। इन पर tax तभी लगता है जब असल में payout मिलता है।',
-  'results.howComputed.bullet3': 'PF: Basic का 12%, दोनों तरफ से। Gratuity accrual: CTC में होने पर Basic का 4.81%।',
+  'results.howComputed.bullet3':
+    'PF: Basic का 12%, दोनों तरफ से (EPF wage ceiling ₹25,000 महीना, S.O. 5109(E))। Gratuity accrual: CTC में होने पर Basic का 4.81% — यानी 15/26 ÷ 12, एक payroll convention, कोई कानून नहीं।',
   'results.howComputed.bullet4':
     'Professional tax आपके state के published slab पर आधारित है (approximate — municipal notification से थोड़ा बदल सकता है)।',
   'results.howComputed.bullet5':

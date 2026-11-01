@@ -3,6 +3,7 @@ import { STATE_NAMES } from '../engine/professionalTax'
 import { cityChoicesFor, cityFromLegacyMetro, isHraMetro, normaliseCity, ptVariesByTown, type CityChoice } from '../engine/city'
 import { useT } from '../i18n'
 import { Card, Details, Label, NumberField, Select, Toggle } from './ui'
+import { PrivacyLine } from './PrivacyLine'
 
 const L = 100_000
 
@@ -24,6 +25,7 @@ export function DecoderForm({
   return (
     <Card className="space-y-4">
       <h2 className="text-base font-bold">{t('decoder.title')}</h2>
+      <PrivacyLine />
 
       <div className="grid grid-cols-2 gap-3">
         <NumberField
