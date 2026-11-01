@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Card, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
-import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.relieving.v1' as const
 /** Read-only pull from the resignation island's own key (allowed per D10). */
@@ -112,7 +112,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">
                 {lwdReady ? t('relieving-chaser.fillFields') : t('relieving-chaser.setLwd')}

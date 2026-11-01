@@ -85,13 +85,16 @@ export function AutoFill({
         >
           {t('autofill.fillButton')}
         </button>
+        {pasted.trim() === '' && <p className="text-[13px] text-ink-soft">{t('autofill.fillBlocked')}</p>}
         {status.kind === 'ok' && (
           <div role="status" className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
             <p className="font-bold text-leaf">
               {t('autofill.okFilled', { fields: status.filled.join(', ') })}
             </p>
             {status.missing.length > 0 && (
-              <p className="mt-1 text-ink-soft">{t('autofill.okMissing', { n: status.missing.length })}</p>
+              <p className="mt-1 text-ink-soft">{status.missing.length === 1
+                  ? t('autofill.okMissingOne')
+                  : t('autofill.okMissing', { n: status.missing.length })}</p>
             )}
           </div>
         )}

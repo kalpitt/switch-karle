@@ -437,6 +437,8 @@ export function DateField(props: {
 export function MoneyField(props: {
   label: string
   hint?: string
+  /** Shown only while the field is empty: the accepted formats, e.g. "12L". */
+  placeholder?: string
   value: number
   onChange: (v: number) => void
 }) {
@@ -482,7 +484,8 @@ export function MoneyField(props: {
           type="text"
           inputMode="decimal"
           enterKeyHint="done"
-          className="tnum w-full bg-transparent py-3 text-[15px] font-medium outline-none"
+          className="tnum w-full bg-transparent py-3 text-[15px] font-medium outline-none placeholder:font-normal placeholder:text-ink-faint"
+          placeholder={props.placeholder}
           value={text}
           onFocus={() => setFocused(true)}
           onBlur={() => {

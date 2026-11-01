@@ -39,8 +39,10 @@ export const hi: Record<string, string> = {
   'erase.saved': 'इस browser में Switch Karle के {n} saved items हैं — आपने जो numbers टाइप किए, आपकी dates, और कोई letter draft।',
   'erase.savedOne': 'इस browser में Switch Karle का 1 saved item है।',
   'erase.empty': 'Switch Karle ने इस browser में कुछ save नहीं किया है। मिटाने को कुछ नहीं है।',
-  'erase.warning': 'मिटाने के बाद वापस नहीं आएगा। अपना board रखना है तो पहले backup export कर लें।',
-  'erase.historyNote': 'यह सिर्फ़ वही मिटाता है जो Switch Karle ने save किया था। यह आपकी browser history नहीं मिटाता — उसे अपने browser से clear करें।',
+  'erase.warning': 'मिटाने के बाद वापस नहीं आएगा।',
+  'erase.warningBoard': 'अपना application tracker रखना है तो पहले backup export कर लें:',
+  'erase.warningBoardLink': 'Applications page',
+  'erase.historyNote': 'यह सिर्फ़ वही मिटाता है जो Switch Karle ने save किया। दो चीज़ें रहती हैं: आपकी browser history (उसे browser से clear करें), और site के अपने pages की offline copy, जिसमें आपका typed कुछ नहीं होता।',
   'erase.confirm': 'सब कुछ मिटाएं',
   'erase.cancel': 'रहने दें',
   'erase.done': 'मिट गया। {n} saved items अब इस browser में नहीं हैं।',
@@ -50,10 +52,10 @@ export const hi: Record<string, string> = {
 
   'nav.home': 'होम',
   'nav.main': 'मुख्य',
-  'home.kicker': 'हर application एक ही board पर। सही calculator सिर्फ़ एक tap दूर।',
-  'home.allTools': 'सभी {n} tools',
+  'home.kicker': 'तीन सवाल, फिर नौकरी छोड़ने से पहले की ज़रूरी dates।',
+  'home.allTools': 'सभी {n} tools: offers, notice, F&F, PF और tax',
   'home.decoder.desc': 'CTC से असल in-hand कितना बनता है, और notice period, bond व variable pay के red flags।',
-  'home.tracker.desc': 'Applications का kanban — CTC discussed, notice, next action. इसी device पर रहता है।',
+  'home.tracker.desc': 'हर application, उसका CTC और next step एक private board पर रखें।',
   'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता।',
 
   'tab.decoder': 'डिकोडर',
@@ -68,9 +70,12 @@ export const hi: Record<string, string> = {
   'ui.copied': 'कॉपी हो गई ✓',
   'ui.exampleChip': 'उदाहरण',
   'ui.exampleNote': 'ये sample numbers हैं — अभी आपके बारे में कुछ जाँचा नहीं गया है।',
-  'ui.print': 'प्रिंट',
+  'ui.print': 'Print करें या PDF save करें',
   'ui.disclaimer': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। FY 2026-27 के नियम। आपके payroll की exact structure थोड़ी अलग होगी।',
-  'ui.money.hint': 'पूरी रकम, जैसे 1200000',
+  'ui.disclaimer.guide': 'यह सामान्य जानकारी है, कानूनी सलाह नहीं। आपका अपना letter और policy ही तय करते हैं।',
+  'ui.money.hint': '12L, 12,00,000 या 1200000',
+  'ui.money.placeholder': 'जैसे 12L या 12,00,000',
+  'ui.money.placeholderMonthly': 'हर महीने, जैसे 80,000',
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
@@ -169,29 +174,31 @@ export const hi: Record<string, string> = {
     'सब कुछ आपके browser में चलता है। आपका offer कभी किसी server तक नहीं पहुंचता। यह एक estimate है, tax advice नहीं — आपके payroll की असल structure थोड़ी अलग हो सकती है।',
 
   // ---- Share card ----
-  'autofill.summary': '⚡ ये fields नहीं पता? अपने AI से offer letter पढ़वाएं',
+  'autofill.summary': 'Offer letter है? अपने AI से यह form भरवाएं',
   'autofill.explainer':
     'यह prompt copy करें, ChatGPT/Claude/Gemini में अपने पूरे offer letter के साथ paste करें, फिर जवाब यहाँ वापस paste करें — form अपने-आप भर जाएगा।',
-  'autofill.copyPrompt': 'Extractor prompt copy करें',
+  'autofill.copyPrompt': 'Prompt copy करें',
   'autofill.copied': 'Copy हो गया ✓',
   'autofill.pastePlaceholder': 'अपने AI का पूरा जवाब यहाँ paste करें (इसमें एक JSON block होगा)…',
   'autofill.pasteLabel': 'आपके AI का जवाब',
   'autofill.fillButton': 'Form भरें',
+  'autofill.fillBlocked': 'Form भरने के लिए ऊपर वाले box में अपने AI का जवाब paste करें।',
   'autofill.okFilled': 'भर दिया: {fields}',
-  'autofill.okMissing': '{n} field(s) आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
+  'autofill.okMissing': '{n} fields आपके offer letter में नहीं थीं — HR से पूछने के exact सवाल आपके AI ने लिख दिए हैं।',
+  'autofill.okMissingOne': '1 field आपके offer letter में नहीं थी — HR से पूछने का exact सवाल आपके AI ने लिख दिया है।',
   'autofill.error':
     'इसमें valid JSON block नहीं मिला। AI का पूरा जवाब paste करें, ```json``` वाला हिस्सा भी।',
   'autofill.privacyNote':
     'ध्यान दें: offer letter किसी AI chatbot में paste करने से वह उस AI provider के पास जाता है — आपकी मर्ज़ी, आपका account। यह app खुद कुछ भी upload नहीं करता।',
 
   'shareCard.cta.rendering': 'बन रहा है…',
-  'shareCard.cta.download': 'Truth card डाउनलोड करें ↓',
+  'shareCard.cta.download': 'Image के रूप में download करें',
   'shareCard.eyebrow': 'CTC की सच्चाई',
   'shareCard.ctcSounds': 'CTC {ctc} सुनने में {amount}/month लगता है',
   'shareCard.butBank': 'लेकिन bank में पहुंचता है',
   'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',
-  'shareCard.footer': 'kalpit.me/switch-karle',
+  'shareCard.footer': 'switchkarle.fyi',
 
   // ---- Tracker ----
   'tracker.title': 'Applications',
@@ -246,6 +253,7 @@ export const hi: Record<string, string> = {
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'बदलाव save करें',
   'tracker.submitAdd': 'Application जोड़ें',
+  'tracker.saveBlocked': 'Save करने के लिए company और role भरें।',
   'tracker.noApplicationsInStage': 'कोई application नहीं',
   'tracker.movePrev': 'पिछले stage पर ले जाएं',
   'tracker.moveNext': 'अगले stage पर ले जाएं',
@@ -268,6 +276,7 @@ export const hi: Record<string, string> = {
   'sweep.privacy': 'यहाँ से कुछ भी नहीं भेजा जाता। Search आप अपने ही account में चलाते हैं और जवाब खुद वापस paste करते हैं।',
   'sweep.step2': 'जो जवाब मिले उसे यहाँ paste करें',
   'sweep.read': 'पढ़ें',
+  'sweep.readBlocked': 'पढ़ने के लिए ऊपर जवाब paste करें।',
   'sweep.invalid': 'यह वैसा JSON नहीं लग रहा जैसा prompt माँगता है। पूरा जवाब paste करें, braces समेत।',
   'sweep.found': 'जोड़ने के लिए तैयार: {n}',
   'sweep.looksClosed': 'बंद लगती है',
@@ -278,6 +287,7 @@ export const hi: Record<string, string> = {
   'sweep.skipped.noCompany': 'Company का नाम नहीं: {n}',
   'sweep.incomplete': 'यह सब कुछ नहीं ढूँढ पाएगा। Job boards confirmation email में सीमित roles ही डालते हैं, और पुराने mail खोजना मुश्किल है। इसे पूरी record नहीं, शुरुआत मानें।',
   'sweep.add': 'चुनी हुई जोड़ें',
+  'sweep.addBlocked': 'जोड़ने के लिए कम से कम एक पर tick करें।',
   'sweep.added': '{n} आपके mailbox से जोड़ी गईं।',
   'sweep.nothing': 'यहाँ जोड़ने को कुछ नहीं है।',
   'coverage.never': 'इस board पर वही है जो आपने खुद जोड़ा है।',
@@ -293,10 +303,9 @@ export const hi: Record<string, string> = {
 
   // ---- Prompt Studio ----
   'promptStudio.title': 'Prompt Studio',
-  'promptStudio.description':
-    'एक context-rich prompt बनाएं, उसे ChatGPT/Claude/Gemini में copy करें, फिर जवाब यहाँ वापस paste करके अपनी tracked application के साथ save करें।',
-  'promptStudio.personalizeFor': 'किसके लिए personalize करें',
-  'promptStudio.genericOption': 'कोई application नहीं — generic',
+  'promptStudio.description': 'एक prompt चुनें और उसे अपने AI (ChatGPT, Claude या Gemini) में copy करें। जवाब यहाँ वापस paste करें ताकि वह उसी application के साथ रहे।',
+  'promptStudio.personalizeFor': 'किसकी details इस्तेमाल करें',
+  'promptStudio.genericOption': 'कोई application नहीं (general prompt)',
   'promptStudio.emptyTitle': 'इन prompts को personalize करने के लिए एक application track करें।',
   'promptStudio.emptyBody':
     'नीचे दिए prompts generically भी काम करते हैं — Tracker में company, role, CTC और notice period जोड़कर ज़्यादा sharp, नाम-specific prompts पाएं।',
@@ -313,25 +322,25 @@ export const hi: Record<string, string> = {
   'promptStudio.answerFor': 'यह जवाब किसके लिए है',
   'promptStudio.pasteLabel': 'AI का जवाब paste करें',
   'promptStudio.saveTo': '{company} में save करें',
+  'promptStudio.saveBlocked': 'Save करने के लिए ऊपर अपने AI का जवाब paste करें।',
   'promptStudio.savedInsights': 'Save किए गए insights',
   'promptStudio.deleteInsightConfirm': 'यह saved insight delete करें? यह वापस नहीं हो सकता।',
 
-  'template.company-research.title': 'Company की due-diligence brief',
+  'template.company-research.title': 'Company के बारे में research करें',
   'template.company-research.description':
     'Funding, culture, comp bands, red flags — आगे बढ़ने से पहले एक structured brief।',
-  'template.jd-deconstruct.title': 'JD की गहराई से पड़ताल',
+  'template.jd-deconstruct.title': 'Job description समझें',
   'template.jd-deconstruct.description':
     'Job description paste करें — hidden expectations, keywords और seniority signals decode करें।',
-  'template.interview-prep.title': 'Stage के हिसाब से interview की तैयारी',
+  'template.interview-prep.title': 'Interview rounds की तैयारी करें',
   'template.interview-prep.description':
     'संभावित rounds, strong-answer outlines, एक STAR story bank, और पूछने लायक questions।',
-  'template.negotiation.title': 'Negotiation की रिहर्सल',
+  'template.negotiation.title': 'Salary की बात की practice करें',
   'template.negotiation.description': 'Counter-offers, हर red flag के लिए scripts, walk-away math, और email drafts।',
-  'template.outreach.title': 'Referral और recruiter outreach',
-  'template.outreach.description': 'छोटे, natural LinkedIn messages — connection note, InMail, और एक follow-up।',
-  'template.offer-compare.title': 'Offer comparison और decision framework',
-  'template.offer-compare.description':
-    'Total-comp truth table, risk-adjusted equity, notice friction — एक असली recommendation निकलवाता है।',
+  'template.outreach.title': 'Referral माँगें',
+  'template.outreach.description': 'छोटे LinkedIn messages: एक connection note, एक InMail और एक follow-up।',
+  'template.offer-compare.title': 'Offers में से चुनें',
+  'template.offer-compare.description': 'हर offer का पैसा, risk और growth एक साथ रखता है, फिर आपके AI से एक चुनवाता है।',
   'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
   'template.offer-extract.description':
     'पूरा offer letter paste करें — आपका AI Decoder के लिए ज़रूरी हर field निकाल देगा, वापस paste करने के लिए तैयार।',

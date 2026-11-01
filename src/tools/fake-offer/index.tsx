@@ -63,7 +63,9 @@ function Body() {
 
   const verdict =
     reds.length > 0
-      ? t('fake-offer.verdict.red', { n: reds.length })
+      ? reds.length === 1
+        ? t('fake-offer.verdict.redOne')
+        : t('fake-offer.verdict.red', { n: reds.length })
       : ambers.length > 0
         ? t('fake-offer.verdict.amber')
         : t('fake-offer.verdict.clean')
@@ -115,7 +117,7 @@ function Body() {
             <Card key={f.id} className="space-y-1.5">
               <p className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${
                     f.severity === 'red'
                       ? 'bg-alarm text-white'
                       : f.severity === 'amber'
@@ -136,7 +138,7 @@ function Body() {
               </p>
             </Card>
           ))}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

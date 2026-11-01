@@ -227,13 +227,13 @@ function MiniOffer({
       <h2 className="text-base font-bold">{title}</h2>
       <MoneyField
         label={t('decoder.field.ctc.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
       <MoneyField
         label={t('decoder.field.variable.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.variableAnnual}
         onChange={(v) => set({ variableAnnual: v })}
       />

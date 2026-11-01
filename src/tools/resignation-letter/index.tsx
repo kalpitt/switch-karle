@@ -13,9 +13,9 @@ import {
   VerdictBanner,
 } from '../../components/ui'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
-import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.resignation.v1' as const
 
@@ -197,7 +197,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={letter} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={letter} label={t('ui.copyLetter')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
             )}
@@ -209,6 +209,7 @@ function Body() {
   )
 }
 
+/** Dates go into the letter as "28 January 2027", never ISO: it is sent to a person. */
 function buildLetter(
   d: Draft,
   lwd: string,
@@ -222,7 +223,6 @@ function buildLetter(
     manager,
     company,
     role,
-    // Dates in a letter read as people write them: "28 January 2027", not 2027-01-28.
     date: formatLongDate(d.resignDate, lang),
     lwd: formatLongDate(lwd, lang),
   })

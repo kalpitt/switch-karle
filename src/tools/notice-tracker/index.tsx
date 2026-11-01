@@ -6,10 +6,10 @@ import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
+import { formatLongDate } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
-import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.notice.v1' as const
 

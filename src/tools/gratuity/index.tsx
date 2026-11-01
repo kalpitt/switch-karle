@@ -13,9 +13,9 @@ import {
   VerdictBanner,
 } from '../../components/ui'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
-import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.gratuity.v1' as const
 
@@ -134,6 +134,7 @@ function Body() {
         ) : result && verdict ? (
           <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
         ) : null}
+        {!isExample && result?.eligible && <p className="text-[13px] text-ink-soft">{t('gratuity.formula')}</p>}
         {result?.flipDate && (
           <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
         )}
@@ -145,7 +146,7 @@ function Body() {
         {!isExample && result && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

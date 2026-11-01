@@ -155,7 +155,7 @@ function Body() {
     <div data-tool="relocation" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('relocation.formTitle')}</h2>
-        <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <Select label={t('relocation.fromState')} value={draft.fromState} onChange={(v) => set({ fromState: v })} options={states} />
         <Toggle label={t('relocation.fromMetro')} hint={t('relocation.metroHint')} checked={draft.fromMetro} onChange={(v) => set({ fromMetro: v })} />
         <MoneyField label={t('relocation.fromRent')} hint={t('relocation.rentHint')} value={draft.fromRent} onChange={(v) => set({ fromRent: v })} />
@@ -196,7 +196,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

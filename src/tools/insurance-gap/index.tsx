@@ -4,9 +4,9 @@ import { Card, DateField, Disclaimer, ExampleNote, Toggle, VerdictBanner } from 
 import { addDays } from '../../engine/dates'
 import { todayIso } from '../../lib/today'
 import { insuranceGap } from '../../engine/insurance'
+import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
-import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.insurance.v1' as const
 
@@ -62,8 +62,13 @@ function Body() {
       : result.uncoveredDays === 0
         ? t('insurance-gap.verdict.none')
         : result.uncovered
-          ? t('insurance-gap.verdict.gap', { days: result.uncoveredDays, lwd: formatLongDate(result.groupCoverEndsOn, lang) })
-          : t('insurance-gap.verdict.covered', { days: result.uncoveredDays })
+          ? t(result.uncoveredDays === 1 ? 'insurance-gap.verdict.gapOne' : 'insurance-gap.verdict.gap', {
+              days: result.uncoveredDays,
+              lwd: formatLongDate(result.groupCoverEndsOn, lang),
+            })
+          : t(result.uncoveredDays === 1 ? 'insurance-gap.verdict.coveredOne' : 'insurance-gap.verdict.covered', {
+              days: result.uncoveredDays,
+            })
 
   return (
     <div data-tool="insurance-gap" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -88,7 +93,7 @@ function Body() {
             </p>
           ))}
         </Card>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

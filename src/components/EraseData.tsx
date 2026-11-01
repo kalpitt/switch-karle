@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
-import { eraseAll, savedCount, type EraseResult } from '../lib/erase'
-import { useT } from '../i18n'
+import { eraseAll, savedKeys, type EraseResult } from '../lib/erase'
+import { withLang } from '../lib/langPath'
+import { STORAGE_KEY as TRACKER_KEY } from '../tracker/store'
+import { useLang, useT } from '../i18n'
 import { useDialog } from './useDialog'
 
 /**
@@ -17,15 +19,20 @@ import { useDialog } from './useDialog'
  */
 export function EraseData({ className }: { className?: string }) {
   const t = useT()
+  const { lang } = useLang()
   const [open, setOpen] = useState(false)
   const [count, setCount] = useState(0)
+  /** Only someone who has a board is told how to keep it. */
+  const [hasBoard, setHasBoard] = useState(false)
   const [result, setResult] = useState<EraseResult | null>(null)
 
   const erased = result != null && result.removed.length > 0
   const panelRef = useRef<HTMLDivElement>(null)
 
   function openDialog() {
-    setCount(savedCount())
+    const keys = savedKeys()
+    setCount(keys.length)
+    setHasBoard(keys.includes(TRACKER_KEY))
     setResult(null)
     setOpen(true)
   }
@@ -84,6 +91,15 @@ export function EraseData({ className }: { className?: string }) {
                 {count > 0 && (
                   <p className="mt-2 text-[13px] font-semibold leading-relaxed text-alarm">
                     {t('erase.warning')}
+                    {hasBoard && (
+                      <>
+                        {' '}
+                        {t('erase.warningBoard')}{' '}
+                        <a href={withLang(lang, 'tracker')} className="underline">
+                          {t('erase.warningBoardLink')}
+                        </a>
+                      </>
+                    )}
                   </p>
                 )}
                 <p className="mt-2 text-[12px] leading-relaxed text-ink-faint">

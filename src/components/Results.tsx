@@ -62,7 +62,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         <div className="mt-4 space-y-3">
           <ShareRow
             copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />
@@ -161,7 +161,7 @@ function RegimePill({
       <p className="flex items-center gap-1.5 text-xs font-bold">
         {name}
         {recommended && (
-          <span className="rounded-full bg-leaf px-1.5 py-px text-[10px] font-bold text-white">
+          <span className="rounded-full bg-leaf px-1.5 py-px text-[10px] font-bold uppercase text-white">
             {t('results.cheaper')}
           </span>
         )}
@@ -249,7 +249,7 @@ function FlagCard({ f, b }: { f: RedFlag; b: SalaryBreakdown }) {
   return (
     <div className={`rounded-xl border ${tone.border} ${tone.bg} p-3.5`}>
       <p className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${tone.chip}`}>
+        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${tone.chip}`}>
           {tone.word}
         </span>
         {title}

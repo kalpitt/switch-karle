@@ -634,6 +634,7 @@ function ApplicationFormPanel({
             {t('common.cancel')}
           </button>
         </div>
+        {!canSave && <p className="text-[13px] text-ink-soft">{t('tracker.saveBlocked')}</p>}
       </form>
     </Card>
   )

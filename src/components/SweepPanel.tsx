@@ -122,6 +122,7 @@ export function SweepPanel({
             {t('sweep.read')}
           </button>
         </div>
+        {text.trim() === '' && <p className="text-[13px] text-ink-soft">{t('sweep.readBlocked')}</p>}
       </div>
 
       {error && (
@@ -216,6 +217,9 @@ export function SweepPanel({
               </button>
             )}
           </div>
+          {result.accepted.length > 0 && selected.size === 0 && (
+            <p className="text-right text-[13px] text-ink-soft">{t('sweep.addBlocked')}</p>
+          )}
         </div>
       )}
 
