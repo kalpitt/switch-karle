@@ -3,6 +3,7 @@ import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { isHiPath, withLang } from '../lib/langPath'
 import { IslandRoot } from './IslandRoot'
+import { buttonClass } from './buttonClass'
 
 /**
  * The one 404 page. GitHub Pages serves the same 404.html for every missing URL,
@@ -32,15 +33,15 @@ function NotFound() {
 
   return (
     <div data-tool="404" className="mx-auto max-w-xl py-10 text-center">
-      <p aria-hidden className="text-6xl font-extrabold tracking-tight text-ink-faint">
+      <p aria-hidden className="font-display text-6xl font-bold tracking-tight text-line-strong">
         404
       </p>
-      <h1 className="mt-3 text-2xl font-bold">{t('notFound.title')}</h1>
+      <h1 className="mt-3 font-display text-[28px] font-bold leading-tight tracking-[-0.02em]">{t('notFound.title')}</h1>
       <p className="mx-auto mt-2 max-w-md text-[15px] leading-relaxed text-ink-soft">{t('notFound.body')}</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <a
           href={withLang(lang)}
-          className="inline-flex min-h-[44px] items-center rounded-full bg-saffron px-6 text-sm font-bold text-white transition-transform active:scale-[0.98]"
+          className={buttonClass('primary')}
         >
           {t('notFound.home')}
         </a>
@@ -48,7 +49,7 @@ function NotFound() {
           href={withLang(other)}
           lang={other}
           hrefLang={other}
-          className="inline-flex min-h-[44px] items-center rounded-full border border-line bg-card px-5 text-sm font-bold text-ink-soft"
+          className={buttonClass('secondary')}
         >
           {t('notFound.otherHome')}
         </a>

@@ -132,6 +132,7 @@ export const hiSuite: Record<string, string> = {
   // ---- Nav / app shell / common ----
   'nav.search': 'टूल खोजें',
   'nav.searchHint': 'टाइप करें और सीधे वहाँ पहुँचें। बंद करने के लिए Esc दबाएं।',
+  'nav.searchKeys': '↑↓ से चुनें · Enter से खोलें · Esc से बंद करें',
   'nav.searchEmpty': '“{q}” के लिए अभी कुछ नहीं। notice, gratuity, in-hand या resign आज़माएं।',
   'nav.searchCount': 'नतीजे: {n}',
   'nav.close': 'बंद करें',
