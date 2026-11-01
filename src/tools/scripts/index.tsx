@@ -53,14 +53,10 @@ function ScriptSwitcher({ current }: { current: ScriptSlug }) {
 
 function Body({ slug }: { slug: ScriptSlug }) {
   const t = useT()
-  const titleKey = TOOLS.find((tool) => tool.slug === slug)?.titleKey ?? slug
 
   return (
     <div data-tool={slug} className="mx-auto max-w-2xl space-y-4">
-      <div>
-        <h2 className="text-xl font-extrabold tracking-tight">{t(titleKey)}</h2>
-        <p className="mt-1 text-[15px] text-ink-soft">{t('hr.lead')}</p>
-      </div>
+      <p className="text-[15px] text-ink-soft">{t('hr.lead')}</p>
       <ScriptSwitcher current={slug} />
       {slug === 'manager-script' ? (
         <SpokenScript />

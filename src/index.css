@@ -9,7 +9,7 @@
   --color-card: #ffffff;
   --color-ink: #1c1917;
   --color-ink-soft: #57534e;
-  --color-ink-faint: #a8a29e;
+  --color-ink-faint: #736d68; /* 4.77:1 on paper, 5.10:1 on white (WCAG AA); was #a8a29e at 2.35:1 */
   --color-line: #e7e0d8;
   --color-saffron: #e8590c;
   --color-saffron-soft: #fff0e6;
@@ -20,6 +20,14 @@
   --color-amberflag: #b45309;
   --color-amberflag-soft: #fef6e7;
   --color-night: #14110f;
+}
+
+/* iOS Safari zooms the page when a field under 16px is focused, and does not zoom back.
+   Unlayered, so it wins over per-component text-[15px] utilities. */
+input:not([type='checkbox']):not([type='radio']):not([type='range']),
+select,
+textarea {
+  font-size: 16px;
 }
 
 html {

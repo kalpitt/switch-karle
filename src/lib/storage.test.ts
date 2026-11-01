@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { migrateJson, readJson, resetBootEchoForTests, writeJson } from './storage'
+import { migrateJson, readJson, reconcile, resetBootEchoForTests, writeJson } from './storage'
 import type { StorageKey } from './storage'
 
 class MemoryStorage {
@@ -154,5 +154,25 @@ describe('boot echo skip', () => {
     )
     expect(migrated).toEqual({ n: 5 })
     expect(mem.getItem('switchkarle.migrate-probe.v2')).not.toBeNull()
+  })
+})
+
+describe('reconcile: saved drafts from older versions', () => {
+  const defaults = { name: '', notice: 90, tags: ['a'] }
+
+  it('fills a field the saved draft lacks from the defaults', () => {
+    expect(reconcile({ notice: 60 }, defaults)).toEqual({ name: '', notice: 60, tags: ['a'] })
+  })
+
+  it('drops a saved value whose shape does not match the defaults', () => {
+    expect(reconcile('oops', defaults)).toBe(defaults)
+    expect(reconcile([1, 2], defaults)).toBe(defaults)
+    expect(reconcile(null, defaults)).toBe(defaults)
+    expect(reconcile({ x: 1 }, [] as number[])).toEqual([])
+  })
+
+  it('passes non-object fallbacks through unchanged', () => {
+    expect(reconcile(5, 0)).toBe(5)
+    expect(reconcile([3], [] as number[])).toEqual([3])
   })
 })

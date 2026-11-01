@@ -15,15 +15,26 @@ export function Shell({ current, children }: { current: string; children: ReactN
     document.documentElement.lang = lang === 'hi' ? 'hi' : 'en'
   }, [lang])
 
+  // Tool pages name themselves: the tool is the page's <h1>, the brand is a link.
+  // Before this, every page's only <h1> was "Switch Karle" and a visitor landing on
+  // /gratuity/ was never told what the page was called.
+  const tool = current === 'home' ? undefined : TOOLS.find((x) => x.slug === current)
+  const Brand = tool ? 'p' : 'h1'
+
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-3 focus:text-[14px] focus:font-bold focus:text-white"
+      >
+        {t('app.skipToContent')}
+      </a>
       <header className="no-print mb-6">
         <a href={withLang(lang)} className="inline-block">
-          <h1 className="text-2xl font-extrabold tracking-tight">
+          <Brand className="text-2xl font-extrabold tracking-tight">
             Switch <span className="font-semibold text-ink-soft">Karle</span>
-          </h1>
+          </Brand>
         </a>
-        {current !== 'home' && <p className="mt-1 text-[15px] text-ink-soft">{t('app.tagline')}</p>}
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <nav className="inline-flex max-w-full flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden gap-1 rounded-full border border-line bg-card p-1">
@@ -54,7 +65,17 @@ export function Shell({ current, children }: { current: string; children: ReactN
         </div>
       </header>
 
-      <main>{children}</main>
+      <main id="main" tabIndex={-1} className="outline-none">
+        {tool && (
+          <div className="mb-6">
+            <h1 className="text-[28px] font-extrabold leading-tight tracking-tight sm:text-[32px]">
+              {t(tool.titleKey)}
+            </h1>
+            <p className="mt-1.5 max-w-[60ch] text-[15px] leading-relaxed text-ink-soft">{t(tool.descKey)}</p>
+          </div>
+        )}
+        {children}
+      </main>
 
       <footer className="no-print mt-10 border-t border-line pt-4 text-xs leading-relaxed text-ink-faint">
         <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-xs font-semibold text-leaf">

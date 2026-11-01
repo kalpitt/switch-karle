@@ -58,6 +58,24 @@ export function resetBootEchoForTests(): void {
   bootEcho.clear()
 }
 
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v)
+}
+
+/**
+ * A saved draft written by an older version can lack a field the current code
+ * reads, or have the wrong shape entirely; the tool then threw on `.trim()` and
+ * the whole page went blank. Fill missing top-level fields from the defaults,
+ * and drop a value whose shape (object / array) does not match them.
+ */
+export function reconcile<T>(saved: unknown, fallback: T): T {
+  if (isPlainObject(fallback)) {
+    return (isPlainObject(saved) ? { ...fallback, ...saved } : fallback) as T
+  }
+  if (Array.isArray(fallback)) return (Array.isArray(saved) ? saved : fallback) as T
+  return saved as T
+}
+
 export function readJson<T>(key: StorageKey, fallback: T): T {
   try {
     const raw = localStorage.getItem(key)
@@ -65,7 +83,7 @@ export function readJson<T>(key: StorageKey, fallback: T): T {
       noteBootRead(key, false)
       return fallback
     }
-    const parsed = JSON.parse(raw) as T
+    const parsed = reconcile(JSON.parse(raw), fallback)
     noteBootRead(key, true)
     return parsed
   } catch {

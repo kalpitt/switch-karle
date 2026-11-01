@@ -99,6 +99,12 @@ if (!existsSync(swPath)) {
     )
     failed = true
   }
+  // The host answers /404/ with HTTP 404; one non-200 precache entry aborts the whole
+  // service-worker install, and the site silently never works offline.
+  if (/url:\s*"(?:[^"]*\/)?404(?:\/|\.html)?"/.test(sw)) {
+    console.error('check-base-build: FAIL — dist/sw.js precaches the 404 page; the SW install will fail.')
+    failed = true
+  }
   for (const page of ['decoder/index.html', 'tracker/index.html', 'prompts/index.html']) {
     if (!sw.includes(page)) {
       console.error(`check-base-build: FAIL — dist/sw.js does not precache ${page}.`)

@@ -43,7 +43,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
 
       {/* Off-screen render target */}
       <div className="pointer-events-none fixed -left-[9999px] top-0">
-        <div ref={ref} className="w-[360px] bg-night p-7 text-white" style={{ fontFamily: 'Inter Variable, sans-serif' }}>
+        <div ref={ref} className="w-[360px] bg-night p-7 font-sans text-white">
           <p className="text-[11px] font-bold tracking-[0.2em] text-white/50">{t('shareCard.eyebrow')}</p>
           <p className="tnum mt-4 text-[15px] font-semibold text-white/70">
             {t('shareCard.ctcSounds', { ctc: formatLPA(b.input.ctcAnnual), amount: formatINR(b.input.ctcAnnual / 12) })}
@@ -53,9 +53,10 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
             {formatINR(b.inHandMonthly)}
             <span className="text-lg font-bold text-white/60">{t('unit.perMonthShort')}</span>
           </p>
-          <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
-            <div className="h-full rounded-full bg-[#ffb84d]" style={{ width: `${Math.min(100, pct)}%` }} />
-          </div>
+          {/* SVG width attribute, not inline style: the CSP drops server-rendered style="". */}
+          <svg className="mt-4 block h-2.5 w-full rounded-full bg-white/15" aria-hidden="true">
+            <rect className="fill-[#ffb84d]" height="100%" rx="5" width={`${Math.max(0, Math.min(100, pct))}%`} />
+          </svg>
           <p className="tnum mt-2 text-[13px] font-semibold text-white/70">{t('shareCard.reaches', { pct })}</p>
           {realFlags > 0 && (
             <p className="mt-4 inline-block rounded-full bg-[#c92a2a] px-3 py-1 text-[12px] font-extrabold">
