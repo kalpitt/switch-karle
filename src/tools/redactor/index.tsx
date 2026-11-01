@@ -39,7 +39,7 @@ function Body() {
     if (!previewRef.current) return
     setBusy(true)
     try {
-      const url = await toPng(previewRef.current, { pixelRatio: 2, cacheBust: true, backgroundColor: '#faf7f2' })
+      const url = await toPng(previewRef.current, { pixelRatio: 2, cacheBust: true, backgroundColor: '#ffffff' })
       const a = document.createElement('a')
       a.href = url
       a.download = 'redacted.png'
@@ -51,8 +51,8 @@ function Body() {
 
   return (
     <div data-tool="redactor" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6 no-print">
-        <h2 className="text-base font-bold">{t('redactor.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20 no-print">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('redactor.formTitle')}</h2>
         <TextArea label={t('redactor.text')} hint={t('redactor.textHint')} value={text} onChange={setText} rows={14} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
@@ -62,7 +62,7 @@ function Body() {
               : t('redactor.verdict.hits', { n: hitCount })}
         </VerdictBanner>
         <Card>
-          <h3 className="mb-2 text-sm font-bold">{t('redactor.preview')}</h3>
+          <h3 className="mb-2 text-[15px] font-semibold">{t('redactor.preview')}</h3>
           <pre
             ref={previewRef}
             className="whitespace-pre-wrap break-words rounded-xl bg-paper p-4 text-[13px] leading-relaxed text-ink"
@@ -75,7 +75,7 @@ function Body() {
             type="button"
             onClick={download}
             disabled={busy || !result.redacted}
-            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
+            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[13px] font-bold text-white disabled:opacity-60"
           >
             {busy ? t('redactor.busy') : t('redactor.download')}
           </button>

@@ -66,7 +66,7 @@ const ogImage = new URL(`${import.meta.env.BASE_URL}og/${lang === 'hi' ? 'defaul
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}icon.svg`} />
     <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}icon-180.png`} />
     <link rel="manifest" href={`${import.meta.env.BASE_URL}manifest.webmanifest`} />
-    <meta name="theme-color" content="#faf7f2" />
+    <meta name="theme-color" content="#ffffff" />
     {jsonLd && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     )}
@@ -91,7 +91,7 @@ const ogImage = new URL(`${import.meta.env.BASE_URL}og/${lang === 'hi' ? 'defaul
         <button
           type="button"
           id="sk-update-reload"
-          class="min-h-11 shrink-0 rounded-xl bg-saffron px-4 font-bold text-white"
+          class="min-h-11 shrink-0 rounded-xl bg-saffron-strong px-4 font-semibold text-white hover:bg-saffron-deep"
         >
           {t('app.updateReload')}
         </button>
