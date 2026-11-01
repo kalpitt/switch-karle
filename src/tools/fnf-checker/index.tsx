@@ -7,14 +7,13 @@ import {
   CopyButton,
   DateField,
   Disclaimer,
-  ExampleNote,
   MoneyField,
   NumberField,
   Receipt,
+  ResultHero,
   ShareRow,
   TextField,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -194,8 +193,8 @@ function Body() {
 
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('fnf-checker.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('fnf-checker.formTitle')}</h2>
         <PrivacyLine />
         <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
@@ -222,15 +221,22 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : result && verdict ? (
-          <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
-        ) : null}
-        <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+        {result && verdict ? (
+          <ResultHero
+            sample={isExample}
+            label={t(result.netPayable < 0 ? 'hero.fnf-checker.owe' : 'hero.fnf-checker.pay')}
+            value={formatINR(Math.abs(result.netPayable))}
+            verdict={verdict}
+            tone={result.netPayable < 0 ? 'alarm' : 'leaf'}
+          >
+            <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+          </ResultHero>
+        ) : (
+          <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+        )}
         {result && (
           <Card>
-            <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
+            <h3 className="mb-2 text-[15px] font-semibold">{t('fnf-checker.audit')}</h3>
             {result.lines.map((line) => (
               <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
                 <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
@@ -255,9 +261,9 @@ function Body() {
         )}
         {!isExample && result && (
           <Card className="space-y-3">
-            <h3 className="text-sm font-bold">{t('fnf-checker.mailTitle')}</h3>
+            <h3 className="text-[15px] font-semibold">{t('fnf-checker.mailTitle')}</h3>
             {disputes.length === 0 ? (
-              <p className="text-[13px] leading-relaxed text-ink-soft">{t('fnf-checker.mailNothing')}</p>
+              <p className="text-[14px] leading-relaxed text-ink-soft">{t('fnf-checker.mailNothing')}</p>
             ) : (
               <>
                 <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{mail}</pre>

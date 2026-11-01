@@ -5,13 +5,13 @@ import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
   Disclaimer,
-  ExampleNote,
+  Ledger,
   MoneyField,
   NumberField,
   Receipt,
+  ResultHero,
   Select,
   ShareRow,
-  VerdictBanner,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -95,8 +95,8 @@ function Body() {
 
   return (
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('leave-encashment.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('leave-encashment.formTitle')}</h2>
         <PrivacyLine />
         <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
         <MoneyField
@@ -120,26 +120,25 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={result.taxable > 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
-        <Receipt ids={TOOL_SOURCES['leave-encashment']} />
-        <Card className="space-y-1 tnum text-[13px]">
-          <p>
-            {t('leave-encashment.gross')}: {formatINR(result.gross)}
-          </p>
-          <p>
-            {t('leave-encashment.exempt')}: {formatINR(result.exempt)}
-          </p>
-          <p>
-            {t('leave-encashment.taxable')}: {formatINR(result.taxable)}
-          </p>
-        </Card>
-        {result.isResignation && <p className="text-[13px] text-ink-soft">{t('leave-encashment.caseNote')}</p>}
-        <p className="text-[13px] text-ink-soft">{t('leave-encashment.limbsNote')}</p>
-        <p className="text-[13px] text-ink-soft">{t('leave-encashment.note')}</p>
+        <ResultHero
+          sample={isExample}
+          label={t('hero.leave-encashment')}
+          value={formatINR(result.gross)}
+          verdict={verdict}
+          tone={result.taxable > 0 ? 'amber' : 'leaf'}
+        >
+          <Ledger
+            rows={[
+              { label: t('leave-encashment.gross'), value: formatINR(result.gross), strong: true },
+              { label: t('leave-encashment.exempt'), value: formatINR(result.exempt), tone: 'gain' },
+              { label: t('leave-encashment.taxable'), value: formatINR(result.taxable), tone: result.taxable > 0 ? 'loss' : undefined },
+            ]}
+          />
+          <Receipt ids={TOOL_SOURCES['leave-encashment']} />
+        </ResultHero>
+        {result.isResignation && <p className="text-[14px] leading-relaxed text-ink-soft">{t('leave-encashment.caseNote')}</p>}
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('leave-encashment.limbsNote')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('leave-encashment.note')}</p>
         {!isExample && (
           <ShareRow
             copyText={copyText}

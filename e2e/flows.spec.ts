@@ -50,7 +50,7 @@ test('decoder: changing the CTC changes the in-hand figure, and the bar matches 
   await expect(figure).not.toHaveText(before)
 
   const { barPct, textPct } = await page.evaluate(() => {
-    const rect = document.querySelector('main svg rect.fill-leaf')!
+    const rect = document.querySelector('main svg rect[data-seg="in-hand"]')!
     const svg = rect.closest('svg')!
     const label = svg.nextElementSibling!.querySelector('span')!.textContent!
     return {

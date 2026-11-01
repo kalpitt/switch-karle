@@ -3,6 +3,8 @@ import type { OfferInput } from '../engine/types'
 import { TEMPLATES } from '../prompts/templates'
 import { parseAiOffer } from '../prompts/offerImport'
 import { useT } from '../i18n'
+import { buttonClass } from './buttonClass'
+import { ChevronRight, SparkleIcon } from './icons'
 
 /**
  * The bridge for people who don't know their own salary structure: copy the
@@ -52,18 +54,19 @@ export function AutoFill({
   }
 
   return (
-    <details className="group rounded-2xl border border-saffron/40 bg-saffron-soft/60">
-      <summary className="cursor-pointer select-none list-none px-4 py-3 text-[13px] font-bold text-saffron">
-        <span className="mr-1 inline-block transition-transform group-open:rotate-90">▸</span>
-        {t('autofill.summary')}
+    <details className="group rounded-2xl border border-line bg-card">
+      <summary className="flex min-h-[48px] cursor-pointer select-none list-none items-center gap-2 px-4 py-3 text-[14px] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+        <SparkleIcon className="text-saffron-strong" />
+        <span className="flex-1">{t('autofill.summary')}</span>
+        <ChevronRight className="text-ink-soft transition-transform group-open:rotate-90" />
       </summary>
       <div className="space-y-3 px-4 pb-4">
-        <p className="text-[13px] leading-relaxed text-ink-soft">{t('autofill.explainer')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('autofill.explainer')}</p>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={copyPrompt}
-            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+            className={buttonClass('secondary', 'sm')}
           >
             <span aria-live="polite">{copied ? t('autofill.copied') : t('autofill.copyPrompt')}</span>
           </button>
@@ -75,17 +78,17 @@ export function AutoFill({
           placeholder={t('autofill.pastePlaceholder')}
           aria-label={t('autofill.pasteLabel')}
           rows={4}
-          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
+          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
         />
         <button
           type="button"
           onClick={fill}
           aria-disabled={pasted.trim() === ''}
-          className="min-h-[44px] rounded-xl border border-saffron px-4 py-2.5 text-[13px] font-bold text-saffron transition-transform active:scale-[0.98] aria-disabled:opacity-60"
+          className={buttonClass('primary', 'sm')}
         >
           {t('autofill.fillButton')}
         </button>
-        {pasted.trim() === '' && <p className="text-[13px] text-ink-soft">{t('autofill.fillBlocked')}</p>}
+        {pasted.trim() === '' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('autofill.fillBlocked')}</p>}
         {status.kind === 'ok' && (
           <div role="status" className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
             <p className="font-bold text-leaf">

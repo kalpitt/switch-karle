@@ -1,19 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
-import { esopReality, type VestCadence } from '../../engine/esop'
+import { esopReality, type VestCadence, type VestRow } from '../../engine/esop'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
   Disclaimer,
-  ExampleNote,
   MoneyField,
   NumberField,
   Receipt,
+  ResultHero,
   Select,
   ShareRow,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -99,8 +98,8 @@ function Body() {
 
   return (
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('esop-reality.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('esop-reality.formTitle')}</h2>
         <PrivacyLine />
         <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
         <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
@@ -120,14 +119,18 @@ function Body() {
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={result.postExitWindowNote ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
-        <Receipt ids={TOOL_SOURCES['esop-reality']} />
+        <ResultHero
+          sample={isExample}
+          label={t('hero.esop-reality')}
+          value={formatINR(result.cashNeeded)}
+          verdict={verdict}
+          tone={result.postExitWindowNote ? 'amber' : 'leaf'}
+        >
+          <Receipt ids={TOOL_SOURCES['esop-reality']} />
+        </ResultHero>
         <Card>
-          <h3 className="mb-2 text-sm font-bold">{t('esop-reality.vestTitle')}</h3>
+          <h3 className="mb-2 text-[15px] font-semibold">{t('esop-reality.vestTitle')}</h3>
+          <VestChart rows={result.vestTable} total={draft.shares} cliff={draft.cliffMonths} cadence={draft.vestCadence} />
           {result.vestTable.map((row, i) => (
             <p key={`${row.month}-${i}`} className="tnum flex justify-between text-[13px]">
               <span>{t('esop-reality.vestRow', { month: row.month })}</span>
@@ -139,13 +142,13 @@ function Body() {
             </p>
           ))}
         </Card>
-        {result.postExitWindowNote && <p className="text-[13px] text-amberflag">{t('esop-reality.illiquid')}</p>}
-        <p className="text-[13px] text-ink-soft">
+        {result.postExitWindowNote && <p className="text-[14px] leading-relaxed text-amberflag">{t('esop-reality.illiquid')}</p>}
+        <p className="text-[14px] leading-relaxed text-ink-soft">
           {t(draft.vestCadence === 'annual' ? 'esop-reality.vestAnnual' : 'esop-reality.vestLinear')}
         </p>
-        <p className="text-[13px] text-ink-soft">{t('esop-reality.vestLetter')}</p>
-        <p className="text-[13px] text-ink-soft">{t('esop-reality.saleNote')}</p>
-        <p className="text-[13px] text-ink-soft">{t('esop-reality.provisional')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('esop-reality.vestLetter')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('esop-reality.saleNote')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('esop-reality.provisional')}</p>
         {!isExample && (
           <ShareRow
             copyText={copyText}
@@ -156,6 +159,68 @@ function Body() {
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
+    </div>
+  )
+}
+
+/**
+ * The vest schedule drawn as a step chart (VIS-24): flat at zero until the cliff,
+ * then the shares that vest after it. Drawn from the engine's own vest table, so the
+ * picture and the rows under it cannot disagree. Hidden from screen readers: the rows
+ * say the same thing in words.
+ */
+function VestChart({
+  rows,
+  total,
+  cliff,
+  cadence,
+}: {
+  rows: VestRow[]
+  total: number
+  cliff: number
+  cadence: VestCadence
+}) {
+  const t = useT()
+  const sorted = [...rows].sort((a, b) => a.month - b.month)
+  const end = Math.max(1, sorted[sorted.length - 1]?.month ?? 1)
+  const top = Math.max(1, total)
+  const x = (m: number) => (m / end) * 100
+  const y = (n: number) => 40 - (Math.max(0, n) / top) * 38
+  const pts: string[] = [`0,${y(0)}`]
+  let prev = 0
+  for (const r of sorted) {
+    if (r.month === 0) continue
+    const v = r.vestedShares
+    if (cadence === 'annual' || r.month === cliff || prev === 0) pts.push(`${x(r.month)},${y(prev)}`)
+    pts.push(`${x(r.month)},${y(v)}`)
+    prev = v
+  }
+  return (
+    <div className="mb-3">
+      <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="block h-28 w-full" aria-hidden="true">
+        <line x1="0" y1="40" x2="100" y2="40" className="stroke-line" vectorEffect="non-scaling-stroke" />
+        {cliff > 0 && cliff < end && (
+          <line
+            x1={x(cliff)}
+            y1="0"
+            x2={x(cliff)}
+            y2="40"
+            className="stroke-ink-faint"
+            strokeDasharray="3 3"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+        <polyline points={pts.join(' ')} fill="none" className="stroke-ink" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <p className="tnum mt-1.5 flex justify-between gap-3 text-[12px] text-ink-faint">
+        <span>{t('esop-reality.vestRow', { month: 0 })}</span>
+        {cliff > 0 && (
+          <span>
+            {t('esop-reality.cliff')} · {t('esop-reality.vestRow', { month: cliff })}
+          </span>
+        )}
+        <span>{t('esop-reality.vestRow', { month: end })}</span>
+      </p>
     </div>
   )
 }

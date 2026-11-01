@@ -6,21 +6,31 @@ import {
   Card,
   DateField,
   Disclaimer,
-  ExampleNote,
   MoneyField,
+  ProgressStrip,
   Receipt,
+  ResultHero,
   ShareRow,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { formatLongDate } from '../../lib/formatDate'
+import { daysBetween } from '../../engine/dates'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
 
 const STORAGE_KEY = 'switchkarle.gratuity.v1' as const
+
+/** Days from one ISO date to another, 0 when either is not a date yet. */
+function daysBetweenIso(from: string, to: string): number {
+  try {
+    return Math.max(0, daysBetween(from, to))
+  } catch {
+    return 0
+  }
+}
 
 interface Draft {
   lastDrawnBasicDA: number
@@ -111,8 +121,8 @@ function Body() {
 
   return (
     <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('gratuity.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('gratuity.formTitle')}</h2>
         <PrivacyLine />
         <MoneyField
           label={t('gratuity.basic')}
@@ -144,18 +154,28 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : result && verdict ? (
-          <VerdictBanner tone={result.eligible ? 'leaf' : 'amber'}>{verdict}</VerdictBanner>
-        ) : null}
-        <Receipt ids={TOOL_SOURCES['gratuity']} />
-        {!isExample && result?.eligible && <p className="text-[13px] text-ink-soft">{t('gratuity.formula')}</p>}
-        {result?.flipDate && (
-          <p className="text-[13px] text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
-        )}
+        <ResultHero
+          sample={isExample}
+          label={t('hero.gratuity')}
+          value={result?.eligible ? formatINR(result.amount) : undefined}
+          verdict={verdict}
+          tone={result?.eligible ? 'leaf' : 'amber'}
+        >
+          {result && !result.eligible && result.flipDate && (
+            <ProgressStrip
+              pct={(daysBetweenIso(draft.joinDate, draft.exitDate) / Math.max(1, daysBetweenIso(draft.joinDate, result.flipDate))) * 100}
+              start={formatLongDate(draft.joinDate, lang)}
+              end={formatLongDate(result.flipDate, lang)}
+            />
+          )}
+          <Receipt ids={TOOL_SOURCES['gratuity']} />
+          {result?.eligible && <p className="text-[14px] leading-relaxed text-ink-soft">{t('gratuity.formula')}</p>}
+          {result?.flipDate && (
+            <p className="text-[14px] leading-relaxed text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
+          )}
+        </ResultHero>
         {result?.notes.map((n) => (
-          <p key={n.id} className="text-[13px] text-ink-soft">
+          <p key={n.id} className="text-[14px] leading-relaxed text-ink-soft">
             {t(`gratuity.note.${n.id}`)}
           </p>
         ))}
