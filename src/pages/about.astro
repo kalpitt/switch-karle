@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro'
+import InfoPageIsland from '../components/InfoPages'
+import { en } from '../i18n/en'
+---
+
+<Base title={en['about.title']!} description={en['about.description']!} slug="about" lang="en">
+  <InfoPageIsland client:load page="about" lang="en" />
+</Base>
