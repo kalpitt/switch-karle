@@ -1200,6 +1200,8 @@ export const en: Record<string, string> = {
   'receipt.convention': 'Convention, not law: {text}',
   'receipt.awaiting-ca': 'Not yet checked by a chartered accountant: {text}',
   'receipt.awaiting-lawyer': 'Not yet checked by a lawyer: {text}',
+  'receipt.open': '{n} points not yet checked by a chartered accountant or lawyer',
+  'receipt.openOne': '1 point not yet checked by a chartered accountant or lawyer',
   'receipt.link': 'How we check numbers',
   'ui.privacyLine': 'Nothing you type is sent anywhere. It is saved in this browser so you do not retype it.',
   'ui.privacyErase': 'Erase',

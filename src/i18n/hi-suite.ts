@@ -881,6 +881,8 @@ export const hiSuite: Record<string, string> = {
   'receipt.convention': 'Convention है, कानून नहीं: {text}',
   'receipt.awaiting-ca': 'अभी chartered accountant ने check नहीं किया: {text}',
   'receipt.awaiting-lawyer': 'अभी lawyer ने check नहीं किया: {text}',
+  'receipt.open': '{n} बातें अभी किसी chartered accountant या lawyer ने check नहीं कीं',
+  'receipt.openOne': '1 बात अभी किसी chartered accountant या lawyer ने check नहीं की',
   'receipt.link': 'हम numbers कैसे check करते हैं',
   'ui.privacyLine': 'आप जो type करते हैं, वह कहीं नहीं भेजा जाता। यह इसी browser में save होता है ताकि दोबारा न लिखना पड़े।',
   'ui.privacyErase': 'मिटाएं',

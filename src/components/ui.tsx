@@ -608,24 +608,38 @@ export function Receipt({ ids, className = '' }: { ids: readonly string[]; class
   for (const e of entries) {
     if (e.status === 'convention') parts.push(t('receipt.convention', { text: t(`source.${e.id}`) }))
   }
-  for (const status of ['awaiting-lawyer', 'awaiting-ca'] as const) {
-    const open = entries.filter((e) => e.status === status)
-    if (open.length) parts.push(t(`receipt.${status}`, { text: open.map((e) => t(`source.${e.id}`)).join('; ') }))
-  }
+  // Open questions sit behind one tap: the answer and its sources stay short to scan.
+  const open = (['awaiting-lawyer', 'awaiting-ca'] as const).flatMap((status) =>
+    entries.filter((e) => e.status === status).map((e) => t(`receipt.${status}`, { text: t(`source.${e.id}`) })),
+  )
 
   return (
-    <p data-receipt className={`text-xs leading-relaxed text-ink-soft ${className}`}>
-      <span className="font-semibold">{t('receipt.label')}</span>{' '}
-      {parts.map((part, i) => (
-        <span key={i}>
-          {i > 0 && ' · '}
-          {part}
-        </span>
-      ))}
-      {' · '}
-      <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
-        {t('receipt.link')}
-      </a>
-    </p>
+    <div data-receipt className={`text-xs leading-relaxed text-ink-soft ${className}`}>
+      <p>
+        <span className="font-semibold">{t('receipt.label')}</span>{' '}
+        {parts.map((part, i) => (
+          <span key={i}>
+            {i > 0 && ' · '}
+            {part}
+          </span>
+        ))}
+        {parts.length > 0 && ' · '}
+        <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
+          {t('receipt.link')}
+        </a>
+      </p>
+      {open.length > 0 && (
+        <details className="mt-1">
+          <summary className="inline-flex min-h-[44px] cursor-pointer items-center font-semibold text-ink">
+            {t(open.length === 1 ? 'receipt.openOne' : 'receipt.open', { n: open.length })}
+          </summary>
+          <ul className="list-disc space-y-1 pl-4">
+            {open.map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </div>
   )
 }
