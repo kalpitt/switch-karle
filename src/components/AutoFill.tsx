@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { OfferInput } from '../engine/types'
 import { TEMPLATES } from '../prompts/templates'
 import { parseAiOffer } from '../prompts/offerImport'
 import { useT } from '../i18n'
+import { buttonClass } from './buttonClass'
+import { ChevronRight, SparkleIcon } from './icons'
 
 /**
  * The bridge for people who don't know their own salary structure: copy the
@@ -19,6 +21,7 @@ export function AutoFill({
   const t = useT()
   const [pasted, setPasted] = useState('')
   const [copied, setCopied] = useState(false)
+  const pasteRef = useRef<HTMLTextAreaElement>(null)
   const [status, setStatus] = useState<
     | { kind: 'idle' }
     | { kind: 'ok'; filled: string[]; missing: string[] }
@@ -34,6 +37,12 @@ export function AutoFill({
   }
 
   const fill = () => {
+    // The button stays reachable when the box is empty (a disabled button drops out
+    // of the tab order and says nothing); pressing it then sends you to the box.
+    if (pasted.trim() === '') {
+      pasteRef.current?.focus()
+      return
+    }
     try {
       const r = parseAiOffer(pasted)
       onChange({ ...offer, ...r.patch })
@@ -45,49 +54,55 @@ export function AutoFill({
   }
 
   return (
-    <details className="group rounded-2xl border border-saffron/40 bg-saffron-soft/60">
-      <summary className="cursor-pointer select-none list-none px-4 py-3 text-[13px] font-bold text-saffron">
-        <span className="mr-1 inline-block transition-transform group-open:rotate-90">▸</span>
-        {t('autofill.summary')}
+    <details className="group rounded-2xl border border-line bg-card">
+      <summary className="flex min-h-[48px] cursor-pointer select-none list-none items-center gap-2 px-4 py-3 text-[14px] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+        <SparkleIcon className="text-saffron-strong" />
+        <span className="flex-1">{t('autofill.summary')}</span>
+        <ChevronRight className="text-ink-soft transition-transform group-open:rotate-90" />
       </summary>
       <div className="space-y-3 px-4 pb-4">
-        <p className="text-[13px] leading-relaxed text-ink-soft">{t('autofill.explainer')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('autofill.explainer')}</p>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={copyPrompt}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+            className={buttonClass('secondary', 'sm')}
           >
-            {copied ? t('autofill.copied') : t('autofill.copyPrompt')}
+            <span aria-live="polite">{copied ? t('autofill.copied') : t('autofill.copyPrompt')}</span>
           </button>
         </div>
         <textarea
+          ref={pasteRef}
           value={pasted}
           onChange={(e) => setPasted(e.target.value)}
           placeholder={t('autofill.pastePlaceholder')}
+          aria-label={t('autofill.pasteLabel')}
           rows={4}
-          className="w-full rounded-xl border border-line bg-card px-3 py-2.5 text-[13px] font-medium outline-none focus:border-saffron"
+          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
         />
         <button
           type="button"
           onClick={fill}
-          disabled={pasted.trim() === ''}
-          className="rounded-xl border border-saffron px-4 py-2.5 text-[13px] font-bold text-saffron transition-transform active:scale-[0.98] disabled:opacity-40"
+          aria-disabled={pasted.trim() === ''}
+          className={buttonClass('primary', 'sm')}
         >
           {t('autofill.fillButton')}
         </button>
+        {pasted.trim() === '' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('autofill.fillBlocked')}</p>}
         {status.kind === 'ok' && (
-          <div className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
+          <div role="status" className="rounded-xl bg-leaf-soft p-3 text-[13px] leading-relaxed">
             <p className="font-bold text-leaf">
               {t('autofill.okFilled', { fields: status.filled.join(', ') })}
             </p>
             {status.missing.length > 0 && (
-              <p className="mt-1 text-ink-soft">{t('autofill.okMissing', { n: status.missing.length })}</p>
+              <p className="mt-1 text-ink-soft">{status.missing.length === 1
+                  ? t('autofill.okMissingOne')
+                  : t('autofill.okMissing', { n: status.missing.length })}</p>
             )}
           </div>
         )}
         {status.kind === 'error' && (
-          <p className="rounded-xl bg-alarm-soft p-3 text-[13px] font-semibold text-alarm">
+          <p role="alert" className="rounded-xl bg-alarm-soft p-3 text-[13px] font-semibold text-alarm">
             {t('autofill.error')}
           </p>
         )}

@@ -1,18 +1,36 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { englishPath, hindiPath } from '../lib/langPath'
-import { en } from './en'
-import { hi } from './hi'
-import { hiSuite } from './hi-suite'
 
 export type Lang = 'en' | 'hi'
 
-/** `en` is canonical. Hindi is `hi.ts` (frozen chrome) plus `hi-suite.ts`
- * (suite tools). `translate()` still falls back to English if a key is missing. */
-export const dictionaries: Record<Lang, Record<string, string>> = {
-  en,
-  hi: { ...hi, ...hiSuite },
+/**
+ * `en` is canonical. Hindi is `hi.ts` (frozen chrome) plus `hi-suite.ts`
+ * (suite tools). `translate()` still falls back to English if a key is missing.
+ *
+ * In the browser only the page's own language is downloaded: an English page
+ * never fetches the Hindi strings and a Hindi page never fetches the English
+ * ones (the i18n freeze test guarantees every English key has a Hindi pair, so
+ * a Hindi page needs no English fallback). The page language comes from
+ * `<html lang>`, which the layout renders on the server. The top-level await
+ * below finishes before any island hydrates, so the first client render has
+ * the same strings the server rendered. On the server and in tests both load.
+ * The language toggle navigates to the other language's URL, which loads that
+ * language; `setLang` also loads it on demand if it ever switches in place.
+ */
+export const dictionaries: Record<Lang, Record<string, string>> = { en: {}, hi: {} }
+const loaded = new Set<Lang>()
+
+async function loadDictionary(lang: Lang): Promise<void> {
+  if (loaded.has(lang)) return
+  dictionaries[lang] = lang === 'hi' ? (await import('./hi-dictionary')).hiDictionary : (await import('./en')).en
+  loaded.add(lang)
 }
+
+const pageLang: Lang | null =
+  typeof document === 'undefined' ? null : document.documentElement.lang === 'hi' ? 'hi' : 'en'
+if (pageLang) await loadDictionary(pageLang)
+else await Promise.all([loadDictionary('en'), loadDictionary('hi')])
 
 const STORAGE_KEY = 'switchkarle.lang.v1'
 
@@ -82,7 +100,7 @@ export function LangProvider({ children, initialLang = 'en' }: { children: React
           return
         }
       }
-      setLangState(next)
+      void loadDictionary(next).then(() => setLangState(next))
     },
     [],
   )

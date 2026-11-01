@@ -34,7 +34,7 @@ function Fallback({ slug }: { slug: string }) {
 
   return (
     <section role="alert" className="rounded-2xl border border-alarm/30 bg-alarm-soft p-5">
-      <h2 className="text-base font-bold text-alarm">{t('error.title')}</h2>
+      <h2 className="text-[18px] font-semibold text-alarm">{t('error.title')}</h2>
       <p className="mt-1 text-[14px] text-ink-soft">{t('error.body')}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         <button

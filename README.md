@@ -53,6 +53,7 @@ for what that decision is and why.
 | `/bond-scanner/` | Does this clause look like a training-bond / liquidated-damages trap? |
 | `/redactor/` | Can I share a payslip with identifiers stripped? |
 | `/clause-library/` | What does this common offer clause actually mean? |
+| `/offer-goes-cold/` | What do I do when the new company goes quiet during my notice period? |
 | `/tracker/` | Where is each application, and what's the next action? |
 | `/prompts/` | What do I paste into my own AI so it sees this offer and this hunt? |
 
@@ -62,7 +63,7 @@ Every English URL has a Hindi twin at `/hi/<same-slug>/`. Language follows the U
 
 - **100% client-side.** No server, no accounts, no analytics. Your offer never leaves this device.
 - **No AI calls.** Bring your own AI: the app generates prompts you paste into ChatGPT/Claude/Gemini.
-- Data lives in `localStorage` under `switchkarle.<tool>.v<N>`, with JSON export/import on the Tracker.
+- Data lives in `localStorage` under `switchkarle.<tool>.v<N>`, and one backup file you can download and restore from the footer ("Back up or restore"), made and kept on your device.
 
 The engineering rule behind these promises, and what it would take to change one, is in [PRIVACY.md](PRIVACY.md).
 
@@ -74,7 +75,7 @@ Pure TypeScript, golden-tested against hand-computed cases (`src/engine/engine.t
 - Old regime: ₹50,000 standard deduction, HRA exemption, 80C/80D, professional-tax deduction.
 - EPF 12% of basic (statutory-ceiling option), gratuity accrual 4.81%, state professional tax (approximate).
 
-**Estimates, not tax or legal advice.** Footer chip shows when the rules were last verified. A practising CA is reviewing the constants; until then statutory tools ship as `provisional-pending-CA`.
+**Estimates, not tax or legal advice.** Every statutory answer names its source and the date it was checked, and `/sources/` lists them all. No chartered accountant has reviewed the constants yet; any constant not yet traced to a primary source stays marked `CANDIDATE` in the code and says so on screen.
 
 How the repo is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -90,9 +91,10 @@ npm run build        # astro build
 npm run check:base   # asset URLs resolve under the configured base
 npm run check:seo    # canonical + OG on every route; no analytics in dist/
 npm run check:csp    # CSP meta + hashes; no off-origin subresources
+npm run test:e2e     # browser tests on the built site (run build first)
 npm run new-tool     # node scripts/new-tool.mjs <slug>
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, and `check:csp` must all pass before you open a pull request.
+`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, `check:csp` and `test:e2e` must all pass before you open a pull request.
 
 MIT licensed. Built by a job-switcher, for job-switchers.

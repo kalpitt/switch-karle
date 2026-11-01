@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, ExampleNote, Select, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, Receipt, ResultHero, Select, Toggle } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -68,8 +69,8 @@ function Body() {
 
   return (
     <div data-tool="epf-transfer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('epf-transfer.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('epf-transfer.formTitle')}</h2>
         <Select
           label={t('epf-transfer.intent')}
           value={draft.intent}
@@ -91,13 +92,15 @@ function Body() {
         <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={result?.prematureWithdrawalTrap ? 'alarm' : result && result.flags.length > 0 ? 'amber' : 'leaf'}>
-            {t(verdictKey, { years: result?.completedYears ?? 0 })}
-          </VerdictBanner>
-        )}
+        <ResultHero
+          sample={isExample}
+          label={t('hero.epf-transfer')}
+          value={String(result?.completedYears ?? 0)}
+          verdict={t(verdictKey, { years: result?.completedYears ?? 0 })}
+          tone={result?.prematureWithdrawalTrap ? 'alarm' : result && result.flags.length > 0 ? 'amber' : 'leaf'}
+        >
+          <Receipt ids={TOOL_SOURCES['epf-transfer']} />
+        </ResultHero>
         {result && (
           <Card className="space-y-2">
             {result.flags.map((f) => (
@@ -105,8 +108,8 @@ function Body() {
                 {t(`epf-transfer.flag.${f.id}`)}
               </p>
             ))}
-            <h3 className="pt-2 text-sm font-bold">{t('epf-transfer.steps')}</h3>
-            <ol className="list-decimal space-y-1 pl-5 text-[13px] leading-relaxed text-ink-soft">
+            <h3 className="pt-2 text-[15px] font-semibold">{t('epf-transfer.steps')}</h3>
+            <ol className="list-decimal space-y-1 pl-5 text-[14px] leading-relaxed text-ink-soft">
               {result.stepIds.map((id) => (
                 <li key={id}>{t(`epf-transfer.step.${id}`)}</li>
               ))}
@@ -118,7 +121,7 @@ function Body() {
             </p>
           </Card>
         )}
-        <p className="text-[13px] text-ink-soft">{t('epf-transfer.provisional')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('epf-transfer.provisional')}</p>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
       </div>
     </div>

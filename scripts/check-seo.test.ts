@@ -40,6 +40,14 @@ describe('check-seo: head contract and valid input', () => {
     expect(result.ok).toBe(false)
     expect(result.errors).toContain('check-seo: FAIL — decoder/index.html missing <title>')
   })
+
+  it('lets a noindex page (the 404) skip canonical, OG and hreflang, but not its title', () => {
+    const notFound = '<html><head><meta name="robots" content="noindex"><title>Page not found</title></head></html>'
+    expect(checkHtmlHead(notFound, '404.html', new Map()).ok).toBe(true)
+    const withCanonical = notFound.replace('</head>', '<link rel="canonical" href="https://x.y/404/"></head>')
+    expect(checkHtmlHead(withCanonical, '404.html', new Map()).ok).toBe(false)
+    expect(checkHtmlHead('<meta name="robots" content="noindex">', '404.html', new Map()).ok).toBe(false)
+  })
 })
 
 describe('check-seo: duplicate title normalisation holes', () => {

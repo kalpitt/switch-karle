@@ -36,7 +36,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
         type="button"
         onClick={download}
         disabled={busy}
-        className="w-full rounded-2xl bg-saffron px-5 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-60"
+        className="w-full rounded-2xl bg-saffron-strong hover:bg-saffron-deep px-5 py-3.5 text-[15px] font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         {busy ? t('shareCard.cta.rendering') : t('shareCard.cta.download')}
       </button>
@@ -44,12 +44,12 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
       {/* Off-screen render target */}
       <div className="pointer-events-none fixed -left-[9999px] top-0">
         <div ref={ref} className="w-[360px] bg-night p-7 font-sans text-white">
-          <p className="text-[11px] font-bold tracking-[0.2em] text-white/50">{t('shareCard.eyebrow')}</p>
+          <p className="text-[12px] font-bold uppercase tracking-[0.2em] text-white/50">{t('shareCard.eyebrow')}</p>
           <p className="tnum mt-4 text-[15px] font-semibold text-white/70">
             {t('shareCard.ctcSounds', { ctc: formatLPA(b.input.ctcAnnual), amount: formatINR(b.input.ctcAnnual / 12) })}
           </p>
           <p className="mt-3 text-[13px] font-semibold text-white/50">{t('shareCard.butBank')}</p>
-          <p className="tnum text-[40px] font-extrabold leading-tight text-[#ffb84d]">
+          <p className="tnum text-[40px] font-bold leading-tight text-[#ffb84d]">
             {formatINR(b.inHandMonthly)}
             <span className="text-lg font-bold text-white/60">{t('unit.perMonthShort')}</span>
           </p>
@@ -59,15 +59,15 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
           </svg>
           <p className="tnum mt-2 text-[13px] font-semibold text-white/70">{t('shareCard.reaches', { pct })}</p>
           {realFlags > 0 && (
-            <p className="mt-4 inline-block rounded-full bg-[#c92a2a] px-3 py-1 text-[12px] font-extrabold">
+            <p className="mt-4 inline-block rounded-full bg-[#c92a2a] px-3 py-1 text-[12px] font-bold">
               {t('shareCard.redFlags', { n: realFlags, plural: realFlags === 1 ? '' : 's' })}
             </p>
           )}
           <div className="mt-6 flex items-baseline justify-between border-t border-white/15 pt-4">
-            <p className="text-[15px] font-extrabold">
+            <p className="text-[15px] font-bold">
               Switch <span className="font-semibold text-white/60">Karle</span>
             </p>
-            <p className="text-[11px] font-semibold text-white/50">{shareFooterLabel()}</p>
+            <p className="text-[12px] font-semibold text-white/50">{shareFooterLabel()}</p>
           </div>
         </div>
       </div>

@@ -63,7 +63,9 @@ function Body() {
 
   const verdict =
     reds.length > 0
-      ? t('fake-offer.verdict.red', { n: reds.length })
+      ? reds.length === 1
+        ? t('fake-offer.verdict.redOne')
+        : t('fake-offer.verdict.red', { n: reds.length })
       : ambers.length > 0
         ? t('fake-offer.verdict.amber')
         : t('fake-offer.verdict.clean')
@@ -78,8 +80,8 @@ function Body() {
 
   return (
     <div data-tool="fake-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('fake-offer.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('fake-offer.formTitle')}</h2>
         <TextField
           label={t('fake-offer.company')}
           value={draft.company}
@@ -115,7 +117,7 @@ function Body() {
             <Card key={f.id} className="space-y-1.5">
               <p className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${
+                  className={`rounded-full px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide ${
                     f.severity === 'red'
                       ? 'bg-alarm text-white'
                       : f.severity === 'amber'
@@ -127,16 +129,16 @@ function Body() {
                 </span>
                 {t(`fake-offer.flag.${f.id}.title`, f.params)}
               </p>
-              <p className="text-[13px] leading-relaxed text-ink-soft">
+              <p className="text-[14px] leading-relaxed text-ink-soft">
                 {t(`fake-offer.flag.${f.id}.detail`, f.params)}
               </p>
               <p className="rounded-lg bg-paper p-2.5 text-[13px] leading-relaxed">
-                <span className="font-bold text-saffron">{t('fake-offer.verify')} </span>
+                <span className="font-bold text-saffron-strong">{t('fake-offer.verify')} </span>
                 <HintText text={t(`fake-offer.flag.${f.id}.hint`, f.params)} />
               </p>
             </Card>
           ))}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )

@@ -7,17 +7,20 @@ import {
   CopyButton,
   DateField,
   Disclaimer,
-  ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
+  ResultHero,
   ShareRow,
   TextField,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
-import { useT, type Lang } from '../../i18n'
+import { useLang, useT, type Lang } from '../../i18n'
+import { formatLongDate } from '../../lib/formatDate'
 
 const STORAGE_KEY = 'switchkarle.fnf.v1' as const
 
@@ -56,6 +59,7 @@ export default function FnfCheckerTool({ lang = 'en' }: { lang?: Lang }) {
 
 function Body() {
   const t = useT()
+  const { lang } = useLang()
   const [draft, setDraft] = useState<Draft>(DEFAULT_DRAFT)
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
@@ -165,11 +169,11 @@ function Body() {
 
   const label = (id: string) => t(`fnf-checker.line.${id}`, { fallbackLabel: id })
   const mail = [
-    t('fnf-checker.mail.subject', { n: disputes.length }),
+    disputes.length === 1 ? t('fnf-checker.mail.subjectOne') : t('fnf-checker.mail.subject', { n: disputes.length }),
     '',
     t('fnf-checker.mail.greeting', { hr: draft.hrName.trim() || t('fnf-checker.mail.hrTeam') }),
     '',
-    t('fnf-checker.mail.intro', { lwd: draft.lastWorkingDay }),
+    t('fnf-checker.mail.intro', { lwd: formatLongDate(draft.lastWorkingDay, lang) }),
     '',
     ...disputes.map((item, i) =>
       t(`fnf-checker.mail.${item.kind}`, {
@@ -189,20 +193,21 @@ function Body() {
 
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('fnf-checker.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('fnf-checker.formTitle')}</h2>
+        <PrivacyLine />
         <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField
           label={t('fnf-checker.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })
             rememberCurrentJob({ monthlyBasic: v })
           }}
         />
-        <MoneyField label={t('fnf-checker.gross')} hint={t('ui.money.hint')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
+        <MoneyField label={t('fnf-checker.gross')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
@@ -216,14 +221,22 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : result && verdict ? (
-          <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
-        ) : null}
+        {result && verdict ? (
+          <ResultHero
+            sample={isExample}
+            label={t(result.netPayable < 0 ? 'hero.fnf-checker.owe' : 'hero.fnf-checker.pay')}
+            value={formatINR(Math.abs(result.netPayable))}
+            verdict={verdict}
+            tone={result.netPayable < 0 ? 'alarm' : 'leaf'}
+          >
+            <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+          </ResultHero>
+        ) : (
+          <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+        )}
         {result && (
           <Card>
-            <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>
+            <h3 className="mb-2 text-[15px] font-semibold">{t('fnf-checker.audit')}</h3>
             {result.lines.map((line) => (
               <p key={line.id} className="tnum flex justify-between gap-3 text-[13px]">
                 <span>{t(`fnf-checker.line.${line.id}`, { fallbackLabel: line.label })}</span>
@@ -248,14 +261,14 @@ function Body() {
         )}
         {!isExample && result && (
           <Card className="space-y-3">
-            <h3 className="text-sm font-bold">{t('fnf-checker.mailTitle')}</h3>
+            <h3 className="text-[15px] font-semibold">{t('fnf-checker.mailTitle')}</h3>
             {disputes.length === 0 ? (
-              <p className="text-[13px] leading-relaxed text-ink-soft">{t('fnf-checker.mailNothing')}</p>
+              <p className="text-[14px] leading-relaxed text-ink-soft">{t('fnf-checker.mailNothing')}</p>
             ) : (
               <>
                 <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{mail}</pre>
                 {canSend ? (
-                  <CopyButton text={mail} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+                  <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
                 ) : (
                   <p className="text-[13px] font-semibold text-amberflag">{t('fnf-checker.mailBlocked')}</p>
                 )}
@@ -267,7 +280,7 @@ function Body() {
         {!isExample && result && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

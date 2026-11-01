@@ -24,7 +24,7 @@ function useCategoryLabel(): Record<PromptTemplate['category'], string> {
 
 const CATEGORY_CLASS: Record<PromptTemplate['category'], string> = {
   research: 'bg-leaf-soft text-leaf',
-  prepare: 'bg-saffron-soft text-saffron',
+  prepare: 'bg-saffron-soft text-saffron-strong',
   negotiate: 'bg-alarm-soft text-alarm',
   outreach: 'bg-amberflag-soft text-amberflag',
 }
@@ -113,7 +113,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
     <div className="space-y-4">
       <Card className="space-y-3">
         <h2 className="text-lg font-bold">{t('promptStudio.title')}</h2>
-        <p className="text-[13px] text-ink-soft">{t('promptStudio.description')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('promptStudio.description')}</p>
         <Select
           label={t('promptStudio.personalizeFor')}
           value={selectedAppId}
@@ -128,12 +128,12 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
       {list.length === 0 && (
         <Card className="flex flex-col items-center gap-3 py-8 text-center">
           <p className="text-[14px] font-semibold">{t('promptStudio.emptyTitle')}</p>
-          <p className="text-[13px] text-ink-soft">{t('promptStudio.emptyBody')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('promptStudio.emptyBody')}</p>
           {onGoToTracker && (
             <button
               type="button"
               onClick={onGoToTracker}
-              className="rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
             >
               {t('promptStudio.goToTracker')}
             </button>
@@ -158,7 +158,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
         <Card className="space-y-4">
           <div>
             <h3 className="text-base font-bold">{t('promptStudio.pasteTitle')}</h3>
-            <p className="text-[13px] text-ink-soft">
+            <p className="text-[14px] leading-relaxed text-ink-soft">
               {t('promptStudio.pasteSub', { company: selectedApp.company, role: selectedApp.role })}
             </p>
           </div>
@@ -171,12 +171,13 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
           <TextArea label={t('promptStudio.pasteLabel')} value={insightContent} onChange={setInsightContent} rows={6} />
           <button
             type="button"
-            disabled={!insightContent.trim()}
+            aria-disabled={!insightContent.trim()}
             onClick={handleSaveInsight}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('promptStudio.saveTo', { company: selectedApp.company })}
           </button>
+          {!insightContent.trim() && <p className="text-[14px] leading-relaxed text-ink-soft">{t('promptStudio.saveBlocked')}</p>}
 
           {selectedApp.insights && selectedApp.insights.length > 0 && (
             <div className="space-y-2 border-t border-line pt-3">
@@ -227,7 +228,7 @@ function TemplateCard({
       <div className="flex items-start justify-between gap-2">
         <div>
           <span
-            className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${CATEGORY_CLASS[template.category]}`}
+            className={`inline-block rounded-full px-2 py-0.5 text-[12px] font-bold ${CATEGORY_CLASS[template.category]}`}
           >
             {categoryLabel[template.category]}
           </span>
@@ -239,7 +240,7 @@ function TemplateCard({
         <button
           type="button"
           onClick={() => onCopy(prompt)}
-          className="rounded-xl bg-saffron px-4 py-2.5 text-[13px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+          className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[13px] font-bold text-white transition-transform active:scale-[0.98]"
         >
           {copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt')}
         </button>

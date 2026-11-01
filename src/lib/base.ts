@@ -1,4 +1,4 @@
-/** Prefix `path` with the configured Astro base (`/switch-karle/` today). */
+/** Prefix `path` with the configured Astro base (`/` since the 2026-10-31 cutover). */
 export function withBase(path = ''): string {
   const base = import.meta.env.BASE_URL || '/'
   const clean = path.replace(/^\/+/, '').replace(/\/+$/, '')

@@ -1,25 +1,116 @@
-@import '@fontsource-variable/inter';
 @import 'tailwindcss';
 
-@theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+/* Inter, latin subset only (what @fontsource-variable/inter declares for it).
+   The rupee sign lives in Inter's 85 KB latin-ext file, and it is the only
+   latin-ext character the site uses, so it comes from a 1 KB subset of that
+   file holding just U+20B9 (made with fontTools' pyftsubset; Inter is OFL).
+   `?no-inline` stops Vite turning that small file into a data: URL, which the
+   CSP (font-src 'self') would block. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/inter-rupee-wght-normal.woff2?no-inline') format('woff2-variations');
+  unicode-range: U+20B9;
+}
+/* Devanagari, self-hosted (CSP font-src 'self'). Only the Devanagari subset is declared:
+   Inter already covers Latin and ₹, so English pages never download this file, and the
+   service worker precaches one font file rather than three. */
+@font-face {
+  font-family: 'Noto Sans Devanagari Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/noto-sans-devanagari/files/noto-sans-devanagari-devanagari-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF;
+}
 
-  /* Chhalaang palette: warm paper, ink, saffron leap, truth-green, alarm-red */
-  --color-paper: #faf7f2;
+/* Display face for page titles and the wordmark: Bricolage Grotesque (OFL 1.1, The
+   Bricolage Grotesque Project Authors), cut to one static 700 instance at opsz 32 and
+   the Latin-1 set with fontTools, 18 KB. Latin only: Hindi titles fall through to
+   Noto Sans Devanagari, and a code-mixed title keeps its English words in this face. */
+@font-face {
+  font-family: 'Bricolage Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('./assets/fonts/bricolage-display-700.woff2?no-inline') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2010-2027, U+2030-203A;
+}
+
+@theme {
+  --font-sans: 'Inter Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Display', 'Inter Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui,
+    sans-serif;
+
+  /* "Passbook" palette (VIS-14, approved 2026-10-31): a white page, ink and big numbers
+     carry it, saffron is a signature accent rather than a fill. Contrast on white
+     unless noted. Token names are kept so every call site moves with them. */
+  --color-paper: #f6f5f3; /* sunken: bands, table heads, inactive segments. The page itself is white. */
   --color-card: #ffffff;
-  --color-ink: #1c1917;
-  --color-ink-soft: #57534e;
-  --color-ink-faint: #736d68; /* 4.77:1 on paper, 5.10:1 on white (WCAG AA); was #a8a29e at 2.35:1 */
-  --color-line: #e7e0d8;
-  --color-saffron: #e8590c;
-  --color-saffron-soft: #fff0e6;
-  --color-leaf: #2f7d32;
-  --color-leaf-soft: #eaf5ea;
-  --color-alarm: #c92a2a;
-  --color-alarm-soft: #fdecec;
-  --color-amberflag: #b45309;
-  --color-amberflag-soft: #fef6e7;
+  --color-ink: #14110f; /* 18.8:1 */
+  --color-ink-soft: #4a4541; /* 9.5:1, 8.7:1 on paper */
+  --color-ink-faint: #6f6862; /* 5.5:1, 5.0:1 on paper (WCAG AA) */
+  --color-line: #e6e3df; /* card and divider hairlines */
+  --color-line-strong: #d6d3d1; /* secondary button edges */
+  /* Borders of fields and the off state of a switch: 3.9:1 on white, 3.6:1 on paper,
+     so the edge of a control is visible (WCAG 1.4.11). */
+  --color-field: #85807a;
+  /* `saffron` is the darker cut so every existing fill and text use passes AA without a
+     per-file change (white on it 5.2:1; as text 5.2:1, 4.8:1 on tint). The bright brand
+     orange is kept for the logo file and for marks that carry no text. */
+  --color-saffron: #c2410c;
+  --color-saffron-strong: #c2410c; /* filled buttons and saffron text, named for intent */
+  --color-saffron-bright: #e8590c; /* active-tab underline, chart markers. Never under or as text. */
+  --color-saffron-deep: #9a3412; /* hover of a filled button, white on it 7.3:1 */
+  --color-saffron-soft: #fff4ec;
+  --color-leaf: #067647; /* gain: 5.7:1, 5.4:1 on leaf-soft */
+  --color-leaf-soft: #ecfdf3;
+  --color-alarm: #b42318; /* loss: 6.6:1, 6.0:1 on alarm-soft */
+  --color-alarm-soft: #fef3f2;
+  --color-amberflag: #b54708; /* caution: 5.4:1, 5.2:1 on amberflag-soft */
+  --color-amberflag-soft: #fffaeb;
+  --color-sample: #475467; /* the Example tag: 6.8:1 on sample-soft */
+  --color-sample-soft: #eef2f6;
   --color-night: #14110f;
+
+  /* One radius system: 6px controls (rounded-xl), 10px cards (rounded-2xl), pills only
+     for status tags. Redefined here so every existing class follows. */
+  --radius-xl: 0.375rem;
+  --radius-2xl: 0.625rem;
+
+  /* Type scale (VIS-21). Nothing smaller than 12px. */
+  --text-display: 2.5rem;
+  --text-display--line-height: 2.75rem;
+  --text-title: 1.625rem;
+  --text-title--line-height: 2rem;
+  --text-heading: 1.125rem;
+  --text-heading--line-height: 1.625rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.25rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.25rem;
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1rem;
+  --text-figure: 2.5rem;
+  --text-figure--line-height: 1;
+
+  /* Shadows only for things that float over the page: menus, the palette. In-flow cards use a border. */
+  --shadow-float: 0 16px 40px -8px rgba(12, 10, 9, 0.18);
+  --shadow-raise: 0 1px 2px rgba(12, 10, 9, 0.06);
 }
 
 /* iOS Safari zooms the page when a field under 16px is focused, and does not zoom back.
@@ -30,17 +121,154 @@ textarea {
   font-size: 16px;
 }
 
+/* One visible focus ring for everything a keyboard can reach. In the base layer, so a
+   component that draws its own ring (fields use focus-within:ring) can still opt out. */
+@layer base {
+  :where(a, button, summary, [role='switch'], [tabindex]:not([tabindex='-1'])):focus-visible {
+    outline: 2px solid var(--color-saffron);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html {
-  background: var(--color-paper);
+  color-scheme: light;
+  /* Anchors and scrollIntoView land below the sticky header (56px from md up). */
+  scroll-padding-top: 5rem;
+  background: var(--color-card);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Hindi typography. Devanagari hangs vowel signs above the headline and below the
+   baseline, so it needs taller lines than Latin; letter-spacing breaks the joined
+   headline; uppercase only shouts the Latin words in a code-mixed line; 10-12px
+   Devanagari is unreadable; and 800+ weights are faux-bolded on most devices.
+   Unlayered, so these win over the Tailwind utilities they correct. Anything marked
+   lang="en" (the wordmark, the EN toggle) keeps its Latin styling. */
+:lang(hi) body,
+:lang(hi) :is(p, li, dd, td) {
+  line-height: 1.7;
+}
+:lang(hi) .leading-relaxed {
+  line-height: 1.75;
+}
+:lang(hi) .leading-snug {
+  line-height: 1.5;
+}
+:lang(hi) :is(h1, h2, h3, .leading-tight) {
+  line-height: 1.35;
+}
+:lang(hi) [class*='tracking-'] {
+  letter-spacing: 0;
+}
+:lang(hi) .uppercase {
+  text-transform: none;
+}
+:lang(hi) :is(.text-\[10px\], .text-\[11px\], .text-\[12px\], .text-xs) {
+  font-size: 13px;
+}
+:lang(hi) .text-\[13px\] {
+  font-size: 14px;
+}
+:lang(hi) :is(.font-extrabold, .font-black) {
+  font-weight: 700;
+}
+
+/* Icons (VIS-17): Lucide outlines (ISC licence) drawn as CSS masks in the current text
+   colour. A mask, not inline <svg>, so an icon is one empty <span> in the markup; the
+   data: URL is an image source, which the CSP allows (img-src 'self' data:). */
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+@media (forced-colors: active) {
+  .icon {
+    background-color: CanvasText;
+  }
+}
+.icon-chevron-right {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+}
+.icon-chevron-down {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+.icon-search {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+}
+.icon-check {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+.icon-alert {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+}
+.icon-info {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+}
+.icon-arrow-down {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='m19 12-7 7-7-7'/%3E%3C/svg%3E");
+}
+.icon-shield-check {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+}
+.icon-sparkle {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z'/%3E%3C/svg%3E");
+}
+.icon-more {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='19' cy='12' r='1'/%3E%3Ccircle cx='5' cy='12' r='1'/%3E%3C/svg%3E");
+}
+.icon-close {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
 }
 
 /* Numeric alignment for money figures */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
+
+/* Motion (VIS-25): a result settles in, a changed figure blinks once. Never a count-up:
+   numbers must read as exact. Only for people who have not asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes tick {
+    from {
+      opacity: 0.35;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .rise {
+    animation: rise 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .tick {
+    animation: tick 0.15s ease-out;
+  }
+}
+
 
 @media print {
   .no-print {

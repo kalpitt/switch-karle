@@ -2,7 +2,9 @@ import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
-import { Card, Details, Disclaimer, ExampleNote, ShareRow } from './ui'
+import { useId } from 'react'
+import { Card, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
+import { ptSourceId, TOOL_SOURCES } from '../data/sources'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -14,34 +16,18 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
 
   return (
     <div className="-order-1 space-y-4 lg:order-none">
-      <Card>
-        {isExample && (
-          <ExampleNote chip={t('results.exampleChip')} note={t('results.exampleNote')} className="mb-3" />
-        )}
-        <p className="text-[13px] font-semibold text-ink-soft">
-          {t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
-        </p>
-        <p className="tnum mt-1 text-4xl font-extrabold tracking-tight">
-          {formatINR(b.inHandMonthly)}
-          <span className="text-lg font-semibold text-ink-faint">{t('unit.perMonth')}</span>
-        </p>
-        <p className="mt-1 text-[13px] text-ink-soft">
-          {t('results.headlineSub', { amount: formatINR(ctcMonthlyIllusion) })}
-        </p>
+      <ResultHero
+        sample={isExample}
+        sampleChip={t('results.exampleChip')}
+        sampleNote={t('results.exampleNote')}
+        label={t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })}
+        value={formatINR(b.inHandMonthly)}
+        unit={t('unit.perMonth')}
+        sub={t('results.headlineSub', { amount: formatINR(ctcMonthlyIllusion) })}
+      >
+        <CtcBar b={b} pct={pct} />
 
-        <div className="mt-4">
-          {/* SVG width attribute, not an inline style: the CSP has no 'unsafe-inline' for
-              styles, so a server-rendered style="width:…" is dropped and the bar draws full. */}
-          <svg className="block h-3 w-full overflow-hidden rounded-full bg-line" aria-hidden="true">
-            <rect className="fill-leaf" height="100%" rx="6" width={`${Math.max(0, Math.min(100, pct))}%`} />
-          </svg>
-          <p className="mt-1.5 text-xs font-medium text-ink-soft">
-            <span className="font-bold text-leaf">{pct}%</span>{' '}
-            {t('results.reaches', { pct, amount: formatCompact(b.inHandMonthly * 12) })}
-          </p>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 pt-1">
           <RegimePill
             name={t('regime.new')}
             recommended={b.recommendedRegime === 'new'}
@@ -55,21 +41,20 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
+        <Receipt ids={[...TOOL_SOURCES.decoder, ptSourceId(b.input.state)]} />
 
-        <div className="mt-4 space-y-3">
-          <ShareRow
-            copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
-            copyLabel={t('ui.copy')}
-            copiedLabel={t('ui.copied')}
-            printLabel={t('ui.print')}
-          />
-          <p className="text-xs leading-relaxed text-ink-faint">{t('decoder.fixedPayNote')}</p>
-          <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        </div>
-      </Card>
+        <ShareRow
+          copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
+          copyLabel={t('ui.copyResult')}
+          copiedLabel={t('ui.copied')}
+          printLabel={t('ui.print')}
+        />
+        <p className="max-w-[65ch] text-[13px] leading-relaxed text-ink-faint">{t('decoder.fixedPayNote')}</p>
+        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+      </ResultHero>
 
       <Card>
-        <h3 className="text-sm font-bold">{t('results.whereGoes')}</h3>
+        <h3 className="text-[15px] font-semibold">{t('results.whereGoes')}</h3>
         <div className="mt-3 space-y-0.5">
           <Row label={t('results.row.ctcQuoted')} value={b.input.ctcAnnual} strong />
           {b.input.variableAnnual > 0 && <Row label={t('results.row.variable')} value={-b.input.variableAnnual} />}
@@ -96,25 +81,25 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
               value={-b.professionalTaxAnnual}
             />
           )}
-          <Row label={t('results.row.inHand')} value={b.inHandMonthly * 12} strong divider accent />
+          <Row label={t('results.row.inHand')} value={b.inHandAnnual} strong divider accent />
         </div>
       </Card>
 
       {flags.length > 0 && (
         <Card>
-          <h3 className="text-sm font-bold">
+          <h3 className="text-[15px] font-semibold">
             {t('results.offerCheck')}{' '}
             {realFlagCount > 0 ? (
-              <span className="tnum ml-1 rounded-full bg-alarm-soft px-2 py-0.5 text-xs font-bold text-alarm">
+              <span className="tnum ml-1 rounded-full bg-alarm-soft px-2 py-0.5 text-[12px] font-semibold text-alarm">
                 {t('results.flagsBadge', { n: realFlagCount, plural: realFlagCount === 1 ? '' : 's' })}
               </span>
             ) : (
-              <span className="ml-1 rounded-full bg-leaf-soft px-2 py-0.5 text-xs font-bold text-leaf">
+              <span className="ml-1 rounded-full bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf">
                 {t('results.noAlarming')}
               </span>
             )}
           </h3>
-          <div className="mt-3 space-y-3">
+          <div className="mt-3 divide-y divide-line">
             {flags.map((f) => (
               <FlagCard key={f.id} f={f} b={b} />
             ))}
@@ -123,7 +108,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
       )}
 
       <Details summary={t('results.howComputed')}>
-        <ul className="list-disc space-y-1.5 pl-4 text-[13px] leading-relaxed text-ink-soft">
+        <ul className="list-disc space-y-1.5 pl-4 text-[14px] leading-relaxed text-ink-soft">
           <li>{t('results.howComputed.bullet1')}</li>
           <li>{t('results.howComputed.bullet2')}</li>
           <li>{t('results.howComputed.bullet3')}</li>
@@ -153,18 +138,19 @@ function RegimePill({
   const t = useT()
   return (
     <div
-      className={`rounded-xl border p-3 ${recommended ? 'border-leaf bg-leaf-soft' : 'border-line bg-paper'}`}
+      className={`rounded-xl border p-3 ${recommended ? 'border-leaf bg-leaf-soft' : 'border-line bg-card'}`}
     >
-      <p className="flex items-center gap-1.5 text-xs font-bold">
+      <p className="flex flex-wrap items-center gap-1.5 text-[13px] font-semibold">
         {name}
         {recommended && (
-          <span className="rounded-full bg-leaf px-1.5 py-px text-[10px] font-bold text-white">
-            {t('results.cheaper')}
-          </span>
+          <span className="rounded-full bg-leaf px-2 py-px text-[12px] font-semibold text-white">{t('results.cheaper')}</span>
         )}
       </p>
-      <p className="tnum mt-1 text-sm font-bold">{formatINR(inHand)}/mo</p>
-      <p className="tnum text-xs text-ink-soft">{t('results.taxPerYear', { amount: formatCompact(tax) })}</p>
+      <p className="tnum mt-1 text-[16px] font-semibold">
+        {formatINR(inHand)}
+        <span className="text-[13px] font-medium text-ink-soft">{t('unit.perMonth')}</span>
+      </p>
+      <p className="tnum text-[13px] text-ink-soft">{t('results.taxPerYear', { amount: formatCompact(tax) })}</p>
     </div>
   )
 }
@@ -186,9 +172,9 @@ function Row({
     <div
       className={`flex items-baseline justify-between gap-3 py-1.5 ${divider ? 'border-t border-line' : ''}`}
     >
-      <span className={`text-[13px] ${strong ? 'font-bold' : 'text-ink-soft'}`}>{label}</span>
+      <span className={`text-[14px] ${strong ? 'font-semibold' : 'text-ink-soft'}`}>{label}</span>
       <span
-        className={`tnum text-[13px] ${accent ? 'text-base font-extrabold text-leaf' : strong ? 'font-bold' : value < 0 ? 'text-alarm' : ''}`}
+        className={`tnum text-[14px] ${accent ? 'text-[17px] font-bold text-leaf' : strong ? 'font-semibold' : value < 0 ? 'text-alarm' : ''}`}
       >
         {value < 0 ? `− ${formatINR(-value)}` : formatINR(value)}
       </span>
@@ -233,10 +219,10 @@ function FlagCard({ f, b }: { f: RedFlag; b: SalaryBreakdown }) {
   const { lang } = useLang()
   const tone =
     f.severity === 'red'
-      ? { bg: 'bg-alarm-soft', border: 'border-alarm/30', chip: 'bg-alarm text-white', word: t('flagChip.red') }
+      ? { chip: 'bg-alarm-soft text-alarm', word: t('flagChip.red') }
       : f.severity === 'amber'
-        ? { bg: 'bg-amberflag-soft', border: 'border-amberflag/30', chip: 'bg-amberflag text-white', word: t('flagChip.amber') }
-        : { bg: 'bg-paper', border: 'border-line', chip: 'bg-line text-ink-soft', word: t('flagChip.info') }
+        ? { chip: 'bg-amberflag-soft text-amberflag', word: t('flagChip.amber') }
+        : { chip: 'bg-paper text-ink-soft', word: t('flagChip.info') }
 
   const vars = flagVars(f, b)
   const title = translateOrFallback(lang, `flag.${f.id}.title`, f.title, vars)
@@ -244,18 +230,106 @@ function FlagCard({ f, b }: { f: RedFlag; b: SalaryBreakdown }) {
   const tip = translateOrFallback(lang, `flag.${f.id}.tip`, f.negotiationTip, vars)
 
   return (
-    <div className={`rounded-xl border ${tone.border} ${tone.bg} p-3.5`}>
-      <p className="flex flex-wrap items-center gap-2 text-[13px] font-bold">
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${tone.chip}`}>
-          {tone.word}
-        </span>
+    <div className="py-4 first:pt-1 last:pb-0">
+      <p className="flex flex-wrap items-center gap-2 text-[15px] font-semibold leading-snug">
+        <span className={`rounded-md px-2 py-0.5 text-[12px] font-semibold ${tone.chip}`}>{tone.word}</span>
         {title}
       </p>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{detail}</p>
-      <p className="mt-2 rounded-lg bg-white/70 p-2.5 text-[13px] leading-relaxed">
-        <span className="font-bold text-saffron">{t('results.sayThis')} </span>
+      <p className="mt-1.5 text-[14px] leading-relaxed text-ink-soft">{detail}</p>
+      <p className="mt-2.5 rounded-lg bg-paper p-3 text-[14px] leading-relaxed">
+        <span className="font-semibold text-saffron-strong">{t('results.sayThis')} </span>
         {tip}
       </p>
     </div>
   )
 }
+
+/**
+ * Where the CTC goes, as one bar (VIS-24): every rupee of the CTC in order, what
+ * reaches the bank first in ink, then what tax, PF and the rest take. The kept part
+ * is no longer painted "good" green against an empty track: the losses are drawn.
+ * Widths are SVG attributes (the CSP drops inline styles). The legend says it in words.
+ */
+function CtcBar({ b, pct }: { b: SalaryBreakdown; pct: number }) {
+  const t = useT()
+  const hatch = useId().replace(/:/g, '')
+  const ctc = Math.max(1, b.input.ctcAnnual)
+  const segs = [
+    { id: 'in-hand', label: t('results.row.inHand'), value: b.inHandAnnual, cls: 'fill-ink', swatch: 'bg-ink' },
+    {
+      id: 'tax',
+      label: t('results.row.incomeTax', { regime: t(`regime.${b.recommendedRegime}`) }),
+      value: taxOf(b),
+      cls: 'fill-alarm',
+      swatch: 'bg-alarm',
+    },
+    { id: 'pf', label: t('results.row.employeePf'), value: b.employeePfAnnual, cls: 'fill-ink-faint', swatch: 'bg-ink-faint' },
+    {
+      id: 'employer-pf',
+      label: t('results.row.employerPf'),
+      value: b.input.employerPfInCtc ? b.employerPfAnnual : 0,
+      cls: 'fill-line-strong',
+      swatch: 'bg-line-strong',
+    },
+    { id: 'variable', label: t('results.row.variable'), value: b.input.variableAnnual, cls: '', swatch: 'bg-amberflag' },
+    {
+      id: 'other',
+      label: [
+        b.gratuityAnnual > 0 ? t('results.row.gratuity') : '',
+        (b.input.esop?.annualValue ?? 0) > 0 ? t('results.row.esop') : '',
+        b.professionalTaxAnnual > 0
+          ? t(b.input.state === 'PB' ? 'results.row.professionalTax.pb' : 'results.row.professionalTax')
+          : '',
+      ]
+        .filter(Boolean)
+        .join(' · '),
+      value: b.gratuityAnnual + (b.input.esop?.annualValue ?? 0) + b.professionalTaxAnnual,
+      cls: 'fill-paper',
+      swatch: 'bg-paper border border-line-strong',
+    },
+  ].filter((s) => s.value > 0)
+  let x = 0
+  return (
+    <div>
+      <svg className="block h-3 w-full overflow-hidden rounded-full bg-paper" aria-hidden="true">
+        <defs>
+          <pattern id={hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="6" height="6" className="fill-amberflag-soft" />
+            <rect width="3" height="6" className="fill-amberflag" />
+          </pattern>
+        </defs>
+        {segs.map((s) => {
+          const w = (s.value / ctc) * 100
+          const r = (
+            <rect
+              key={s.id}
+              data-seg={s.id}
+              className={`${s.cls} stroke-card`}
+              fill={s.id === 'variable' ? `url(#${hatch})` : undefined}
+              strokeWidth="1"
+              height="100%"
+              x={`${x}%`}
+              width={`${s.id === 'in-hand' ? Math.max(0, Math.min(100, pct)) : Math.max(0, w)}%`}
+            />
+          )
+          x += s.id === 'in-hand' ? pct : w
+          return r
+        })}
+      </svg>
+      <p className="mt-2 text-[13px] text-ink-soft">
+        <span className="font-semibold text-ink">{pct}%</span>{' '}
+        {t('results.reaches', { pct, amount: formatCompact(b.inHandAnnual) })}
+      </p>
+      <ul aria-hidden="true" className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-soft">
+        {segs.map((s) => (
+          <li key={s.id} className="inline-flex items-center gap-1.5">
+            <span className={`inline-block h-2.5 w-2.5 rounded-sm ${s.swatch}`} />
+            <span>{s.label}</span>
+            <span className="tnum text-ink-faint">{formatCompact(s.value)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+

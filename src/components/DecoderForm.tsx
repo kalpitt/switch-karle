@@ -3,6 +3,7 @@ import { STATE_NAMES } from '../engine/professionalTax'
 import { cityChoicesFor, cityFromLegacyMetro, isHraMetro, normaliseCity, ptVariesByTown, type CityChoice } from '../engine/city'
 import { useT } from '../i18n'
 import { Card, Details, Label, NumberField, Select, Toggle } from './ui'
+import { PrivacyLine } from './PrivacyLine'
 
 const L = 100_000
 
@@ -23,7 +24,8 @@ export function DecoderForm({
 
   return (
     <Card className="space-y-4">
-      <h2 className="text-base font-bold">{t('decoder.title')}</h2>
+      <h2 className="text-[18px] font-semibold leading-snug">{t('decoder.title')}</h2>
+      <PrivacyLine />
 
       <div className="grid grid-cols-2 gap-3">
         <NumberField
@@ -49,6 +51,7 @@ export function DecoderForm({
           onChange={(v) => set({ basicPercent: Math.min(100, v) })}
         />
         <NumberField
+          integer
           label={t('decoder.field.notice.label')}
           suffix={t('unit.days')}
           value={value.noticePeriodDays}
@@ -59,7 +62,7 @@ export function DecoderForm({
       <label className="block">
         <Label>{t('decoder.field.state.label')}</Label>
         <select
-          className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
+          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
           value={value.state}
           onChange={(e) => {
             const state = e.target.value as StateCode
@@ -85,7 +88,7 @@ export function DecoderForm({
         }))}
       />
       {ptVariesByTown(value.state, city) && (
-        <p className="text-[13px] text-ink-soft">{t('city.ptTown', { state: t(`state.${value.state}`) })}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('city.ptTown', { state: t(`state.${value.state}`) })}</p>
       )}
 
       <div className="space-y-2">
@@ -127,6 +130,7 @@ export function DecoderForm({
         {value.esop && (
           <>
             <NumberField
+              integer
               label={t('decoder.field.esopCliff.label')}
               suffix={t('unit.months')}
               value={value.esop.cliffMonths}
@@ -153,6 +157,7 @@ export function DecoderForm({
         />
         {value.joiningBonus && (
           <NumberField
+            integer
             label={t('decoder.field.clawback.label')}
             suffix={t('unit.months')}
             value={value.joiningBonus.clawbackMonths}
@@ -168,6 +173,7 @@ export function DecoderForm({
         />
         {value.bond && (
           <NumberField
+            integer
             label={t('decoder.field.bondMonths.label')}
             suffix={t('unit.months')}
             value={value.bond.months}
@@ -209,9 +215,9 @@ export function DecoderForm({
           max={60}
           value={value.hraPercentOfBasic}
           onChange={(e) => set({ hraPercentOfBasic: Number(e.target.value) })}
-          className="mt-2 w-full accent-saffron"
+          className="mt-2 w-full accent-ink"
         />
-        <span className="tnum text-xs font-medium text-ink-faint">
+        <span className="tnum text-xs font-medium text-ink-soft">
           {t('decoder.field.hra.value', { percent: value.hraPercentOfBasic })}
         </span>
       </label>

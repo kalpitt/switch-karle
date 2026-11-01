@@ -6,16 +6,19 @@ import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  CompareBars,
   DeltaTable,
   Disclaimer,
-  ExampleNote,
   InheritNote,
   MoneyField,
+  Receipt,
+  ResultHero,
   Select,
   ShareRow,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -83,15 +86,21 @@ function CompareBody() {
     setSlots((prev) => prev.map((s, idx) => (idx === i ? { ...s, offer } : s)))
   }
 
-  const verdict = isExample
-    ? null
-    : result.verdictIndex === null
+  const verdict =
+    result.verdictIndex === null
       ? t('offer-comparison.verdict.tie')
       : t('offer-comparison.verdict.win', {
           label: slots[result.verdictIndex]!.label,
           amount: formatINR(result.forVerdict[result.verdictIndex]!.inHandMonthly),
         })
 
+  // The winner's lead over the next-best offer, the figure the verdict turns on.
+  const winner = result.verdictIndex
+  const lead =
+    winner === null
+      ? 0
+      : result.forVerdict[winner]!.inHandMonthly -
+        Math.max(...result.forVerdict.filter((_, i) => i !== winner).map((b) => b.inHandMonthly))
   const copyText = isExample
     ? ''
     : [
@@ -129,7 +138,8 @@ function CompareBody() {
 
   return (
     <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <div className="space-y-4 lg:sticky lg:top-6">
+      <div className="space-y-4 lg:sticky lg:top-20">
+        <PrivacyLine />
         {slots.map((s, i) => (
           <MiniOffer
             key={s.label}
@@ -141,7 +151,7 @@ function CompareBody() {
         {slots.length === 2 ? (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() =>
               setSlots((prev) => [
                 ...prev,
@@ -154,7 +164,7 @@ function CompareBody() {
         ) : (
           <button
             type="button"
-            className="w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
             onClick={() => setSlots((prev) => prev.slice(0, 2))}
           >
             {t('offer-comparison.removeThird')}
@@ -164,19 +174,36 @@ function CompareBody() {
       </div>
 
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('offer-comparison.exampleChip')} note={t('offer-comparison.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
+        <ResultHero
+          sample={isExample}
+          sampleChip={t('offer-comparison.exampleChip')}
+          sampleNote={t('offer-comparison.exampleNote')}
+          label={
+            winner === null ? t('offer-comparison.delta') : t('hero.offer-comparison', { label: slots[winner]!.label })
+          }
+          value={winner === null ? undefined : `+${formatINR(lead)}`}
+          unit={t('unit.perMonth')}
+          verdict={verdict}
+          tone={winner === null ? 'amber' : 'leaf'}
+        >
+          <CompareBars
+            rows={slots.map((s, i) => ({
+              label: t('offer-comparison.offer', { label: s.label }),
+              display: `${formatINR(result.forVerdict[i]!.inHandMonthly)}${t('unit.perMonth')}`,
+              value: result.forVerdict[i]!.inHandMonthly,
+              strong: i === winner,
+            }))}
+          />
+          <Receipt ids={[...TOOL_SOURCES['offer-comparison'], ...slots.map((s) => ptSourceId(s.offer.state))]} />
+        </ResultHero>
         {slots.length === 2 ? (
           <Card>
-            <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>
-            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} />
+            <h3 className="mb-3 text-[15px] font-semibold">{t('offer-comparison.delta')}</h3>
+            <DeltaTable aLabel={slots[0]!.label} bLabel={slots[1]!.label} rows={rows} rowHeader={t('offer-comparison.delta')} />
           </Card>
         ) : (
           <Card className="space-y-2">
-            <h3 className="text-sm font-bold">{t('offer-comparison.delta')}</h3>
+            <h3 className="text-[15px] font-semibold">{t('offer-comparison.delta')}</h3>
             {result.forVerdict.map((b, i) => (
               <p key={slots[i]!.label} className="tnum text-[13px]">
                 <span className="font-bold">{slots[i]!.label}:</span> {formatINR(b.inHandMonthly)}/mo ·{' '}
@@ -186,16 +213,16 @@ function CompareBody() {
           </Card>
         )}
         {result.flags.esopZeroed && (
-          <p className="text-[13px] text-ink-soft">{t('offer-comparison.esopPolicy')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('offer-comparison.esopPolicy')}</p>
         )}
         {result.flags.asymmetricGratuity && (
-          <p className="text-[13px] text-amberflag">{t('offer-comparison.flag.gratuity')}</p>
+          <p className="text-[14px] leading-relaxed text-amberflag">{t('offer-comparison.flag.gratuity')}</p>
         )}
         {result.flags.asymmetricEmployerPf && (
-          <p className="text-[13px] text-amberflag">{t('offer-comparison.flag.pf')}</p>
+          <p className="text-[14px] leading-relaxed text-amberflag">{t('offer-comparison.flag.pf')}</p>
         )}
         {result.flags.asymmetricPfCeiling && (
-          <p className="text-[13px] text-amberflag">{t('offer-comparison.flag.ceiling')}</p>
+          <p className="text-[14px] leading-relaxed text-amberflag">{t('offer-comparison.flag.ceiling')}</p>
         )}
         {!isExample && (
           <ShareRow
@@ -224,16 +251,16 @@ function MiniOffer({
   const set = (patch: Partial<OfferInput>) => onChange({ ...offer, ...patch })
   return (
     <Card className="space-y-3">
-      <h2 className="text-base font-bold">{title}</h2>
+      <h2 className="text-[18px] font-semibold leading-snug">{title}</h2>
       <MoneyField
         label={t('decoder.field.ctc.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
       <MoneyField
         label={t('decoder.field.variable.label')}
-        hint={t('ui.money.hint')}
+        placeholder={t('ui.money.placeholder')}
         value={offer.variableAnnual}
         onChange={(v) => set({ variableAnnual: v })}
       />

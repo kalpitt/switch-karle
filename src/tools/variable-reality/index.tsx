@@ -5,14 +5,17 @@ import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  CompareBars,
   Disclaimer,
-  ExampleNote,
   InheritNote,
   MoneyField,
   NumberField,
+  Receipt,
+  ResultHero,
   ShareRow,
-  VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -89,16 +92,18 @@ function Body() {
 
   return (
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('variable-reality.formTitle')}</h2>
-        <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('variable-reality.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <MoneyField
           label={t('decoder.field.variable.label')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholder')}
           value={draft.variable}
           onChange={(v) => set({ variable: v })}
         />
         <NumberField
+          integer
           label={t('variable-reality.months')}
           hint={t('variable-reality.monthsHint')}
           suffix={t('unit.months')}
@@ -110,21 +115,26 @@ function Body() {
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={atRiskPct > 15 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
+        <ResultHero
+          sample={isExample}
+          label={t('hero.variable-reality')}
+          value={formatINR(result.inHandMonthlyFixed)}
+          unit={t('unit.perMonth')}
+          verdict={verdict}
+          tone={atRiskPct > 15 ? 'amber' : 'leaf'}
+        >
+          <Receipt ids={TOOL_SOURCES['variable-reality']} />
+        </ResultHero>
         <Card>
-          <h3 className="mb-3 text-sm font-bold">{t('variable-reality.table')}</h3>
-          <div className="space-y-2">
-            {result.rows.map((row) => (
-              <p key={row.fraction} className="tnum flex justify-between text-[13px]">
-                <span>{t('variable-reality.row', { pct: Math.round(row.fraction * 100) })}</span>
-                <span className="font-bold">{formatINR(row.inHandMonthlyIfSpread)}/mo</span>
-              </p>
-            ))}
-          </div>
+          <h3 className="mb-3 text-[15px] font-semibold">{t('variable-reality.table')}</h3>
+          <CompareBars
+            rows={result.rows.map((row, i) => ({
+              label: t('variable-reality.row', { pct: Math.round(row.fraction * 100) }),
+              display: `${formatINR(row.inHandMonthlyIfSpread)}${t('unit.perMonth')}`,
+              value: row.inHandMonthlyIfSpread,
+              strong: i === 0,
+            }))}
+          />
           <p className="mt-3 text-[13px] text-ink-soft">
             {t('variable-reality.split', {
               fixed: formatLPA(result.fixedCtc),
@@ -133,21 +143,21 @@ function Body() {
           </p>
         </Card>
         <Card className="space-y-2">
-          <p className="text-[13px] leading-relaxed text-ink-soft">
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('variable-reality.withheld', { amount: formatINR(result.withheldVsSpread.lumpNet) })}
           </p>
-          <p className="text-[13px] leading-relaxed text-ink-soft">
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('variable-reality.spread', { amount: formatINR(result.withheldVsSpread.spreadMonthly) })}
           </p>
           {result.firstYearProrate && (
-            <p className="text-[13px] text-amberflag">{t('variable-reality.prorate', { months: result.monthsInFy })}</p>
+            <p className="text-[14px] leading-relaxed text-amberflag">{t('variable-reality.prorate', { months: result.monthsInFy })}</p>
           )}
-          <p className="text-[13px] text-ink-soft">{t('variable-reality.fullYearTax')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('variable-reality.fullYearTax')}</p>
         </Card>
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

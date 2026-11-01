@@ -2,16 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import {
-  Card,
-  Disclaimer,
-  ExampleNote,
-  InheritNote,
-  MoneyField,
-  ShareRow,
-  Toggle,
-  VerdictBanner,
-} from '../../components/ui'
+import { Card, Disclaimer, InheritNote, MoneyField, ResultHero, ShareRow, Toggle } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -88,29 +80,33 @@ function Body() {
 
   return (
     <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('counter-offer.formTitle')}</h2>
-        <MoneyField label={t('counter-offer.current')} hint={t('ui.money.hint')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
-        <MoneyField label={t('counter-offer.counter')} hint={t('ui.money.hint')} value={draft.counterCtc} onChange={(v) => set({ counterCtc: v })} />
-        <MoneyField label={t('counter-offer.outside')} hint={t('ui.money.hint')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('counter-offer.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('counter-offer.current')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <MoneyField label={t('counter-offer.counter')} placeholder={t('ui.money.placeholder')} value={draft.counterCtc} onChange={(v) => set({ counterCtc: v })} />
+        <MoneyField label={t('counter-offer.outside')} placeholder={t('ui.money.placeholder')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />
         <Toggle label={t('counter-offer.promo')} checked={draft.promisedPromo} onChange={(v) => set({ promisedPromo: v })} />
         <Toggle label={t('counter-offer.team')} checked={draft.teamStay} onChange={(v) => set({ teamStay: v })} />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={paperGap > 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
-        <p className="text-[13px] leading-relaxed text-ink-soft">{t('counter-offer.honest')}</p>
+        <ResultHero
+          sample={isExample}
+          label={t('hero.counter-offer')}
+          value={paperGap > 0 ? formatINR(bankGap) : undefined}
+          unit={t('unit.perMonth')}
+          verdict={verdict}
+          tone={paperGap > 0 ? 'amber' : 'leaf'}
+        />
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('counter-offer.honest')}</p>
         {(draft.promisedPromo || draft.teamStay) && (
-          <p className="text-[13px] text-ink-soft">{t('counter-offer.nonRupee')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('counter-offer.nonRupee')}</p>
         )}
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

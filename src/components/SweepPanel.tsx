@@ -8,7 +8,7 @@ import {
   type RejectedRow,
 } from '../engine/ingest'
 import { SWEEP_PROMPT } from '../prompts/sweep'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
 import { Card, TextArea } from './ui'
 import { todayIso } from '../lib/today'
 import { extractJsonObject } from '../lib/extractJsonObject'
@@ -32,6 +32,7 @@ export function SweepPanel({
   onCancel: () => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const [copied, setCopied] = useState(false)
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -95,7 +96,7 @@ export function SweepPanel({
             <button
               type="button"
               onClick={handleCopy}
-              className="rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-field hover:text-saffron-strong"
             >
               {copied ? t('sweep.copied') : t('sweep.copy')}
             </button>
@@ -115,12 +116,13 @@ export function SweepPanel({
           <button
             type="button"
             onClick={handleRead}
-            disabled={text.trim() === ''}
-            className="rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] disabled:opacity-50"
+            aria-disabled={text.trim() === ''}
+            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2 text-[13px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('sweep.read')}
           </button>
         </div>
+        {text.trim() === '' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('sweep.readBlocked')}</p>}
       </div>
 
       {error && (
@@ -160,7 +162,7 @@ export function SweepPanel({
                             }
                             setSelected(next)
                           }}
-                          className="h-4 w-4 rounded border-line text-saffron focus:ring-saffron"
+                          className="h-4 w-4 rounded border-line text-saffron-strong focus:ring-saffron"
                         />
                         <div className="min-w-0 text-[13px]">
                           <span className="font-semibold text-ink">{candidate.company}</span>
@@ -169,13 +171,13 @@ export function SweepPanel({
                           )}
                           {candidate.appliedOn && (
                             <span className="ml-1.5 text-xs text-ink-faint">
-                              ({formatDate(candidate.appliedOn)})
+                              ({formatDate(candidate.appliedOn, lang)})
                             </span>
                           )}
                         </div>
                       </div>
                       {isClosed && (
-                        <span className="shrink-0 rounded-full border border-alarm/20 bg-alarm-soft px-2 py-0.5 text-[11px] font-medium text-alarm">
+                        <span className="shrink-0 rounded-full border border-alarm/20 bg-alarm-soft px-2 py-0.5 text-[12px] font-medium text-alarm">
                           {t('sweep.looksClosed')}
                         </span>
                       )}
@@ -200,21 +202,24 @@ export function SweepPanel({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
             >
               {t('tracker.restore.cancel')}
             </button>
             {result.accepted.length > 0 && (
               <button
                 type="button"
-                disabled={selected.size === 0}
+                aria-disabled={selected.size === 0}
                 onClick={handleAdd}
-                className="rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] disabled:opacity-50"
+                className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2 text-[13px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
               >
                 {t('sweep.add')}
               </button>
             )}
           </div>
+          {result.accepted.length > 0 && selected.size === 0 && (
+            <p className="text-right text-[13px] text-ink-soft">{t('sweep.addBlocked')}</p>
+          )}
         </div>
       )}
 
@@ -223,7 +228,7 @@ export function SweepPanel({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+            className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
           >
             {t('tracker.restore.cancel')}
           </button>

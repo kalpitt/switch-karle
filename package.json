@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -13,11 +16,13 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:csp": "node scripts/check-csp.mjs",
     "new-tool": "node scripts/new-tool.mjs",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/noto-sans-devanagari": "^5.2.8",
     "astro": "^5.18.2",
     "html-to-image": "^1.11.13",
     "react": "^19.2.7",
@@ -26,6 +31,7 @@
   "devDependencies": {
     "@emnapi/core": "^1.11.3",
     "@emnapi/runtime": "^1.11.3",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",

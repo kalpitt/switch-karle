@@ -8,13 +8,16 @@ import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
   Disclaimer,
-  ExampleNote,
   InheritNote,
+  Ledger,
   MoneyField,
+  Receipt,
+  ResultHero,
   Select,
   ShareRow,
-  VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -171,9 +174,10 @@ function Body() {
 
   return (
     <div data-tool="relocation" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('relocation.formTitle')}</h2>
-        <MoneyField label={t('decoder.field.ctc.label')} hint={t('ui.money.hint')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('relocation.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <Select
           label={t('relocation.fromState')}
           value={draft.fromState}
@@ -194,30 +198,40 @@ function Body() {
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={delta < 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
-        )}
+        <ResultHero
+          sample={isExample}
+          label={t('hero.relocation')}
+          value={`${delta > 0 ? '+' : delta < 0 ? '−' : ''}${formatINR(Math.abs(delta))}`}
+          unit={t('unit.perMonth')}
+          verdict={verdict}
+          tone={delta < 0 ? 'amber' : 'leaf'}
+        >
+          <Receipt ids={[...TOOL_SOURCES['relocation'], ptSourceId(draft.fromState), ptSourceId(draft.toState)]} />
+        </ResultHero>
         <Card className="space-y-2">
-          <p className="tnum text-[13px]">
-            {t('relocation.row.inHand')}: {formatINR(result.from.inHandMonthly)} → {formatINR(result.to.inHandMonthly)}/mo
-          </p>
-          <p className="tnum text-[13px]">
-            {t('relocation.row.pt')}: {formatINR(result.from.professionalTaxAnnual)} → {formatINR(result.to.professionalTaxAnnual)}/{t('relocation.year')}
-          </p>
-          <p className="tnum text-[13px]">
-            {t('relocation.row.hra')}: {formatINR(result.hraExemptionFrom)} → {formatINR(result.hraExemptionTo)}
-          </p>
-          {hraIsDisplayOnly && <p className="text-[13px] text-ink-soft">{t('relocation.hraNewRegime')}</p>}
-          <p className="text-[13px] text-ink-soft">{t('relocation.ptApprox')}</p>
-          <p className="text-[13px] text-ink-soft">{t('relocation.slabsNil')}</p>
-          <p className="text-[13px] text-ink-soft">{t('relocation.noCol')}</p>
+          <Ledger
+            rows={[
+              {
+                label: t('relocation.row.inHand'),
+                value: `${formatINR(result.from.inHandMonthly)} → ${formatINR(result.to.inHandMonthly)}${t('unit.perMonth')}`,
+                strong: true,
+              },
+              {
+                label: t('relocation.row.pt'),
+                value: `${formatINR(result.from.professionalTaxAnnual)} → ${formatINR(result.to.professionalTaxAnnual)}/${t('relocation.year')}`,
+              },
+              { label: t('relocation.row.hra'), value: `${formatINR(result.hraExemptionFrom)} → ${formatINR(result.hraExemptionTo)}` },
+            ]}
+          />
+          {hraIsDisplayOnly && <p className="text-[14px] leading-relaxed text-ink-soft">{t('relocation.hraNewRegime')}</p>}
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('relocation.ptApprox')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('relocation.slabsNil')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('relocation.noCol')}</p>
         </Card>
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

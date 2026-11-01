@@ -10,14 +10,16 @@ import {
   Card,
   DateField,
   Disclaimer,
-  ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
+  ResultHero,
   Select,
   ShareRow,
   Toggle,
-  VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -122,11 +124,17 @@ function Body() {
   const isExample = JSON.stringify(draft) === JSON.stringify(draftFrom(DEFAULT_OFFER))
   const tone = result.effectiveValueAtPlanned < 0 ? 'alarm' : result.repaymentIfLeaveAtPlanned > 0 ? 'amber' : 'leaf'
   const verdict = draft.netWording
-    ? t('bonus-clawback.verdict.net', {
-        net: formatINR(result.netReceived),
-        repay: formatINR(result.repaymentIfLeaveAtPlanned),
-        keep: formatINR(result.effectiveValueAtPlanned),
-      })
+    ? result.effectiveValueAtPlanned < 0
+      ? t('bonus-clawback.verdict.netLoss', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          loss: formatINR(-result.effectiveValueAtPlanned),
+        })
+      : t('bonus-clawback.verdict.net', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          keep: formatINR(result.effectiveValueAtPlanned),
+        })
     : t('bonus-clawback.verdict.gross', {
         gross: formatINR(draft.amount),
         repay: formatINR(result.repaymentIfLeaveAtPlanned),
@@ -150,10 +158,12 @@ function Body() {
 
   return (
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('bonus-clawback.formTitle')}</h2>
-        <MoneyField label={t('bonus-clawback.amount')} hint={t('ui.money.hint')} value={draft.amount} onChange={(v) => set({ amount: v })} />
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('bonus-clawback.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('bonus-clawback.amount')} placeholder={t('ui.money.placeholder')} value={draft.amount} onChange={(v) => set({ amount: v })} />
         <NumberField
+          integer
           label={t('bonus-clawback.window')}
           suffix={t('unit.months')}
           value={draft.clawbackMonths}
@@ -172,6 +182,7 @@ function Body() {
           onChange={(v) => set({ plannedLwd: v })}
         />
         <NumberField
+          integer
           label={t('bonus-clawback.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}
@@ -196,21 +207,25 @@ function Body() {
       </Card>
 
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner tone={tone}>{verdict}</VerdictBanner>
-        )}
+        <ResultHero
+          sample={isExample}
+          label={t('hero.bonus-clawback')}
+          value={formatINR(result.repaymentIfLeaveAtPlanned)}
+          verdict={verdict}
+          tone={tone}
+        >
+          <Receipt ids={TOOL_SOURCES['bonus-clawback']} />
+        </ResultHero>
         <Card className="space-y-2">
           <p className="tnum text-[13px] font-semibold">{servedLine}</p>
           <p className="tnum text-[13px]">{t('bonus-clawback.tax', { amount: formatINR(result.taxOnBonus) })}</p>
           <p className="tnum text-[13px]">{t('bonus-clawback.marginal', { pct: Math.round(result.effectiveRate * 100) })}</p>
-          {result.noticeWouldCoverClawback && <p className="text-[13px] text-amberflag">{t('bonus-clawback.noticeOverlap')}</p>}
-          <p className="text-[13px] text-ink-soft">{t('bonus-clawback.allOrNothing')}</p>
-          <p className="text-[13px] text-ink-soft">{t('bonus-clawback.taxRecovery')}</p>
+          {result.noticeWouldCoverClawback && <p className="text-[14px] leading-relaxed text-amberflag">{t('bonus-clawback.noticeOverlap')}</p>}
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('bonus-clawback.allOrNothing')}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{t('bonus-clawback.taxRecovery')}</p>
         </Card>
         <Card>
-          <h3 className="mb-2 text-sm font-bold">{t('bonus-clawback.curve')}</h3>
+          <h3 className="mb-2 text-[15px] font-semibold">{t('bonus-clawback.curve')}</h3>
           {sample.map((p) => (
             <p key={p.exitMonth} className="tnum flex justify-between text-[13px]">
               <span>{t('bonus-clawback.point', { month: p.exitMonth })}</span>
@@ -223,7 +238,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

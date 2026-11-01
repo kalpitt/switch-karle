@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react'
-import { eraseAll, savedCount, type EraseResult } from '../lib/erase'
-import { useT } from '../i18n'
+import { useRef, useState } from 'react'
+import { eraseAll, savedKeys, type EraseResult } from '../lib/erase'
+import { withLang } from '../lib/langPath'
+import { STORAGE_KEY as TRACKER_KEY } from '../tracker/store'
+import { useLang, useT } from '../i18n'
+import { useDialog } from './useDialog'
 
 /**
  * The one control that erases everything this site has saved in the browser.
@@ -14,27 +17,22 @@ import { useT } from '../i18n'
  * re-save the numbers we just removed; the reload is what makes the erase
  * hold. Nothing is written before the reload — it re-mounts on empty storage.
  */
-export function EraseData({ className }: { className?: string }) {
+export function EraseData({ className, label }: { className?: string; label?: string }) {
   const t = useT()
+  const { lang } = useLang()
   const [open, setOpen] = useState(false)
   const [count, setCount] = useState(0)
+  /** Only someone who has a board is told how to keep it. */
+  const [hasBoard, setHasBoard] = useState(false)
   const [result, setResult] = useState<EraseResult | null>(null)
 
   const erased = result != null && result.removed.length > 0
-
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
-      if (erased) window.location.reload()
-      else setOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, erased])
+  const panelRef = useRef<HTMLDivElement>(null)
 
   function openDialog() {
-    setCount(savedCount())
+    const keys = savedKeys()
+    setCount(keys.length)
+    setHasBoard(keys.includes(TRACKER_KEY))
     setResult(null)
     setOpen(true)
   }
@@ -51,6 +49,10 @@ export function EraseData({ className }: { className?: string }) {
     setResult(eraseAll())
   }
 
+  // Focus goes to the first button (Cancel or Done), stays inside, Escape closes,
+  // and focus returns to the footer link that opened it.
+  useDialog(open, panelRef, close)
+
   return (
     <>
       <button
@@ -58,7 +60,7 @@ export function EraseData({ className }: { className?: string }) {
         onClick={openDialog}
         className={className ?? 'py-1 font-semibold underline'}
       >
-        {t('erase.button')}
+        {label ?? t('erase.button')}
       </button>
       {open && (
         <div
@@ -66,6 +68,7 @@ export function EraseData({ className }: { className?: string }) {
           onClick={close}
         >
           <div
+            ref={panelRef}
             className="w-full max-w-md rounded-2xl border border-line bg-paper p-5 text-left shadow-lg"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
@@ -78,7 +81,7 @@ export function EraseData({ className }: { className?: string }) {
 
             {result == null ? (
               <>
-                <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
                   {count === 0
                     ? t('erase.empty')
                     : count === 1
@@ -88,6 +91,15 @@ export function EraseData({ className }: { className?: string }) {
                 {count > 0 && (
                   <p className="mt-2 text-[13px] font-semibold leading-relaxed text-alarm">
                     {t('erase.warning')}
+                    {hasBoard && (
+                      <>
+                        {' '}
+                        {t('erase.warningBoard')}{' '}
+                        <a href={withLang(lang, 'tracker')} className="underline">
+                          {t('erase.warningBoardLink')}
+                        </a>
+                      </>
+                    )}
                   </p>
                 )}
                 <p className="mt-2 text-[12px] leading-relaxed text-ink-faint">
@@ -97,7 +109,7 @@ export function EraseData({ className }: { className?: string }) {
                   <button
                     type="button"
                     onClick={close}
-                    className="rounded-xl border border-line px-3 py-2 text-[13px] font-semibold text-ink-soft"
+                    className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
                   >
                     {count === 0 ? t('erase.close') : t('erase.cancel')}
                   </button>
@@ -105,7 +117,7 @@ export function EraseData({ className }: { className?: string }) {
                     <button
                       type="button"
                       onClick={confirm}
-                      className="rounded-xl bg-alarm px-4 py-2 text-[13px] font-bold text-white"
+                      className="min-h-[44px] rounded-xl bg-alarm px-4 py-2 text-[13px] font-bold text-white"
                     >
                       {t('erase.confirm')}
                     </button>
@@ -114,7 +126,7 @@ export function EraseData({ className }: { className?: string }) {
               </>
             ) : (
               <>
-                <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
+                <p role="status" className="mt-2 text-[14px] leading-relaxed text-ink-soft">
                   {result.removed.length === 1
                     ? t('erase.doneOne')
                     : t('erase.done', { n: result.removed.length })}
@@ -128,7 +140,9 @@ export function EraseData({ className }: { className?: string }) {
                   <button
                     type="button"
                     onClick={close}
-                    className="rounded-xl border border-line px-3 py-2 text-[13px] font-semibold text-ink-soft"
+                    // The buttons that had focus are gone; keep it inside the dialog.
+                    autoFocus
+                    className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
                   >
                     {t('erase.close')}
                   </button>

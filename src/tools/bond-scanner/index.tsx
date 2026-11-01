@@ -36,8 +36,8 @@ function Body() {
 
   return (
     <div data-tool="bond-scanner" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('bond-scanner.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('bond-scanner.formTitle')}</h2>
         <TextArea label={t('bond-scanner.text')} hint={t('bond-scanner.textHint')} value={text} onChange={setText} rows={12} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
@@ -49,7 +49,9 @@ function Body() {
           <VerdictBanner tone={flags.length === 0 ? 'leaf' : flags.some((f) => f.severity === 'red') ? 'alarm' : 'amber'}>
             {flags.length === 0
               ? t('bond-scanner.verdict.clean')
-              : t('bond-scanner.verdict.flags', { n: flags.length })}
+              : flags.length === 1
+                ? t('bond-scanner.verdict.flagsOne')
+                : t('bond-scanner.verdict.flags', { n: flags.length })}
           </VerdictBanner>
         )}
         {!isBlank && flags.length > 0 && (
@@ -61,8 +63,8 @@ function Body() {
             ))}
           </Card>
         )}
-        <p className="text-[13px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
+        <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
       </div>
     </div>
   )
