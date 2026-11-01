@@ -89,8 +89,8 @@ function Body() {
 
   return (
     <div data-tool="relieving-chaser" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('relieving-chaser.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('relieving-chaser.formTitle')}</h2>
         <TextField label={t('relieving-chaser.company')} value={draft.company} onChange={(v) => set({ company: v })} />
         <TextField label={t('relieving-chaser.hr')} value={draft.hr} onChange={(v) => set({ hr: v })} />
         <TextField label={t('relieving-chaser.role')} value={draft.role} onChange={(v) => set({ role: v })} />

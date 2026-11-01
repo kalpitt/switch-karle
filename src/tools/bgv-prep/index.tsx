@@ -43,8 +43,8 @@ function Body() {
 
   return (
     <div data-tool="bgv-prep" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('bgv-prep.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('bgv-prep.formTitle')}</h2>
         <NumberField integer label={t('bgv-prep.gap')} hint={t('bgv-prep.gapHint')} suffix={t('unit.months')} value={draft.gapMonths} onChange={(v) => set({ gapMonths: v })} />
         <Toggle label={t('bgv-prep.dualPf')} checked={draft.dualPf} onChange={(v) => set({ dualPf: v })} />
         <Toggle label={t('bgv-prep.relieving')} checked={draft.relievingPending} onChange={(v) => set({ relievingPending: v })} />

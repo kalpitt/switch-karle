@@ -31,7 +31,7 @@ function Page({ page, children }: { page: InfoPage; children: ReactNode }) {
   const { lang } = useLang()
   return (
     <article data-info={page} className="max-w-[65ch] space-y-8 text-[15px] leading-relaxed">
-      <h1 className="text-[28px] font-extrabold leading-tight tracking-tight sm:text-[32px]">{t(`${page}.title`)}</h1>
+      <h1 className="text-[28px] font-bold leading-tight tracking-tight sm:text-[32px]">{t(`${page}.title`)}</h1>
       {children}
       <footer className="space-y-2 border-t border-line pt-4 text-[13px] text-ink-soft">
         <p>
@@ -120,7 +120,7 @@ function SourceCard({ entry }: { entry: SourceEntry }) {
     <li id={entry.id} className="scroll-mt-6 rounded-xl border border-line bg-card p-3.5">
       <p className="text-[14px] font-semibold leading-snug">{t(`source.${entry.id}`)}</p>
       {entry.citation && (
-        <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+        <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
           {entry.url ? (
             <a href={entry.url} target="_blank" rel="noreferrer" className="underline">
               {entry.citation}
@@ -130,7 +130,7 @@ function SourceCard({ entry }: { entry: SourceEntry }) {
           )}
         </p>
       )}
-      {entry.note && <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{t(`sourceNote.${entry.id}`)}</p>}
+      {entry.note && <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{t(`sourceNote.${entry.id}`)}</p>}
       <p className="mt-1.5 text-xs text-ink-soft">
         <span className="font-semibold">{t(`sources.status.${entry.status}`)}</span> ·{' '}
         {t(dateKey, { date: formatLongDate(entry.checked, lang) })}

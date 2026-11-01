@@ -34,7 +34,7 @@ function ScriptSwitcher({ current }: { current: ScriptSlug }) {
           <span
             key={slug}
             aria-current="page"
-            className="inline-flex min-h-[44px] items-center rounded-full border border-saffron bg-saffron px-4 text-[13px] font-bold text-white"
+            className="inline-flex min-h-[44px] items-center rounded-xl border border-ink bg-ink px-3.5 text-[14px] font-semibold text-white"
           >
             {t(titleKey(slug))}
           </span>
@@ -42,7 +42,7 @@ function ScriptSwitcher({ current }: { current: ScriptSlug }) {
           <a
             key={slug}
             href={withLang(lang, slug)}
-            className="inline-flex min-h-[44px] items-center rounded-full border border-line px-4 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron"
+            className="inline-flex min-h-[44px] items-center rounded-xl border border-line-strong px-3.5 text-[14px] font-medium text-ink-soft transition-colors hover:border-field hover:text-ink"
           >
             {t(titleKey(slug))}
           </a>

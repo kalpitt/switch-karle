@@ -4,6 +4,7 @@ import type { ToolDef } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Plan } from '../plan'
+import { ChevronRight } from '../../components/icons'
 
 export default function HomeTool({ lang = 'en' }: { lang?: Lang }) {
   return (
@@ -23,18 +24,22 @@ export default function HomeTool({ lang = 'en' }: { lang?: Lang }) {
   )
 }
 
-function ToolCard({ tool, lang, featured = false }: { tool: ToolDef; lang: Lang; featured?: boolean }) {
+/** A tool as a list row, not a card (VIS-27): name, one line of what it does, a chevron. */
+function ToolRow({ tool, lang }: { tool: ToolDef; lang: Lang }) {
   const t = useT()
   return (
     <li>
       <a
         href={withLang(lang, tool.slug)}
-        className={`block h-full rounded-2xl border bg-card p-5 shadow-[0_1px_3px_rgba(28,25,23,0.06)] transition-colors hover:border-saffron ${
-          featured ? 'border-saffron/40' : 'border-line'
-        }`}
+        className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
       >
-        <h3 className="text-base font-bold">{t(tool.titleKey)}</h3>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{t(tool.descKey)}</p>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2">
+            {t(tool.titleKey)}
+          </span>
+          <span className="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-ink-soft">{t(tool.descKey)}</span>
+        </span>
+        <ChevronRight className="mt-1 text-ink-faint" />
       </a>
     </li>
   )
@@ -60,48 +65,43 @@ function BelowTheDoor() {
 
   return (
     <div className="space-y-4">
-      <p className="text-[13px] leading-relaxed text-ink-soft">
+      <p className="text-[14px] leading-relaxed text-ink-soft">
         {t('home.trackerLink')}{' '}
-        <a href={withLang(lang, 'tracker')} className="inline-flex min-h-[44px] items-center font-semibold text-saffron underline">
+        <a href={withLang(lang, 'tracker')} className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline">
           {t('home.trackerLink.cta')}
         </a>
       </p>
 
       <details className="group rounded-2xl border border-line bg-card">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-[14px] font-bold">
+        <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-[15px] font-semibold [&::-webkit-details-marker]:hidden">
           <span>{t('home.allTools', { n: toolCount })}</span>
           {/* list-none kills the native marker, so carry an explicit affordance —
               on touch there is no cursor or hover to hint that this opens. */}
-          <span
-            aria-hidden="true"
-            className="text-lg leading-none text-ink-faint transition-transform group-open:rotate-90"
-          >
-            ›
-          </span>
+          <ChevronRight size={18} className="text-ink-soft transition-transform group-open:rotate-90" />
         </summary>
         <div className="space-y-8 border-t border-line px-5 py-5">
-          <div>
-            <h2 className="mb-3 text-[13px] font-bold uppercase tracking-wide text-ink-faint">{t('home.pinned')}</h2>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {pinned.map((tool) => (
-                <ToolCard key={tool.slug} tool={tool} lang={lang} featured />
-              ))}
-            </ul>
-          </div>
+          <ToolGroup title={t('home.pinned')} tools={pinned} lang={lang} />
           {sections.map((section) => (
-            <div key={section.category}>
-              <h2 className="mb-3 text-[13px] font-bold uppercase tracking-wide text-ink-faint">
-                {t(section.titleKey)}
-              </h2>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {section.tools.map((tool) => (
-                  <ToolCard key={tool.slug} tool={tool} lang={lang} />
-                ))}
-              </ul>
-            </div>
+            <ToolGroup key={section.category} title={t(section.titleKey)} tools={section.tools} lang={lang} />
           ))}
         </div>
       </details>
     </div>
   )
 }
+
+function ToolGroup({ title, tools, lang }: { title: string; tools: ToolDef[]; lang: Lang }) {
+  return (
+    <div>
+      <h2 className="mb-1 text-[14px] font-semibold text-ink">
+        {title} <span className="tnum font-normal text-ink-faint">· {tools.length}</span>
+      </h2>
+      <ul className="grid gap-x-8 sm:grid-cols-2">
+        {tools.map((tool) => (
+          <ToolRow key={tool.slug} tool={tool} lang={lang} />
+        ))}
+      </ul>
+    </div>
+  )
+}
+

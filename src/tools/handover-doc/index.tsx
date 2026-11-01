@@ -63,8 +63,8 @@ function Body() {
 
   return (
     <div data-tool="handover-doc" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('handover-doc.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('handover-doc.formTitle')}</h2>
         <TextField label={t('handover-doc.role')} value={draft.role} onChange={(v) => set({ role: v })} />
         <TextField label={t('handover-doc.owner')} value={draft.owner} onChange={(v) => set({ owner: v })} />
         <TextArea label={t('handover-doc.projects')} value={draft.projects} onChange={(v) => set({ projects: v })} rows={5} />
