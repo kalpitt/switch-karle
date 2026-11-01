@@ -2,6 +2,8 @@
 import '../index.css'
 import { englishPath, hindiPath } from '../lib/langPath'
 import type { Lang } from '../i18n'
+import { en } from '../i18n/en'
+import { hi } from '../i18n/hi'
 
 interface Props {
   title: string
@@ -20,8 +22,10 @@ const enHref = new URL(englishPath(Astro.url.pathname, base), Astro.site).href
 const hiHref = new URL(hindiPath(Astro.url.pathname, base), Astro.site).href
 const brand = lang === 'hi' ? 'स्विच कर ले' : 'Switch Karle'
 const fullTitle = slug ? `${title} — ${brand}` : title
-const ogImage = new URL(`${import.meta.env.BASE_URL}og/default.png`, Astro.site).href
 const htmlLang = lang === 'hi' ? 'hi' : 'en'
+// Server-side only: these strings are rendered into the HTML, never bundled.
+const t = (key: string) => (lang === 'hi' ? hi[key] : undefined) ?? en[key] ?? key
+const ogImage = new URL(`${import.meta.env.BASE_URL}og/${lang === 'hi' ? 'default-hi' : 'default'}.png`, Astro.site).href
 ---
 
 <!doctype html>
@@ -44,16 +48,21 @@ const htmlLang = lang === 'hi' ? 'hi' : 'en'
       )
     }
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand} />
+    <meta property="og:locale" content={lang === 'hi' ? 'hi_IN' : 'en_IN'} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('app.ogImageAlt')} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={t('app.ogImageAlt')} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}icon.svg`} />
     <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}icon-180.png`} />
     <link rel="manifest" href={`${import.meta.env.BASE_URL}manifest.webmanifest`} />
@@ -63,11 +72,67 @@ const htmlLang = lang === 'hi' ? 'hi' : 'en'
     )}
   </head>
   <body>
+    <noscript>
+      <p class="bg-amberflag-soft px-4 py-3 text-center text-[14px] font-semibold leading-relaxed text-amberflag">
+        {t('app.noscript')}
+      </p>
+    </noscript>
     <slot />
+    <div
+      class="no-print pointer-events-none fixed inset-x-0 bottom-0 z-40 flex flex-col items-center gap-2 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+    >
+      <div
+        id="sk-update"
+        role="status"
+        hidden
+        class="pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-2xl bg-ink py-2 pl-4 pr-2 text-[14px] leading-snug text-white shadow-lg"
+      >
+        <p class="flex-1">{t('app.update')}</p>
+        <button
+          type="button"
+          id="sk-update-reload"
+          class="min-h-11 shrink-0 rounded-xl bg-saffron px-4 font-bold text-white"
+        >
+          {t('app.updateReload')}
+        </button>
+      </div>
+      <div
+        id="sk-storage"
+        role="status"
+        hidden
+        class="pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-2xl border border-amberflag/30 bg-amberflag-soft py-2 pl-4 pr-2 text-[13px] leading-snug text-ink shadow-lg"
+      >
+        <p class="flex-1">{t('app.storageBlocked')}</p>
+        <button
+          type="button"
+          id="sk-storage-dismiss"
+          class="min-h-11 shrink-0 rounded-xl border border-line bg-card px-4 font-bold text-ink"
+        >
+          {t('app.dismiss')}
+        </button>
+      </div>
+    </div>
     <script>
       import { registerSW } from 'virtual:pwa-register'
+      import { STORAGE_BLOCKED_EVENT } from '../lib/storage'
+
+      function show(id: string) {
+        document.getElementById(id)?.removeAttribute('hidden')
+      }
+      function hide(id: string) {
+        document.getElementById(id)?.setAttribute('hidden', '')
+      }
+
+      // A tool could not save what the user typed: say so once, so nobody
+      // closes the tab believing their dates are kept.
+      window.addEventListener(STORAGE_BLOCKED_EVENT, () => show('sk-storage'))
+      document.getElementById('sk-storage-dismiss')?.addEventListener('click', () => hide('sk-storage'))
+
       if (import.meta.env.PROD) {
-        registerSW({ immediate: true })
+        // After a deploy the new service worker takes over in the background.
+        // Ask before reloading: a silent reload mid-typing reads as a crash.
+        registerSW({ immediate: true, onNeedReload: () => show('sk-update') })
+        document.getElementById('sk-update-reload')?.addEventListener('click', () => window.location.reload())
       }
     </script>
   </body>

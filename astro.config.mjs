@@ -14,13 +14,18 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       injectRegister: false,
+      // The share images (og/*) are deliberately absent: only link-preview
+      // crawlers fetch them, never the page, so precaching them would spend a
+      // visitor's data on files they never see.
       includeAssets: [
         'icon.svg',
         'icon-180.png',
+        'icon-192.png',
         'icon-512.png',
+        'icon-maskable-512.png',
+        'favicon.ico',
         'favicon.svg',
         'icons.svg',
-        'og/default.png',
       ],
       manifest: false,
       workbox: {
@@ -32,7 +37,16 @@ export default defineConfig({
         // GitHub Pages serves 404.html for unknown paths but answers /404/ itself with
         // HTTP 404. A precache entry that is not 200 makes Workbox abort the whole
         // install ("bad-precaching-response"), so offline never worked in production.
-        globIgnores: ['404.html'],
+        globIgnores: [
+          '404.html',
+          // Share images: fetched by link-preview crawlers only.
+          'og/**',
+          // Inter subsets for scripts the site never uses (the latin face and
+          // the rupee subset are declared in src/index.css).
+          '**/inter-cyrillic*',
+          '**/inter-greek*',
+          '**/inter-vietnamese*',
+        ],
         cleanupOutdatedCaches: true,
       },
       experimental: {

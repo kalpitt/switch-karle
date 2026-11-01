@@ -8,6 +8,7 @@ import { formatLongDate } from '../lib/formatDate'
 import { withLang } from '../lib/langPath'
 import { CommandPalette } from './CommandPalette'
 import { EraseData } from './EraseData'
+import { BackupData } from './BackupData'
 
 export function Shell({ current, children }: { current: string; children: ReactNode }) {
   const t = useT()
@@ -110,7 +111,9 @@ export function Shell({ current, children }: { current: string; children: ReactN
           GitHub
         </a>
         <br />
-        <span className="inline-block">
+        <span className="inline-flex flex-wrap items-center gap-x-1.5">
+          <BackupData className="inline-block min-h-[44px] py-3 font-semibold text-ink-soft underline" />
+          <span aria-hidden>·</span>
           <EraseData className="inline-block min-h-[44px] py-3 pr-2 font-semibold text-alarm underline" />
         </span>
       </footer>

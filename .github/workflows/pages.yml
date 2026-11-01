@@ -33,8 +33,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      # Guards that asset URLs resolve under the configured base so the
-      # subpath deploy cannot break silently. Cutover flips base to `/`.
+      # Guards that asset URLs resolve under the configured base and that
+      # every precached URL exists (a missing one breaks the offline app).
       - run: npm run check:base
       - run: npm run check:seo
       - run: npm run check:csp
@@ -55,3 +55,23 @@ jobs:
           path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Opens the live site after the deploy, the way a visitor would. A failure
+  # here means production is broken right now: GitHub emails whoever pushed
+  # the merge. Sends ordinary page requests only, no data.
+  smoke:
+    needs: build-deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Give the CDN a moment to serve the new files.
+      - run: sleep 60
+      - run: node scripts/smoke-prod.mjs https://switchkarle.fyi
