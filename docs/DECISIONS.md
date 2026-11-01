@@ -10,6 +10,22 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-10-24 — Tools ask for the work city, not only the state
+
+**Decided by Kalpit (project chat, 2026-10-24).** The 50% HRA limb belongs to
+eight cities (Rule 279(1)(c), Income-tax Rules, 2026), not to states, so the
+state proxy was wrong for Pune-vs-Nagpur or Bengaluru-vs-Mysuru. The Decoder
+and Relocation now ask for a city: the state's qualifying cities plus
+"Elsewhere in <state>" (`src/engine/city.ts`). `OfferInput.city` decides the
+limb when set; `old.metro` is kept only for offers saved before the field
+existed. Tamil Nadu and Kerala professional tax is set town by town, so the
+Decoder warns when the state figure may not be the user's (Tamil Nadu shows
+Chennai's verified rate; no Kerala town is verified).
+
+The same day an AI-only check of the CA questions against primary sources
+(no CA available) moved TN and OD to ₹2,500 and AS to ₹2,496 and PY to
+₹2,500. See `docs/ARCHITECTURE.md` for the status table.
+
 ## 2026-09-28 — Leave encashment on resignation is exempt; Karnataka PT is ₹2,500
 
 **Fixed, not decided.** `src/engine/leaveEncash.ts` treated resignation as
@@ -451,13 +467,14 @@ executable spec for correct money math.
 - Notice-buyout: formula unchanged, dual basis displayed, Decoder seeds cash
   gross, GST and tax treatment shown as **disputed — not computed**.
 - F&F is claimed-vs-recomputed. No dispute-mail feature.
-- Punjab ₹2,400 is State Development Tax (PSDT Act 2018). BR/JH/AS/CG/SK/ML/TR/PY
+- Punjab ₹2,400 is State Development Tax (PSDT Act 2018). BR/JH/CG/SK/ML/TR
   stay ₹0 with `PT_AMOUNT_UNVERIFIED`. KA is ₹2,500 (Karnataka Act No. 33 of
-  2025, in force 1 April 2025) — see the 2026-09-28 entry above.
+  2025, in force 1 April 2025) — see the 2026-09-28 entry above. AS ₹2,496,
+  PY ₹2,500, TN ₹2,500 (Chennai) and OD ₹2,500 — see the 2026-10-24 entry.
 - HRA now keeps the eight-city metro limb (Mumbai, Kolkata, Delhi, Chennai,
   Hyderabad, Pune, Ahmedabad, Bengaluru), primary-sourced 2026-09-27 to Rule
-  279 of the Income-tax Rules, 2026. State codes are a city proxy — see the
-  2026-09-27 entry above.
+  279 of the Income-tax Rules, 2026. The work city decides the limb since
+  2026-10-24; before that, state codes were a city proxy.
 - Gratuity: eligibility (Code on Social Security, 2020 s.53(1) with s.54 — 5y,
   or 4y + 190 / 240 days on a 5-day / 6-day week) is a separate test from
   payable years (s.53(2)). **Amended 2026-09-27:** the 190/240-day count is

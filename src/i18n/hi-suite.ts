@@ -288,6 +288,8 @@ export const hiSuite: Record<string, string> = {
   'relocation.fromMetro': 'HRA के लिए metro से',
   'relocation.toState': 'किस राज्य में',
   'relocation.toMetro': 'HRA के लिए metro में',
+  'relocation.fromCity': 'किस शहर से',
+  'relocation.toCity': 'किस शहर में',
   'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad या Bengaluru — basic का 50% (Rule 279, Income-tax Rules, 2026)। बाक़ी कहीं भी 40%। सिर्फ़ old regime में।',
   'relocation.rent': 'आप जो rent देते हैं / महीना',
   'relocation.fromRent': 'यहाँ rent / महीना',
@@ -297,7 +299,7 @@ export const hiSuite: Record<string, string> = {
   'relocation.metroWarn':
     '{state} में HRA metro city नहीं है (सिर्फ़ Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru qualify करते हैं, Income-tax Rules, 2026 के Rule 279 के अनुसार)। आपने जो 50% वाला limb on किया है, वह वहाँ apply नहीं होगा।',
   'relocation.ptApprox':
-    'Professional tax approximate है। Bihar, Assam और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
+    'Professional tax approximate है। Bihar, Jharkhand और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Tamil Nadu में Chennai का rate दिखाया गया है; Tamil Nadu के दूसरे शहर अपना rate खुद तय करते हैं। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ़ old-regime comparison के लिए दिखाई गई है।',
   'relocation.verdict.nil': 'In-hand नहीं बदलता। National tax slabs हर राज्य में same हैं।',
   'relocation.verdict.delta': 'Same CTC, move के बाद in-hand {amount}/month {dir}।',
@@ -496,7 +498,7 @@ export const hiSuite: Record<string, string> = {
   'form16-shock.tds': 'पहले से deduct हुआ TDS',
   'form16-shock.stdNote': 'हर payroll ने probably आपको पूरा standard deduction दिया। Return सिर्फ़ एक allow करता है।',
   'form16-shock.omit234':
-    's.234B/234C का interest तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
+    'Advance-tax interest (Income-tax Act, 2025 की s.424/425 — पुराने 234B/234C) तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
   'form16-shock.form12bTitle': 'Employer 2 को देने वाला Form 12B text',
   'form16-shock.form12b':
     'इस FY में previous employer: salary/gross {gross}, TDS {tds}। कृपया मेरी बाक़ी salary पर tax deduct करते समय इस income को ध्यान में रखें (Form 12B)।',
@@ -785,9 +787,9 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes आमतौर पर Contract Act s.27 के तहत void होते हैं। Employment के दौरान वाला सवाल अलग है।',
   'bond-scanner.flag.training-bond':
-    'Courts ने specialised training cost माँगा है, ordinary onboarding नहीं (*Sicpa India v. Manas Pratim Deb*)। Letter में लिखा number automatically owed नहीं है — किसी CA से confirm करें।',
+    'Bond की रकम एक ceiling है, price नहीं: employer को फिर भी असली training और actual loss दिखाना होता है। *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) में “training” trips असल में business trips थीं, और bond की रकम enforce नहीं हुई। Letter में लिखा number automatically owed नहीं है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.liquidated-damages':
-    'Liquidated damages एक ceiling हैं जिसके लिए फिर भी actual loss का proof चाहिए (*Kailash Nath Associates v. DDA*)। यह fact-specific है — किसी CA से confirm करें।',
+    'Liquidated damages एक ceiling हैं; जहाँ loss साबित किया जा सकता है, वहाँ actual loss का proof फिर भी चाहिए (*Kailash Nath Associates v. DDA*, Supreme Court, 2015)। यह fact-specific है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.probation-extend':
     'Discretion पर extendable probation का मतलब है confirmation कोई पक्की date नहीं है। Max extension writing में लें।',
   'bond-scanner.disclaimer':
@@ -824,7 +826,7 @@ export const hiSuite: Record<string, string> = {
     'साधारण भारतीय letters दोनों पक्षों को unserved notice pay करने देती हैं। यह कोई scam deposit नहीं है। Switch Karle का notice-buyout tool letter के /30 convention से cash estimate करता है।',
   'clause-library.bond-training.title': 'Training / Service Bond',
   'clause-library.bond-training.body':
-    'कोई rupee figure automatically payable नहीं है। Courts specialised training cost और actual loss देखते हैं। Clause को bond scanner में paste करें।',
+    'कोई rupee figure automatically payable नहीं है। Courts असली training और actual loss देखते हैं। Clause को bond scanner में paste करें।',
   'clause-library.variable-discretion.title': 'Company Discretion पर Variable',
   'clause-library.variable-discretion.body':
     'अगर payout "at discretion" है, तो CTC headline कोई promise नहीं है। 0 / 50 / 100% पर variable-reality tool इस्तेमाल करें।',

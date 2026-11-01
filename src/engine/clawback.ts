@@ -14,6 +14,13 @@ import { computeTax } from './tax'
  * CANDIDATE / not a statute: the gross-repay convention is contractual
  * practice, not a section of the Income-tax Act. Whether the tax already
  * paid can be recovered (same-year revised Form 16, etc.) is fact-specific.
+ * 2026-10-24: a joining bonus is salary — "profits in lieu of salary" includes
+ * any amount received "before his joining any employment" (Income-tax Act,
+ * 2025 s.18(1)(b)(i)). In the same tax year the employer "may, increase or
+ * reduce the amount to be deducted ... for adjusting any excess or deficiency"
+ * (s.392(5)(c)). No provision was found that gives relief when the repayment
+ * falls in a LATER tax year (s.157 relief is for arrears/advance salary). Open
+ * for a CA.
  * `noticeWouldCoverClawback` is cash-flow framing, not legal advice.
  */
 export interface ClawbackInput {
