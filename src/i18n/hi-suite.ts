@@ -906,6 +906,21 @@ export const hiSuite: Record<string, string> = {
 
   'about.title': 'Switch Karle के बारे में',
   'about.description': 'Switch Karle कौन बनाता है, इसकी कीमत क्या है, और इसका code कहाँ है।',
+  'about.lead': 'नौकरी छोड़ने पर आपके आस-पास हर किसी की एक राय है। Switch Karle आपको numbers देता है।',
+  'about.why.title': 'यह क्यों है',
+  'about.why.p1':
+    'नौकरी छोड़ने का फ़ैसला अक्सर मुश्किल हिस्सा नहीं होता। मुश्किल यह समझना है कि छोड़ने की कीमत क्या है। हो सकता है आपकी gratuity तीन हफ़्ते दूर हो। पिछले साल का joining bonus अभी भी वापस माँगा जा सकता है। “30% hike” से हर महीने bank में शायद थोड़ा ही ज़्यादा आए।',
+  'about.why.p2':
+    'Switch Karle तब शुरू हुआ जब कुछ colleagues नौकरी छोड़ना चाहते थे पर पहला कदम तय नहीं कर पा रहे थे। यह वही हिसाब आपके लिए करता है, English और Hindi में, manager से एक शब्द कहने से पहले।',
+  'about.what.title': 'इसमें क्या है',
+  'about.what.p':
+    'पूरा job switch, “बस, अब यहाँ नहीं” से नई नौकरी के पहले 90 दिन तक: offer असल में कितना देता है, resign करने से पहले ज़रूरी dates, manager और HR से क्या कहें, छोड़ते समय आपका कितना बनता है, और join करने के बाद PF, insurance और tax के काम।',
+  'about.checks.title': 'Numbers कैसे check होते हैं',
+  'about.checks.p':
+    'हर tax और कानूनी नियम सीधे Act, notification या court के फ़ैसले से आता है, और ध्यान से बनाए गए AI agents हर number को उसी text से मिलाते हैं। अभी किसी chartered accountant ने इन्हें review नहीं किया है, और हर जवाब बताता है कि क्या अभी खुला है।',
+  'about.promise.title': 'आपको इसकी क्या कीमत चुकानी है',
+  'about.who.title': 'इसे कौन बनाता है',
+  'about.contact': 'कोई number ग़लत मिला, या बस बात करनी है?',
   'about.who': 'Switch Karle को Kalpit Tiwari बनाते हैं।',
   'about.free':
     'यह free है। कोई paid version नहीं, कोई account नहीं बनाना, कोई backend server नहीं और कोई analytics नहीं। Tools आपके browser में चलते हैं।',
@@ -920,9 +935,9 @@ export const hiSuite: Record<string, string> = {
   'sources.intro': 'Tools जो भी नियम इस्तेमाल करते हैं, वह किस document से आया, और आख़िरी बार कब check हुआ।',
   'sources.how.title': 'हम कैसे check करते हैं',
   'sources.how.p1':
-    'कोई भी नियम सिर्फ़ primary document से आता है: Act, उसके तहत बने Rules, gazette notification, सरकारी rate chart या circular, या court का फ़ैसला। Tax blog से कभी नहीं, और AI के जवाब से कभी नहीं।',
+    'कोई भी नियम सिर्फ़ primary document से आता है: Act, उसके तहत बने Rules, gazette notification, सरकारी rate chart या circular, या court का फ़ैसला। Tax blog से कभी नहीं, और AI की याददाश्त से भी कभी नहीं।',
   'sources.how.p2':
-    '“Check किया” का मतलब है कि उस date पर number को उसी document से मिलाया गया। इसका मतलब यह नहीं कि किसी chartered accountant ने review किया है। जिन नियमों का review अभी बाक़ी है, वे यह बात यहाँ भी कहते हैं और tool के जवाब के नीचे भी।',
+    'Checking ध्यान से बनाए गए AI agents करते हैं। वे इन documents को खोलते हैं और हर number को section-by-section text से मिलाते हैं। “Check किया” का मतलब है कि उस date पर यह मिलान हुआ। इसका मतलब यह नहीं कि किसी chartered accountant ने review किया है: अभी तक किसी ने नहीं किया। जो नियम अभी उस review का इंतज़ार कर रहे हैं, वे यहाँ और tool के जवाब के नीचे यह बताते हैं।',
   'sources.how.p3':
     'कुछ numbers कानून हैं ही नहीं, बस ज़्यादातर employers और letters ऐसे ही करते हैं। उन पर लिखा है “convention है, कानून नहीं”, और आपका अपना contract ही तय करता है।',
   'sources.how.code': 'हर source उस code के पास भी लिखा है जो उसे इस्तेमाल करता है, और code public है।',

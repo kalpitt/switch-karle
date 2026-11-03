@@ -77,20 +77,50 @@ function OtherPages({ page }: { page: InfoPage }) {
 
 function About() {
   const t = useT()
+  const { lang } = useLang()
   return (
     <Page page="about">
-      <div className="space-y-3">
-        <p className="font-semibold">{t('about.who')}</p>
-        <p>{t('app.tagline')}</p>
-        <p>{t('about.free')}</p>
-        <p>{t('about.advice')}</p>
+      <p className="text-lg font-semibold leading-snug text-ink">{t('about.lead')}</p>
+      <Section title={t('about.why.title')}>
+        <div className="space-y-3">
+          <p>{t('about.why.p1')}</p>
+          <p>{t('about.why.p2')}</p>
+        </div>
+      </Section>
+      <Section title={t('about.what.title')}>
+        <p>{t('about.what.p')}</p>
+      </Section>
+      <Section title={t('about.checks.title')}>
         <p>
-          {t('about.code')}{' '}
-          <a href={SOURCE_CODE_URL} target="_blank" rel="noreferrer" className={LINK}>
-            {t('about.codeLink')}
+          {t('about.checks.p')}{' '}
+          <a href={withLang(lang, 'sources')} className={LINK}>
+            {t('sources.title')}
           </a>
         </p>
-      </div>
+      </Section>
+      <Section title={t('about.promise.title')}>
+        <div className="space-y-3">
+          <p>{t('about.free')}</p>
+          <p>{t('about.advice')}</p>
+        </div>
+      </Section>
+      <Section title={t('about.who.title')}>
+        <div className="space-y-3">
+          <p className="font-semibold">{t('about.who')}</p>
+          <p>
+            {t('about.contact')}{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`} className={LINK}>
+              {CONTACT_EMAIL}
+            </a>
+          </p>
+          <p>
+            {t('about.code')}{' '}
+            <a href={SOURCE_CODE_URL} target="_blank" rel="noreferrer" className={LINK}>
+              {t('about.codeLink')}
+            </a>
+          </p>
+        </div>
+      </Section>
       <Section title={t('about.more')}>
         <OtherPages page="about" />
       </Section>
