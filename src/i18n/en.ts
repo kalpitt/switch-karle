@@ -1228,6 +1228,21 @@ export const en: Record<string, string> = {
 
   'about.title': 'About Switch Karle',
   'about.description': 'Who makes Switch Karle, what it costs, and where its code lives.',
+  'about.lead': 'Everyone around you has an opinion about leaving. Switch Karle gives you the numbers.',
+  'about.why.title': 'Why it exists',
+  'about.why.p1':
+    'Deciding to leave a job is rarely the hard part. Working out what leaving costs is. Your gratuity may be three weeks away. A joining bonus from last year may still be clawed back. A “30% hike” may put only a little more in your bank each month.',
+  'about.why.p2':
+    'Switch Karle started when colleagues wanted to leave and could not work out the first step. It does that arithmetic for you, in English and Hindi, before you say a word to your manager.',
+  'about.what.title': 'What it covers',
+  'about.what.p':
+    'The whole switch, from “I’m done here” to your first 90 days in the new job: what an offer really pays, the dates that matter before you resign, what to say to your manager and HR, what you are owed when you leave, and the PF, insurance and tax steps after you join.',
+  'about.checks.title': 'How the numbers are checked',
+  'about.checks.p':
+    'Every tax and legal rule comes from the Act, notification or judgment itself, and carefully built AI agents check each number against that text. No chartered accountant has reviewed them yet, and every answer says what is still open.',
+  'about.promise.title': 'What it costs you',
+  'about.who.title': 'Who makes it',
+  'about.contact': 'Found a wrong number, or want to say hello?',
   'about.who': 'Switch Karle is made by Kalpit Tiwari.',
   'about.free':
     'It is free. There is no paid version, no account to make, no backend server and no analytics. The tools run in your browser.',
@@ -1242,9 +1257,9 @@ export const en: Record<string, string> = {
   'sources.intro': 'Every rule the tools use, the document it comes from, and the date it was last checked.',
   'sources.how.title': 'How we check',
   'sources.how.p1':
-    'A rule comes only from a primary document: an Act, the Rules under it, a gazette notification, an official rate chart or circular, or a court judgment. Never from a tax blog, and never from an AI’s answer.',
+    'A rule comes only from a primary document: an Act, the Rules under it, a gazette notification, an official rate chart or circular, or a court judgment. Never from a tax blog, and never from an AI’s memory.',
   'sources.how.p2':
-    '“Checked” means the number was matched against that document on that date. It does not mean a chartered accountant has reviewed it. Rules still waiting for that review say so, here and under the tool’s answer.',
+    'The checking is done by carefully built AI agents. They open those documents and match each number against the text, section by section. “Checked” means that match was made on that date. It does not mean a chartered accountant has reviewed it: none has yet. Rules still waiting for that review say so, here and under the tool’s answer.',
   'sources.how.p3':
     'Some numbers are not law at all, only how most employers and letters do it. Those say “convention, not law”, and your own contract decides.',
   'sources.how.code': 'Each source is also written next to the code that uses it, and the code is public.',
