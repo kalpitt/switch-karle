@@ -1239,7 +1239,6 @@ export const en: Record<string, string> = {
     'Every tax and legal rule comes from the Act, notification or judgment itself, and carefully built AI agents check each number against that text. No chartered accountant has reviewed them yet, and every answer says what is still open.',
   'about.promise.title': 'What it costs you',
   'about.who.title': 'Who makes it',
-  'about.contact': 'Found a wrong number, or want to say hello?',
   'about.who': 'Switch Karle is made by Kalpit Tiwari.',
   'about.free':
     'It is free. There is no paid version, no account to make, no backend server and no analytics. The tools run in your browser.',

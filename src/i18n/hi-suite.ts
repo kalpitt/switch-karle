@@ -920,7 +920,6 @@ export const hiSuite: Record<string, string> = {
     'हर tax और कानूनी नियम सीधे Act, notification या court के फ़ैसले से आता है, और ध्यान से बनाए गए AI agents हर number को उसी text से मिलाते हैं। अभी किसी chartered accountant ने इन्हें review नहीं किया है, और हर जवाब बताता है कि क्या अभी खुला है।',
   'about.promise.title': 'आपको इसकी क्या कीमत चुकानी है',
   'about.who.title': 'इसे कौन बनाता है',
-  'about.contact': 'कोई number ग़लत मिला, या बस बात करनी है?',
   'about.who': 'Switch Karle को Kalpit Tiwari बनाते हैं।',
   'about.free':
     'यह free है। कोई paid version नहीं, कोई account नहीं बनाना, कोई backend server नहीं और कोई analytics नहीं। Tools आपके browser में चलते हैं।',
