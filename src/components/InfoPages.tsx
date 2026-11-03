@@ -108,12 +108,6 @@ function About() {
         <div className="space-y-3">
           <p className="font-semibold">{t('about.who')}</p>
           <p>
-            {t('about.contact')}{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className={LINK}>
-              {CONTACT_EMAIL}
-            </a>
-          </p>
-          <p>
             {t('about.code')}{' '}
             <a href={SOURCE_CODE_URL} target="_blank" rel="noreferrer" className={LINK}>
               {t('about.codeLink')}
