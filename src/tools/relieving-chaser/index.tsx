@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
 import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
@@ -121,6 +122,7 @@ function Body() {
           </div>
         </Card>
         <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+        <NextStep from="relieving-chaser" />
       </div>
     </div>
   )

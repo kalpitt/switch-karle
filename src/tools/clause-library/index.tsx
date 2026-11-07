@@ -1,4 +1,5 @@
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, Disclaimer, VerdictBanner } from '../../components/ui'
 import { CLAUSES } from '../../data/clauses'
 import { useT, type Lang } from '../../i18n'
@@ -31,6 +32,7 @@ function Body() {
           )
         })}
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        <NextStep from="clause-library" />
       </div>
     </div>
   )

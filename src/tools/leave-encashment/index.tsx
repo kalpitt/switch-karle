@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { leaveEncash } from '../../engine/leaveEncash'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   Disclaimer,
@@ -148,6 +149,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="leave-encashment" />
       </div>
     </div>
   )

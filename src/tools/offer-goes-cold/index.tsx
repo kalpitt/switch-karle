@@ -1,4 +1,5 @@
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, Disclaimer, VerdictBanner } from '../../components/ui'
 import { withLang } from '../../lib/langPath'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -97,6 +98,7 @@ function Body() {
         </Card>
 
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        <NextStep from="offer-goes-cold" />
       </div>
     </div>
   )

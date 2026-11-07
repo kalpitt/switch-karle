@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, Disclaimer, MoneyField, Select, TextField, VerdictBanner } from '../../components/ui'
 import { SCRIPT_SLUGS, type ScriptSlug } from '../../data/hrScripts'
 import { TOOLS } from '../../data/tools'
@@ -67,6 +68,7 @@ function Body({ slug }: { slug: ScriptSlug }) {
         <StaticScript slug={slug} />
       )}
       <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+      <NextStep from={slug} />
     </div>
   )
 }

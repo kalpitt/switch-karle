@@ -16,8 +16,11 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
+import { NextStep } from '../../components/NextStep'
+import { PlanDatesNote } from '../../components/PlanDatesNote'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { loadPlanDates, seedFromPlan, stillFromPlan, type PlanDateMap, type PlanDates } from '../../data/planDates'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
 import { formatLongDate } from '../../lib/formatDate'
@@ -49,6 +52,9 @@ const DEFAULT_DRAFT: Draft = {
   yourName: '',
 }
 
+/** The plan's join date and last working day land here on a first visit (UX-16). */
+const PLAN_MAP = { joinDate: 'joinDate', lastWorkingDay: 'lastWorkingDay' } as const satisfies PlanDateMap<Draft>
+
 export default function FnfCheckerTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="fnf-checker">
@@ -64,6 +70,8 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
+  /** The plan dates placed on boot; empty when the tool had its own saved draft. */
+  const [seeded, setSeeded] = useState<PlanDates>({})
   // Read, never written here: the door asks it. Unknown is handled by the engine.
   const [workWeekDays, setWorkWeekDays] = useState<5 | 6 | undefined>(undefined)
   // Same: read-only from the door's coveredByAct answer. A user who told the
@@ -94,8 +102,13 @@ function Body() {
       setDraft(fill({ ...DEFAULT_DRAFT, ...saved }))
       setExample(null)
     } else {
-      const boot = fill(DEFAULT_DRAFT)
+      // No draft here yet: the plan's dates replace the sample ones. The
+      // settlement figures stay a worked example until the person types the
+      // ones their F&F sheet claims, so the Example tag stays too.
+      const planned = seedFromPlan(DEFAULT_DRAFT, loadPlanDates(), PLAN_MAP, false)
+      const boot = fill(planned.draft)
       setDraft(boot)
+      setSeeded(planned.seeded)
       setExample(boot)
     }
     setHydrated(true)
@@ -152,6 +165,13 @@ function Body() {
         ? t('fnf-checker.verdict.owe', { amount: formatINR(-result.netPayable) })
         : t('fnf-checker.verdict.pay', { amount: formatINR(result.netPayable) })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const fromPlan = stillFromPlan(draft, seeded, PLAN_MAP)
+  /** Both dates are the plan's, so only figures can still be samples. */
+  const planDated = fromPlan.joinDate !== undefined && fromPlan.lastWorkingDay !== undefined
+  // A plan-derived last working day rests on our day-one reading: say so on the receipt.
+  const receiptIds = fromPlan.lastWorkingDay
+    ? [...TOOL_SOURCES['fnf-checker'], 'last-working-day']
+    : TOOL_SOURCES['fnf-checker']
 
   const copyText =
     result && verdict
@@ -224,15 +244,20 @@ function Body() {
         {result && verdict ? (
           <ResultHero
             sample={isExample}
+            sampleNote={planDated ? t('plan-dates.sampleNote') : undefined}
             label={t(result.netPayable < 0 ? 'hero.fnf-checker.owe' : 'hero.fnf-checker.pay')}
             value={formatINR(Math.abs(result.netPayable))}
             verdict={verdict}
             tone={result.netPayable < 0 ? 'alarm' : 'leaf'}
           >
-            <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+            <PlanDatesNote dates={fromPlan} />
+            <Receipt ids={receiptIds} />
           </ResultHero>
         ) : (
-          <Receipt ids={TOOL_SOURCES['fnf-checker']} />
+          <>
+            <PlanDatesNote dates={fromPlan} />
+            <Receipt ids={receiptIds} />
+          </>
         )}
         {result && (
           <Card>
@@ -286,6 +311,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="fnf-checker" />
       </div>
     </div>
   )

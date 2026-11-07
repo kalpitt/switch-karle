@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, DateField, Disclaimer, Receipt, ResultHero, Select, Toggle } from '../../components/ui'
 import { TOOL_SOURCES } from '../../data/sources'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
@@ -123,6 +124,7 @@ function Body() {
         )}
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('epf-transfer.provisional')}</p>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="epf-transfer" />
       </div>
     </div>
   )

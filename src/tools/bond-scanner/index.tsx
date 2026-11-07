@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, TextArea, VerdictBanner } from '../../components/ui'
 import { scanBondClause } from '../../engine/bondScan'
 import { readJson, writeJson } from '../../lib/storage'
@@ -65,6 +66,7 @@ function Body() {
         )}
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        <NextStep from="bond-scanner" />
       </div>
     </div>
   )

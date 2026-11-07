@@ -26,6 +26,8 @@ src/
   tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
+  data/journey.ts  the seven journey stages (`ToolDef.journey`) and each
+                   tool's "Next" link (components/NextStep.tsx renders it)
   prompts/         text the user hands to their own AI — English literals,
                    not i18n keys, because they are content and not UI chrome
   lib/storage.ts   switchkarle.<tool>.v<N>
@@ -37,10 +39,20 @@ src/
 ```
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
-wired to `VerdictBanner` + `Disclaimer` → registry row → `en.ts` keys**. The
+wired to `VerdictBanner` + `Disclaimer` + `NextStep` → registry row with its
+`journey` stage → a `NEXT_STEP` entry in `data/journey.ts` → `en.ts` keys**. The
 catch-all picks up the slug. `node scripts/new-tool.mjs <slug>` scaffolds that
 loop (and patches `ToolIslands.astro` with one static import — Astro cannot hydrate a
 variable component).
+
+**Journey stages and the "Next" link.** Each tool's stage is `ToolDef.journey`
+(one of the seven in `PRODUCT.md`, mapping approved 2026-10-31). `NEXT_STEP` in
+`src/data/journey.ts` holds only the walk order: each tool's one next tool, in
+journey order, with form16-shock leading back to the plan. `NextStep` renders it
+after the result and names the stage when the link crosses into a later one.
+`src/data/journey.test.ts` fails if a tool has no next step, if a link steps
+back a stage, or if following "Next" from any tool cycles before the end of
+stage 6.
 
 ## Head contract
 
@@ -273,6 +285,21 @@ since s.54(B)(a) counts days actually worked. `src/lib/ics.ts` is a pure string
 builder for `dates.ics`, all-day events, no `VALARM` (Google Calendar drops
 custom alarms on import), and its link comes from `SITE` + `BASE` rather than a
 literal.
+
+**Plan dates reach the tools** (2026-11, UX-15, UX-16). `src/data/planDates.ts`
+reads both records through `loadPlan` and `loadCurrentJob` and returns the join
+date, the resign date and — only when the notice period is known too — the
+derived last working day. It never writes. `seedFromPlan` places them in a
+tool's draft on a first visit only (a saved tool draft wins, exactly like a
+`seedOnly` field above), and `stillFromPlan` says which of them the draft still
+holds, which drives the "From your plan" line (`PlanDatesNote`). Readers:
+`resignation-letter` and `notice-tracker` (resign date), `gratuity` and
+`fnf-checker` (join date, last working day). The last working day rests on the
+day-one count in `lastWorkingDay()`, a convention, so those two tools add the
+`last-working-day` source to their receipt whenever they show a plan-derived
+one. Gratuity drops the Example chip only when nothing on screen is a fixture:
+basic + DA and the work week from the record, both dates from the plan.
+`src/data/planDates.test.ts` and `src/tools/journeyLinks.test.ts` pin this.
 
 Erase needs no change for the new key: `src/lib/erase.ts` sweeps the
 `switchkarle.` prefix. `erasePlan()` is the narrower door behind "start over",

@@ -4,6 +4,7 @@ import { STATE_NAMES } from '../../engine/professionalTax'
 import { realHike } from '../../engine/hike'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   CompareBars,
@@ -230,6 +231,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="real-hike" />
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { decodeOffer } from '../../engine/salary'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, InheritNote, MoneyField, ResultHero, ShareRow, Toggle } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
@@ -112,6 +113,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="counter-offer" />
       </div>
     </div>
   )

@@ -14,8 +14,11 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
+import { NextStep } from '../../components/NextStep'
+import { PlanDatesNote } from '../../components/PlanDatesNote'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
+import { loadPlanDates, seedFromPlan, stillFromPlan, type PlanDateMap, type PlanDates } from '../../data/planDates'
 import { formatLongDate } from '../../lib/formatDate'
 import { daysBetween } from '../../engine/dates'
 import { readJson, writeJson } from '../../lib/storage'
@@ -49,6 +52,9 @@ const DEFAULT_DRAFT: Draft = {
   workWeekDays: 6,
 }
 
+/** The plan's join date and last working day land here on a first visit (UX-16). */
+const PLAN_MAP = { joinDate: 'joinDate', lastWorkingDay: 'exitDate' } as const satisfies PlanDateMap<Draft>
+
 export default function GratuityTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="gratuity">
@@ -64,6 +70,8 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
   /** What first paint showed when nothing was saved here; the example the user has not yet edited. */
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
+  /** The plan dates placed on boot; empty when the tool had its own saved draft. */
+  const [seeded, setSeeded] = useState<PlanDates>({})
 
   useEffect(() => {
     // Gratuity is on basic + DA (see the VERIFIED marker in src/engine/gratuity.ts), so it reads `monthlyBasicDA` and
@@ -83,9 +91,21 @@ function Body() {
       setDraft(fill(saved))
       setExample(null)
     } else {
-      const boot = fill(DEFAULT_DRAFT)
+      // No draft here yet: the plan's dates replace the sample ones, and the
+      // sample answer stays only for what the plan does not know.
+      const planned = seedFromPlan(DEFAULT_DRAFT, loadPlanDates(), PLAN_MAP, false)
+      const boot = fill(planned.draft)
       setDraft(boot)
-      setExample(boot)
+      setSeeded(planned.seeded)
+      // Every figure is the person's own (basic + DA and work week from the
+      // record, both dates from the plan), so it is their answer, not the
+      // worked example: nothing on screen was invented by the page.
+      const allTheirs =
+        job.monthlyBasicDA !== undefined &&
+        job.workWeekDays !== undefined &&
+        planned.seeded.joinDate !== undefined &&
+        planned.seeded.lastWorkingDay !== undefined
+      setExample(allTheirs ? null : boot)
     }
     setHydrated(true)
   }, [])
@@ -112,6 +132,9 @@ function Body() {
       : t('gratuity.verdict.no', { years: result.completedYears })
     : null
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const fromPlan = stillFromPlan(draft, seeded, PLAN_MAP)
+  /** Both dates are the plan's, so only figures can still be samples. */
+  const planDated = fromPlan.joinDate !== undefined && fromPlan.lastWorkingDay !== undefined
 
   const copyText = result && verdict
     ? [verdict, result.flipDate ? t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) }) : '', t('ui.disclaimer')]
@@ -156,6 +179,7 @@ function Body() {
       <div className="-order-1 space-y-4 lg:order-none">
         <ResultHero
           sample={isExample}
+          sampleNote={planDated ? t('plan-dates.sampleNote') : undefined}
           label={t('hero.gratuity')}
           value={result?.eligible ? formatINR(result.amount) : undefined}
           verdict={verdict}
@@ -168,7 +192,9 @@ function Body() {
               end={formatLongDate(result.flipDate, lang)}
             />
           )}
-          <Receipt ids={TOOL_SOURCES['gratuity']} />
+          <PlanDatesNote dates={fromPlan} />
+          {/* A plan-derived last working day rests on our day-one reading: say so on the receipt. */}
+          <Receipt ids={fromPlan.lastWorkingDay ? [...TOOL_SOURCES['gratuity'], 'last-working-day'] : TOOL_SOURCES['gratuity']} />
           {result?.eligible && <p className="text-[14px] leading-relaxed text-ink-soft">{t('gratuity.formula')}</p>}
           {result?.flipDate && (
             <p className="text-[14px] leading-relaxed text-ink-soft">{t('gratuity.flip', { date: formatLongDate(result.flipDate, lang) })}</p>
@@ -188,6 +214,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="gratuity" />
       </div>
     </div>
   )

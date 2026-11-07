@@ -4,6 +4,7 @@ import { STATE_NAMES } from '../../engine/professionalTax'
 import { compareOffers } from '../../engine/compare'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   CompareBars,
@@ -233,6 +234,7 @@ function CompareBody() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="offer-comparison" />
       </div>
     </div>
   )

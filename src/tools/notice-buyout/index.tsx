@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { buyoutQuote } from '../../engine/noticeBuyout'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, MoneyField, NumberField, Receipt, ResultHero, Select, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -217,6 +218,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
+        <NextStep from="notice-buyout" />
       </div>
     </div>
   )

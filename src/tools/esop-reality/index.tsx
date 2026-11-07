@@ -3,6 +3,7 @@ import { decodeOffer } from '../../engine/salary'
 import { esopReality, type VestCadence, type VestRow } from '../../engine/esop'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   Disclaimer,
@@ -158,6 +159,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="esop-reality" />
       </div>
     </div>
   )

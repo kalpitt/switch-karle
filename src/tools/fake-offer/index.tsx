@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { scanOfferScam } from '../../engine/offerScam'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -139,6 +140,8 @@ function Body() {
             </Card>
           ))}
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        {/* Hard stops on the letter: moving on to resigning would be the wrong advice. */}
+        <NextStep from="fake-offer" hidden={!isBlank && reds.length > 0} />
       </div>
     </div>
   )
