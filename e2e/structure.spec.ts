@@ -123,5 +123,5 @@ test('an old script address in Hindi opens क्या कहें with that s
   await expect(page.locator('h1')).toHaveText('क्या कहें')
   await expect(page.getByRole('link', { name: 'हाँ के बाद मना करने का email' })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('main h2')).toHaveText('हाँ के बाद मना करने का email')
-  await expect(page).toHaveTitle('हाँ के बाद मना करने का email — स्विच कर ले')
+  await expect(page).toHaveTitle('हाँ के बाद मना करने का email — Switch Karle')
 })

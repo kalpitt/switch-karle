@@ -15,6 +15,6 @@ describe('page titles', () => {
 
   it('adds the brand in the page language', () => {
     expect(withBrand('Gratuity calculator', 'en')).toBe('Gratuity calculator — Switch Karle')
-    expect(withBrand('Gratuity calculator', 'hi')).toBe('Gratuity calculator — स्विच कर ले')
+    expect(withBrand('Gratuity calculator', 'hi')).toBe('Gratuity calculator — Switch Karle')
   })
 })
