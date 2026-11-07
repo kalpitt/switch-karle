@@ -214,3 +214,33 @@ test('a browser that cannot save is told so once', async ({ page }) => {
   await page.getByRole('button', { name: 'OK', exact: true }).click()
   await expect(notice).toBeHidden()
 })
+
+test('tracker: keyboard focus follows the form and the card, and each change is announced', async ({ page }) => {
+  await open(page, '/tracker/')
+  await page.getByRole('button', { name: '+ Add application' }).click()
+  await expect(page.getByRole('textbox', { name: 'Company', exact: true })).toBeFocused()
+  await page.getByRole('textbox', { name: 'Company', exact: true }).fill('Acme')
+  await page.getByRole('textbox', { name: 'Role', exact: true }).fill('Analyst')
+  await page.getByRole('button', { name: 'Add application', exact: true }).click()
+  await expect(page.getByRole('button', { name: '+ Add application' })).toBeFocused()
+  await expect(page.getByRole('status').filter({ hasText: /^Added Acme to / })).toHaveCount(1)
+
+  await page.getByRole('button', { name: 'Move to next stage' }).click()
+  await expect(page.getByRole('button', { name: 'Move to next stage' })).toBeFocused()
+  await expect(page.getByRole('status').filter({ hasText: /^Moved Acme to / })).toHaveCount(1)
+})
+
+test('backup dialog holds focus and gives it back on Escape', async ({ page }) => {
+  await open(page, '/')
+  const opener = page.getByRole('button', { name: 'Back up or restore' })
+  await opener.click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.locator(':focus')).toHaveCount(1)
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab')
+    await expect(dialog.locator(':focus')).toHaveCount(1)
+  }
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(opener).toBeFocused()
+})

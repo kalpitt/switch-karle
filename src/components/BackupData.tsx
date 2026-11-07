@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useDialog } from './useDialog'
 import { useT } from '../i18n'
 import {
   countOverlap,
@@ -26,17 +27,10 @@ export function BackupData({ className }: { className?: string }) {
   const [invalid, setInvalid] = useState(false)
   const [result, setResult] = useState<RestoreResult | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const restored = result != null && result.written.length > 0
 
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  })
 
   function openDialog() {
     setCount(savedCount())
@@ -81,6 +75,10 @@ export function BackupData({ className }: { className?: string }) {
     setPending(null)
   }
 
+  // Focus moves into the dialog, Tab stays inside, Escape closes, and focus
+  // returns to the footer link that opened it (the same as EraseData).
+  useDialog(open, panelRef, close)
+
   const btn = 'min-h-11 rounded-xl px-4 py-2 text-[13px] font-bold'
   const n = pending ? Object.keys(pending.keys).length : 0
 
@@ -92,6 +90,7 @@ export function BackupData({ className }: { className?: string }) {
       {open && (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/40 p-4 pt-[10vh]" onClick={close}>
           <div
+            ref={panelRef}
             className="w-full max-w-md rounded-2xl border border-line bg-paper p-5 text-left text-ink shadow-lg"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
@@ -119,6 +118,7 @@ export function BackupData({ className }: { className?: string }) {
                 type="file"
                 accept="application/json,.json"
                 className="hidden"
+                tabIndex={-1}
                 onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (file) onFile(file)
