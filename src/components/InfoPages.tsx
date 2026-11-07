@@ -31,7 +31,7 @@ function Page({ page, children }: { page: InfoPage; children: ReactNode }) {
   const { lang } = useLang()
   return (
     <article data-info={page} className="max-w-[65ch] space-y-8 text-[15px] leading-relaxed">
-      <h1 className="text-[28px] font-bold leading-tight tracking-tight sm:text-[32px]">{t(`${page}.title`)}</h1>
+      <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">{t(`${page}.title`)}</h1>
       {children}
       <footer className="space-y-2 border-t border-line pt-4 text-[13px] text-ink-soft">
         <p>
@@ -53,7 +53,7 @@ function Page({ page, children }: { page: InfoPage; children: ReactNode }) {
 function Section({ id, title, children }: { id?: string; title: string; children: ReactNode }) {
   return (
     <section id={id} className="scroll-mt-6 space-y-3">
-      <h2 className="text-lg font-bold">{title}</h2>
+      <h2 className="text-[18px] font-semibold leading-snug">{title}</h2>
       {children}
     </section>
   )
