@@ -1,5 +1,5 @@
 import { useT, useLang, type Lang } from '../../i18n'
-import { homeSections, pinnedTools } from '../../data/home'
+import { journeySections } from '../../data/journey'
 import type { ToolDef } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
@@ -52,16 +52,14 @@ function ToolRow({ tool, lang }: { tool: ToolDef; lang: Lang }) {
  * one tap from the nav on every screen and from the link below. Its own erase
  * control travels with it, so the second copy did not vanish in the move.
  * Removing the tool grid is Phase 2, not this one, so it stays where it was:
- * collapsed, under the door.
+ * collapsed, under the door — now grouped by journey stage (PRODUCT.md), with
+ * every tool under exactly one.
  */
 function BelowTheDoor() {
   const t = useT()
   const { lang } = useLang()
-  const pinned = pinnedTools()
-  const sections = homeSections()
-  // Counted from what the disclosure actually renders, not from TOOLS.length —
-  // the registry also carries `tracker` and `prompts`, which live in the nav.
-  const toolCount = pinned.length + sections.reduce((n, section) => n + section.tools.length, 0)
+  const sections = journeySections()
+  const toolCount = sections.reduce((n, section) => n + section.tools.length, 0)
 
   return (
     <div className="space-y-4">
@@ -80,9 +78,14 @@ function BelowTheDoor() {
           <ChevronRight size={18} className="text-ink-soft transition-transform group-open:rotate-90" />
         </summary>
         <div className="space-y-8 border-t border-line px-5 py-5">
-          <ToolGroup title={t('home.pinned')} tools={pinned} lang={lang} />
           {sections.map((section) => (
-            <ToolGroup key={section.category} title={t(section.titleKey)} tools={section.tools} lang={lang} />
+            <ToolGroup
+              key={section.id}
+              title={t(section.nameKey)}
+              what={t(section.whatKey)}
+              tools={section.tools}
+              lang={lang}
+            />
           ))}
         </div>
       </details>
@@ -90,12 +93,13 @@ function BelowTheDoor() {
   )
 }
 
-function ToolGroup({ title, tools, lang }: { title: string; tools: ToolDef[]; lang: Lang }) {
+function ToolGroup({ title, what, tools, lang }: { title: string; what: string; tools: ToolDef[]; lang: Lang }) {
   return (
     <div>
-      <h2 className="mb-1 text-[14px] font-semibold text-ink">
+      <h2 className="text-[14px] font-semibold text-ink">
         {title} <span className="tnum font-normal text-ink-faint">· {tools.length}</span>
       </h2>
+      <p className="mb-1 text-[13px] leading-snug text-ink-soft">{what}</p>
       <ul className="grid gap-x-8 sm:grid-cols-2">
         {tools.map((tool) => (
           <ToolRow key={tool.slug} tool={tool} lang={lang} />
