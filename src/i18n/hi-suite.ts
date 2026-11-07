@@ -15,8 +15,8 @@
  */
 export const hiSuite: Record<string, string> = {
   // ---- Decoder inheritance disclosure ----
-  'ui.inherit': 'Basic, HRA और PF का split आपके save किए हुए Decoder offer से आता है — यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
-  'ui.inheritLink': 'Decoder खोलें',
+  'ui.inherit': 'Basic, HRA और PF का split in-hand salary calculator में save किए offer से आता है। यह tool सिर्फ़ वही बदलता है जो ऊपर पूछा गया है।',
+  'ui.inheritLink': 'In-hand salary calculator खोलें',
   'ui.currentJob': 'Current job के figures — basic, gross, notice period — सभी exit tools में एक ही रहते हैं। यहाँ बदलेंगे तो हर जगह बदल जाएगा। सिर्फ़ इसी device पर save रहता है।',
   'ui.noticeMonthsNudge': 'क्या यह {n} months है? यहाँ notice days में गिना जाता है: {n} months मतलब लगभग {days} days।',
   'ui.noticeMonthsUse': '{days} days use करें',
@@ -140,8 +140,8 @@ export const hiSuite: Record<string, string> = {
   'plan.action.read-what-binds-you.body': 'clause paste करें और देखें कि उसमें असल में क्या लिखा है।',
   'plan.action.read-what-binds-you.open': 'bond scanner खोलें',
   'plan.action.research-two-companies.title': 'अपने AI से पहली दो companies की research करें',
-  'plan.action.research-two-companies.body': 'Prompt Studio prompt लिख देता है। इस site से कुछ नहीं भेजा जाता।',
-  'plan.action.research-two-companies.open': 'Prompt Studio खोलें',
+  'plan.action.research-two-companies.body': 'AI prompts वाला page prompt लिख देता है। इस site से कुछ नहीं भेजा जाता।',
+  'plan.action.research-two-companies.open': 'AI prompts खोलें',
   'plan.action.message-one-ex-colleague.title': 'एक पुराने colleague को referral के लिए message करें',
   'plan.action.message-one-ex-colleague.body': 'ऐसा कोई चुनें जो अब आपके manager के साथ काम नहीं करता। मौजूदा colleague को भेजा message उन तक पहुँच सकता है।',
   'plan.action.message-one-ex-colleague.open': 'referral वाला prompt खोलें',
@@ -197,6 +197,20 @@ export const hiSuite: Record<string, string> = {
   'nav.searchEmpty': '“{q}” के लिए अभी कुछ नहीं। notice, gratuity, in-hand या resign आज़माएं।',
   'nav.searchCount': 'नतीजे: {n}',
   'nav.close': 'बंद करें',
+  'nav.plan': 'आपका plan',
+  'nav.allTools': 'सारे tools',
+  'palette.tools.desc': 'हर tool, switch के सात stages में बँटा हुआ।',
+  'toolsPage.title': 'सारे tools, stage के हिसाब से',
+  'toolsPage.seoTitle': 'Job switch के सारे tools, stage के हिसाब से',
+  'toolsPage.description': 'Switch Karle के सारे free tools, job switch के सात stages में: notice, offers, in-hand salary, resign करना, F&F, PF और tax।',
+  'toolsPage.intro': 'हर tool, उसी क्रम में जिसमें job switch होता है: छोड़ने के फ़ैसले से लेकर नई नौकरी के पहले 90 दिन तक।',
+  'toolsPage.plan': 'पता नहीं आप किस stage में हैं?',
+  'toolsPage.planCta': 'अपने plan से शुरू करें →',
+  'what-to-say.title': 'क्या कहें',
+  'what-to-say.desc': 'Job switch की मुश्किल बातचीत के लिए शब्द। अपनी situation चुनें, फिर copy करें या बोलें।',
+  'what-to-say.picker': 'आपकी situation',
+  'what-to-say.pick': 'आप जिस situation में हैं, उसे चुनें।',
+  'what-to-say.showing': 'अब दिख रहा है: {name}',
   'notFound.docTitle': 'Page नहीं मिला — Switch Karle',
   'notFound.title': 'यह page मौजूद नहीं है।',
   'notFound.body': 'Link पुराना या ग़लत हो सकता है। आपने जो भी save किया है, वह इसी device पर है।',
@@ -212,8 +226,8 @@ export const hiSuite: Record<string, string> = {
   'ui.copyScript': 'Script copy करें',
 
   // ---- Offer comparison ----
-  'offer-comparison.title': 'Offer तुलना',
-  'offer-comparison.desc': 'दो या तीन offers, side by side — in-hand देखें, headline CTC नहीं।',
+  'offer-comparison.title': 'Offers की तुलना',
+  'offer-comparison.desc': 'दो या तीन offers साथ रखें और देखें कि किसमें in-hand ज़्यादा है।',
   'offer-comparison.offer': 'Offer {label}',
   'offer-comparison.addThird': 'तीसरा offer जोड़ें',
   'offer-comparison.removeThird': 'Offer C हटाएं',
@@ -236,8 +250,8 @@ export const hiSuite: Record<string, string> = {
   'offer-comparison.flag.ceiling': 'एक offer में PF पूरे basic पर है, दूसरे में wage ceiling पर।',
 
   // ---- Real hike ----
-  'real-hike.title': 'असली Hike',
-  'real-hike.desc': 'CTC में उछाल बनाम हर महीने असल में क्या आपके account तक पहुंचता है।',
+  'real-hike.title': 'In-hand hike calculator',
+  'real-hike.desc': 'देखें कि bank में असल में कितना ज़्यादा आएगा, सिर्फ़ यह नहीं कि CTC कितना बढ़ा।',
   'real-hike.formTitle': 'यह job → अगली job',
   'real-hike.currentCtc': 'मौजूदा CTC',
   'real-hike.currentVariable': 'मौजूदा variable',
@@ -258,8 +272,8 @@ export const hiSuite: Record<string, string> = {
     'Variable को tax के बाद 70% पर गिना गया है, quoted figure पर नहीं, फिर 12 महीनों में spread किया गया है।',
 
   // ---- Variable reality ----
-  'variable-reality.title': 'Variable की असलियत',
-  'variable-reality.desc': 'अगर variable 0, 50 या 100% pay हो तो आपका monthly in-hand कैसा दिखेगा।',
+  'variable-reality.title': 'Variable pay की जाँच',
+  'variable-reality.desc': 'Variable 0%, 50% या 100% मिले तो आपका monthly in-hand कितना होगा, यह देखें।',
   'variable-reality.formTitle': 'आपका variable pay',
   'variable-reality.months': 'इस FY में payroll पर महीने',
   'variable-reality.monthsHint':
@@ -276,7 +290,7 @@ export const hiSuite: Record<string, string> = {
   'variable-reality.fullYearTax': 'Variable pro-rated होने पर भी, tax का base आपका full-year CTC ही रहता है।',
 
   // ---- Bonus clawback ----
-  'bonus-clawback.title': 'Bonus Clawback',
+  'bonus-clawback.title': 'Joining bonus की वापसी',
   'bonus-clawback.desc': 'Clawback ख़त्म होने से पहले छोड़ने पर कितना लौटाना होगा, tax समेत, यह देखें।',
   'bonus-clawback.formTitle': 'Clawback की अवधि',
   'bonus-clawback.amount': 'Joining bonus (gross)',
@@ -287,7 +301,7 @@ export const hiSuite: Record<string, string> = {
   'bonus-clawback.plannedLwd': 'सोचा हुआ last working day',
   'bonus-clawback.plannedLwdHint': 'Anniversary से तीन हफ़्ते पहले निकलना भी कम ही गिना जाता है।',
   'bonus-clawback.taxableIncome': 'Bonus के बिना taxable income',
-  'bonus-clawback.taxableIncomeHint': 'आपके Decoder offer से लिया गया है। असली income अलग हो तो बदल दें।',
+  'bonus-clawback.taxableIncomeHint': 'In-hand salary calculator वाले offer से लिया गया है। असली income अलग हो तो बदल दें।',
   'bonus-clawback.regime': 'Tax regime',
   'bonus-clawback.served': '{window} महीने की window में से {months} महीने पूरे हुए।',
   'bonus-clawback.netMode': 'Net-vs-gross trap दिखाएं',
@@ -309,8 +323,8 @@ export const hiSuite: Record<string, string> = {
   'bonus-clawback.keep': 'आपको net',
 
   // ---- ESOP reality ----
-  'esop-reality.title': 'ESOP की असलियत',
-  'esop-reality.desc': 'Exercise पर perquisite tax, vest schedule, और यह paper असल में liquid है या नहीं।',
+  'esop-reality.title': 'ESOP की cost और tax',
+  'esop-reality.desc': 'Options exercise करने के लिए कितना cash चाहिए और उसी दिन कितना tax बनता है, यह देखें।',
   'esop-reality.formTitle': 'The Grant',
   'esop-reality.shares': 'Shares',
   'esop-reality.strike': 'Strike price',
@@ -343,7 +357,7 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.provisional': 'अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
 
   // ---- Relocation ----
-  'relocation.title': 'Relocation',
+  'relocation.title': 'शहर बदलने का calculator',
   'relocation.desc': 'देखें कि वही CTC दूसरे शहर में जाने पर आपका in-hand कैसे बदलता है।',
   'relocation.formTitle': 'वही salary, नया शहर',
   'relocation.fromState': 'किस राज्य से',
@@ -375,8 +389,8 @@ export const hiSuite: Record<string, string> = {
   'relocation.noCol': 'यह cost-of-living index नहीं है। Rent वही है जो आप type करते हैं, किसी city का average नहीं।',
 
   // ---- Fake offer scanner ----
-  'fake-offer.title': 'Fake Offer Scanner',
-  'fake-offer.desc': 'Deposit की माँग, free-mail recruiters, lookalike domains — plus EPFO और MCA lookup links।',
+  'fake-offer.title': 'Fake offer की जाँच',
+  'fake-offer.desc': 'पैसे देने या कोई document भेजने से पहले job scam के संकेत पहचानें।',
   'fake-offer.formTitle': 'आपको भेजी गई letter',
   'fake-offer.company': 'Company का नाम',
   'fake-offer.email': 'Recruiter का email या domain',
@@ -420,8 +434,8 @@ export const hiSuite: Record<string, string> = {
   'fake-offer.verify': 'Verify करें:',
 
   // ---- Notice buyout ----
-  'notice-buyout.title': 'Notice Buyout',
-  'notice-buyout.desc': 'Notice पूरा serve किए बिना छोड़ने में क्या cost लगती है — या F&F से वे कितना recover करते हैं।',
+  'notice-buyout.title': 'Notice buyout calculator',
+  'notice-buyout.desc': 'Notice period पूरा होने से पहले छोड़ने में कितना ख़र्च आएगा, यह निकालें।',
   'notice-buyout.formTitle': 'जो notice serve नहीं किया',
   'notice-buyout.basis': 'Letter इस्तेमाल करती है',
   'notice-buyout.basis.basic': 'Basic प्रति महीना',
@@ -446,8 +460,8 @@ export const hiSuite: Record<string, string> = {
   'notice-buyout.gstNote': 'Notice buyout पर GST / income-tax का treatment disputed है — यह tool कोई tax compute नहीं करता।',
 
   // ---- Gratuity ----
-  'gratuity.title': 'Gratuity',
-  'gratuity.desc': 'आप eligible हैं या नहीं, कितना मिलेगा, और कौन सी date आपको line के पार ले जाती है।',
+  'gratuity.title': 'Gratuity calculator',
+  'gratuity.desc': 'वह date जानें जब आप gratuity के हक़दार बनते हैं, और लगभग कितनी मिलेगी।',
   'gratuity.formTitle': 'आपकी service और pay',
   'gratuity.basic': 'महीने का basic + DA',
   'gratuity.basicHint': 'Last drawn, CTC नहीं। Basic और dearness allowance; pay का और हिस्सा कब गिना जाता है, यह result के नीचे वाला note बताता है।',
@@ -471,9 +485,9 @@ export const hiSuite: Record<string, string> = {
     '21 नवंबर 2025 से gratuity Code on Social Security, 2020 की “wages” (s.2(88)) पर मिलती है: basic और DA, और अगर HRA, conveyance जैसे excluded हिस्से आपकी pay के आधे से ज़्यादा हैं तो उससे ऊपर वाला हिस्सा भी। यह सिर्फ़ basic + DA पर है, इसलिए इसे कम से कम की रकम मानें।',
 
   // ---- Leave encashment ----
-  'leave-encashment.title': 'Leave Encashment',
+  'leave-encashment.title': 'Leave encashment calculator',
   'leave-encashment.desc':
-    'Resignation हो या retirement, leave encashment Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक exempt है।',
+    'बची हुई leave का कितना पैसा मिलेगा और उसमें से कितने पर tax लगेगा, यह निकालें।',
   'leave-encashment.formTitle': 'Encash करने का balance',
   'leave-encashment.days': 'Leave दिन',
   'leave-encashment.basic': 'Monthly basic',
@@ -494,8 +508,8 @@ export const hiSuite: Record<string, string> = {
     'Provisional है। 26 बनाम 30 पर employer की practice अलग-अलग होती है। यह tool सिर्फ़ ₹25,00,000 की notified ceiling और मिली हुई amount apply करता है; leave-days या average-salary वाले limbs model नहीं करता।',
 
   // ---- F&F checker ----
-  'fnf-checker.title': 'F&F Checker',
-  'fnf-checker.desc': 'Full-and-final sheet फिर से calculate करें: unpaid leave, notice recovery, gratuity, और क्या आप उन्हें कुछ owe करते हैं।',
+  'fnf-checker.title': 'F&F की जाँच',
+  'fnf-checker.desc': 'अपना full-and-final settlement line by line जाँचें और dispute email पाएं।',
   'fnf-checker.formTitle': 'Sheet जो claim करती है',
   'fnf-checker.join': 'Join करने की date',
   'fnf-checker.lwd': 'Last working day (आख़िरी दिन)',
@@ -548,8 +562,8 @@ export const hiSuite: Record<string, string> = {
     'इस sheet में gratuity की line नहीं है। आपकी service पर यह कम से कम ₹{amount} बनता है। अगर आप Code on Social Security, 2020 के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
 
   // ---- Two Form-16 shock ----
-  'form16-shock.title': 'दो Form-16 का झटका',
-  'form16-shock.desc': 'दोनों employers ने आपको slab benefit दिया। एक return में इन्हें साथ मिलाना पड़ता है।',
+  'form16-shock.title': 'दो नौकरियों वाला tax check',
+  'form16-shock.desc': 'एक साल में दो employers होने से कहीं tax बाक़ी तो नहीं, March से पहले देख लें।',
   'form16-shock.formTitle': 'इस FY में, दो Form-16s',
   'form16-shock.e1gross': 'पहला employer: taxable salary',
   'form16-shock.e1tds': 'पहला employer: TDS',
@@ -569,8 +583,8 @@ export const hiSuite: Record<string, string> = {
   'form16-shock.form12bNote': 'यह एक plain summary है, statutory form नहीं — payroll इससे आपकी बाक़ी TDS का अंदाज़ा लेता है।',
 
   // ---- Resignation letter ----
-  'resignation-letter.title': 'Resignation Letter',
-  'resignation-letter.desc': 'तीन में से किसी एक tone में resignation letter लिखें, last working day दोनों तरह से गिनकर, जैसे letters गिनते हैं।',
+  'resignation-letter.title': 'Resignation letter',
+  'resignation-letter.desc': 'तीन में से किसी एक tone में resignation लिखें, last working day की गिनती के साथ।',
   'resignation-letter.formTitle': 'Letter',
   'resignation-letter.formHint': 'आपका draft सिर्फ़ इस device पर save होता है, कभी upload नहीं होता।',
   'resignation-letter.company': 'Company का नाम',
@@ -601,8 +615,8 @@ export const hiSuite: Record<string, string> = {
     'प्रिय {manager},\n\nयह {company} में {role} से resignation है, {date} से effective। Last working day: {lwd}। कृपया acknowledge करें और F&F / relieving checklist share करें।\n\nRegards',
 
   // ---- Manager conversation ----
-  'manager-script.title': 'Manager से बातचीत',
-  'manager-script.desc': 'सामने resign करते समय क्या कहें — supportive room, counter-offer का risk, या hard room।',
+  'manager-script.title': 'Resign की बातचीत का script',
+  'manager-script.desc': 'Manager को बताते वक़्त क्या कहें, माहौल जैसा भी हो।',
   'manager-script.formTitle': 'जिस room में आप जा रहे हैं',
   'manager-script.preset': 'यह manager आमतौर पर कैसा है',
   'manager-script.preset.supportive': 'Supportive',
@@ -622,8 +636,8 @@ export const hiSuite: Record<string, string> = {
   'manager-script.lead': 'आमने-सामने कहें, फिर writing में follow up करें।',
   'hr.switcher': 'और scripts',
   'hr.disclaimer': 'Templates हैं, legal advice नहीं। भेजने से पहले इन्हें अपनी appointment letter से match करें।',
-  'hr.expected-ctc.title': 'Expected CTC',
-  'hr.expected-ctc.desc': 'जब recruiter band share करने से पहले एक number माँगे।',
+  'hr.expected-ctc.title': 'Expected CTC का जवाब',
+  'hr.expected-ctc.desc': '“आपकी expected CTC क्या है?” का जवाब दें, और उसी जवाब में band पूछें।',
   'hr.early-release.body': 'नमस्ते [Manager name],\n\nमैंने [date] को अपना resignation share किया था, notice के हिसाब से last working day [LWD] है।\n\n[new joining date] को अगली job join करनी है, इसलिए early release से समय पर शुरुआत करने में मदद मिलेगी। एक written handover पूरा किया जाएगा, और जाने के बाद भी सवालों के लिए संपर्क बना रहेगा। क्या हम early release या बचे हुए notice का buyout देख सकते हैं, ताकि मेरा आख़िरी दिन [proposed LWD] हो सके?\n\nजो appointment letter allow करती है, वही follow किया जाएगा। ध्यान देने के लिए धन्यवाद।',
   'hr.buyout-ask.body': 'नमस्ते [HR name],\n\nक्या आप confirm कर सकते हैं कि मेरी letter में notice buyout कैसे काम करता है — basic पर या gross पर, और divisor 30 दिन है?\n\nमेरा सुझाव है कि [proposed last day] को last working day रखा जाए। Buyout allowed हो तो कृपया amount बताएं, और यह भी कि वह F&F से recover होगा या relieving से पहले मुझे देना होगा।\n\nदोनों सूरत में handover पूरा किया जाएगा।',
   'hr.decline-accepted.body': 'नमस्ते [Recruiter / HR name],\n\n[company] में [role] के offer के लिए फिर से धन्यवाद। अच्छी तरह सोचने के बाद, मुझे अपनी acceptance वापस लेनी है। फ़ैसला हो चुका है — join नहीं किया जाएगा।\n\nदिक्कत के लिए माफ़ी। कृपया इस mail को मेरा formal decline मानें।\n\nआपके समय के लिए धन्यवाद, और team के लिए शुभकामनाएं।',
@@ -638,21 +652,21 @@ export const hiSuite: Record<string, string> = {
   'hr.expected-ctc.copyBlocked': 'Reply copy करने के लिए role और दोनों numbers भरें।',
   'hr.expected-ctc.placeholderCurrent': '[आपका current CTC]',
   'hr.expected-ctc.placeholderExpected': '[आपका expected CTC]',
-  'hr.early-release.title': 'Early Release',
-  'hr.early-release.desc': 'मौजूदा HR/manager से notice छोटा करने के लिए कहें।',
-  'hr.buyout-ask.title': 'Buyout Ask',
-  'hr.buyout-ask.desc': 'Basic बनाम gross और /30 divisor को writing में confirm करें।',
-  'hr.decline-accepted.title': 'Yes के बाद Decline',
-  'hr.decline-accepted.desc': 'Acceptance withdraw करें, बिना इसे negotiation बनाए।',
-  'hr.counter-offer-reply.title': 'Counter-offer Reply',
-  'hr.counter-offer-reply.desc': 'मौजूदा manager के साथ writing में loop close करें।',
-  'hr.recruiter-followup.title': 'Recruiter Follow-up',
-  'hr.recruiter-followup.desc': 'Promised timeline के बाद एक-mail वाला nudge।',
+  'hr.early-release.title': 'Early release का email',
+  'hr.early-release.desc': 'Notice ख़त्म होने से पहले जाने की request, विनम्रता से और लिखकर।',
+  'hr.buyout-ask.title': 'Notice buyout का email',
+  'hr.buyout-ask.desc': 'HR से लिखकर पूछें कि आपका notice buyout कैसे निकाला जाता है।',
+  'hr.decline-accepted.title': 'हाँ के बाद मना करने का email',
+  'hr.decline-accepted.desc': 'पहले से accept किया offer साफ़ तरीक़े से और लिखकर छोड़ें।',
+  'hr.counter-offer-reply.title': 'Counter-offer के जवाब का email',
+  'hr.counter-offer-reply.desc': 'Current employer का counter-offer लिखकर मना करें, अच्छे रिश्ते रखते हुए।',
+  'hr.recruiter-followup.title': 'Recruiter follow-up email',
+  'hr.recruiter-followup.desc': 'वादे की date के बाद चुप हो गए recruiter को याद दिलाएं।',
 
   // ---- Counter-offer ----
-  'counter-offer.title': 'Counter-offer',
+  'counter-offer.title': 'Counter-offer की जाँच',
   'counter-offer.desc':
-    'Outside offer के मुकाबले rupee का gap, plus non-rupee reasons जिनकी वजह से लोग रुकते हैं — और honest stay-rate warning।',
+    'रुकने का फ़ैसला करने से पहले counter और बाहर वाले offer का in-hand मिलाएं।',
   'counter-offer.formTitle': 'तीन CTCs',
   'counter-offer.current': 'मौजूदा CTC',
   'counter-offer.counter': 'उन्होंने जो counter offer किया',
@@ -666,8 +680,8 @@ export const hiSuite: Record<string, string> = {
   'counter-offer.nonRupee': 'एक non-rupee reason on किया गया है। अगर रुकते हैं, तो promotion या team change को date के साथ writing में लें।',
 
   // ---- Handover doc ----
-  'handover-doc.title': 'Handover Doc',
-  'handover-doc.desc': 'एक structured KT note जिसे mail या doc में paste कर सकते हैं।',
+  'handover-doc.title': 'Handover note',
+  'handover-doc.desc': 'आपकी जगह आने वाले को जो handover चाहिए, वह लिखें, email में paste करने के लिए तैयार।',
   'handover-doc.formTitle': 'अगले owner को क्या चाहिए',
   'handover-doc.role': 'Role',
   'handover-doc.owner': 'आपके बाद इसे कौन owns करेगा',
@@ -687,8 +701,8 @@ export const hiSuite: Record<string, string> = {
   'handover-doc.copyBlocked': 'Note copy करने के लिए अपना role, अगले owner का नाम और projects भरें।',
 
   // ---- Relieving chaser ----
-  'relieving-chaser.title': 'Relieving Chaser',
-  'relieving-chaser.desc': 'अगर relieving letter नहीं आई है तो Day 7, 14 और 30 वाले mails।',
+  'relieving-chaser.title': 'Relieving letter के emails',
+  'relieving-chaser.desc': 'Relieving letter देर से आए तो day 7, 14 और 30 के तीन follow-ups।',
   'relieving-chaser.formTitle': 'किसे chase करना है',
   'relieving-chaser.company': 'Company',
   'relieving-chaser.hr': 'HR का नाम',
@@ -707,8 +721,8 @@ export const hiSuite: Record<string, string> = {
   'relieving-chaser.setLwd': 'पहले बीत चुकी last working day set करें — LWD के बाद ही chase समझ आता है।',
   'relieving-chaser.fillFields': 'Email copy करने के लिए company, HR contact का नाम और अपना role भरें।',
   // ---- EPF transfer ----
-  'epf-transfer.title': 'EPF Transfer',
-  'epf-transfer.desc': 'Online Form 13, unmarked date-of-exit, KYC mismatches, और जल्दी withdraw करना आमतौर पर क्यों ज़्यादा costly move है।',
+  'epf-transfer.title': 'PF transfer guide',
+  'epf-transfer.desc': 'अपना PF नए employer के पास ले जाएं और जो आमतौर पर अटकता है, उसे ठीक करें।',
   'epf-transfer.formTitle': 'आपका PF account',
   'epf-transfer.intent': 'आप क्या करना चाहते हैं',
   'epf-transfer.intent.transfer': 'नए employer को Transfer करें (Form 13)',
@@ -746,8 +760,8 @@ export const hiSuite: Record<string, string> = {
   'epf-transfer.provisional': 'PF withdrawal पर tax का अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
 
   // ---- BGV prep ----
-  'bgv-prep.title': 'BGV Prep',
-  'bgv-prep.desc': 'Background check क्या देखेगा — gaps, dual PF, pending relieving letter — और company type के हिसाब से क्या pack करें।',
+  'bgv-prep.title': 'Background check (BGV) की तैयारी',
+  'bgv-prep.desc': 'जानें कि background check में क्या दिखेगा, और papers तैयार रखें।',
   'bgv-prep.formTitle': 'वे क्या देखेंगे',
   'bgv-prep.gap': 'Employment gap',
   'bgv-prep.gapHint': 'इस job और पिछली job के बीच महीने। कोई gap नहीं तो 0।',
@@ -773,8 +787,8 @@ export const hiSuite: Record<string, string> = {
   'bgv-prep.item.type-startup': 'नए startups में PF या साफ org chart न भी हो। Bank salary credits और grant letter रखें।',
 
   // ---- Insurance gap ----
-  'insurance-gap.title': 'Insurance Gap',
-  'insurance-gap.desc': 'Group cover आपके last working day पर ख़त्म हो जाता है। अगले employer की policy शुरू होने तक uncovered दिन count करें।',
+  'insurance-gap.title': 'Health cover का gap',
+  'insurance-gap.desc': 'दो नौकरियों के बीच कितने दिन health cover नहीं रहेगा, गिनें।',
   'insurance-gap.formTitle': 'Uncovered समय',
   'insurance-gap.lwd': 'Last working day (आख़िरी दिन)',
   'insurance-gap.join': 'नई join date',
@@ -792,15 +806,15 @@ export const hiSuite: Record<string, string> = {
   'insurance-gap.factor.city': 'Metro बनाम non-metro network hospitals बदलता है, यह नहीं कि आपके पास gap है या नहीं।',
 
   // ---- Tax declaration ----
-  'tax-declaration.title': 'Tax Declaration',
-  'tax-declaration.desc': 'नए employer को क्या बताएं: regime, HRA proofs, और वह Form 16 जो आपके जाने के बाद आती है।',
+  'tax-declaration.title': 'नई नौकरी का tax declaration',
+  'tax-declaration.desc': 'Tax regime चुनें और जानें कि नए employer को कौन से proofs देने हैं।',
   'tax-declaration.formTitle': 'इस साल की declarations',
   'tax-declaration.ctc': 'इन numbers के पीछे CTC',
   'tax-declaration.basic': 'Basic',
   'tax-declaration.rent': 'Monthly rent (old-regime HRA)',
   'tax-declaration.state': 'Work state',
-  'tax-declaration.profileHint': 'Decoder से seed किया गया है। यहाँ fields बदलने से Decoder overwrite नहीं होता।',
-  'tax-declaration.openDecoder': 'Decoder खोलें',
+  'tax-declaration.profileHint': 'In-hand salary calculator से लिया गया है। यहाँ fields बदलने से वहाँ कुछ नहीं बदलता।',
+  'tax-declaration.openDecoder': 'In-hand salary calculator खोलें',
   'tax-declaration.hra': 'HRA claim करना है (old regime)',
   'tax-declaration.hraHint': 'असल rent receipts चाहिए। अगर new regime सस्ता है तो बेकार है।',
   'tax-declaration.80c': 'PF के अलावा extra 80C invest करना है',
@@ -819,8 +833,8 @@ export const hiSuite: Record<string, string> = {
     'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। Income-tax Act, 2025 की s.392(4)(a)(i) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
 
   // ---- Notice tracker ----
-  'notice-tracker.title': 'Notice Tracker',
-  'notice-tracker.desc': 'Dates और एक checklist: F&F, asset return, insurance end, PF date of exit।',
+  'notice-tracker.title': 'Notice period checklist',
+  'notice-tracker.desc': 'Notice के दिन गिनें और F&F, laptop return, PF और insurance पर tick लगाएं।',
   'notice-tracker.formTitle': 'आपकी notice dates',
   'notice-tracker.resign': 'Resignation date',
   'notice-tracker.notice': 'Notice period',
@@ -847,8 +861,8 @@ export const hiSuite: Record<string, string> = {
   'plan-dates.sampleNote': 'Dates आपके plan से हैं, पर कुछ figures अभी sample हैं। अपने numbers डालें।',
 
   // ---- Bond scanner ----
-  'bond-scanner.title': 'Bond Scanner',
-  'bond-scanner.desc': 'Bond, non-compete या probation clause paste करें। यह patterns flag करता है — यह कोई court नहीं है।',
+  'bond-scanner.title': 'Bond और clause की जाँच',
+  'bond-scanner.desc': 'Bond या non-compete clause paste करें और देखें कि lawyer से क्या पूछना चाहिए।',
   'bond-scanner.formTitle': 'Clause paste करें',
   'bond-scanner.text': 'Offer / appointment text',
   'bond-scanner.textHint':
@@ -871,8 +885,8 @@ export const hiSuite: Record<string, string> = {
     'यह एक pattern scan है, legal advice नहीं। भारतीय case law fact-specific होता है। ऊपर दिए दो citations आपकी letter पर holdings नहीं हैं।',
 
   // ---- Payslip redactor ----
-  'redactor.title': 'Mask text (फोटो नहीं)',
-  'redactor.desc': 'Payslip या offer का screenshot लेने से पहले Aadhaar, PAN, UAN, phone, email और rupee amounts को इस device पर mask करें।',
+  'redactor.title': 'Payslip masker',
+  'redactor.desc': 'Paste किया text share करने से पहले PAN, Aadhaar, phone number और amounts छिपाएं।',
   'redactor.formTitle': 'Page paste करें',
   'redactor.text': 'Payslip या offer text',
   'redactor.textHint':
@@ -885,8 +899,8 @@ export const hiSuite: Record<string, string> = {
   'redactor.preview': 'Masked Preview',
 
   // ---- Clause library ----
-  'clause-library.title': 'Clause Library',
-  'clause-library.desc': 'भारतीय appointment letters में मिलने वाली clauses की plain-English readings। यह legal advice नहीं है।',
+  'clause-library.title': 'Offer letter की clauses, आसान भाषा में',
+  'clause-library.desc': 'Notice, bond, variable और PF clauses पर आसान notes।',
   'clause-library.verdict': 'वह clause पढ़ें जो आपने असल में sign की है। यह notes एक map हैं, आपका contract नहीं।',
   'clause-library.cat.notice': 'Notice',
   'clause-library.cat.bond': 'Bond',
@@ -924,8 +938,8 @@ export const hiSuite: Record<string, string> = {
   'state.PY': 'पुदुचेरी',
 
   // ---- Offer Goes Cold Guide ----
-    'offer-goes-cold.title': 'जब नया offer शांत हो जाए',
-  'offer-goes-cold.desc': 'क्या करें जब notice period के दौरान नई company शांत हो जाए।',
+    'offer-goes-cold.title': 'नया offer चुप हो गया',
+  'offer-goes-cold.desc': 'Notice के दौरान नई company जवाब देना बंद कर दे तो क्या करें।',
   'offer-goes-cold.verdict': 'Recruiter की तरफ से silence का मतलब आमतौर पर slow paperwork होता है। लेकिन अगर ऐसा ही चलता रहे, तो last working day से पहले writing में जवाब चाहिए।',
   'offer-goes-cold.s1.title': 'Silence का मतलब (और क्या नहीं)',
   'offer-goes-cold.s1.body.1': 'Silence का मतलब हमेशा यह नहीं होता कि offer ख़त्म हो गया है। Paperwork, BGV, budget approvals या recruiter का job बदलना अक्सर चीजों को slow कर देते हैं। लेकिन यह भी न मानें कि सब कुछ ठीक है। आपको writing में confirmed joining date चाहिए। Validity date या conditions के लिए offer letter को फिर से पढ़ें। अगर BGV वजह है, तो आपके पिछले employer का HR slow हो सकता है: देखें ',

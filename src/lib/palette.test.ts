@@ -18,10 +18,12 @@ const labels: Record<string, string> = {
 }
 
 describe('palette', () => {
-  it('puts home first, then every registry tool', () => {
+  it('puts your plan first, then all tools, then every registry tool', () => {
     const items = paletteItems(tools, '/switch-karle/', (s) => `/switch-karle/${s}/`)
-    expect(items.map((i) => i.slug)).toEqual(['home', 'epf-transfer', 'decoder'])
+    expect(items.map((i) => i.slug)).toEqual(['home', 'tools', 'epf-transfer', 'decoder'])
     expect(items[0]!.href).toBe('/switch-karle/')
+    expect(items[0]!.titleKey).toBe('nav.plan')
+    expect(items[1]!.href).toBe('/switch-karle/tools/')
   })
 
   it('filters on slug, title, or description', () => {
@@ -29,7 +31,7 @@ describe('palette', () => {
     const label = (k: string) => labels[k] ?? k
     expect(filterPalette(items, 'form 13', label).map((i) => i.slug)).toEqual(['epf-transfer'])
     expect(filterPalette(items, 'DECODER', label).map((i) => i.slug)).toEqual(['decoder'])
-    expect(filterPalette(items, '  ', label)).toHaveLength(3)
+    expect(filterPalette(items, '  ', label)).toHaveLength(4)
   })
 
   it('treats hyphens, spaces, and punctuation as equivalent so in-hand, in hand, and inhand match identically', () => {
@@ -173,6 +175,36 @@ describe('palette', () => {
       expect(filterPalette(items, q, label)[0]!.slug, q).toBe('home')
     }
 
+    // the old names still find the renamed tools (COPY-05)
+    const oldNames: [string, string][] = [
+      ['decoder', 'decoder'],
+      ['offer decoder', 'decoder'],
+      ['real hike', 'real-hike'],
+      ['variable reality', 'variable-reality'],
+      ['esop reality', 'esop-reality'],
+      ['relocation', 'relocation'],
+      ['fake offer scanner', 'fake-offer'],
+      ['bond scanner', 'bond-scanner'],
+      ['f&f checker', 'fnf-checker'],
+      ['two form-16 shock', 'form16-shock'],
+      ['manager conversation', 'manager-script'],
+      ['decline after yes', 'decline-accepted'],
+      ['buyout ask', 'buyout-ask'],
+      ['handover doc', 'handover-doc'],
+      ['relieving chaser', 'relieving-chaser'],
+      ['notice tracker', 'notice-tracker'],
+      ['mask text', 'redactor'],
+      ['clause library', 'clause-library'],
+      ['insurance gap', 'insurance-gap'],
+      ['tracker', 'tracker'],
+      ['prompt studio', 'prompts'],
+      ['scripts', 'what-to-say'],
+    ]
+    for (const [q, slug] of oldNames) {
+      expect(filterPalette(items, q, label).map((i) => i.slug), q).toContain(slug)
+    }
+    expect(filterPalette(items, 'all tools', label)[0]!.slug).toBe('tools')
+
     // no resume promises: Prompt Studio has no resume template
     expect(filterPalette(items, 'resume', label).map((i) => i.slug)).not.toContain('prompts')
 
@@ -193,6 +225,15 @@ describe('palette', () => {
       expect(hasDevanagari, `Tool ${tool.slug} must include Devanagari keywords`).toBe(true)
       expect(hasLatin, `Tool ${tool.slug} must include English/Hinglish keywords`).toBe(true)
     }
+  })
+
+  it('finds renamed tools by their old Hindi names on a Hindi page', () => {
+    const items = paletteItems(TOOLS, '/hi/', (s) => `/hi/${s}/`)
+    const label = (k: string) => dictionaries.hi[k] ?? k
+    expect(filterPalette(items, 'डिकोडर', label)[0]!.slug).toBe('decoder')
+    expect(filterPalette(items, 'ट्रैकर', label)[0]!.slug).toBe('tracker')
+    expect(filterPalette(items, 'प्रॉम्प्ट्स', label)[0]!.slug).toBe('prompts')
+    expect(filterPalette(items, 'क्या कहें', label)[0]!.slug).toBe('what-to-say')
   })
 })
 

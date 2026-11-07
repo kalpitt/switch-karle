@@ -20,7 +20,20 @@ export interface ToolDef {
   statutory: boolean
   storageKey?: `switchkarle.${string}.v${number}`
   keywords?: string[]
+  /**
+   * A situation inside another page rather than a tool of its own: the seven
+   * "What to say" scripts keep their own URLs (old links and bookmarks work),
+   * but each renders the one What to say page with itself picked. Lists show
+   * the group once per stage instead of each situation (see `listSections`).
+   */
+  partOf?: typeof WHAT_TO_SAY
 }
+
+/** The one page that holds every script (decision 4, 2026-10-31). */
+export const WHAT_TO_SAY = 'what-to-say' as const
+
+/** The page that lists every tool by stage, /tools/ and /hi/tools/. Not a tool slug. */
+export const TOOLS_PAGE = 'tools' as const
 
 export const TOOLS: ToolDef[] = [
   {
@@ -31,16 +44,17 @@ export const TOOLS: ToolDef[] = [
     icon: 'decoder',
     titleKey: 'tab.decoder',
     descKey: 'home.decoder.desc',
-    seoTitle: 'Offer decoder',
+    seoTitle: 'In-hand salary calculator',
     seoDescription:
       'Decode your Indian job offer: CTC to real in-hand salary under both tax regimes, plus a red-flag scanner for notice periods, bonds and variable pay.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.decoder.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'offer decoder',
+      'डिकोडर',
       'in hand',
-      'in-hand',
-      'inhand',
       'take home',
       'ctc',
       'salary breakdown',
@@ -69,12 +83,13 @@ export const TOOLS: ToolDef[] = [
     statutory: true,
     storageKey: 'switchkarle.compare.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'offer तुलना',
       'hike',
       'compare offers',
       'job offers',
       'ctc comparison',
       'multiple offers',
-      'offer compare',
       'do offer',
       'kaunsa offer',
       'ऑफर तुलना',
@@ -125,13 +140,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'hike',
     titleKey: 'real-hike.title',
     descKey: 'real-hike.desc',
-    seoTitle: 'Real hike calculator',
+    seoTitle: 'In-hand hike calculator',
     seoDescription:
       'See how much more reaches your bank on a job switch, not just how much bigger the CTC is. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.hike.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'real hike calculator',
+      'असली hike',
       'hike',
       'increment',
       'percentage hike',
@@ -155,13 +173,17 @@ export const TOOLS: ToolDef[] = [
     icon: 'variable',
     titleKey: 'variable-reality.title',
     descKey: 'variable-reality.desc',
-    seoTitle: 'Variable pay reality check',
+    seoTitle: 'Variable pay check',
     seoDescription:
       'Monthly in-hand if variable pays 0%, 50% or 100%, plus first-year pro-rating and lump-versus-spread tax.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.variable.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'variable reality',
+      'variable pay reality check',
+      'variable की असलियत',
       'variable pay',
       'performance bonus',
       'annual bonus',
@@ -183,13 +205,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'clawback',
     titleKey: 'bonus-clawback.title',
     descKey: 'bonus-clawback.desc',
-    seoTitle: 'Joining bonus clawback',
+    seoTitle: 'Joining bonus payback',
     seoDescription:
       'You received the joining bonus net of tax. Leaving early, Indian letters typically ask for the gross amount back.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.clawback.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'bonus clawback',
+      'joining bonus clawback',
       'joining bonus',
       'sign on bonus',
       'clawback',
@@ -211,14 +236,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'esop',
     titleKey: 'esop-reality.title',
     descKey: 'esop-reality.desc',
-    seoTitle: 'ESOP reality check',
+    seoTitle: 'ESOP cost and tax',
     seoDescription:
       'See the cash you need to exercise your options and the tax due that day. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.esop.v1',
     keywords: [
-      'esop',
+      // Former names (COPY-05), so search still finds them.
+      'esop reality check',
+      'esop की असलियत',
       'stocks',
       'equity',
       'shares',
@@ -242,13 +269,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'relocation',
     titleKey: 'relocation.title',
     descKey: 'relocation.desc',
-    seoTitle: 'Relocation equivalence',
+    seoTitle: 'City move calculator',
     seoDescription:
       'See how your in-hand changes when the same CTC moves to another city. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.relocation.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'relocation',
+      'relocation equivalence',
       'relocation',
       'moving city',
       'metro hra',
@@ -271,13 +301,15 @@ export const TOOLS: ToolDef[] = [
     icon: 'scan',
     titleKey: 'fake-offer.title',
     descKey: 'fake-offer.desc',
-    seoTitle: 'Fake offer scanner',
+    seoTitle: 'Fake offer check',
     seoDescription:
       'Scan an Indian job offer for deposit asks, free-mail recruiters and lookalike domains, with EPFO and MCA verification links. Runs on this device.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.fake-offer.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'fake offer scanner',
       'job',
       'fake offer',
       'job scam',
@@ -302,17 +334,18 @@ export const TOOLS: ToolDef[] = [
     icon: 'notice',
     titleKey: 'notice-buyout.title',
     descKey: 'notice-buyout.desc',
-    seoTitle: 'Notice period buyout',
+    seoTitle: 'Notice buyout calculator',
     seoDescription:
       'Work out what it costs to leave before your notice period ends. Free, runs in your browser.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.notice-buyout.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'notice period buyout',
       'quit',
       'resign',
       'notice period',
-      'notice buyout',
       'buyout calculator',
       'early exit',
       'short notice',
@@ -334,14 +367,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'gratuity',
     titleKey: 'gratuity.title',
     descKey: 'gratuity.desc',
-    seoTitle: 'Gratuity + flip date',
+    seoTitle: 'Gratuity calculator',
     seoDescription:
       'Find the date you qualify for gratuity and roughly how much you get. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.gratuity.v1',
     keywords: [
-      'gratuity',
+      // Former names (COPY-05), so search still finds them.
+      'gratuity + flip date',
+      'flip date',
       'gratuity eligibility',
       '4 years 240 days',
       '5 years service',
@@ -355,7 +390,6 @@ export const TOOLS: ToolDef[] = [
       'quit',
       'resign',
       'leave job',
-      '5 years',
     ],
   },
   {
@@ -366,7 +400,7 @@ export const TOOLS: ToolDef[] = [
     icon: 'leave',
     titleKey: 'leave-encashment.title',
     descKey: 'leave-encashment.desc',
-    seoTitle: 'Leave encashment',
+    seoTitle: 'Leave encashment calculator',
     seoDescription:
       'Work out what your unused leave pays out and how much of it is taxed. Free, runs in your browser.',
     hasIsland: true,
@@ -394,13 +428,17 @@ export const TOOLS: ToolDef[] = [
     icon: 'fnf',
     titleKey: 'fnf-checker.title',
     descKey: 'fnf-checker.desc',
-    seoTitle: 'F&F settlement checker',
+    seoTitle: 'F&F check',
     seoDescription:
       'Recompute a full-and-final sheet: unpaid leave, notice recovery, gratuity, and whether you may owe them.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.fnf.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'f&f checker',
+      'fnf checker',
+      'f&f settlement checker',
       'fnf',
       'full and final',
       'settlement',
@@ -423,13 +461,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'form16',
     titleKey: 'form16-shock.title',
     descKey: 'form16-shock.desc',
-    seoTitle: 'Two Form-16 shock',
+    seoTitle: 'Two-job tax check',
     seoDescription:
       'See if two employers in one year leave you owing tax, before March. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.form16.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'two form-16 shock',
+      'दो form-16 का झटका',
       'form 16',
       'two form 16',
       'double tax',
@@ -446,6 +487,33 @@ export const TOOLS: ToolDef[] = [
     ],
   },
   {
+    slug: 'what-to-say',
+    category: 'documents',
+    stage: 3,
+    // Its earliest situation's stage. Lists show it in every stage it has a
+    // situation in (`listSections`); this is only where the hub page itself sits.
+    journey: 2,
+    icon: 'script',
+    titleKey: 'what-to-say.title',
+    descKey: 'what-to-say.desc',
+    seoTitle: 'What to say: scripts and emails for a job switch',
+    seoDescription:
+      'Copy-ready words for the hard moments of a job switch: the expected CTC question, telling your manager, a counter-offer, notice and backing out. Free, runs in your browser.',
+    hasIsland: true,
+    statutory: false,
+    keywords: [
+      'scripts',
+      'email templates',
+      'hr email',
+      'what to say',
+      'what to tell',
+      'kya bolu',
+      'kya kahu',
+      'क्या कहें',
+      'क्या बोलूँ',
+    ],
+  },
+  {
     slug: 'manager-script',
     category: 'documents',
     stage: 3,
@@ -453,11 +521,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'talk',
     titleKey: 'manager-script.title',
     descKey: 'manager-script.desc',
-    seoTitle: 'Manager conversation script',
+    seoTitle: 'Resignation talk script',
     seoDescription: 'What to say when you resign in person — supportive, counter-offer risk, or a hard room.',
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'manager script',
+      'manager conversation script',
+      'manager से बातचीत',
       'manager conversation',
       'resignation discussion',
       'talking to boss',
@@ -472,6 +545,33 @@ export const TOOLS: ToolDef[] = [
     ],
   },
   {
+    slug: 'counter-offer-reply',
+    category: 'documents',
+    stage: 3,
+    journey: 4,
+    icon: 'script',
+    titleKey: 'hr.counter-offer-reply.title',
+    descKey: 'hr.counter-offer-reply.desc',
+    seoTitle: HR_SCRIPTS['counter-offer-reply'].seoTitle,
+    seoDescription: HR_SCRIPTS['counter-offer-reply'].seoDescription,
+    partOf: 'what-to-say',
+    hasIsland: true,
+    statutory: false,
+    keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'counter offer reply',
+      'counter offer reply',
+      'reject counter offer',
+      'accept counter offer',
+      'retention offer response',
+      'counter offer ka jawab',
+      'boss ka offer mana karna',
+      'counter reject',
+      'काउंटर ऑफर जवाब',
+      'काउंटर ऑफर',
+    ],
+  },
+  {
     slug: 'expected-ctc',
     category: 'documents',
     stage: 3,
@@ -481,10 +581,12 @@ export const TOOLS: ToolDef[] = [
     descKey: 'hr.expected-ctc.desc',
     seoTitle: HR_SCRIPTS['expected-ctc'].seoTitle,
     seoDescription: HR_SCRIPTS['expected-ctc'].seoDescription,
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
-      'expected ctc',
+      // Former names (COPY-05), so search still finds them.
+      'expected ctc script',
       'salary expectation',
       'ctc negotiation',
       'hr salary mail',
@@ -511,9 +613,12 @@ export const TOOLS: ToolDef[] = [
     descKey: 'hr.early-release.desc',
     seoTitle: HR_SCRIPTS['early-release'].seoTitle,
     seoDescription: HR_SCRIPTS['early-release'].seoDescription,
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'early release script',
       'early release',
       'shorten notice',
       'early lwd',
@@ -537,9 +642,13 @@ export const TOOLS: ToolDef[] = [
     descKey: 'hr.buyout-ask.desc',
     seoTitle: HR_SCRIPTS['buyout-ask'].seoTitle,
     seoDescription: HR_SCRIPTS['buyout-ask'].seoDescription,
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'buyout ask',
+      'notice buyout ask',
       'buyout request',
       'buyout letter',
       'buyout maangna',
@@ -564,9 +673,14 @@ export const TOOLS: ToolDef[] = [
     descKey: 'hr.decline-accepted.desc',
     seoTitle: HR_SCRIPTS['decline-accepted'].seoTitle,
     seoDescription: HR_SCRIPTS['decline-accepted'].seoDescription,
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'decline after yes',
+      'decline after accepting',
+      'yes के बाद decline',
       'decline offer',
       'reject offer',
       'renege offer',
@@ -581,30 +695,6 @@ export const TOOLS: ToolDef[] = [
     ],
   },
   {
-    slug: 'counter-offer-reply',
-    category: 'documents',
-    stage: 3,
-    journey: 4,
-    icon: 'script',
-    titleKey: 'hr.counter-offer-reply.title',
-    descKey: 'hr.counter-offer-reply.desc',
-    seoTitle: HR_SCRIPTS['counter-offer-reply'].seoTitle,
-    seoDescription: HR_SCRIPTS['counter-offer-reply'].seoDescription,
-    hasIsland: true,
-    statutory: false,
-    keywords: [
-      'counter offer reply',
-      'reject counter offer',
-      'accept counter offer',
-      'retention offer response',
-      'counter offer ka jawab',
-      'boss ka offer mana karna',
-      'counter reject',
-      'काउंटर ऑफर जवाब',
-      'काउंटर ऑफर',
-    ],
-  },
-  {
     slug: 'recruiter-followup',
     category: 'documents',
     stage: 3,
@@ -614,9 +704,12 @@ export const TOOLS: ToolDef[] = [
     descKey: 'hr.recruiter-followup.desc',
     seoTitle: HR_SCRIPTS['recruiter-followup'].seoTitle,
     seoDescription: HR_SCRIPTS['recruiter-followup'].seoDescription,
+    partOf: 'what-to-say',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'recruiter follow-up',
       'recruiter followup',
       'interview status',
       'followup email',
@@ -638,14 +731,15 @@ export const TOOLS: ToolDef[] = [
     icon: 'counter',
     titleKey: 'counter-offer.title',
     descKey: 'counter-offer.desc',
-    seoTitle: 'Counter-offer evaluator',
+    seoTitle: 'Counter-offer check',
     seoDescription:
       'Compare the counter with your outside offer in-hand before you decide to stay. Free, runs in your browser.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.counter.v1',
     keywords: [
-      'counter offer',
+      // Former names (COPY-05), so search still finds them.
+      'counter-offer evaluator',
       'retention offer',
       'stay or leave',
       'boss offered hike',
@@ -670,12 +764,14 @@ export const TOOLS: ToolDef[] = [
     icon: 'handover',
     titleKey: 'handover-doc.title',
     descKey: 'handover-doc.desc',
-    seoTitle: 'Handover doc',
+    seoTitle: 'Handover note',
     seoDescription: 'Write the handover your replacement needs, ready to paste into an email. Free, runs in your browser.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.handover.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'handover doc',
       'handover',
       'kt document',
       'knowledge transfer',
@@ -697,12 +793,15 @@ export const TOOLS: ToolDef[] = [
     icon: 'chaser',
     titleKey: 'relieving-chaser.title',
     descKey: 'relieving-chaser.desc',
-    seoTitle: 'Relieving letter chaser',
+    seoTitle: 'Relieving letter emails',
     seoDescription: 'Day 7, 14 and 30 escalation mails if your relieving letter has not arrived.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.relieving.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'relieving chaser',
+      'relieving letter chaser',
       'relieving letter',
       'experience letter',
       'experience certificate',
@@ -724,13 +823,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'epf',
     titleKey: 'epf-transfer.title',
     descKey: 'epf-transfer.desc',
-    seoTitle: 'EPF / UAN transfer',
+    seoTitle: 'PF transfer guide',
     seoDescription:
       'Move your PF to the new employer and fix what usually blocks it. Free, runs in your browser.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.epf.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'epf transfer',
+      'epf / uan transfer',
       'epf',
       'pf transfer',
       'uan transfer',
@@ -754,13 +856,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'bgv',
     titleKey: 'bgv-prep.title',
     descKey: 'bgv-prep.desc',
-    seoTitle: 'BGV prep checklist',
+    seoTitle: 'Background check (BGV) prep',
     seoDescription:
       'What an Indian background check will see: employment gaps, dual PF, a pending relieving letter. Pack the file before they ask.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.bgv.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'bgv prep',
+      'bgv prep checklist',
       'bgv',
       'background verification',
       'background check',
@@ -783,13 +888,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'insurance',
     titleKey: 'insurance-gap.title',
     descKey: 'insurance-gap.desc',
-    seoTitle: 'Insurance gap planner',
+    seoTitle: 'Health cover gap',
     seoDescription:
       'Count the days you have no health cover between jobs. Free, runs in your browser.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.insurance.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'insurance gap',
+      'insurance gap planner',
       'insurance gap',
       'mediclaim',
       'health insurance',
@@ -811,13 +919,15 @@ export const TOOLS: ToolDef[] = [
     icon: 'tax',
     titleKey: 'tax-declaration.title',
     descKey: 'tax-declaration.desc',
-    seoTitle: 'Tax declaration planner',
+    seoTitle: 'New-job tax declaration',
     seoDescription:
       'What to tell the new employer: regime, HRA proofs, Form 12B in month 1, and the Form 16 that arrives after you have left.',
     hasIsland: true,
     statutory: true,
     storageKey: 'switchkarle.tax-declaration.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'tax declaration planner',
       'tax declaration',
       'form 12b',
       'investment declaration',
@@ -839,13 +949,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'notice-track',
     titleKey: 'notice-tracker.title',
     descKey: 'notice-tracker.desc',
-    seoTitle: 'Notice period survival tracker',
+    seoTitle: 'Notice period checklist',
     seoDescription:
       'Dates and a checklist through notice: F&F, asset return, insurance end, PF date of exit. Stays on this device.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.notice.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'notice tracker',
+      'notice period survival tracker',
       'quit',
       'resign',
       'notice period',
@@ -869,12 +982,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'chaser',
     titleKey: 'offer-goes-cold.title',
     descKey: 'offer-goes-cold.desc',
-    seoTitle: 'Offer goes cold survival guide',
+    seoTitle: 'New offer gone quiet',
     seoDescription:
       'What to do when the new company goes quiet during your notice period. A practical guide and AI prompt to follow up.',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'when the new offer goes quiet',
+      'offer goes cold',
+      'जब नया offer शांत हो जाए',
       'offer goes cold',
       'offer ghosting',
       'ghosted after offer',
@@ -897,13 +1014,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'bond',
     titleKey: 'bond-scanner.title',
     descKey: 'bond-scanner.desc',
-    seoTitle: 'Bond & probation scanner',
+    seoTitle: 'Bond and clause check',
     seoDescription:
       'Paste an Indian service-bond or non-compete clause. Pattern flags with case-law hedges — not a court, not legal advice.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.bond.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'bond scanner',
+      'bond & probation scanner',
       'bond scanner',
       'service agreement',
       'employment bond',
@@ -926,13 +1046,17 @@ export const TOOLS: ToolDef[] = [
     icon: 'redact',
     titleKey: 'redactor.title',
     descKey: 'redactor.desc',
-    seoTitle: 'Payslip redactor',
+    seoTitle: 'Payslip masker',
     seoDescription:
       'Mask Aadhaar, PAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.redactor.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'redactor',
+      'payslip redactor',
+      'mask text',
       'redactor',
       'mask payslip',
       'hide salary',
@@ -955,12 +1079,15 @@ export const TOOLS: ToolDef[] = [
     icon: 'clauses',
     titleKey: 'clause-library.title',
     descKey: 'clause-library.desc',
-    seoTitle: 'Offer letter clause library',
+    seoTitle: 'Offer letter clauses explained',
     seoDescription:
       'Plain-English readings of notice, bond, variable and PF clauses in Indian appointment letters. Not legal advice.',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'clause library',
+      'offer letter clause library',
       'clause library',
       'offer letter clauses',
       'appointment letter',
@@ -982,13 +1109,17 @@ export const TOOLS: ToolDef[] = [
     icon: 'tracker',
     titleKey: 'tab.tracker',
     descKey: 'home.tracker.desc',
-    seoTitle: 'Job tracker',
+    seoTitle: 'Application tracker',
     seoDescription:
       'Keep every application, its CTC and next step on one private board. Free, runs in your browser.',
     hasIsland: true,
     statutory: false,
     storageKey: 'switchkarle.tracker.v1',
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'tracker',
+      'job tracker',
+      'ट्रैकर',
       'job',
       'job applications',
       'application tracker',
@@ -1011,12 +1142,16 @@ export const TOOLS: ToolDef[] = [
     icon: 'prompts',
     titleKey: 'tab.prompts',
     descKey: 'home.prompts.desc',
-    seoTitle: 'Prompt Studio',
+    seoTitle: 'AI prompts',
     seoDescription:
       'Copy a context-rich prompt into your own ChatGPT, Claude or Gemini tab. This app never sends your data to an AI.',
     hasIsland: true,
     statutory: false,
     keywords: [
+      // Former names (COPY-05), so search still finds them.
+      'prompts',
+      'prompt studio',
+      'प्रॉम्प्ट्स',
       'job',
       'ai prompts',
       'chatgpt prompts',

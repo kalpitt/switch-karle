@@ -20,14 +20,17 @@ domain question is settled and must not be re-opened.
 ```
 src/
   engine/          pure TS — never imports react (purity.test.ts)
-  tools/<slug>/    one island per tool (form + result); the six HR-script
-                   slugs share tools/scripts, and tools/home + tools/plan are
-                   the home page, not registry tools
+  tools/<slug>/    one island per tool (form + result); the seven script
+                   slugs and `what-to-say` share tools/what-to-say,
+                   tools/home + tools/plan are the home page and
+                   tools/all-tools is /tools/ — none of those three are
+                   registry tools
   tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
-  data/journey.ts  the seven journey stages (`ToolDef.journey`) and each
-                   tool's "Next" link (components/NextStep.tsx renders it)
+  data/journey.ts  the seven journey stages (`ToolDef.journey`), the list
+                   view of them (`listSections`), and each tool's "Next"
+                   link (components/NextStep.tsx renders it)
   prompts/         text the user hands to their own AI — English literals,
                    not i18n keys, because they are content and not UI chrome
   lib/storage.ts   switchkarle.<tool>.v<N>
@@ -36,6 +39,7 @@ src/
   i18n/            en.ts canonical; hi.ts + hi-suite.ts full EN→HI parity
   layouts/Base.astro  head contract, hreflang en/hi/x-default, PWA register
   pages/[tool].astro + pages/hi/[tool].astro  EN and Hindi twins
+  pages/tools.astro + pages/hi/tools.astro    the all-tools list
 ```
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
@@ -54,6 +58,41 @@ after the result and names the stage when the link crosses into a later one.
 back a stage, or if following "Next" from any tool cycles before the end of
 stage 6.
 
+**Navigation (batch 6, 2026-11).** The header (`components/Shell.tsx`) holds
+two places — "Your plan" (home) and "All tools" (`/tools/`, `TOOLS_PAGE`) —
+then search (`components/CommandPalette.tsx`) and the EN/हिन्दी switch. No tool
+has a tab of its own; every tool is one tap from `/tools/` and from search.
+Below 360px the wordmark is visually hidden (the mark stays, the name stays for
+screen readers) so the bar keeps to two rows.
+
+**The tool list has one home.** `/tools/` (`tools/all-tools`) renders
+`listSections()` from `data/journey.ts`: the seven stages, each with its name,
+its one-line "what", and its tools as rows. The home page does not keep a
+second list; it links to `/tools/`, with a count from `distinctToolCount()`.
+Tool names are the plain names of COPY-05 (decision 5, 2026-10-31); a tool's
+former names sit in its `keywords`, so search still finds "Decoder" or
+"Prompt Studio". Slugs did not change.
+
+**What to say: one page, seven addresses.** The seven scripts (`SCRIPT_SLUGS`
+in `data/hrScripts.ts`) are situations of one page, `what-to-say`
+(decision 4, 2026-10-31). In the registry each script keeps its `ToolDef`, its
+`journey` stage and its slug, and carries `partOf: 'what-to-say'`; the
+`what-to-say` entry is the page itself. Lists fold the situations into one
+"What to say" row per stage that has any (stages 2, 3 and 4), linking to that
+stage's first situation; search lists the page and every situation.
+
+GitHub Pages cannot send redirects, so each old script address stays a real,
+prerendered page: `/expected-ctc/` renders the What to say island with that
+situation picked, with its own title, description and self-canonical, and
+stays in the sitemap. `/what-to-say/` opens on the picker with nothing picked.
+Picking a situation swaps it in place (`history.pushState` to that
+situation's own address, the tab title follows, Back and Forward walk the
+picks), so a reload, a shared link, the language switch and the offline copy
+all land on the same situation. Nothing was renamed in storage: the scripts
+keep no draft of their own, and the resignation talk script still only reads
+`switchkarle.resignation.v1`. The What to say page shows no Next link until a
+situation is picked; after that, Next follows that situation's `NEXT_STEP`.
+
 ## Head contract
 
 Every prerendered HTML route has a unique `<title>`, meta description, canonical,
@@ -65,7 +104,8 @@ x-default. Hindi
 titles use `— स्विच कर ले` so they do not collide with English. Home adds JSON-LD
 `WebApplication`. `/hi/` twins live at `src/pages/hi/`.
 
-`sitemap.xml` and `robots.txt` are generated from the registry (EN + HI locs).
+`sitemap.xml` and `robots.txt` are generated from the registry plus `/tools/`
+and the info pages (EN + HI locs).
 Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
 `check-seo.mjs` greps `dist/` for `googletagmanager|gtag|plausible|umami|fathom`.
 

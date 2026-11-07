@@ -1,4 +1,4 @@
-import type { ToolDef } from '../data/tools'
+import { TOOLS_PAGE, type ToolDef } from '../data/tools'
 
 export interface PaletteItem {
   slug: string
@@ -60,6 +60,8 @@ export function filterPalette(items: PaletteItem[], query: string, label: (key: 
 /** Words people type when what they want is the home plan (their dates). */
 const PLAN_KEYWORDS = [
   'plan',
+  'home',
+  'होम',
   'my dates',
   'when to resign',
   'resign date',
@@ -77,7 +79,14 @@ const PLAN_KEYWORDS = [
 
 export function paletteItems(tools: ToolDef[], homeHref: string, toolHref: (slug: string) => string): PaletteItem[] {
   return [
-    { slug: 'home', href: homeHref, titleKey: 'nav.home', descKey: 'palette.plan.desc', keywords: PLAN_KEYWORDS },
+    { slug: 'home', href: homeHref, titleKey: 'nav.plan', descKey: 'palette.plan.desc', keywords: PLAN_KEYWORDS },
+    {
+      slug: TOOLS_PAGE,
+      href: toolHref(TOOLS_PAGE),
+      titleKey: 'nav.allTools',
+      descKey: 'palette.tools.desc',
+      keywords: ['all tools', 'list', 'every tool', 'stages', 'सारे tools', 'सभी tools'],
+    },
     ...tools.map((tool) => ({
       slug: tool.slug,
       href: toolHref(tool.slug),

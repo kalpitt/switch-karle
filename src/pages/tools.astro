@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro'
+import AllToolsPage from '../tools/all-tools/index'
+import { TOOLS_PAGE } from '../data/tools'
+import { en } from '../i18n/en'
+---
+
+<Base title={en['toolsPage.seoTitle']!} description={en['toolsPage.description']!} slug={TOOLS_PAGE} lang="en">
+  <AllToolsPage client:load lang="en" />
+</Base>
