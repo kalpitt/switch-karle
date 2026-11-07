@@ -54,7 +54,7 @@ jobs:
         with:
           path: dist
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   # Opens the live site after the deploy, the way a visitor would. A failure
   # here means production is broken right now: GitHub emails whoever pushed
