@@ -3,7 +3,7 @@ import { form16Shock } from '../../engine/form16'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, CopyButton, Disclaimer, Ledger, MoneyField, Receipt, ResultHero, ShareRow } from '../../components/ui'
+import { Card, ResultHeading, CopyButton, Disclaimer, Ledger, MoneyField, Receipt, ResultHero, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
 import { decodeOffer } from '../../engine/salary'
@@ -99,15 +99,8 @@ function Body() {
 
   return (
     <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('form16-shock.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField label={t('form16-shock.e1gross')} placeholder={t('ui.money.placeholder')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
-        <MoneyField label={t('form16-shock.e1tds')} placeholder={t('ui.money.placeholder')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
-        <MoneyField label={t('form16-shock.e2gross')} placeholder={t('ui.money.placeholder')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
-        <MoneyField label={t('form16-shock.e2tds')} placeholder={t('ui.money.placeholder')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t(result.shock > 0 ? 'hero.form16-shock.owe' : 'hero.form16-shock.ok')}
@@ -145,6 +138,14 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="form16-shock" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('form16-shock.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('form16-shock.e1gross')} placeholder={t('ui.money.placeholder')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
+        <MoneyField label={t('form16-shock.e1tds')} placeholder={t('ui.money.placeholder')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
+        <MoneyField label={t('form16-shock.e2gross')} placeholder={t('ui.money.placeholder')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
+        <MoneyField label={t('form16-shock.e2tds')} placeholder={t('ui.money.placeholder')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
+      </Card>
     </div>
   )
 }

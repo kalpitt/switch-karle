@@ -8,6 +8,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   Disclaimer,
   InheritNote,
   Ledger,
@@ -175,30 +176,8 @@ function Body() {
 
   return (
     <div data-tool="relocation" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('relocation.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
-        <Select
-          label={t('relocation.fromState')}
-          value={draft.fromState}
-          onChange={(v) => set({ fromState: v, fromCity: normaliseCity(v, draft.fromCity) })}
-          options={states}
-        />
-        <Select label={t('relocation.fromCity')} hint={t('relocation.metroHint')} value={draft.fromCity} onChange={(v) => set({ fromCity: v })} options={cities(draft.fromState)} />
-        <MoneyField label={t('relocation.fromRent')} hint={t('relocation.rentHint')} value={draft.fromRent} onChange={(v) => set({ fromRent: v })} />
-        <Select
-          label={t('relocation.toState')}
-          value={draft.toState}
-          onChange={(v) => set({ toState: v, toCity: normaliseCity(v, draft.toCity) })}
-          options={states}
-        />
-        <Select label={t('relocation.toCity')} hint={t('relocation.metroHint')} value={draft.toCity} onChange={(v) => set({ toCity: v })} options={cities(draft.toState)} />
-        <MoneyField label={t('relocation.toRent')} hint={t('relocation.rentHint')} value={draft.toRent} onChange={(v) => set({ toRent: v })} />
-        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.relocation')}
@@ -240,6 +219,29 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="relocation" />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('relocation.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <Select
+          label={t('relocation.fromState')}
+          value={draft.fromState}
+          onChange={(v) => set({ fromState: v, fromCity: normaliseCity(v, draft.fromCity) })}
+          options={states}
+        />
+        <Select label={t('relocation.fromCity')} hint={t('relocation.metroHint')} value={draft.fromCity} onChange={(v) => set({ fromCity: v })} options={cities(draft.fromState)} />
+        <MoneyField label={t('relocation.fromRent')} hint={t('relocation.rentHint')} value={draft.fromRent} onChange={(v) => set({ fromRent: v })} />
+        <Select
+          label={t('relocation.toState')}
+          value={draft.toState}
+          onChange={(v) => set({ toState: v, toCity: normaliseCity(v, draft.toCity) })}
+          options={states}
+        />
+        <Select label={t('relocation.toCity')} hint={t('relocation.metroHint')} value={draft.toCity} onChange={(v) => set({ toCity: v })} options={cities(draft.toState)} />
+        <MoneyField label={t('relocation.toRent')} hint={t('relocation.rentHint')} value={draft.toRent} onChange={(v) => set({ toRent: v })} />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
+      </Card>
     </div>
   )
 }

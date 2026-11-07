@@ -6,6 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   Disclaimer,
   MoneyField,
   NumberField,
@@ -99,27 +100,8 @@ function Body() {
 
   return (
     <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('esop-reality.formTitle')}</h2>
-        <PrivacyLine />
-        <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
-        <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
-        <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
-        <NumberField integer label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
-        <NumberField integer label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
-        <Select
-          label={t('esop-reality.cadence')}
-          value={draft.vestCadence}
-          onChange={(v) => set({ vestCadence: v })}
-          options={[
-            { value: 'monthly', label: t('esop-reality.cadence.monthly') },
-            { value: 'annual', label: t('esop-reality.cadence.annual') },
-          ]}
-        />
-        <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.esop-reality')}
@@ -161,6 +143,26 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="esop-reality" />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('esop-reality.formTitle')}</h2>
+        <PrivacyLine />
+        <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
+        <MoneyField label={t('esop-reality.strike')} hint={t('esop-reality.perShare')} value={draft.strike} onChange={(v) => set({ strike: v })} />
+        <MoneyField label={t('esop-reality.fmv')} hint={t('esop-reality.fmvHint')} value={draft.fmv} onChange={(v) => set({ fmv: v })} />
+        <NumberField integer label={t('esop-reality.cliff')} suffix={t('unit.months')} value={draft.cliffMonths} onChange={(v) => set({ cliffMonths: v })} />
+        <NumberField integer label={t('esop-reality.vest')} suffix={t('unit.months')} value={draft.vestMonths} onChange={(v) => set({ vestMonths: v })} />
+        <Select
+          label={t('esop-reality.cadence')}
+          value={draft.vestCadence}
+          onChange={(v) => set({ vestCadence: v })}
+          options={[
+            { value: 'monthly', label: t('esop-reality.cadence.monthly') },
+            { value: 'annual', label: t('esop-reality.cadence.annual') },
+          ]}
+        />
+        <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
+      </Card>
     </div>
   )
 }

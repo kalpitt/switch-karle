@@ -3,7 +3,7 @@ import { buyoutQuote } from '../../engine/noticeBuyout'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, Disclaimer, MoneyField, NumberField, Receipt, ResultHero, Select, ShareRow } from '../../components/ui'
+import { Card, ResultHeading, Disclaimer, MoneyField, NumberField, Receipt, ResultHero, Select, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -108,6 +108,63 @@ function Body() {
 
   return (
     <div data-tool="notice-buyout" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
+        <ResultHero
+          sample={isExample}
+          label={t(draft.mode === 'pay' ? 'hero.notice-buyout.pay' : 'hero.notice-buyout.recover')}
+          value={formatINR(result.amount)}
+          verdict={verdict}
+          tone={draft.mode === 'pay' ? 'neutral' : 'amber'}
+        >
+          <Receipt ids={TOOL_SOURCES['notice-buyout']} />
+        </ResultHero>
+        <Card>
+          <h3 className="mb-2 text-[15px] font-semibold">{t('notice-buyout.bothBases')}</h3>
+          <p className="tnum flex justify-between gap-3 text-[13px]">
+            <span>{t('notice-buyout.row.basic')}</span>
+            <span>
+              {formatINR(result.basis === 'basic' ? result.dailyRate : resultOnOtherBasis.dailyRate)}
+              /day →{' '}
+              <span className="font-bold">
+                {formatINR(result.basis === 'basic' ? result.amount : resultOnOtherBasis.amount)}
+              </span>
+            </span>
+          </p>
+          <p className="tnum mt-1 flex justify-between gap-3 text-[13px]">
+            <span>{t('notice-buyout.row.gross')}</span>
+            <span>
+              {formatINR(result.basis === 'gross' ? result.dailyRate : resultOnOtherBasis.dailyRate)}
+              /day →{' '}
+              <span className="font-bold">
+                {formatINR(result.basis === 'gross' ? result.amount : resultOnOtherBasis.amount)}
+              </span>
+            </span>
+          </p>
+        </Card>
+        {result.leaveDaysApplied > 0 && (
+          <p className="tnum text-[13px] text-ink-soft">
+            {t('notice-buyout.leaveApplied', {
+              days: result.leaveDaysApplied,
+              net: result.unservedDaysNet,
+              before: formatINR(result.amountBeforeLeave),
+            })}
+          </p>
+        )}
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.leaveCandidate')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.divisor')}</p>
+        <p className="text-[14px] leading-relaxed text-amberflag">{t('notice-buyout.gstNote')}</p>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copyResult')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
+        <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
+        <NextStep from="notice-buyout" />
+      </div>
       <Card className="space-y-3 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('notice-buyout.formTitle')}</h2>
         <PrivacyLine />
@@ -164,62 +221,6 @@ function Body() {
         />
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
-        <ResultHero
-          sample={isExample}
-          label={t(draft.mode === 'pay' ? 'hero.notice-buyout.pay' : 'hero.notice-buyout.recover')}
-          value={formatINR(result.amount)}
-          verdict={verdict}
-          tone={draft.mode === 'pay' ? 'neutral' : 'amber'}
-        >
-          <Receipt ids={TOOL_SOURCES['notice-buyout']} />
-        </ResultHero>
-        <Card>
-          <h3 className="mb-2 text-[15px] font-semibold">{t('notice-buyout.bothBases')}</h3>
-          <p className="tnum flex justify-between gap-3 text-[13px]">
-            <span>{t('notice-buyout.row.basic')}</span>
-            <span>
-              {formatINR(result.basis === 'basic' ? result.dailyRate : resultOnOtherBasis.dailyRate)}
-              /day →{' '}
-              <span className="font-bold">
-                {formatINR(result.basis === 'basic' ? result.amount : resultOnOtherBasis.amount)}
-              </span>
-            </span>
-          </p>
-          <p className="tnum mt-1 flex justify-between gap-3 text-[13px]">
-            <span>{t('notice-buyout.row.gross')}</span>
-            <span>
-              {formatINR(result.basis === 'gross' ? result.dailyRate : resultOnOtherBasis.dailyRate)}
-              /day →{' '}
-              <span className="font-bold">
-                {formatINR(result.basis === 'gross' ? result.amount : resultOnOtherBasis.amount)}
-              </span>
-            </span>
-          </p>
-        </Card>
-        {result.leaveDaysApplied > 0 && (
-          <p className="tnum text-[13px] text-ink-soft">
-            {t('notice-buyout.leaveApplied', {
-              days: result.leaveDaysApplied,
-              net: result.unservedDaysNet,
-              before: formatINR(result.amountBeforeLeave),
-            })}
-          </p>
-        )}
-        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.leaveCandidate')}</p>
-        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.divisor')}</p>
-        <p className="text-[14px] leading-relaxed text-amberflag">{t('notice-buyout.gstNote')}</p>
-        {!isExample && (
-          <ShareRow
-            copyText={copyText}
-            copyLabel={t('ui.copyResult')}
-            copiedLabel={t('ui.copied')}
-            printLabel={t('ui.print')}
-          />
-        )}
-        <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
-        <NextStep from="notice-buyout" />
-      </div>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { addDays, epfoDateOverlap, lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  ResultHeading,
   CopyButton,
   DateField,
   Disclaimer,
@@ -151,6 +152,35 @@ function Body() {
 
   return (
     <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
+        <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
+        {earliestSafeJoin !== '' && (
+          <p className="text-[14px] leading-relaxed text-ink-soft">
+            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
+          </p>
+        )}
+        <PlanDatesNote dates={fromPlan} />
+        <Receipt ids={TOOL_SOURCES['resignation-letter']} />
+        {overlap && <p className="text-[14px] leading-relaxed text-amberflag">{t('resignation-letter.epfo')}</p>}
+        {earliestSafeJoin !== '' && (
+          <p className="tnum text-[13px] text-ink-soft">
+            {t('resignation-letter.earliestJoin', { date: formatLongDate(earliestSafeJoin, lang) })}
+          </p>
+        )}
+        <Card>
+          <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
+          <div className="mt-4">
+            {canCopy ? (
+              <CopyButton text={letter} label={t('ui.copyLetter')} copiedLabel={t('ui.copied')} />
+            ) : (
+              <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
+            )}
+          </div>
+        </Card>
+        <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+        <NextStep from="resignation-letter" />
+      </div>
       <Card className="space-y-3 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('resignation-letter.formTitle')}</h2>
         <p className="text-xs leading-snug text-ink-faint">{t('resignation-letter.formHint')}</p>
@@ -205,34 +235,6 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
-        <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
-        {earliestSafeJoin !== '' && (
-          <p className="text-[14px] leading-relaxed text-ink-soft">
-            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
-          </p>
-        )}
-        <PlanDatesNote dates={fromPlan} />
-        <Receipt ids={TOOL_SOURCES['resignation-letter']} />
-        {overlap && <p className="text-[14px] leading-relaxed text-amberflag">{t('resignation-letter.epfo')}</p>}
-        {earliestSafeJoin !== '' && (
-          <p className="tnum text-[13px] text-ink-soft">
-            {t('resignation-letter.earliestJoin', { date: formatLongDate(earliestSafeJoin, lang) })}
-          </p>
-        )}
-        <Card>
-          <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{letter}</pre>
-          <div className="mt-4">
-            {canCopy ? (
-              <CopyButton text={letter} label={t('ui.copyLetter')} copiedLabel={t('ui.copied')} />
-            ) : (
-              <p className="text-[13px] font-semibold text-amberflag">{t('resignation-letter.copyBlocked')}</p>
-            )}
-          </div>
-        </Card>
-        <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
-        <NextStep from="resignation-letter" />
-      </div>
     </div>
   )
 }

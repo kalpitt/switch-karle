@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, Disclaimer, PrintButton, TextArea, VerdictBanner } from '../../components/ui'
+import { Card, ResultHeading, Disclaimer, PrintButton, TextArea, VerdictBanner } from '../../components/ui'
 import { redactText } from '../../engine/redact'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -52,11 +52,8 @@ function Body() {
 
   return (
     <div data-tool="redactor" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20 no-print">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('redactor.formTitle')}</h2>
-        <TextArea label={t('redactor.text')} hint={t('redactor.textHint')} value={text} onChange={setText} rows={14} />
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <VerdictBanner tone={hitCount === 0 ? 'amber' : 'leaf'}>
           {hitCount === 0 ? t('redactor.verdict.none') : hitCount === 1
               ? t('redactor.verdict.hitsOne')
@@ -85,6 +82,10 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="redactor" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20 no-print">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('redactor.formTitle')}</h2>
+        <TextArea label={t('redactor.text')} hint={t('redactor.textHint')} value={text} onChange={setText} rows={14} />
+      </Card>
     </div>
   )
 }

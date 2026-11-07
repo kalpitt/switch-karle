@@ -978,6 +978,7 @@ export const hiSuite: Record<string, string> = {
   'ui.privacyErase': 'मिटाएं',
   'ui.privacyCheck': 'कैसे check करें',
   'ui.disclaimerContract': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। आपका अपना contract और letters ही तय करते हैं।',
+  'ui.resultHeading': 'आपका नतीजा',
   'resignation-letter.verdictNext':
     'यह resignation वाले दिन को पहला दिन गिनता है। अगर letter में notice उस date “से” गिना जाता है, तो यह {lwdNext} हो सकता है। आपके letter की wording जो date दे, वही लिखें।',
 

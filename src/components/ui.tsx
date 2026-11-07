@@ -630,6 +630,17 @@ function ToneIcon({ tone }: { tone: Tone }) {
 type Tone = 'leaf' | 'alarm' | 'amber' | 'neutral'
 
 /**
+ * A heading for the result column, for screen-reader heading navigation only:
+ * the answer is the first thing on a phone, and without this the page outline
+ * stopped at the form's heading (A11Y N5). Kept outside the live region so it is
+ * not re-read every time the answer changes.
+ */
+export function ResultHeading() {
+  const t = useT()
+  return <h2 className="sr-only">{t('ui.resultHeading')}</h2>
+}
+
+/**
  * The answer, first and biggest (VIS-02): a label, one figure, then the sentence that
  * says what it means. On a first visit it shows the worked example's answer under a
  * grey "Example" tag (VIS-03, TRUST-06, approved 2026-10-31), so the page opens on a

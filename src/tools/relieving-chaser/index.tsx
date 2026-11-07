@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
+import { Card, ResultHeading, CopyButton, DateField, Disclaimer, Select, TextField, VerdictBanner } from '../../components/ui'
 import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -90,6 +90,24 @@ function Body() {
 
   return (
     <div data-tool="relieving-chaser" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
+        <VerdictBanner>{t(`relieving-chaser.verdict.${draft.day}`)}</VerdictBanner>
+        <Card>
+          <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>
+          <div className="mt-4">
+            {canCopy ? (
+              <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
+            ) : (
+              <p className="text-[13px] font-semibold text-amberflag">
+                {lwdReady ? t('relieving-chaser.fillFields') : t('relieving-chaser.setLwd')}
+              </p>
+            )}
+          </div>
+        </Card>
+        <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+        <NextStep from="relieving-chaser" />
+      </div>
       <Card className="space-y-3 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('relieving-chaser.formTitle')}</h2>
         <TextField label={t('relieving-chaser.company')} value={draft.company} onChange={(v) => set({ company: v })} />
@@ -107,23 +125,6 @@ function Body() {
           ]}
         />
       </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
-        <VerdictBanner>{t(`relieving-chaser.verdict.${draft.day}`)}</VerdictBanner>
-        <Card>
-          <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed">{mail}</pre>
-          <div className="mt-4">
-            {canCopy ? (
-              <CopyButton text={mail} label={t('ui.copyEmail')} copiedLabel={t('ui.copied')} />
-            ) : (
-              <p className="text-[13px] font-semibold text-amberflag">
-                {lwdReady ? t('relieving-chaser.fillFields') : t('relieving-chaser.setLwd')}
-              </p>
-            )}
-          </div>
-        </Card>
-        <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
-        <NextStep from="relieving-chaser" />
-      </div>
     </div>
   )
 }

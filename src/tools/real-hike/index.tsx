@@ -7,6 +7,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   CompareBars,
   Disclaimer,
   InheritNote,
@@ -154,43 +155,8 @@ function Body() {
 
   return (
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('real-hike.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
-        <MoneyField
-          label={t('real-hike.currentVariable')}
-          placeholder={t('ui.money.placeholder')}
-          value={draft.currentVariable}
-          onChange={(v) => set({ currentVariable: v })}
-        />
-        <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
-        <MoneyField label={t('real-hike.nextCtc')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
-        <MoneyField
-          label={t('real-hike.nextVariable')}
-          placeholder={t('ui.money.placeholder')}
-          value={draft.nextVariable}
-          onChange={(v) => set({ nextVariable: v })}
-        />
-        <Select label={t('real-hike.nextState')} value={draft.nextState} onChange={(v) => set({ nextState: v })} options={states} />
-        <NumberField
-          label={t('real-hike.nextBasic')}
-          hint={t('real-hike.nextBasicHint')}
-          suffix="%"
-          max={100}
-          value={draft.nextBasicPercent}
-          onChange={(v) => set({ nextBasicPercent: Math.min(100, v) })}
-        />
-        <Toggle
-          label={t('real-hike.haircut')}
-          hint={t('real-hike.haircutHint')}
-          checked={draft.haircut}
-          onChange={(v) => set({ haircut: v })}
-        />
-        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.real-hike')}
@@ -233,6 +199,42 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="real-hike" />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('real-hike.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <MoneyField
+          label={t('real-hike.currentVariable')}
+          placeholder={t('ui.money.placeholder')}
+          value={draft.currentVariable}
+          onChange={(v) => set({ currentVariable: v })}
+        />
+        <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
+        <MoneyField label={t('real-hike.nextCtc')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
+        <MoneyField
+          label={t('real-hike.nextVariable')}
+          placeholder={t('ui.money.placeholder')}
+          value={draft.nextVariable}
+          onChange={(v) => set({ nextVariable: v })}
+        />
+        <Select label={t('real-hike.nextState')} value={draft.nextState} onChange={(v) => set({ nextState: v })} options={states} />
+        <NumberField
+          label={t('real-hike.nextBasic')}
+          hint={t('real-hike.nextBasicHint')}
+          suffix="%"
+          max={100}
+          value={draft.nextBasicPercent}
+          onChange={(v) => set({ nextBasicPercent: Math.min(100, v) })}
+        />
+        <Toggle
+          label={t('real-hike.haircut')}
+          hint={t('real-hike.haircutHint')}
+          checked={draft.haircut}
+          onChange={(v) => set({ haircut: v })}
+        />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
+      </Card>
     </div>
   )
 }

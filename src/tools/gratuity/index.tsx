@@ -4,6 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  ResultHeading,
   DateField,
   Disclaimer,
   MoneyField,
@@ -144,45 +145,8 @@ function Body() {
 
   return (
     <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('gratuity.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField
-          label={t('gratuity.basic')}
-          hint={t('gratuity.basicHint')}
-          value={draft.lastDrawnBasicDA}
-          onChange={(v) => {
-            set({ lastDrawnBasicDA: v })
-            rememberCurrentJob({ monthlyBasicDA: v })
-          }}
-        />
-        <DateField label={t('gratuity.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
-        <DateField label={t('gratuity.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
-        <Toggle
-          label={t('gratuity.covered')}
-          hint={t('gratuity.coveredHint')}
-          checked={draft.coveredByAct}
-          onChange={(v) => set({ coveredByAct: v })}
-        />
-        <Toggle
-          label={t('gratuity.week5.label')}
-          hint={t('gratuity.week5.hint')}
-          checked={(draft.workWeekDays ?? 5) === 5}
-          onChange={(v) => {
-            const workWeekDays = v ? 5 : 6
-            set({ workWeekDays })
-            rememberCurrentJob({ workWeekDays })
-          }}
-        />
-        {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
-        {draft.workWeekDays === undefined && (
-          <p className="text-[13px] leading-snug text-ink-soft">
-            {t('gratuity.weekAssumed')}
-          </p>
-        )}
-        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           sampleNote={planDated ? t('plan-dates.sampleNote') : undefined}
@@ -222,6 +186,44 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="gratuity" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('gratuity.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField
+          label={t('gratuity.basic')}
+          hint={t('gratuity.basicHint')}
+          value={draft.lastDrawnBasicDA}
+          onChange={(v) => {
+            set({ lastDrawnBasicDA: v })
+            rememberCurrentJob({ monthlyBasicDA: v })
+          }}
+        />
+        <DateField label={t('gratuity.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
+        <DateField label={t('gratuity.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
+        <Toggle
+          label={t('gratuity.covered')}
+          hint={t('gratuity.coveredHint')}
+          checked={draft.coveredByAct}
+          onChange={(v) => set({ coveredByAct: v })}
+        />
+        <Toggle
+          label={t('gratuity.week5.label')}
+          hint={t('gratuity.week5.hint')}
+          checked={(draft.workWeekDays ?? 5) === 5}
+          onChange={(v) => {
+            const workWeekDays = v ? 5 : 6
+            set({ workWeekDays })
+            rememberCurrentJob({ workWeekDays })
+          }}
+        />
+        {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
+        {draft.workWeekDays === undefined && (
+          <p className="text-[13px] leading-snug text-ink-soft">
+            {t('gratuity.weekAssumed')}
+          </p>
+        )}
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
+      </Card>
     </div>
   )
 }

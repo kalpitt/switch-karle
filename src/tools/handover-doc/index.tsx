@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, CopyButton, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
+import { Card, ResultHeading, CopyButton, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -64,15 +64,8 @@ function Body() {
 
   return (
     <div data-tool="handover-doc" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('handover-doc.formTitle')}</h2>
-        <TextField label={t('handover-doc.role')} value={draft.role} onChange={(v) => set({ role: v })} />
-        <TextField label={t('handover-doc.owner')} value={draft.owner} onChange={(v) => set({ owner: v })} />
-        <TextArea label={t('handover-doc.projects')} value={draft.projects} onChange={(v) => set({ projects: v })} rows={5} />
-        <TextArea label={t('handover-doc.access')} value={draft.access} onChange={(v) => set({ access: v })} rows={4} />
-        <TextArea label={t('handover-doc.risks')} value={draft.risks} onChange={(v) => set({ risks: v })} rows={3} />
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <VerdictBanner>{t('handover-doc.verdict')}</VerdictBanner>
         <Card>
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>
@@ -87,6 +80,14 @@ function Body() {
         <Disclaimer>{t('handover-doc.disclaimer')}</Disclaimer>
         <NextStep from="handover-doc" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('handover-doc.formTitle')}</h2>
+        <TextField label={t('handover-doc.role')} value={draft.role} onChange={(v) => set({ role: v })} />
+        <TextField label={t('handover-doc.owner')} value={draft.owner} onChange={(v) => set({ owner: v })} />
+        <TextArea label={t('handover-doc.projects')} value={draft.projects} onChange={(v) => set({ projects: v })} rows={5} />
+        <TextArea label={t('handover-doc.access')} value={draft.access} onChange={(v) => set({ access: v })} rows={4} />
+        <TextArea label={t('handover-doc.risks')} value={draft.risks} onChange={(v) => set({ risks: v })} rows={3} />
+      </Card>
     </div>
   )
 }

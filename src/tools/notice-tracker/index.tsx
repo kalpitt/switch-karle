@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  ResultHeading,
   DateField,
   Disclaimer,
   NoticeMonthsNudge,
@@ -125,30 +126,8 @@ function Body() {
 
   return (
     <div data-tool="notice-tracker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('notice-tracker.formTitle')}</h2>
-        <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
-        <NumberField
-          integer
-          label={t('notice-tracker.notice')}
-          suffix={t('unit.days')}
-          value={draft.noticePeriodDays}
-          onChange={(v) => {
-            set({ noticePeriodDays: v })
-            rememberCurrentJob({ noticePeriodDays: v })
-          }}
-        />
-        <NoticeMonthsNudge
-          value={draft.noticePeriodDays}
-          t={t}
-          onUse={(days) => {
-            set({ noticePeriodDays: days })
-            rememberCurrentJob({ noticePeriodDays: days })
-          }}
-        />
-        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.notice-tracker')}
@@ -196,6 +175,29 @@ function Body() {
         <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
         <NextStep from="notice-tracker" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('notice-tracker.formTitle')}</h2>
+        <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
+        <NumberField
+          integer
+          label={t('notice-tracker.notice')}
+          suffix={t('unit.days')}
+          value={draft.noticePeriodDays}
+          onChange={(v) => {
+            set({ noticePeriodDays: v })
+            rememberCurrentJob({ noticePeriodDays: v })
+          }}
+        />
+        <NoticeMonthsNudge
+          value={draft.noticePeriodDays}
+          t={t}
+          onUse={(days) => {
+            set({ noticePeriodDays: days })
+            rememberCurrentJob({ noticePeriodDays: days })
+          }}
+        />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
+      </Card>
     </div>
   )
 }

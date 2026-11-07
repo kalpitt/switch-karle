@@ -6,6 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   CompareBars,
   Disclaimer,
   InheritNote,
@@ -93,29 +94,8 @@ function Body() {
 
   return (
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('variable-reality.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
-        <MoneyField
-          label={t('decoder.field.variable.label')}
-          placeholder={t('ui.money.placeholder')}
-          value={draft.variable}
-          onChange={(v) => set({ variable: v })}
-        />
-        <NumberField
-          integer
-          label={t('variable-reality.months')}
-          hint={t('variable-reality.monthsHint')}
-          suffix={t('unit.months')}
-          max={12}
-          value={draft.monthsInFy}
-          onChange={(v) => set({ monthsInFy: v })}
-        />
-        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.variable-reality')}
@@ -166,6 +146,28 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="variable-reality" />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('variable-reality.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <MoneyField
+          label={t('decoder.field.variable.label')}
+          placeholder={t('ui.money.placeholder')}
+          value={draft.variable}
+          onChange={(v) => set({ variable: v })}
+        />
+        <NumberField
+          integer
+          label={t('variable-reality.months')}
+          hint={t('variable-reality.monthsHint')}
+          suffix={t('unit.months')}
+          max={12}
+          value={draft.monthsInFy}
+          onChange={(v) => set({ monthsInFy: v })}
+        />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
+      </Card>
     </div>
   )
 }

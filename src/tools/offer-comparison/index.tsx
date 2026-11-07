@@ -7,6 +7,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   CompareBars,
   DeltaTable,
   Disclaimer,
@@ -139,42 +140,8 @@ function CompareBody() {
 
   return (
     <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <div className="space-y-4 lg:sticky lg:top-20">
-        <PrivacyLine />
-        {slots.map((s, i) => (
-          <MiniOffer
-            key={s.label}
-            title={t('offer-comparison.offer', { label: s.label })}
-            offer={s.offer}
-            onChange={(o) => patch(i, o)}
-          />
-        ))}
-        {slots.length === 2 ? (
-          <button
-            type="button"
-            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
-            onClick={() =>
-              setSlots((prev) => [
-                ...prev,
-                { label: 'C', offer: { ...DEFAULT_OFFER, ctcAnnual: 3_000_000, state: 'MH' } },
-              ])
-            }
-          >
-            {t('offer-comparison.addThird')}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
-            onClick={() => setSlots((prev) => prev.slice(0, 2))}
-          >
-            {t('offer-comparison.removeThird')}
-          </button>
-        )}
-        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
-      </div>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           sampleChip={t('offer-comparison.exampleChip')}
@@ -235,6 +202,41 @@ function CompareBody() {
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="offer-comparison" />
+      </div>
+
+      <div className="space-y-4 lg:sticky lg:top-20">
+        <PrivacyLine />
+        {slots.map((s, i) => (
+          <MiniOffer
+            key={s.label}
+            title={t('offer-comparison.offer', { label: s.label })}
+            offer={s.offer}
+            onChange={(o) => patch(i, o)}
+          />
+        ))}
+        {slots.length === 2 ? (
+          <button
+            type="button"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            onClick={() =>
+              setSlots((prev) => [
+                ...prev,
+                { label: 'C', offer: { ...DEFAULT_OFFER, ctcAnnual: 3_000_000, state: 'MH' } },
+              ])
+            }
+          >
+            {t('offer-comparison.addThird')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="min-h-[44px] w-full rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft"
+            onClick={() => setSlots((prev) => prev.slice(0, 2))}
+          >
+            {t('offer-comparison.removeThird')}
+          </button>
+        )}
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </div>
     </div>
   )

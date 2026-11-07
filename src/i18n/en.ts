@@ -1303,6 +1303,7 @@ export const en: Record<string, string> = {
   'ui.privacyErase': 'Erase',
   'ui.privacyCheck': 'How to check',
   'ui.disclaimerContract': 'Estimate, not tax or legal advice. Your own contract and letters decide.',
+  'ui.resultHeading': 'Your result',
   'resignation-letter.verdictNext':
     'This counts the resignation day as day one. If your letter says notice runs “from” that date, it may be {lwdNext}. Put the date your letter’s wording gives.',
 
