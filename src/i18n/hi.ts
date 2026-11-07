@@ -113,6 +113,7 @@ export const hi: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
+  'decoder.stickyLabel': 'आपके bank में {amount}/month',
   'decoder.seeded':
     'CTC और notice period एक tracker card से आए हैं। बाक़ी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
   'decoder.field.ctc.label': 'Total CTC',

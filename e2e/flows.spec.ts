@@ -133,6 +133,31 @@ test('decoder: changing the CTC changes the in-hand figure, and the bar matches 
   expect(Math.abs(barPct - textPct)).toBeLessThan(1.5)
 })
 
+test('decoder on a phone: a thin bar keeps the in-hand figure once the result card scrolls away', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await open(page, '/decoder/')
+  const bar = page.locator('[data-sticky-inhand]')
+  await expect(bar).toHaveCount(0)
+  await page.getByLabel('Total CTC').scrollIntoViewIfNeeded()
+  await page.mouse.wheel(0, 3000)
+  await expect(bar).toBeVisible()
+  await expect(bar).toHaveText(/^In your bank ₹[\d,]+\/month$/)
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect(bar).toHaveCount(0)
+
+  // Desktop never shows it: the result column stays in view there.
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.mouse.wheel(0, 3000)
+  await expect(bar).toBeHidden()
+})
+
+test('decoder on a phone in Hindi: the bar speaks Hindi', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await open(page, '/hi/decoder/')
+  await page.mouse.wheel(0, 3000)
+  await expect(page.locator('[data-sticky-inhand]')).toHaveText(/^आपके bank में ₹[\d,]+\/month$/)
+})
+
 test('decoder: "Use my numbers" puts the cursor in a field the visitor can see', async ({ page }) => {
   await open(page, '/decoder/')
   await page.getByRole('button', { name: /^Use my numbers/ }).first().click()

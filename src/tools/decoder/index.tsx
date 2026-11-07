@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { decodeOffer } from '../../engine/salary'
 import { scanRedFlags } from '../../engine/redFlags'
 import { DecoderForm } from '../../components/DecoderForm'
@@ -9,6 +9,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { DECODER_STORAGE_KEY, DEFAULT_OFFER, consumeHandoff, loadOffer, saveOffer } from '../../data/defaults'
 import { releaseBootEcho } from '../../lib/storage'
 import type { OfferInput } from '../../engine/types'
+import { formatINR } from '../../engine/format'
 import { useT, type Lang } from '../../i18n'
 
 function SeededNote() {
@@ -17,6 +18,35 @@ function SeededNote() {
     <p className="rounded-xl bg-saffron-soft px-3 py-2.5 text-[14px] leading-relaxed text-ink-soft">
       {t('decoder.seeded')}
     </p>
+  )
+}
+
+/**
+ * On a phone, once the main result card has scrolled up out of view, a thin bar
+ * keeps the one number that matters on screen (decided 2026-11-07). It watches
+ * the result card already on the page, so the result column stays as it is.
+ */
+function StickyInHand({ within, amount }: { within: RefObject<HTMLDivElement | null>; amount: string }) {
+  const t = useT()
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const hero = within.current?.querySelector('[data-result-hero]')
+    if (!hero || typeof IntersectionObserver === 'undefined') return
+    // Only once it has gone up past the top: below the fold it is still to come.
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry) setShow(!entry.isIntersecting && entry.boundingClientRect.top < 0)
+    })
+    io.observe(hero)
+    return () => io.disconnect()
+  }, [within])
+  if (!show) return null
+  return (
+    <div
+      data-sticky-inhand
+      className="no-print fixed inset-x-0 top-0 z-20 border-b border-line bg-card px-4 py-2 text-[14px] font-semibold leading-snug text-ink shadow-sm md:hidden"
+    >
+      <span className="tnum">{t('decoder.stickyLabel', { amount })}</span>
+    </div>
   )
 }
 
@@ -61,10 +91,11 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
 
   const breakdown = useMemo(() => decodeOffer(offer), [offer])
   const flags = useMemo(() => scanRedFlags(breakdown), [breakdown])
+  const grid = useRef<HTMLDivElement>(null)
 
   return (
     <IslandRoot lang={lang} current="decoder">
-      <div data-tool="decoder" className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div ref={grid} data-tool="decoder" className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
         <div className="space-y-4 lg:sticky lg:top-20">
           {seeded && <SeededNote />}
           <AutoFill offer={offer} onChange={edit} />
@@ -73,6 +104,7 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
         </div>
         <Results b={breakdown} flags={flags} />
       </div>
+      <StickyInHand within={grid} amount={formatINR(breakdown.inHandMonthly)} />
     </IslandRoot>
   )
 }

@@ -970,6 +970,7 @@ export const en: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
+  'decoder.stickyLabel': 'In your bank {amount}/month',
   'decoder.seeded':
     'CTC and notice period carried from a tracker card. Everything else is from the offer you last saved here, so check it before you trust the result.',
   'decoder.field.ctc.label': 'Total CTC',
