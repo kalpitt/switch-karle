@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
-import { Card, DateField, Disclaimer, ExampleNote, Select, Toggle, VerdictBanner } from '../../components/ui'
+import { Card, DateField, Disclaimer, ExampleNote, Receipt, Select, Toggle, VerdictBanner } from '../../components/ui'
+import { TOOL_SOURCES } from '../../data/sources'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -98,6 +99,7 @@ function Body() {
             {t(verdictKey, { years: result?.completedYears ?? 0 })}
           </VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['epf-transfer']} />
         {result && (
           <Card className="space-y-2">
             {result.flags.map((f) => (

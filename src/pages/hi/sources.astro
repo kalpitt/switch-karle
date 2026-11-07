@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro'
+import InfoPageIsland from '../../components/InfoPages'
+import { hiDictionary } from '../../i18n/hi-dictionary'
+---
+
+<Base title={hiDictionary['sources.title']!} description={hiDictionary['sources.description']!} slug="sources" lang="hi">
+  <InfoPageIsland client:load page="sources" lang="hi" />
+</Base>

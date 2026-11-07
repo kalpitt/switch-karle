@@ -11,10 +11,13 @@ import {
   ExampleNote,
   InheritNote,
   MoneyField,
+  Receipt,
   Select,
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -173,6 +176,7 @@ function Body() {
     <div data-tool="relocation" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('relocation.formTitle')}</h2>
+        <PrivacyLine />
         <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <Select
           label={t('relocation.fromState')}
@@ -199,6 +203,7 @@ function Body() {
         ) : (
           <VerdictBanner tone={delta < 0 ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={[...TOOL_SOURCES['relocation'], ptSourceId(draft.fromState), ptSourceId(draft.toState)]} />
         <Card className="space-y-2">
           <p className="tnum text-[13px]">
             {t('relocation.row.inHand')}: {formatINR(result.from.inHandMonthly)} → {formatINR(result.to.inHandMonthly)}/mo

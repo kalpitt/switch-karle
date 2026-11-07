@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { TOOLS } from '../data/tools'
-import { RULES_LAST_VERIFIED } from '../data/rules'
+import { verifiedRange } from '../data/sources'
+import { INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
 import { formatLongDate } from '../lib/formatDate'
 import { withLang } from '../lib/langPath'
 import { CommandPalette } from './CommandPalette'
@@ -22,10 +23,13 @@ export function Shell({ current, children }: { current: string; children: ReactN
   // Before this, every page's only <h1> was "Switch Karle" and a visitor landing on
   // /gratuity/ was never told what the page was called.
   const tool = current === 'home' ? undefined : TOOLS.find((x) => x.slug === current)
-  const Brand = tool || current === '404' ? 'p' : 'h1'
+  // The pages about the site name themselves with their own <h1>, like tools do.
+  const infoPage = (INFO_PAGES as readonly string[]).includes(current)
+  const Brand = tool || infoPage || current === '404' ? 'p' : 'h1'
   // The page this one is a twin of. The 404 has no twin, so its toggle goes home.
   const slug = tool ? tool.slug : current === 'home' || current === '404' ? '' : current
   const pick = current === '404' ? undefined : setLang
+  const checked = verifiedRange()
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-6">
@@ -93,24 +97,48 @@ export function Shell({ current, children }: { current: string; children: ReactN
         <br />
         {t('app.footer.rules')} <span className="font-semibold">{t('app.footer.privacy')}</span>
         <br />
-        <span className="mt-1 inline-flex items-center rounded-full border border-line bg-card px-2.5 py-0.5 font-semibold text-ink-soft">
-          {t('app.footer.verified', { date: formatLongDate(RULES_LAST_VERIFIED, lang) })}
-        </span>
+        {/* The dates come from the sources registry: the oldest and newest check of a
+            verified rule. One hand-set date for the whole site could not be true. */}
+        <a
+          href={withLang(lang, 'sources')}
+          className="mt-1 inline-flex min-h-[44px] items-center rounded-full border border-line bg-card px-3 font-semibold text-ink-soft underline-offset-2 hover:underline"
+        >
+          {t('app.footer.verified', { from: formatLongDate(checked.from, lang), to: formatLongDate(checked.to, lang) })}
+        </a>
         <br />
+        <a href={withLang(lang, 'about')} className="inline-block py-3 font-semibold underline">
+          {t('app.footer.madeBy')}
+        </a>{' '}
         {t('app.footer.feedback')}{' '}
         <a href="mailto:tiwari.kalpit@gmail.com" className="inline-block py-3 font-semibold underline">
           {t('app.footer.feedbackEmail')}
         </a>{' '}
         ·{' '}
         <a
-          href="https://github.com/kalpitt/switch-karle/issues"
+          href={`${SOURCE_CODE_URL}/issues`}
           target="_blank"
           rel="noreferrer"
           className="inline-block py-3 font-semibold underline"
         >
-          GitHub
+          {t('app.footer.reportGithub')}
         </a>
-        <br />
+        <nav aria-label={t('app.footer.pages')} className="flex flex-wrap items-center gap-x-1.5">
+          {INFO_PAGES.map((page: InfoPage) => (
+            <span key={page} className="inline-flex items-center gap-x-1.5">
+              <a
+                href={withLang(lang, page)}
+                aria-current={current === page ? 'page' : undefined}
+                className="inline-block py-3 font-semibold underline"
+              >
+                {t(`info.${page}.link`)}
+              </a>
+              <span aria-hidden>·</span>
+            </span>
+          ))}
+          <a href={SOURCE_CODE_URL} target="_blank" rel="noreferrer" className="inline-block py-3 font-semibold underline">
+            {t('app.footer.sourceCode')}
+          </a>
+        </nav>
         <span className="inline-flex flex-wrap items-center gap-x-1.5">
           <BackupData className="inline-block min-h-[44px] py-3 font-semibold text-ink-soft underline" />
           <span aria-hidden>·</span>

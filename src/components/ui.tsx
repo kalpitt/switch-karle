@@ -1,8 +1,10 @@
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { useEffect, useId, useState } from 'react'
 import { formatINR } from '../engine/format'
-import { useLang } from '../i18n'
+import { useLang, useT } from '../i18n'
+import { sourceById, type SourceEntry } from '../data/sources'
 import { formatLongDate } from '../lib/formatDate'
+import { withLang } from '../lib/langPath'
 import { parseINRInput } from '../lib/money'
 import { noticeLooksLikeMonths, noticeMonthsToDays } from '../lib/noticeMonths'
 
@@ -573,5 +575,72 @@ export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel
         {linkLabel}
       </a>
     </p>
+  )
+}
+
+/**
+ * The receipt under a verdict (PRODUCT.md rule 3): which document each rule
+ * comes from and the date it was checked, a convention named as one, and an
+ * open item said plainly. Built only from `src/data/sources.ts`, so the line
+ * under the answer and the "How we check numbers" page can never disagree.
+ */
+export function Receipt({ ids, className = '' }: { ids: readonly string[]; className?: string }) {
+  const t = useT()
+  const { lang } = useLang()
+  const entries = [...new Set(ids)].map(sourceById).filter((e): e is SourceEntry => e !== undefined)
+
+  // Verified rules: one clause per checked date, documents within it in first-seen order.
+  const byDate = new Map<string, Map<string, string[]>>()
+  for (const e of entries) {
+    if (e.status !== 'verified') continue
+    const docs = byDate.get(e.checked) ?? new Map<string, string[]>()
+    const sections = docs.get(e.doc) ?? []
+    if (e.section) sections.push(e.section)
+    docs.set(e.doc, sections)
+    byDate.set(e.checked, docs)
+  }
+  const parts: string[] = [...byDate].map(([date, docs]) =>
+    t('receipt.checked', {
+      items: [...docs].map(([doc, sections]) => (sections.length ? `${doc} ${sections.join(', ')}` : doc)).join('; '),
+      date: formatLongDate(date, lang),
+    }),
+  )
+  for (const e of entries) {
+    if (e.status === 'convention') parts.push(t('receipt.convention', { text: t(`source.${e.id}`) }))
+  }
+  // Open questions sit behind one tap: the answer and its sources stay short to scan.
+  const open = (['awaiting-lawyer', 'awaiting-ca'] as const).flatMap((status) =>
+    entries.filter((e) => e.status === status).map((e) => t(`receipt.${status}`, { text: t(`source.${e.id}`) })),
+  )
+
+  return (
+    <div data-receipt className={`text-xs leading-relaxed text-ink-soft ${className}`}>
+      <p>
+        <span className="font-semibold">{t('receipt.label')}</span>{' '}
+        {parts.map((part, i) => (
+          <span key={i}>
+            {i > 0 && ' · '}
+            {part}
+          </span>
+        ))}
+        {parts.length > 0 && ' · '}
+        <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
+          {t('receipt.link')}
+        </a>
+      </p>
+      {open.length > 0 && (
+        <details className="mt-1">
+          <summary className="inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 font-semibold text-ink">
+            <span aria-hidden>▸</span>
+            {t(open.length === 1 ? 'receipt.openOne' : 'receipt.open', { n: open.length })}
+          </summary>
+          <ul className="list-disc space-y-1 pl-4">
+            {open.map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </div>
   )
 }

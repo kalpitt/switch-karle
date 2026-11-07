@@ -12,6 +12,7 @@ import {
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -90,6 +91,7 @@ function Body() {
     <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('counter-offer.formTitle')}</h2>
+        <PrivacyLine />
         <MoneyField label={t('counter-offer.current')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField label={t('counter-offer.counter')} placeholder={t('ui.money.placeholder')} value={draft.counterCtc} onChange={(v) => set({ counterCtc: v })} />
         <MoneyField label={t('counter-offer.outside')} placeholder={t('ui.money.placeholder')} value={draft.outsideCtc} onChange={(v) => set({ outsideCtc: v })} />

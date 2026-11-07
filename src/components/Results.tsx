@@ -2,7 +2,8 @@ import type { RedFlag, SalaryBreakdown } from '../engine/types'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
-import { Card, Details, Disclaimer, ExampleNote, ShareRow } from './ui'
+import { Card, Details, Disclaimer, ExampleNote, Receipt, ShareRow } from './ui'
+import { ptSourceId, TOOL_SOURCES } from '../data/sources'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -40,7 +41,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
           </svg>
           <p className="mt-1.5 text-xs font-medium text-ink-soft">
             <span className="font-bold text-leaf">{pct}%</span>{' '}
-            {t('results.reaches', { pct, amount: formatCompact(b.inHandMonthly * 12) })}
+            {t('results.reaches', { pct, amount: formatCompact(b.inHandAnnual) })}
           </p>
         </div>
 
@@ -58,6 +59,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
+        <Receipt className="mt-3" ids={[...TOOL_SOURCES.decoder, ptSourceId(b.input.state)]} />
 
         <div className="mt-4 space-y-3">
           <ShareRow
@@ -99,7 +101,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
               value={-b.professionalTaxAnnual}
             />
           )}
-          <Row label={t('results.row.inHand')} value={b.inHandMonthly * 12} strong divider accent />
+          <Row label={t('results.row.inHand')} value={b.inHandAnnual} strong divider accent />
         </div>
       </Card>
 

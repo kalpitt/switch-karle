@@ -8,10 +8,13 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
   Select,
   ShareRow,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -109,13 +112,14 @@ function Body() {
     verdict,
     `${t('notice-buyout.row.basic')}: ${formatINR(result.basis === 'basic' ? result.amount : resultOnOtherBasis.amount)}`,
     `${t('notice-buyout.row.gross')}: ${formatINR(result.basis === 'gross' ? result.amount : resultOnOtherBasis.amount)}`,
-    t('ui.disclaimer'),
+    t('ui.disclaimerContract'),
   ].join('\n')
 
   return (
     <div data-tool="notice-buyout" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('notice-buyout.formTitle')}</h2>
+        <PrivacyLine />
         <Select
           label={t('notice-buyout.basis')}
           value={draft.basis}
@@ -175,6 +179,7 @@ function Body() {
         ) : (
           <VerdictBanner>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={TOOL_SOURCES['notice-buyout']} />
         <Card>
           <h3 className="mb-2 text-sm font-bold">{t('notice-buyout.bothBases')}</h3>
           <p className="tnum flex justify-between gap-3 text-[13px]">
@@ -218,7 +223,7 @@ function Body() {
             printLabel={t('ui.print')}
           />
         )}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
       </div>
     </div>
   )

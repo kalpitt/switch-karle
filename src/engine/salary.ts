@@ -115,6 +115,9 @@ export function decodeOffer(input: OfferInput): SalaryBreakdown {
   const inHandMonthlyNew = Math.round(inHand(newRegime.totalTax))
   const inHandMonthlyOld = Math.round(inHand(oldRegime.totalTax))
   const inHandMonthly = recommendedRegime === 'new' ? inHandMonthlyNew : inHandMonthlyOld
+  // Rounded once from the unrounded year, so it equals the rows above it in the
+  // "Where your CTC goes" table. `inHandMonthly * 12` can be ₹1 off that sum.
+  const inHandAnnual = Math.round(inHand(recommendedRegime === 'new' ? newRegime.totalTax : oldRegime.totalTax) * 12)
 
   return {
     input,
@@ -134,6 +137,7 @@ export function decodeOffer(input: OfferInput): SalaryBreakdown {
     inHandMonthlyNew,
     inHandMonthlyOld,
     inHandMonthly,
+    inHandAnnual,
     inHandRatio: input.ctcAnnual > 0 ? (inHandMonthly * 12) / input.ctcAnnual : 0,
   }
 }

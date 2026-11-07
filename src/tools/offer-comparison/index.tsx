@@ -11,11 +11,14 @@ import {
   ExampleNote,
   InheritNote,
   MoneyField,
+  Receipt,
   Select,
   ShareRow,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -130,6 +133,7 @@ function CompareBody() {
   return (
     <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <div className="space-y-4 lg:sticky lg:top-6">
+        <PrivacyLine />
         {slots.map((s, i) => (
           <MiniOffer
             key={s.label}
@@ -169,6 +173,7 @@ function CompareBody() {
         ) : (
           <VerdictBanner tone={result.verdictIndex === null ? 'amber' : 'leaf'}>{verdict}</VerdictBanner>
         )}
+        <Receipt ids={[...TOOL_SOURCES['offer-comparison'], ...slots.map((s) => ptSourceId(s.offer.state))]} />
         {slots.length === 2 ? (
           <Card>
             <h3 className="mb-3 text-sm font-bold">{t('offer-comparison.delta')}</h3>

@@ -10,11 +10,14 @@ import {
   ExampleNote,
   MoneyField,
   NumberField,
+  Receipt,
   ShareRow,
   TextField,
   Toggle,
   VerdictBanner,
 } from '../../components/ui'
+import { PrivacyLine } from '../../components/PrivacyLine'
+import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
@@ -193,6 +196,7 @@ function Body() {
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('fnf-checker.formTitle')}</h2>
+        <PrivacyLine />
         <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
         <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField
@@ -223,6 +227,7 @@ function Body() {
         ) : result && verdict ? (
           <VerdictBanner tone={result.netPayable < 0 ? 'alarm' : 'leaf'}>{verdict}</VerdictBanner>
         ) : null}
+        <Receipt ids={TOOL_SOURCES['fnf-checker']} />
         {result && (
           <Card>
             <h3 className="mb-2 text-sm font-bold">{t('fnf-checker.audit')}</h3>

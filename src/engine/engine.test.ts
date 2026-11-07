@@ -252,3 +252,43 @@ describe('format', () => {
     expect(formatLPA(2_450_000)).toBe('24.5 LPA')
   })
 })
+
+/**
+ * TRUST-15: the "Where your CTC goes" total is the sum of its rows. Hand-derived
+ * for the Decoder's example (₹24L CTC, ₹2.4L variable, 40% basic, PF on full
+ * basic inside CTC, Karnataka): gross ₹20,56,320 − tax ₹2,04,115 − employee PF
+ * ₹1,03,680 − PT ₹2,500 = ₹17,46,025. `inHandMonthly × 12` gave ₹17,46,024.
+ */
+describe('decodeOffer — annual in-hand equals the breakdown rows', () => {
+  const offer: OfferInput = {
+    ctcAnnual: 2_400_000,
+    variableAnnual: 240_000,
+    basicPercent: 40,
+    hraPercentOfBasic: 50,
+    employerPfInCtc: true,
+    gratuityInCtc: false,
+    pfOnFullBasic: true,
+    noticePeriodDays: 60,
+    state: 'KA',
+  }
+
+  it('is ₹17,46,025 on the example offer, not ₹17,46,024', () => {
+    const b = decodeOffer(offer)
+    expect(b.grossSalary).toBe(2_056_320)
+    expect(b.newRegime.totalTax).toBe(204_115)
+    expect(b.employeePfAnnual).toBe(103_680)
+    expect(b.professionalTaxAnnual).toBe(2_500)
+    expect(b.inHandAnnual).toBe(1_746_025)
+    expect(b.inHandMonthly * 12).toBe(1_746_024)
+  })
+
+  it('equals gross − tax − employee PF − PT across a spread of offers', () => {
+    for (const ctcAnnual of [600_000, 1_234_567, 2_400_000, 5_555_555]) {
+      for (const state of ['KA', 'DL', 'TG'] as const) {
+        const b = decodeOffer({ ...offer, ctcAnnual, state })
+        const tax = b.recommendedRegime === 'new' ? b.newRegime.totalTax : b.oldRegime.totalTax
+        expect(b.inHandAnnual).toBe(b.grossSalary - tax - b.employeePfAnnual - b.professionalTaxAnnual)
+      }
+    }
+  })
+})
