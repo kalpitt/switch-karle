@@ -10,6 +10,7 @@ import {
   Receipt,
   ResultHero,
 } from '../../components/ui'
+import { NextStep } from '../../components/NextStep'
 import { TOOL_SOURCES } from '../../data/sources'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
@@ -175,6 +176,7 @@ function Body() {
           })}
         </Card>
         <Disclaimer>{t('ui.disclaimerContract')}</Disclaimer>
+        <NextStep from="notice-tracker" />
       </div>
     </div>
   )

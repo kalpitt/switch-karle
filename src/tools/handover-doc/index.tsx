@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -84,6 +85,7 @@ function Body() {
           </div>
         </Card>
         <Disclaimer>{t('handover-doc.disclaimer')}</Disclaimer>
+        <NextStep from="handover-doc" />
       </div>
     </div>
   )

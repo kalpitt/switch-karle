@@ -26,6 +26,8 @@ src/
   tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
+  data/journey.ts  the seven journey stages (`ToolDef.journey`) and each
+                   tool's "Next" link (components/NextStep.tsx renders it)
   prompts/         text the user hands to their own AI — English literals,
                    not i18n keys, because they are content and not UI chrome
   lib/storage.ts   switchkarle.<tool>.v<N>
@@ -37,10 +39,20 @@ src/
 ```
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
-wired to `VerdictBanner` + `Disclaimer` → registry row → `en.ts` keys**. The
+wired to `VerdictBanner` + `Disclaimer` + `NextStep` → registry row with its
+`journey` stage → a `NEXT_STEP` entry in `data/journey.ts` → `en.ts` keys**. The
 catch-all picks up the slug. `node scripts/new-tool.mjs <slug>` scaffolds that
 loop (and patches `ToolIslands.astro` with one static import — Astro cannot hydrate a
 variable component).
+
+**Journey stages and the "Next" link.** Each tool's stage is `ToolDef.journey`
+(one of the seven in `PRODUCT.md`, mapping approved 2026-10-31). `NEXT_STEP` in
+`src/data/journey.ts` holds only the walk order: each tool's one next tool, in
+journey order, with form16-shock leading back to the plan. `NextStep` renders it
+after the result and names the stage when the link crosses into a later one.
+`src/data/journey.test.ts` fails if a tool has no next step, if a link steps
+back a stage, or if following "Next" from any tool cycles before the end of
+stage 6.
 
 ## Head contract
 

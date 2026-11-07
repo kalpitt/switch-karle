@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, DateField, Disclaimer, ResultHero, Toggle } from '../../components/ui'
 import { addDays } from '../../engine/dates'
 import { todayIso } from '../../lib/today'
@@ -106,6 +107,7 @@ function Body() {
           ))}
         </Card>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        <NextStep from="insurance-gap" />
       </div>
     </div>
   )

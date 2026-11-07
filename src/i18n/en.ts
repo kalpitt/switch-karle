@@ -863,6 +863,11 @@ export const en: Record<string, string> = {
   'notice-tracker.item.relieving-chase': 'If no relieving letter, start the day-7 chase',
   'notice-tracker.open': 'Open {tool}',
   'notice-tracker.due': 'Due {date}',
+  // ---- One next thing under every result (UX-14, IA-02) ----
+  'next.label': 'Next',
+  'next.label.stage': 'Next stage: {stage}',
+  'next.plan.title': 'Back to your plan',
+  'next.plan.desc': 'Your dates for the whole switch, in one place.',
 
   'bond-scanner.title': 'Bond scanner',
   'bond-scanner.desc': 'Paste the bond, non-compete or probation clause. This flags patterns — it is not a court.',

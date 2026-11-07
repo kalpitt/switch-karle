@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, PrintButton, TextArea, VerdictBanner } from '../../components/ui'
 import { redactText } from '../../engine/redact'
 import { readJson, writeJson } from '../../lib/storage'
@@ -82,6 +83,7 @@ function Body() {
           <PrintButton label={t('ui.print')} />
         </div>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="redactor" />
       </div>
     </div>
   )

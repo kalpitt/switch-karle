@@ -5,6 +5,7 @@ import { DEFAULT_OFFER } from '../data/defaults'
 import { useId } from 'react'
 import { Card, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
 import { ptSourceId, TOOL_SOURCES } from '../data/sources'
+import { NextStep } from './NextStep'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -116,6 +117,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
           <li>{t('results.howComputed.bullet5')}</li>
         </ul>
       </Details>
+      <NextStep from="decoder" />
     </div>
   )
 }

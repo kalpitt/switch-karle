@@ -16,6 +16,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
+import { NextStep } from '../../components/NextStep'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { readJson, writeJson } from '../../lib/storage'
@@ -286,6 +287,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="fnf-checker" />
       </div>
     </div>
   )

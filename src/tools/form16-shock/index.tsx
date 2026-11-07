@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { form16Shock } from '../../engine/form16'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, CopyButton, Disclaimer, Ledger, MoneyField, Receipt, ResultHero, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -142,6 +143,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="form16-shock" />
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ import {
   TextField,
   VerdictBanner,
 } from '../../components/ui'
+import { NextStep } from '../../components/NextStep'
 import { TOOL_SOURCES } from '../../data/sources'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { formatLongDate } from '../../lib/formatDate'
@@ -212,6 +213,7 @@ function Body() {
           </div>
         </Card>
         <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+        <NextStep from="resignation-letter" />
       </div>
     </div>
   )

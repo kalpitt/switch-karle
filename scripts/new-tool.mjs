@@ -73,6 +73,7 @@ mkdirSync(islandDir, { recursive: true })
 writeFileSync(
   islandFile,
   `import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, VerdictBanner } from '../../components/ui'
 import { useT, type Lang } from '../../i18n'
 
@@ -95,6 +96,7 @@ function ${Comp}Body() {
       <div className="space-y-3">
         <VerdictBanner>{t('${slug}.verdict')}</VerdictBanner>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="${slug}" />
       </div>
     </div>
   )
@@ -153,4 +155,5 @@ console.log(`  ${engineFile}`)
 console.log(`  ${testFile}  (golden should FAIL until you implement)`)
 console.log(`  ${islandFile}`)
 console.log('  registry + en.ts + ToolIslands.astro patched')
+console.log('  set journey: 0–6 on the registry row and add its next step to NEXT_STEP in src/data/journey.ts (journey.test.ts fails until you do)')
 console.log('Next: make the golden pass, then npm test && npm run typecheck && npm run lint && npm run build && npm run check:seo')

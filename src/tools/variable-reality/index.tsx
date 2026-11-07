@@ -3,6 +3,7 @@ import type { OfferInput } from '../../engine/types'
 import { variableReality } from '../../engine/variable'
 import { formatINR, formatLPA } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   CompareBars,
@@ -163,6 +164,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="variable-reality" />
       </div>
     </div>
   )

@@ -6,6 +6,7 @@ import { addMonths, monthsBetween } from '../../engine/dates'
 import { todayIso } from '../../lib/today'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import {
   Card,
   DateField,
@@ -244,6 +245,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="bonus-clawback" />
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
+import { NextStep } from '../../components/NextStep'
 import { Card, Disclaimer, NumberField, Select, Toggle, VerdictBanner } from '../../components/ui'
 import { bgvPrep, type BgvCompanyType } from '../../engine/bgv'
 import { readJson, writeJson } from '../../lib/storage'
@@ -75,6 +76,7 @@ function Body() {
           ))}
         </Card>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
+        <NextStep from="bgv-prep" />
       </div>
     </div>
   )

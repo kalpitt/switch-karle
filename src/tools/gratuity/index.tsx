@@ -14,6 +14,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
+import { NextStep } from '../../components/NextStep'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { formatLongDate } from '../../lib/formatDate'
@@ -188,6 +189,7 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="gratuity" />
       </div>
     </div>
   )

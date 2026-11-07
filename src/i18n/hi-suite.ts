@@ -818,6 +818,11 @@ export const hiSuite: Record<string, string> = {
   'notice-tracker.item.relieving-chase': 'अगर relieving letter नहीं है, तो day-7 वाला chase शुरू करें',
   'notice-tracker.open': '{tool} खोलें',
   'notice-tracker.due': '{date} तक due',
+  // ---- हर result के नीचे एक अगला क़दम (UX-14, IA-02) ----
+  'next.label': 'अगला क़दम',
+  'next.label.stage': 'अगला पड़ाव: {stage}',
+  'next.plan.title': 'अपने plan पर वापस',
+  'next.plan.desc': 'पूरे switch की आपकी dates, एक जगह।',
 
   // ---- Bond scanner ----
   'bond-scanner.title': 'Bond Scanner',
