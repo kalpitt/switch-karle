@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { TOOLS } from './tools'
-import { NAV_SLUGS, homeSections, pinnedTools } from './home'
+import { JOURNEY_IDS, journeySections } from './journey'
 import { NOTICE_TOOL } from './noticeLinks'
 import { STAGE_ACTIONS } from './stageActions'
 import { STAGE_ORDER } from '../tracker/store'
@@ -20,20 +20,17 @@ describe('tool registry', () => {
   })
 })
 
-describe('home layout', () => {
-  it('shows every tool exactly once, except the two the nav already carries', () => {
-    const shown = [...pinnedTools(), ...homeSections().flatMap((s) => s.tools)].map((t) => t.slug)
-    expect(new Set(shown).size).toBe(shown.length)
-    const expected = TOOLS.map((t) => t.slug).filter((slug) => !NAV_SLUGS.includes(slug as never))
-    expect(shown.slice().sort()).toEqual(expected.slice().sort())
+describe('journey stages', () => {
+  it('gives every tool exactly one of the seven stages', () => {
+    for (const tool of TOOLS) {
+      expect(JOURNEY_IDS).toContain(tool.journey)
+    }
+    const shown = journeySections().flatMap((s) => s.tools.map((t) => t.slug))
+    expect(shown.slice().sort()).toEqual(TOOLS.map((t) => t.slug).sort())
   })
 
-  it('pins the three starters, in journey order', () => {
-    expect(pinnedTools().map((t) => t.slug)).toEqual(['decoder', 'offer-comparison', 'resignation-letter'])
-  })
-
-  it('orders the sections offer → exit → documents → landing', () => {
-    expect(homeSections().map((s) => s.category)).toEqual(['offer', 'exit', 'documents', 'landing'])
+  it('has at least one tool in every stage, in stage order', () => {
+    expect(journeySections().map((s) => s.id)).toEqual([...JOURNEY_IDS])
   })
 })
 
