@@ -81,11 +81,13 @@ if (pages.length < 20) fail(`sitemap lists only ${pages.length} pages`)
     fail(`home flow: ${String(e.message).split('\n')[0]}`)
   }
   try {
-    // Decoder: a rupee figure, and a bar that is not drawn 100% full.
+    // Decoder: a rupee figure, and an in-hand bar that is not drawn 100% full.
+    // Matched by data-seg: since #101 the result column comes first in the
+    // page, so the first svg rect in main is no longer the bar.
     await page.goto(`${origin}/decoder/`)
     await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'))
     const { rupee, ratio } = await page.evaluate(() => {
-      const rect = document.querySelector('main svg rect')
+      const rect = document.querySelector('main svg rect[data-seg="in-hand"]')
       const svg = rect?.closest('svg')
       return {
         rupee: /₹\s?[\d,]+/.test(document.querySelector('main')?.textContent ?? ''),
