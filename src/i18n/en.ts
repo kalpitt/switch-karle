@@ -47,7 +47,7 @@ export const en: Record<string, string> = {
   'plan.act.hint': 'Then the Code on Social Security does not cover you for gratuity. If it had ten or more on any day in the last twelve months, or ever came under the Code, it still does. Your employer may still pay gratuity anyway.',
   'plan.act.none':
     'For an employer the Code has never covered, it sets no gratuity date for you. Nothing statutory is holding you here.',
-  'plan.hike.line': 'Your hike lands in {month}. Resigning before {date} means you never see it.',
+  'plan.hike.line': 'Your hike lands in {month}. Resign on or before {date} and you never see it.',
   'plan.cliffs.none': 'Nothing is ahead of you. No date is holding you here.',
   'plan.cliffs.next': 'Next: pick a date',
 
