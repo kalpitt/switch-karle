@@ -666,7 +666,7 @@ export function ResultHero({
         {value && (
           <p
             key={value}
-            className={`tnum tick mt-2 text-[40px] font-bold leading-none tracking-[-0.03em] sm:text-[48px] ${sample ? 'text-ink-soft' : 'text-ink'}`}
+            className="tnum tick mt-2 text-[40px] font-bold leading-none tracking-[-0.03em] text-ink sm:text-[48px]"
           >
             {value}
             {unit && <span className="ml-0.5 text-[18px] font-medium tracking-normal text-ink-faint">{unit}</span>}
