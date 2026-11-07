@@ -52,8 +52,6 @@ export default defineConfig({
         'icon-512.png',
         'icon-maskable-512.png',
         'favicon.ico',
-        'favicon.svg',
-        'icons.svg',
       ],
       manifest: false,
       workbox: {
@@ -77,9 +75,10 @@ export default defineConfig({
         ],
         cleanupOutdatedCaches: true,
       },
-      experimental: {
-        directoryAndTrailingSlashHandler: true,
-      },
+      // No experimental directoryAndTrailingSlashHandler: it added a second
+      // entry for every page ("decoder/" beside "decoder/index.html"), so a
+      // first visit downloaded each page twice. The plugin's own transform
+      // already lists each page once, as "decoder/" (N-06).
     }),
   ],
   experimental: {

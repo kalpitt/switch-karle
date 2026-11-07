@@ -106,11 +106,20 @@ if (!existsSync(swPath)) {
     console.error('check-base-build: FAIL — dist/sw.js precaches the 404 page; the SW install will fail.')
     failed = true
   }
-  for (const page of ['decoder/index.html', 'tracker/index.html', 'prompts/index.html']) {
-    if (!sw.includes(page)) {
+  // Each page is precached once, under the address a visitor opens ("decoder/");
+  // Workbox maps it to the file. A second "decoder/index.html" entry for the
+  // same page only made a first visit download every page twice (N-06).
+  const swUrls = [...sw.matchAll(/url:\s*"([^"]+)"/g)].map((m) => m[1])
+  for (const page of ['decoder/', 'tracker/', 'prompts/']) {
+    if (!swUrls.includes(page)) {
       console.error(`check-base-build: FAIL — dist/sw.js does not precache ${page}.`)
       failed = true
     }
+  }
+  const twice = swUrls.filter((u) => u.endsWith('index.html'))
+  if (twice.length > 0) {
+    console.error(`check-base-build: FAIL — dist/sw.js precaches pages by file name too (${twice.slice(0, 3).join(', ')}…).`)
+    failed = true
   }
   // Any precache URL without a file behind it fails the whole install the same way.
   for (const [, url] of sw.matchAll(/url:\s*"([^"]+)"/g)) {
