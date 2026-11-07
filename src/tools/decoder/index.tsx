@@ -64,7 +64,7 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
 
   return (
     <IslandRoot lang={lang} current="decoder">
-      <div data-tool="decoder" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div data-tool="decoder" className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
         <div className="space-y-4 lg:sticky lg:top-20">
           {seeded && <SeededNote />}
           <AutoFill offer={offer} onChange={edit} />
