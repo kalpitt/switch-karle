@@ -74,7 +74,7 @@ export const en: Record<string, string> = {
   'plan.recap.applyNow': 'Start applying now. {date} has already passed.',
   'plan.recap.offerLate': 'Offer in hand as soon as you can. {date} has already passed.',
   'plan.recap.resign': 'Resign on {date}.',
-  'plan.recap.lwd': 'Last working day {date}, on {days} days’ notice.',
+  'plan.recap.lwd': 'Last working day {date}, by our count, on {days} days’ notice.',
   'plan.recap.forfeit': 'you give this up',
   'plan.cliff.gratuity-5-day': 'Gratuity on {date}',
   'plan.cliff.gratuity-6-day': 'Gratuity on {date}',
@@ -662,9 +662,9 @@ export const en: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (optional)',
   'resignation-letter.empIdHint': 'Stays on this page only.',
   'resignation-letter.copyBlocked': 'Add the company, your role, your manager and your name to copy the letter.',
-  'resignation-letter.earliestJoin': 'Earliest join date with no EPFO overlap: {date} — the day after your last working day.',
+  'resignation-letter.earliestJoin': 'Earliest join date with no EPFO overlap on either count: {date} — the day after the later last working day.',
   'resignation-letter.epfo':
-    'Your new join date is on or before that last working day. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
+    'Your new join date is on or before your last working day, on at least one of the two counts above. EPFO’s portal often cannot mark two employers on overlapping days — get the exit date recorded, or push the join date. This is portal behaviour, not a statute.',
   'resignation-letter.body.professional':
     'Dear {manager},\n\nPlease accept this letter as my resignation from the position of {role} at {company}, dated {date}. I will serve my notice. My last working day will be {lwd}.\n\nI will share a written handover and remain available for a clean transition. Please confirm receipt and the relieving process.\n\nYours sincerely',
   'resignation-letter.body.grateful':

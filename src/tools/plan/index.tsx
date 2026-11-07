@@ -1077,6 +1077,9 @@ function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePerio
           <span className="font-semibold text-alarm">{t('plan.recap.forfeit')}</span>
         </p>
       ))}
+      {/* The last working day rests on our day-one count, the same convention the
+          tools that inherit it name on their receipts (TR2-02). */}
+      <Receipt ids={['last-working-day']} />
     </div>
   )
 }

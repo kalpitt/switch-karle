@@ -89,7 +89,7 @@ export const hiSuite: Record<string, string> = {
   'plan.recap.applyNow': 'अभी apply शुरू करें। {date} निकल चुकी है।',
   'plan.recap.offerLate': 'जितनी जल्दी हो सके offer हाथ में लें। {date} निकल चुकी है।',
   'plan.recap.resign': '{date} को resign करें।',
-  'plan.recap.lwd': 'Last working day {date}, {days} दिन के notice के बाद।',
+  'plan.recap.lwd': 'Last working day {date}, हमारी गिनती से, {days} दिन के notice के बाद।',
   'plan.recap.forfeit': 'यह आप छोड़ रहे हैं',
   'plan.cliff.gratuity-5-day': '{date} की gratuity',
   'plan.cliff.gratuity-6-day': '{date} की gratuity',
@@ -605,9 +605,9 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (चाहें तो)',
   'resignation-letter.empIdHint': 'सिर्फ़ इसी page पर रहता है।',
   'resignation-letter.copyBlocked': 'Letter copy करने के लिए company, अपना role, अपने manager का नाम और अपना नाम भरें।',
-  'resignation-letter.earliestJoin': 'EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी last working day के अगले दिन।',
+  'resignation-letter.earliestJoin': 'दोनों गिनतियों में EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी बाद वाले last working day के अगले दिन।',
   'resignation-letter.epfo':
-    'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
+    'ऊपर की दोनों गिनतियों में से कम से कम एक में आपकी नई join date last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
   'resignation-letter.body.professional':
     'प्रिय {manager},\n\nकृपया इस letter को {company} में {role} के पद से मेरा resignation मानें, दिनांक {date}। Notice serve किया जाएगा। Last working day {lwd} होगा।\n\nएक written handover share किया जाएगा और एक clean transition के लिए उपलब्धता रहेगी। कृपया receipt और relieving process confirm करें।\n\nसादर',
   'resignation-letter.body.grateful':
