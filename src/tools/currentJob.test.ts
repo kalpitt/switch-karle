@@ -42,12 +42,18 @@ describe('current-job record: one home, basic and basic+DA never merge', () => {
     }
   })
 
-  it('gratuity is the only tool that reads or writes monthlyBasicDA', () => {
+  it('gratuity is the only tool that writes monthlyBasicDA; fnf-checker only reads it for its gratuity line', () => {
     for (const tool of TOOLS_READING_CURRENT_JOB) {
       const src = read(tool)
       const mentionsBasicDA = src.includes('monthlyBasicDA')
-      expect(mentionsBasicDA).toBe(tool === 'gratuity')
+      expect(mentionsBasicDA).toBe(tool === 'gratuity' || tool === 'fnf-checker')
     }
+    // fnf-checker never writes it back and never seeds its plain-basic field
+    // from it: the two figures still do not merge.
+    const fnf = read('fnf-checker')
+    expect(fnf).not.toMatch(/rememberCurrentJob\(\{[^}]*monthlyBasicDA/)
+    expect(fnf).not.toMatch(/shared:\s*\{[^}]*monthlyBasicDA/)
+    expect(fnf).toMatch(/setBasicDA\(job\.monthlyBasicDA\)/)
   })
 
   it('the two seed-only fields are declared seed-only, not shared', () => {

@@ -78,6 +78,10 @@ function Body() {
   // door their employer never had ten employees must not get a gratuity flag
   // here that assumes the Code reaches them.
   const [coveredByAct, setCoveredByAct] = useState<boolean | undefined>(undefined)
+  // Read-only too: basic + DA as typed in the plan's "what this is worth" or
+  // the gratuity tool. Gratuity is paid on basic + DA, so when it is known the
+  // gratuity line uses it rather than this tool's plain-basic field (N4).
+  const [basicDA, setBasicDA] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     // Basic is shared. Gross is seed-only: the field is what the F&F sheet
@@ -88,6 +92,7 @@ function Body() {
     const job = loadCurrentJob()
     setWorkWeekDays(job.workWeekDays)
     setCoveredByAct(job.coveredByAct)
+    setBasicDA(job.monthlyBasicDA)
     const saved = readJson<Partial<Draft> | null>(STORAGE_KEY, null)
     const fill = (d: Draft) =>
       fillFromCurrentJob(
@@ -124,6 +129,7 @@ function Body() {
       joinDate: draft.joinDate,
       lastWorkingDay: draft.lastWorkingDay,
       monthlyBasic: draft.monthlyBasic,
+      monthlyBasicDA: basicDA,
       monthlyGross: draft.monthlyGross,
       unpaidLeaveDays: draft.unpaidLeaveDays,
       payslipLines: [
@@ -137,7 +143,7 @@ function Body() {
       workWeekDays,
       coveredByAct,
     }),
-    [draft, t, workWeekDays, coveredByAct],
+    [draft, t, workWeekDays, coveredByAct, basicDA],
   )
   const result = useMemo(() => {
     try {
@@ -146,6 +152,17 @@ function Body() {
       return null
     }
   }, [input])
+  // The five-day assumption is said only where it changes the answer: the same
+  // sheet recomputed on a six-day week gives a different gratuity (RC-02).
+  const weekChangesGratuity = useMemo(() => {
+    if (workWeekDays !== undefined || result == null) return false
+    try {
+      return auditFnF({ ...input, workWeekDays: 6 }).gratuityNotOnSheet !== result.gratuityNotOnSheet
+    } catch {
+      return false
+    }
+  }, [input, result, workWeekDays])
+  const usesBasicDA = basicDA != null && basicDA > 0 && draft.gratuityEligible
   const disputes = useMemo(() => {
     if (!result) return []
     try {
@@ -281,8 +298,13 @@ function Body() {
         {/* Decided 2026-09-27: an unknown work week takes the five-day reading,
             the one that agrees with a user who says gratuity is due. Said out
             loud, because on a six-day week the same dates may not qualify. */}
-        {workWeekDays === undefined && result != null && result.gratuityNotOnSheet > 0 && (
+        {workWeekDays === undefined && result != null && result.gratuityNotOnSheet > 0 && weekChangesGratuity && (
           <p className="text-[13px] leading-snug text-ink-soft">{t('fnf-checker.weekAssumed')}</p>
+        )}
+        {usesBasicDA && result != null && result.gratuityNotOnSheet > 0 && (
+          <p className="text-[13px] leading-snug text-ink-soft">
+            {t('fnf-checker.basicDAUsed', { amount: formatINR(basicDA) })}
+          </p>
         )}
         {!isExample && result && (
           <Card className="space-y-3">
