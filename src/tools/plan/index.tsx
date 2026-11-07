@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { ReactNode, RefObject } from 'react'
 import {
   cliffs as computeCliffs,
@@ -10,42 +10,70 @@ import {
   type Cliff,
   type Trade,
 } from '../../engine/switchCalendar'
-import { isIsoDate } from '../../engine/dates'
+import { gratuity, GRATUITY_CAP } from '../../engine/gratuity'
+import { formatINR } from '../../engine/format'
+import { isIsoDate, lastWorkingDay } from '../../engine/dates'
 import { loadCurrentJob, rememberCurrentJob, type CurrentJob } from '../../data/currentJob'
 import { erasePlan, loadPlan, savePlan, tickAction, untickAction, type ActionId, type Plan } from '../../data/plan'
+import { TOOL_SOURCES } from '../../data/sources'
 import { downloadBlob } from '../../lib/downloadBlob'
 import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
 import { withLang } from '../../lib/langPath'
 import { todayIso } from '../../lib/today'
-import { doorEngineInput, questionsSubmittable, resignDatesMovedFrom } from './fork'
-import { Card, DateField, ExampleNote, NoticeMonthsNudge, NumberField, Select, TextArea } from '../../components/ui'
+import {
+  answerProblems,
+  dateStepReachable,
+  doorEngineInput,
+  firstCleanTrade,
+  gratuityToSpeakOf,
+  isGratuityCliff,
+  resignDatesMovedFrom,
+  soonerDefault,
+  weekChangesADate,
+} from './fork'
+import {
+  Button,
+  Card,
+  DateField,
+  ExampleNote,
+  MoneyField,
+  NoticeMonthsNudge,
+  NumberField,
+  Receipt,
+  Select,
+  TextArea,
+} from '../../components/ui'
+import { CheckIcon, ChevronRight } from '../../components/icons'
 import { useLang, useT, type Lang } from '../../i18n'
-import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
 import { hikeMonthOrder } from './hikeMonthOrder'
 import { planIcsEvents, planSiteUrl } from './planEvents'
 import { ActionList } from './ActionList'
 
 /**
- * The front door: three questions, the dates they produce, and a date to leave
- * on — then the same plan handed back on every later visit.
+ * The front door: three questions with the dates they produce shown live
+ * beside them, then a date to leave on, then the recap — and the same plan
+ * handed back on every later visit.
  *
  * Spec: docs/DIRECTION.md Part 3 (the first session), Part 4 (coming back) and
- * Part 13 (Phase 0). This is the home page, not a registry tool: it has no
- * slug of its own in Phase 0 and `src/tools/home/index.tsx` renders it.
+ * Part 13 (Phase 0), with the 2026-10-31 polish audit (UX-01, UX-02, UX-05,
+ * COPY-03, COPY-04, IA-03). Three screens, as ROADMAP.md Now says: the
+ * questions and their dates, the dates and a resign date to pick, the recap.
+ * This is the home page, not a registry tool: `src/tools/home/index.tsx`
+ * renders it.
  *
- * Two records and one home per fact. Join date, notice period, work week and
- * Act coverage are facts about the employer and go to `currentJob`; the reason,
- * the hike month, the date picked and `lookingSince` are what the plan invented
- * and go to the plan. **No money is asked for or stored anywhere here** — a
- * date needs a join date and a notice period, and rule 11 puts money after a
- * date, behind the "what this is worth" link.
+ * Two records and one home per fact. Join date, notice period, work week, Act
+ * coverage and basic + DA are facts about the employer and go to `currentJob`;
+ * the reason, the hike month, the date picked and `lookingSince` are what the
+ * plan invented and go to the plan. **No money is asked for on the way to a
+ * date** — rule 11 puts money after a date, behind "what this is worth", and
+ * even there it is one optional field that never reaches the plan record.
  *
- * Nothing is written on mount. Every write below hangs off a button the user
- * pressed.
+ * Nothing is written on mount. Every write below hangs off something the user
+ * pressed or typed.
  */
 
-type Step = 'questions' | 'cliffs' | 'dates'
+type Step = 'questions' | 'dates'
 
 interface Answers {
   joinDate: string
@@ -53,6 +81,8 @@ interface Answers {
   /** 1–12, or 0 for "skip this". */
   hikeCreditMonth: number
 }
+
+type T = (key: string, vars?: Record<string, string | number>) => string
 
 /**
  * Ravi from Part 3, and the reason the first screen is not blank: rule 1 says a
@@ -78,14 +108,19 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [returning, setReturning] = useState(false)
   const [repicking, setRepicking] = useState(false)
   const [downloaded, setDownloaded] = useState(false)
+  // Set by a press that could not go on, so the reason shows under the field
+  // instead of a greyed-out button that says nothing (A11Y-08).
+  const [showErrors, setShowErrors] = useState(false)
+  const [weekBlocked, setWeekBlocked] = useState(false)
+  const [actOpen, setActOpen] = useState(false)
   // Resign dates given up this visit. Not saved: the point is to name them
   // while the user is looking at the button that would add a second date.
   const [movedFrom, setMovedFrom] = useState<string[]>([])
 
-  // The top of whichever screen is showing, so a step change can scroll back
-  // up to it instead of leaving the visitor wherever the last tap landed.
   const containerRef = useRef<HTMLDivElement>(null)
-  const mounted = useRef(false)
+  // What the next render should move focus to. Set only by something the user
+  // pressed, so loading a saved plan never scrolls the page (UX-09b).
+  const pendingFocus = useRef<'heading' | 'invalid' | null>(null)
 
   useEffect(() => {
     const savedJob = loadCurrentJob()
@@ -108,22 +143,30 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
         savedPlan.hikeCreditMonth ?? (answeredBefore ? 0 : EXAMPLE.hikeCreditMonth),
     })
     if (answeredBefore) setTouched(true)
+    // The small-employer answer is shown, not folded away, once it is given.
+    setActOpen(savedJob.coveredByAct === false)
     if (savedPlan.resignDate != null) setReturning(true)
   }, [])
 
-  // Every step, repicking and recap swap opens at its own top rather than
-  // wherever the previous screen's last tap left the scroll position — not on
-  // the first render, which is already at the top. `hasResignDate` stands in
-  // for the trade-cards-to-recap swap within the dates step, which neither
-  // `step` nor `repicking` alone changes.
-  const hasResignDate = plan.resignDate != null
+  // Every screen change opens at its own top, and focus goes to the new
+  // screen's heading so a keyboard or screen-reader user hears where they are
+  // (A11Y-03). A press that could not go on focuses the first thing to fix.
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
+    const want = pendingFocus.current
+    if (want == null) return
+    pendingFocus.current = null
+    const root = containerRef.current
+    if (want === 'heading') {
+      root?.scrollIntoView?.({ block: 'start' })
+      const heading = root?.querySelector?.<HTMLElement>('[data-step-heading]')
+      heading?.focus?.({ preventScroll: true })
       return
     }
-    containerRef.current?.scrollIntoView({ block: 'start' })
-  }, [step, repicking, returning, hasResignDate])
+    const target =
+      root?.querySelector?.<HTMLElement>('[aria-invalid="true"]') ??
+      root?.querySelector?.<HTMLElement>('[data-week-option]')
+    target?.focus?.()
+  })
 
   const answered = (patch: Partial<Answers>) => {
     setTouched(true)
@@ -138,23 +181,39 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const result = switchCalendar(input)
   /** Both readings of the gratuity cliff, whatever the user has already answered. */
   const forkCliffs = computeCliffs({ ...input, workWeekDays: undefined }).filter(isGratuityCliff)
+  const coveredByAct = job.coveredByAct ?? true
+  const problems = answerProblems(answers.joinDate, answers.noticePeriodDays, today)
+  const weekMatters = weekChangesADate(forkCliffs, input.asOf, input.noticePeriodDays)
+  const speak = gratuityToSpeakOf(forkCliffs, job.workWeekDays, weekMatters)
+  const reachable = dateStepReachable(coveredByAct, forkCliffs.length === 2, job.workWeekDays, weekMatters)
 
   const fmt = (iso: string) => formatLongDate(iso, lang)
 
   // ---- writes. Every one of these is a button the user pressed. ----
 
   function submitQuestions() {
-    if (!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)) return
+    if (today === '') return
+    if (problems.length > 0) {
+      setShowErrors(true)
+      pendingFocus.current = 'invalid'
+      return
+    }
+    if (!reachable) {
+      setWeekBlocked(true)
+      pendingFocus.current = 'invalid'
+      return
+    }
     // Only write to the shared record when the user actually edited the
     // answers. Prefilled example values must not seed the rest of the app.
     if (touched) {
       rememberCurrentJob({
         joinDate: answers.joinDate,
         noticePeriodDays: answers.noticePeriodDays,
-        // A week or coverage answer given while still on the example lived on
-        // screen only; it becomes real with the first real answers.
+        // A week, coverage or pay answer given while still on the example
+        // lived on screen only; it becomes real with the first real answers.
         ...(job.workWeekDays !== undefined ? { workWeekDays: job.workWeekDays } : {}),
         ...(job.coveredByAct !== undefined ? { coveredByAct: job.coveredByAct } : {}),
+        ...(job.monthlyBasicDA !== undefined ? { monthlyBasicDA: job.monthlyBasicDA } : {}),
       })
       if (answers.hikeCreditMonth > 0) {
         // The year the month resolved to is pinned now, so a plan saved this
@@ -169,12 +228,14 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
       setJob(loadCurrentJob())
       setPlan(loadPlan())
     }
-    setStep('cliffs')
+    setStep('dates')
+    pendingFocus.current = 'heading'
   }
 
   // An untouched example keeps these answers on screen only: writing them
   // would seed the shared record with facts about nobody's employer.
   function chooseWeek(days: 5 | 6) {
+    setWeekBlocked(false)
     if (!touched) return setJob((j) => ({ ...j, workWeekDays: days }))
     rememberCurrentJob({ workWeekDays: days })
     setJob(loadCurrentJob())
@@ -186,17 +247,28 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setJob(loadCurrentJob())
   }
 
+  function chooseBasicDA(amount: number) {
+    // The record keeps a stored figure when the field is cleared, so the
+    // screen does the same rather than showing an amount the record lacks.
+    if (!(amount > 0)) return
+    if (!touched) return setJob((j) => ({ ...j, monthlyBasicDA: amount }))
+    rememberCurrentJob({ monthlyBasicDA: amount })
+    setJob(loadCurrentJob())
+  }
+
   function pickResignDate(date: string) {
     setMovedFrom((m) => resignDatesMovedFrom(m, plan.resignDate, date))
     // The file in their downloads still carries the old date.
-    if (plan.resignDate != null && plan.resignDate !== date) setDownloaded(false)
+    const moved = plan.resignDate != null && plan.resignDate !== date
+    if (moved) setDownloaded(false)
     if (touched) {
-      savePlan({ resignDate: date })
+      savePlan({ resignDate: date, ...(moved ? { calendarAddedOn: null } : {}) })
       setPlan(loadPlan())
     } else {
-      setPlan((p) => ({ ...p, resignDate: date }))
+      setPlan((p) => ({ ...p, resignDate: date, ...(moved ? { calendarAddedOn: undefined } : {}) }))
     }
     setRepicking(false)
+    pendingFocus.current = 'heading'
   }
 
   function startLooking() {
@@ -257,12 +329,14 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setReturning(false)
     setRepicking(false)
     setStep('questions')
+    pendingFocus.current = 'heading'
   }
 
   function changeDate() {
     setReturning(false)
     setRepicking(true)
     setStep('dates')
+    pendingFocus.current = 'heading'
   }
 
   function startOver() {
@@ -277,6 +351,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setReturning(false)
     setRepicking(false)
     setStep('questions')
+    pendingFocus.current = 'heading'
   }
 
   function downloadDates() {
@@ -288,6 +363,26 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     const blob = new Blob([text], { type: 'text/calendar;charset=utf-8' })
     downloadBlob(blob, DATES_ICS_FILENAME)
     setDownloaded(true)
+    if (touched) {
+      savePlan({ calendarAddedOn: today })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, calendarAddedOn: today }))
+    }
+  }
+
+  const worth: WorthProps = {
+    t,
+    lang,
+    fmt,
+    // "What this is worth" exists only once a gratuity date does (Part 3,
+    // step four): never for an employer the Code does not cover.
+    available: coveredByAct && forkCliffs.length > 0,
+    joinDate: answers.joinDate,
+    lastWorkingDay: result.timeline?.lastWorkingDay.date ?? null,
+    workWeekDays: job.workWeekDays,
+    basicDA: job.monthlyBasicDA ?? 0,
+    onBasicDA: chooseBasicDA,
   }
 
   const shared = {
@@ -300,6 +395,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     touched,
     downloaded,
     movedFrom,
+    worth,
     onExampleChip: goToQuestions,
     onDownload: downloadDates,
     onLooking: startLooking,
@@ -321,113 +417,142 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     )
   }
 
+  const showRecap = step === 'dates' && !repicking && plan.resignDate != null
+
   return (
-    <div ref={containerRef} data-tool="plan" className="space-y-3">
-      <p className="max-w-xl text-[15px] leading-relaxed text-ink-soft">{t('plan.tagline')}</p>
+    <div ref={containerRef} data-tool="plan" className="space-y-5">
+      <header className="space-y-2">
+        {step === 'questions' && (
+          <p className="text-[13px] font-medium leading-snug text-ink-soft">{t('plan.eyebrow')}</p>
+        )}
+        <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">
+          {t('plan.headline')}
+        </h1>
+        {step === 'questions' && (
+          <p className="max-w-[60ch] text-[15px] leading-relaxed text-ink-soft">{t('plan.tagline')}</p>
+        )}
+      </header>
 
       {step === 'questions' && (
-        <Card className="space-y-3">
-          <h2 className="text-base font-bold">{t('plan.q.title')}</h2>
+        <Card className="space-y-4">
+          <StepHeading>{t('plan.q.title')}</StepHeading>
           {!touched && <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.note')} />}
-          <DateField
-            label={t('plan.q.join')}
-            hint={t('plan.q.joinHint')}
-            value={answers.joinDate}
-            max={today === '' ? undefined : today}
-            onChange={(v) => answered({ joinDate: v })}
-          />
-          <NumberField
-            label={t('plan.q.notice')}
-            hint={t('plan.q.noticeHint')}
-            value={answers.noticePeriodDays}
-            suffix={t('plan.q.noticeSuffix')}
-            min={1}
-            allowBlank
-            onChange={(v) => answered({ noticePeriodDays: v })}
-          />
-          <NoticeMonthsNudge value={answers.noticePeriodDays} t={t} onUse={(days) => answered({ noticePeriodDays: days })} />
-          <Select
-            label={t('plan.q.hike')}
-            hint={t('plan.q.hikeHint')}
-            value={String(answers.hikeCreditMonth)}
-            options={[
-              { value: '0', label: t('plan.q.hikeSkip') },
-              ...hikeMonthOrder(today).map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
-            ]}
-            onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
-          />
-          <PrimaryButton
-            onClick={submitQuestions}
-            disabled={!questionsSubmittable(answers.joinDate, answers.noticePeriodDays, today)}
-          >
-            {t('plan.q.next')}
-          </PrimaryButton>
+          <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
+            <div className="space-y-4">
+              <DateField
+                label={t('plan.q.join')}
+                hint={t('plan.q.joinHint')}
+                value={answers.joinDate}
+                max={today === '' ? undefined : today}
+                error={showErrors && problems.includes('join') ? t('plan.q.err.join') : undefined}
+                onChange={(v) => answered({ joinDate: v })}
+              />
+              <div className="space-y-2">
+                <NumberField
+                  label={t('plan.q.notice')}
+                  hint={t('plan.q.noticeHint')}
+                  value={answers.noticePeriodDays}
+                  suffix={t('plan.q.noticeSuffix')}
+                  min={1}
+                  integer
+                  allowBlank
+                  error={showErrors && problems.includes('notice') ? t('plan.q.err.notice') : undefined}
+                  onChange={(v) => answered({ noticePeriodDays: v })}
+                />
+                <NoticeMonthsNudge
+                  value={answers.noticePeriodDays}
+                  t={t}
+                  onUse={(days) => answered({ noticePeriodDays: days })}
+                />
+              </div>
+              <Select
+                label={t('plan.q.hike')}
+                hint={t('plan.q.hikeHint')}
+                value={String(answers.hikeCreditMonth)}
+                options={[
+                  { value: '0', label: t('plan.q.hikeSkip') },
+                  ...hikeMonthOrder(today).map((m) => ({ value: String(m), label: monthLabel(m, today, lang) })),
+                ]}
+                onChange={(v) => answered({ hikeCreditMonth: Number(v) })}
+              />
+            </div>
+
+            <LiveDates
+              t={t}
+              fmt={fmt}
+              ready={today !== '' && problems.length === 0}
+              forkCliffs={forkCliffs}
+              cliffs={result.cliffs}
+              speak={speak}
+              weekMatters={weekMatters}
+              workWeekDays={job.workWeekDays}
+              coveredByAct={coveredByAct}
+              hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+              noticePeriodDays={input.noticePeriodDays}
+              today={today}
+              weekBlocked={weekBlocked}
+              actOpen={actOpen}
+              onActToggle={setActOpen}
+              onChooseWeek={chooseWeek}
+              onChooseCoverage={chooseCoverage}
+            />
+          </div>
+          {/* Never greyed out with no reason: before the page is live it says
+              it is loading (a tap there would be lost, UX-09c); after that a
+              press with something missing says what, under the field. */}
+          <Button onClick={submitQuestions} disabled={today === ''} aria-busy={today === ''} className="w-full lg:w-auto">
+            {today === '' ? t('plan.q.loading') : t('plan.q.next')}
+          </Button>
         </Card>
       )}
 
-      {step === 'cliffs' && (
-        <CliffScreen
-          t={t}
-          fmt={fmt}
-          cliffs={result.cliffs}
-          forkCliffs={forkCliffs}
-          workWeekDays={job.workWeekDays}
-          coveredByAct={job.coveredByAct ?? true}
-          hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+      {step === 'dates' && !showRecap && (
+        <Card className="space-y-4">
+          <StepHeading>{t('plan.dates.title')}</StepHeading>
+          {!touched && (
+            <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={goToQuestions} />
+          )}
+          <DatesSummary
+            t={t}
+            fmt={fmt}
+            speak={speak}
+            coveredByAct={coveredByAct}
+            cliffs={result.cliffs}
+            hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+            noticePeriodDays={input.noticePeriodDays}
+            today={today}
+          />
+          <TradeList
+            t={t}
+            fmt={fmt}
+            trades={result.trades}
+            cliffs={result.cliffs}
+            today={today}
+            noticePeriodDays={input.noticePeriodDays}
+            chosenDate={plan.resignDate}
+            onPick={pickResignDate}
+          />
+          <Button variant="ghost" size="sm" onClick={goToQuestions} className="-ml-3.5">
+            {t('plan.back')}
+          </Button>
+        </Card>
+      )}
+
+      {showRecap && (
+        <Recap
+          {...shared}
           noticePeriodDays={answers.noticePeriodDays}
-          today={today}
-          touched={touched}
-          onExampleChip={goToQuestions}
-          onChooseWeek={chooseWeek}
-          onChooseCoverage={chooseCoverage}
-          onBack={() => setStep('questions')}
-          onNext={() => setStep('dates')}
+          onChangeDate={() => {
+            setRepicking(true)
+            pendingFocus.current = 'heading'
+          }}
         />
       )}
 
-      {step === 'dates' && (
-        <div className="space-y-4">
-          {/* The options give way to the recap once a date exists. Leaving
-              them above it pushes "add these to my calendar" — the one thing
-              this screen is for — off a 375px viewport. "Change my date" in
-              the recap brings them back. */}
-          {(repicking || plan.resignDate == null) && (
-            <Card className="space-y-3">
-              <h2 className="text-base font-bold">{t('plan.dates.title')}</h2>
-              {!touched && (
-                <ExampleNote
-                  chip={t('plan.example.chip')}
-                  note={t('plan.example.laterNote')}
-                  onChipClick={goToQuestions}
-                />
-              )}
-              {result.trades.map((trade) => (
-                <TradeOption
-                  key={trade.id}
-                  t={t}
-                  fmt={fmt}
-                  trade={trade}
-                  today={today}
-                  chosen={plan.resignDate != null && plan.resignDate === trade.resignDate}
-                  onPick={pickResignDate}
-                />
-              ))}
-              <button type="button" onClick={() => setStep('cliffs')} className="py-1 text-[13px] font-semibold text-ink-faint underline">
-                {t('plan.back')}
-              </button>
-            </Card>
-          )}
-
-          {!repicking && plan.resignDate != null && (
-            <Recap {...shared} noticePeriodDays={answers.noticePeriodDays} onChangeDate={() => setRepicking(true)} />
-          )}
-        </div>
-      )}
-
-      {/* The tracker and the tool grid, which Phase 0 does not remove — only
-          moves off the front of the door. They never render on the return
-          screen: five calculators beside one next thing is rule 9 broken. */}
-      {belowDoor}
+      {/* The tracker link and the tool list sit under the questions only. Under
+          the trades or the recap they would put thirty-odd links beside the
+          one thing that screen is for (IA-17, rule 9). */}
+      {step === 'questions' && belowDoor}
     </div>
   )
 }
@@ -449,161 +574,144 @@ function hikeMonthLabel(month: number, cliffs: readonly Cliff[], lang: Lang): st
   return formatMonthYear(month, Number(hike.date.slice(0, 4)), lang)
 }
 
-function PrimaryButton({
-  children,
-  onClick,
-  disabled,
-}: {
-  children: ReactNode
-  onClick: () => void
-  disabled?: boolean
-}) {
+/** A screen's own heading: the place focus lands when the screen changes. */
+function StepHeading({ children }: { children: ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className="w-full rounded-xl bg-saffron px-4 py-3 text-[15px] font-bold text-white disabled:opacity-60"
-    >
+    <h2 data-step-heading tabIndex={-1} className="text-[18px] font-semibold leading-snug outline-none">
       {children}
-    </button>
+    </h2>
   )
 }
 
-/* ---- screen two: the cliffs ---- */
+/** "Safe since…" or "safe from…, N days away", for the one reading the screen may name. */
+function gratuitySentence(t: T, fmt: (iso: string) => string, cliff: Cliff): string {
+  return cliff.passed
+    ? t('plan.gratuity.past', { date: fmt(cliff.date), days: -cliff.daysAway })
+    : t('plan.gratuity.ahead', { date: fmt(cliff.date), days: cliff.daysAway })
+}
 
-function CliffScreen(props: {
-  t: (key: string, vars?: Record<string, string | number>) => string
+/* ---- screen one: the dates, live beside the questions ---- */
+
+function LiveDates(props: {
+  t: T
   fmt: (iso: string) => string
-  cliffs: readonly Cliff[]
+  /** False before the clock is known and while an answer is missing. */
+  ready: boolean
   forkCliffs: readonly Cliff[]
+  cliffs: readonly Cliff[]
+  speak: Cliff | null
+  weekMatters: boolean
   workWeekDays?: 5 | 6
   coveredByAct: boolean
   hikeLabel: string | null
   noticePeriodDays: number
   today: string
-  touched: boolean
-  onExampleChip: () => void
+  weekBlocked: boolean
+  actOpen: boolean
+  onActToggle: (open: boolean) => void
   onChooseWeek: (days: 5 | 6) => void
   onChooseCoverage: (covered: boolean) => void
-  onBack: () => void
-  onNext: () => void
 }) {
   const { t, fmt } = props
+  const titleId = useId()
+  const weekId = useId()
   const five = props.forkCliffs.find((c) => c.id === 'gratuity-5-day')
   const six = props.forkCliffs.find((c) => c.id === 'gratuity-6-day')
-  const chosen = chosenGratuityCliff(props.cliffs, props.workWeekDays)
   const hike = props.cliffs.find((c) => c.id === 'hike')
   const ahead = props.cliffs.filter((c) => stillAhead(c, props.today, props.noticePeriodDays))
-  const resignFrom = chosen == null ? null : gratuityResignFrom(chosen.date, props.noticePeriodDays)
-  const reachable = dateStepReachable(props.coveredByAct, five != null && six != null, props.workWeekDays)
-  const [blocked, setBlocked] = useState(false)
-
-  function handleNext() {
-    if (!reachable) {
-      setBlocked(true)
-      return
-    }
-    props.onNext()
-  }
+  const fork = props.coveredByAct && props.weekMatters && five != null && six != null
 
   return (
-    <Card className="space-y-4">
-      <h2 className="text-base font-bold">{t('plan.cliffs.title')}</h2>
-      {!props.touched && (
-        <ExampleNote
-          chip={t('plan.example.chip')}
-          note={t('plan.example.laterNote')}
-          onChipClick={props.onExampleChip}
-        />
-      )}
+    <section
+      aria-labelledby={titleId}
+      className="space-y-3 border-t border-line pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+    >
+      <h3 id={titleId} className="text-[14px] font-semibold leading-snug text-ink-soft">
+        {t('plan.cliffs.title')}
+      </h3>
 
-      {props.coveredByAct && five != null && six != null ? (
-        <div className="space-y-2">
-          <p className="text-[15px] font-bold leading-snug">{t('plan.week.title')}</p>
-          {/* Both readings, and neither is labelled theirs until they answer.
-              No "in three days" sentence before the choice: that is a countdown
-              to a date they may not have. */}
-          <WeekOption
-            label={t('plan.week.five')}
-            date={fmt(five.date)}
-            active={props.workWeekDays === 5}
-            onClick={() => props.onChooseWeek(5)}
-          />
-          <WeekOption
-            label={t('plan.week.six')}
-            date={fmt(six.date)}
-            active={props.workWeekDays === 6}
-            onClick={() => props.onChooseWeek(6)}
-          />
-          {!blocked && props.workWeekDays === undefined && (
-            <p className="text-[14px] font-bold">{t('plan.week.ask')}</p>
-          )}
-          {/* The gate: tapping "Next" with neither card chosen re-prints the
-              same question in the warning colour already used for a late
-              trade (plan.trade.late) rather than moving to a date the
-              visitor has not earned a reading for. */}
-          {blocked && props.workWeekDays === undefined && (
-            <p className="text-[14px] font-bold text-alarm">{t('plan.week.ask')}</p>
-          )}
-          {/* Only once they have answered. `cliffs` holds BOTH readings until
-              then, so a `find` here would print the five-day sentence to a
-              six-day employee — the countdown to a date they do not have that
-              Part 3 forbids. */}
-          {chosen != null && (
-            <p className="text-[15px] leading-snug">
-              {chosen.passed
-                ? t('plan.gratuity.past', { date: fmt(chosen.date), days: -chosen.daysAway })
-                : t('plan.gratuity.ahead', { date: fmt(chosen.date), days: chosen.daysAway })}
-            </p>
-          )}
-          {/* s.54(B)(a) counts days actually worked, not calendar days, and
-              this engine does not model public holidays or unearned leave —
-              both only push the date later, never earlier. */}
-          {chosen != null && (
-            <p className="text-[13px] leading-snug text-ink-soft">{t('plan.gratuity.workingDays')}</p>
-          )}
-          {/* Gratuity is judged on the last working day, so the date to wait
-              for is not the gratuity date but the notice before it. The risk
-              is said in the same breath: an early release undoes it. */}
-          {chosen != null && !chosen.passed && resignFrom != null && (
-            <p className="text-[14px] leading-snug text-ink-soft">
-              {resignFrom <= props.today
-                ? t('plan.gratuity.noticeNow', { date: fmt(chosen.date) })
-                : t('plan.gratuity.notice', { from: fmt(resignFrom), date: fmt(chosen.date) })}
-            </p>
-          )}
-        </div>
-      ) : (
-        <p className="text-[15px] leading-snug">{t('plan.act.none')}</p>
-      )}
-
-      <label className="flex items-start gap-2 rounded-xl border border-line bg-paper px-3 py-2.5">
-        <input
-          type="checkbox"
-          className="mt-1 h-4 w-4 shrink-0 accent-saffron"
-          checked={!props.coveredByAct}
-          onChange={(e) => props.onChooseCoverage(!e.target.checked)}
-        />
-        <span>
-          <span className="block text-[13px] font-semibold text-ink">{t('plan.act.label')}</span>
-          <span className="mt-0.5 block text-xs leading-snug text-ink-faint">{t('plan.act.hint')}</span>
-        </span>
-      </label>
-
-      {hike != null && props.hikeLabel != null && (
-        <p className="text-[15px] leading-snug">
-          {t('plan.hike.line', { month: props.hikeLabel, date: fmt(hike.date) })}
+      {!props.ready ? (
+        <p className="text-[14px] leading-snug text-ink-faint">
+          {props.today === '' ? t('plan.q.loading') : t('plan.preview.waiting')}
         </p>
+      ) : (
+        <>
+          {/* Asked only when the answer changes a date (UX-02). Both readings,
+              and neither is labelled theirs until they answer: no "in three
+              days" sentence before the choice — that is a countdown to a date
+              they may not have (Part 3). */}
+          {fork && (
+            <div role="group" aria-labelledby={weekId} className="space-y-2">
+              <p id={weekId} className="text-[15px] font-semibold leading-snug">
+                {t('plan.week.title')}
+              </p>
+              <WeekOption
+                label={t('plan.week.five')}
+                date={fmt(five.date)}
+                active={props.workWeekDays === 5}
+                onClick={() => props.onChooseWeek(5)}
+              />
+              <WeekOption
+                label={t('plan.week.six')}
+                date={fmt(six.date)}
+                active={props.workWeekDays === 6}
+                onClick={() => props.onChooseWeek(6)}
+              />
+              {props.workWeekDays === undefined && (
+                <p
+                  role={props.weekBlocked ? 'alert' : undefined}
+                  className={`text-[13px] leading-snug ${props.weekBlocked ? 'font-semibold text-alarm' : 'text-ink-soft'}`}
+                >
+                  {t('plan.week.ask')}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Announced as it changes: these lines recompute on every answer. */}
+          <div aria-live="polite" className="space-y-2.5">
+            {!props.coveredByAct && <p className="text-[15px] leading-snug">{t('plan.act.none')}</p>}
+            {props.coveredByAct && props.speak != null && (
+              <p className="flex gap-2 text-[15px] leading-snug">
+                {props.speak.passed && <CheckIcon size={16} className="mt-[3px] text-leaf" />}
+                <span>{gratuitySentence(t, fmt, props.speak)}</span>
+              </p>
+            )}
+            {hike != null && props.hikeLabel != null && (
+              <p className="text-[15px] leading-snug">
+                {t('plan.hike.line', { month: props.hikeLabel, date: fmt(hike.date) })}
+              </p>
+            )}
+            {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
+          </div>
+
+          {/* Fifty words of legal text that apply to very few visitors, folded
+              behind one line (UX-02d, MOB-12) — and open once ticked. */}
+          <details
+            open={props.actOpen}
+            onToggle={(e) => props.onActToggle(e.currentTarget.open)}
+            className="group rounded-xl border border-line"
+          >
+            <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-2 px-3 text-[13px] font-semibold text-ink-soft [&::-webkit-details-marker]:hidden">
+              <ChevronRight size={14} className="transition-transform group-open:rotate-90" />
+              {t('plan.act.summary')}
+            </summary>
+            <label className="flex items-start gap-2 px-3 pb-3">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 shrink-0 accent-saffron"
+                checked={!props.coveredByAct}
+                onChange={(e) => props.onChooseCoverage(!e.target.checked)}
+              />
+              <span>
+                <span className="block text-[13px] font-semibold text-ink">{t('plan.act.label')}</span>
+                <span className="mt-0.5 block text-xs leading-snug text-ink-faint">{t('plan.act.hint')}</span>
+              </span>
+            </label>
+          </details>
+        </>
       )}
-
-      {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
-
-      <PrimaryButton onClick={handleNext}>{t('plan.cliffs.next')}</PrimaryButton>
-      <button type="button" onClick={props.onBack} className="py-1 text-[13px] font-semibold text-ink-faint underline">
-        {t('plan.back')}
-      </button>
-    </Card>
+    </section>
   )
 }
 
@@ -611,84 +719,271 @@ function WeekOption(props: { label: string; date: string; active: boolean; onCli
   return (
     <button
       type="button"
+      data-week-option
       aria-pressed={props.active}
       onClick={props.onClick}
-      className={`flex w-full items-baseline justify-between gap-3 rounded-xl border px-3 py-2.5 text-left ${
-        props.active ? 'border-saffron bg-saffron/10' : 'border-line bg-paper'
+      className={`flex min-h-[44px] w-full items-baseline justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${
+        props.active ? 'border-saffron bg-saffron-soft' : 'border-field bg-card hover:border-ink-soft'
       }`}
     >
-      <span className="text-[13px] font-semibold text-ink">{props.label}</span>
-      <span className="tnum shrink-0 text-[14px] font-bold">{props.date}</span>
+      <span className="text-[14px] font-semibold text-ink">{props.label}</span>
+      <span className="tnum shrink-0 text-[14px] font-semibold">{props.date}</span>
     </button>
   )
 }
 
-/* ---- screen three: the trades ---- */
+/* ---- screen two: the dates, and a resign date to pick ---- */
+
+function DatesSummary(props: {
+  t: T
+  fmt: (iso: string) => string
+  speak: Cliff | null
+  coveredByAct: boolean
+  cliffs: readonly Cliff[]
+  hikeLabel: string | null
+  noticePeriodDays: number
+  today: string
+}) {
+  const { t, fmt, speak } = props
+  const hike = props.cliffs.find((c) => c.id === 'hike')
+  const ahead = props.cliffs.filter((c) => stillAhead(c, props.today, props.noticePeriodDays))
+  const resignFrom = speak == null ? null : gratuityResignFrom(speak.date, props.noticePeriodDays)
+  return (
+    <div className="space-y-2 rounded-xl bg-paper px-4 py-3 text-[14px] leading-snug">
+      {!props.coveredByAct && <p>{t('plan.act.none')}</p>}
+      {props.coveredByAct && speak != null && (
+        <>
+          <p className="font-semibold">{gratuitySentence(t, fmt, speak)}</p>
+          {/* Gratuity is judged on the last working day, so the date to wait
+              for is not the gratuity date but the notice before it. The risk
+              is said in the same breath: an early release undoes it. */}
+          {!speak.passed && resignFrom != null && (
+            <p className="text-ink-soft">
+              {resignFrom <= props.today
+                ? t('plan.gratuity.noticeNow', { date: fmt(speak.date) })
+                : t('plan.gratuity.notice', { from: fmt(resignFrom), date: fmt(speak.date) })}
+            </p>
+          )}
+          {/* s.54(B)(a) counts days actually worked, not calendar days, and
+              this engine does not model public holidays or unearned leave —
+              both only push the date later, never earlier. */}
+          {!speak.passed && <p className="text-[13px] text-ink-soft">{t('plan.gratuity.workingDays')}</p>}
+        </>
+      )}
+      {hike != null && props.hikeLabel != null && (
+        <p className="font-semibold">{t('plan.hike.line', { month: props.hikeLabel, date: fmt(hike.date) })}</p>
+      )}
+      {ahead.length === 0 && <p>{t('plan.cliffs.none')}</p>}
+    </div>
+  )
+}
+
+function TradeList(props: {
+  t: T
+  fmt: (iso: string) => string
+  trades: readonly Trade[]
+  cliffs: readonly Cliff[]
+  today: string
+  noticePeriodDays: number
+  chosenDate?: string
+  onPick: (date: string) => void
+}) {
+  const clean = firstCleanTrade(props.trades, props.cliffs, props.today, props.noticePeriodDays)
+  return (
+    <div className="space-y-3">
+      {props.trades.map((trade) => (
+        <TradeOption
+          key={trade.id}
+          t={props.t}
+          fmt={props.fmt}
+          trade={trade}
+          today={props.today}
+          noticePeriodDays={props.noticePeriodDays}
+          losesNothing={trade.id === clean}
+          chosen={props.chosenDate != null && props.chosenDate === trade.resignDate}
+          onPick={props.onPick}
+        />
+      ))}
+    </div>
+  )
+}
+
+function pickerStart(id: Trade['id'], resignDate: string | null, earliestDate: string | null, today: string): string {
+  if (id === 'own-date') return ''
+  if (id === 'keep-what-is-earned') return soonerDefault(today, resignDate)
+  return earliestDate ?? today
+}
 
 function TradeOption(props: {
-  t: (key: string, vars?: Record<string, string | number>) => string
+  t: T
   fmt: (iso: string) => string
   trade: Trade
   today: string
+  noticePeriodDays: number
+  losesNothing: boolean
   chosen: boolean
   onPick: (date: string) => void
 }) {
   const { t, fmt, trade } = props
   const needsPicker =
     trade.id === 'keep-what-is-earned' || trade.resignDate === null || trade.earliestDate !== null
-  const [value, setValue] = useState(trade.earliestDate ?? props.today)
+  // "I already have a date" opens empty, and "Leave sooner" opens on the
+  // soonest date that is not already late (UX-05): neither card greets the
+  // visitor with a warning about a date they never chose.
+  const [value, setValue] = useState(() => pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
+  const [missing, setMissing] = useState(false)
 
   useEffect(() => {
-    setValue(trade.earliestDate ?? props.today)
-  }, [trade.earliestDate, trade.resignDate, props.today])
+    setValue(pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
+    setMissing(false)
+  }, [trade.id, trade.earliestDate, trade.resignDate, props.today])
 
   // A card with a picker can show any date the visitor types, so the late
-  // line has to follow that date rather than the fixed one the Trade was
-  // built from — otherwise "keep what is earned" reads as late forever, even
-  // nine months out, because it is frozen at today's own date.
-  const late =
-    needsPicker && isIsoDate(value)
-      ? startApplyingByPassed(value, props.today)
-      : trade.startApplyingByPassed
+  // line follows that date rather than the fixed one the Trade was built from.
+  const late = needsPicker
+    ? isIsoDate(value) && startApplyingByPassed(value, props.today)
+    : trade.startApplyingByPassed
 
   const detail =
     trade.id === 'keep-what-is-earned'
       ? t('plan.trade.earned.detail', { date: fmt(trade.resignDate ?? props.today) })
-      : trade.id === 'own-date'
+      : trade.id === 'own-date' || trade.resignDate == null
         ? t('plan.trade.own.detail')
         : t('plan.trade.fixed.detail', {
-            date: fmt(trade.resignDate ?? ''),
+            lwd: fmt(lastWorkingDay(trade.resignDate, props.noticePeriodDays)),
             apply: fmt(trade.startApplyingBy ?? ''),
           })
 
+  const date = needsPicker ? value : (trade.resignDate ?? '')
+  const pick = () => {
+    if (!isIsoDate(date)) {
+      setMissing(true)
+      return
+    }
+    props.onPick(date)
+  }
+
   return (
-    <div className={`rounded-xl border px-3 py-3 ${props.chosen ? 'border-saffron bg-saffron/10' : 'border-line bg-paper'}`}>
-      <p className="text-[14px] font-bold">{t(`plan.trade.${trade.id}`)}</p>
-      <p className="mt-1 text-[13px] leading-snug text-ink-soft">{detail}</p>
+    <div
+      data-trade={trade.id}
+      className={`space-y-2 rounded-xl border px-4 py-3 ${props.chosen ? 'border-saffron bg-saffron-soft' : 'border-line bg-card'}`}
+    >
+      <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span className="text-[15px] font-semibold">{t(`plan.trade.${trade.id}`)}</span>
+        {/* A fact about the date, not a recommendation: none is ever marked best. */}
+        {props.losesNothing && (
+          <span className="inline-flex items-center gap-1 rounded-md bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf">
+            <CheckIcon size={14} />
+            {t('plan.trade.clean')}
+          </span>
+        )}
+      </p>
+      <p className="text-[13px] leading-snug text-ink-soft">{detail}</p>
       {/* In words, on the option itself. Hiding it would be choosing for them. */}
-      {late && (
-        <p className="mt-1 text-[13px] font-semibold leading-snug text-alarm">{t('plan.trade.late')}</p>
+      {late && <p className="text-[13px] font-semibold leading-snug text-alarm">{t('plan.trade.late')}</p>}
+      {needsPicker && (
+        <DateField
+          label={t('plan.trade.dateLabel')}
+          value={value}
+          error={missing && !isIsoDate(value) ? t('plan.trade.err') : undefined}
+          onChange={(v) => {
+            setValue(v)
+            setMissing(false)
+          }}
+        />
       )}
-      {needsPicker ? (
-        <div className="mt-2 space-y-2">
-          <DateField label={t('plan.trade.dateLabel')} value={value} onChange={setValue} />
-          <button
-            type="button"
-            onClick={() => props.onPick(value)}
-            disabled={!isIsoDate(value)}
-            className="w-full rounded-xl border border-saffron px-3 py-2 text-[14px] font-bold text-saffron disabled:opacity-60"
+      <Button variant="secondary" onClick={pick} className="w-full">
+        {isIsoDate(date) ? t('plan.trade.useDate', { date: fmt(date) }) : t('plan.trade.use')}
+      </Button>
+    </div>
+  )
+}
+
+/* ---- "what this is worth": one optional field, inside the recap ---- */
+
+interface WorthProps {
+  t: T
+  lang: Lang
+  fmt: (iso: string) => string
+  available: boolean
+  joinDate: string
+  lastWorkingDay: string | null
+  workWeekDays?: 5 | 6
+  basicDA: number
+  onBasicDA: (amount: number) => void
+}
+
+/**
+ * Part 3, step four, as specified and not as first shipped: not a link to
+ * another page, but a button that opens one field here — basic plus DA, never
+ * plain basic — and answers inline with the existing gratuity engine, on the
+ * last working day of the date just picked (IA-03). Prefilled from the shared
+ * current-job record, so anyone who used the gratuity tool is not asked twice.
+ */
+function WorthPanel(props: WorthProps) {
+  const { t, fmt } = props
+  const [open, setOpen] = useState(false)
+  const panelId = useId()
+  if (!props.available || props.lastWorkingDay == null || !isIsoDate(props.joinDate)) return null
+
+  const result =
+    props.basicDA > 0
+      ? gratuity({
+          lastDrawnBasicDA: props.basicDA,
+          joinDate: props.joinDate,
+          exitDate: props.lastWorkingDay,
+          coveredByAct: true,
+          workWeekDays: props.workWeekDays,
+        })
+      : null
+
+  return (
+    <div className="w-full">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex min-h-[44px] items-center gap-1.5 text-left text-[14px] font-semibold text-saffron-strong underline underline-offset-4"
+      >
+        <ChevronRight size={14} className={`no-underline transition-transform ${open ? 'rotate-90' : ''}`} />
+        {t('plan.worth')}
+      </button>
+      {open && (
+        <div id={panelId} data-worth className="mt-1 space-y-3 rounded-xl border border-line bg-paper p-4">
+          <MoneyField
+            label={t('gratuity.basic')}
+            hint={t('plan.worth.hint')}
+            value={props.basicDA}
+            onChange={props.onBasicDA}
+          />
+          {result != null && (
+            <div role="status" aria-live="polite" className="space-y-2">
+              {result.eligible ? (
+                <p className="text-[15px] font-semibold leading-snug">
+                  {t('plan.worth.amount', { date: fmt(props.lastWorkingDay), amount: formatINR(result.amount) })}
+                </p>
+              ) : (
+                <p className="text-[15px] font-semibold leading-snug">
+                  {t('plan.worth.notYet', { date: fmt(props.lastWorkingDay) })}
+                </p>
+              )}
+              {result.eligible && (
+                <p className="text-[12px] leading-relaxed text-ink-soft">
+                  {t('gratuity.note.code-wages')}
+                  {result.amount >= GRATUITY_CAP ? ` ${t('gratuity.note.cap-applied')}` : ''}
+                </p>
+              )}
+            </div>
+          )}
+          <Receipt ids={TOOL_SOURCES.gratuity} />
+          <a
+            href={withLang(props.lang, 'gratuity')}
+            className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
           >
-            {t('plan.trade.use')}
-          </button>
+            {t('plan.worth.full')}
+          </a>
         </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => props.onPick(trade.resignDate as string)}
-          className="mt-2 w-full rounded-xl border border-saffron px-3 py-2 text-[14px] font-bold text-saffron"
-        >
-          {t('plan.trade.use')}
-        </button>
       )}
     </div>
   )
@@ -697,7 +992,7 @@ function TradeOption(props: {
 /* ---- the recap, shared by screen three and the return screen ---- */
 
 interface RecapProps {
-  t: (key: string, vars?: Record<string, string | number>) => string
+  t: T
   lang: Lang
   fmt: (iso: string) => string
   plan: Plan
@@ -708,6 +1003,7 @@ interface RecapProps {
   downloaded: boolean
   /** Resign dates moved away from this visit, which a calendar may still hold. */
   movedFrom: readonly string[]
+  worth: WorthProps
   onExampleChip: () => void
   onDownload: () => void
   onLooking: () => void
@@ -745,7 +1041,11 @@ function CalendarButton({
   onDownload,
   downloaded,
   movedFrom,
-}: Pick<RecapProps, 't' | 'fmt' | 'onDownload' | 'downloaded' | 'movedFrom'>) {
+  addedOn,
+}: Pick<RecapProps, 't' | 'fmt' | 'onDownload' | 'downloaded' | 'movedFrom'> & { addedOn?: string }) {
+  // On a return visit with the file already downloaded, the button stops
+  // being the one big thing and the action list takes over as "next" (UX-09a).
+  const kept = addedOn != null && movedFrom.length === 0
   return (
     <div className="space-y-1.5">
       {/* Above the button, so it is read before a second date goes in beside
@@ -755,18 +1055,35 @@ function CalendarButton({
           {t('plan.calendar.moved', { dates: movedFrom.map(fmt).join(', ') })}
         </p>
       )}
-      <PrimaryButton onClick={onDownload}>{t('plan.calendar.cta')}</PrimaryButton>
-      <p className="text-xs leading-relaxed text-ink-faint">{t('plan.calendar.note')}</p>
-      {downloaded && (
-        <p className="text-[13px] font-semibold leading-snug text-ink">{t('plan.calendar.downloaded')}</p>
+      {kept ? (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <p className="flex items-center gap-2 text-[14px] font-semibold text-leaf">
+            <CheckIcon size={16} />
+            {t('plan.calendar.since', { date: fmt(addedOn) })}
+          </p>
+          <Button variant="secondary" size="sm" onClick={onDownload}>
+            {t('plan.calendar.again')}
+          </Button>
+        </div>
+      ) : (
+        <>
+          <Button onClick={onDownload} className="w-full">
+            {t('plan.calendar.cta')}
+          </Button>
+          <p className="text-xs leading-relaxed text-ink-faint">{t('plan.calendar.note')}</p>
+        </>
       )}
+      <p role="status" className="text-[13px] font-semibold leading-snug text-ink">
+        {downloaded ? t('plan.calendar.downloaded') : null}
+      </p>
     </div>
   )
 }
 
 function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onReason'>) {
   const [draft, setDraft] = useState(plan.reason ?? '')
-  const [saved, setSaved] = useState(false)
+  // A line that is already saved says so on a return visit (UX-09b).
+  const [saved, setSaved] = useState(plan.reason != null)
   useEffect(() => {
     setDraft(plan.reason ?? '')
   }, [plan.reason])
@@ -778,7 +1095,7 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
   // own.
   const save = () => {
     onReason(draft)
-    setSaved(true)
+    setSaved(draft.trim() !== '')
   }
 
   return (
@@ -799,9 +1116,15 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
           save()
         }}
       />
-      <button type="button" onClick={save} className="rounded-xl border border-line px-3 py-2 text-[13px] font-bold">
-        {saved ? t('plan.reason.saved') : t('plan.reason.save')}
-      </button>
+      <div className="flex items-center gap-3">
+        <Button variant="secondary" size="sm" onClick={save}>
+          {t('plan.reason.save')}
+        </Button>
+        <span role="status" className="flex items-center gap-1 text-[13px] font-semibold text-leaf">
+          {saved && <CheckIcon size={14} />}
+          {saved ? t('plan.reason.saved') : null}
+        </span>
+      </div>
     </div>
   )
 }
@@ -810,12 +1133,14 @@ function LookingTap({ t, fmt, plan, onLooking }: Pick<RecapProps, 't' | 'fmt' | 
   if (plan.lookingSince != null) {
     return <p className="text-[14px] font-semibold leading-snug">{t('plan.looking.since', { date: fmt(plan.lookingSince) })}</p>
   }
+  // A door, not a task (Part 3): a text button, so it does not compete with
+  // the calendar button for "the one thing on this screen" (UX-09c).
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-0.5">
       <button
         type="button"
         onClick={onLooking}
-        className="w-full rounded-xl border border-saffron px-3 py-2.5 text-[14px] font-bold text-saffron"
+        className="inline-flex min-h-[44px] items-center text-left text-[14px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
       >
         {t('plan.looking.cta')}
       </button>
@@ -824,25 +1149,13 @@ function LookingTap({ t, fmt, plan, onLooking }: Pick<RecapProps, 't' | 'fmt' | 
   )
 }
 
-function WorthLink({ t, lang }: Pick<RecapProps, 't' | 'lang'>) {
-  return (
-    <a href={withLang(lang, 'gratuity')} className="text-[13px] font-semibold text-saffron underline">
-      {t('plan.worth')}
-    </a>
-  )
-}
-
 function Recap(props: RecapProps) {
   const { t } = props
   return (
-    <Card className="space-y-4">
-      <h2 className="text-base font-bold">{t('plan.recap.title')}</h2>
+    <Card className="space-y-5">
+      <StepHeading>{t('plan.recap.title')}</StepHeading>
       {!props.touched && (
-        <ExampleNote
-          chip={t('plan.example.chip')}
-          note={t('plan.example.laterNote')}
-          onChipClick={props.onExampleChip}
-        />
+        <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={props.onExampleChip} />
       )}
       <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
       <CalendarButton
@@ -852,13 +1165,15 @@ function Recap(props: RecapProps) {
         downloaded={props.downloaded}
         movedFrom={props.movedFrom}
       />
-      <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
-      <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <WorthLink t={t} lang={props.lang} />
-        <button type="button" onClick={props.onChangeDate} className="py-1 text-[13px] font-semibold text-ink-faint underline">
+      <div className="space-y-4 border-t border-line pt-4">
+        <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
+        <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
+      </div>
+      <div className="space-y-1 border-t border-line pt-3">
+        <WorthPanel {...props.worth} />
+        <Button variant="ghost" size="sm" onClick={props.onChangeDate} className="-ml-3.5">
           {t('plan.change')}
-        </button>
+        </Button>
       </div>
     </Card>
   )
@@ -871,6 +1186,7 @@ function ReturnScreen(
 ) {
   const { t, plan, result } = props
   const days = result.timeline?.daysAway ?? 0
+  const addedOn = plan.calendarAddedOn
   return (
     <div ref={props.containerRef} data-tool="plan" className="space-y-4">
       {/* Their own sentence, on the screen and not behind a tap. It is what
@@ -879,54 +1195,61 @@ function ReturnScreen(
       {plan.reason != null && (
         <p className="text-[17px] font-bold italic leading-snug">“{plan.reason}”</p>
       )}
+      <h1
+        data-step-heading
+        tabIndex={-1}
+        className="font-display text-[26px] font-bold leading-[1.2] tracking-[-0.02em] text-ink outline-none sm:text-[32px]"
+      >
+        {t('plan.return.countdown', { days, date: props.fmt(result.timeline?.resignDate ?? '') })}
+      </h1>
 
-      <Card className="space-y-4">
+      <Card className="space-y-5">
         {!props.touched && (
-          <ExampleNote
-            chip={t('plan.example.chip')}
-            note={t('plan.example.laterNote')}
-            onChipClick={props.onExampleChip}
-          />
+          <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={props.onExampleChip} />
         )}
-        <p className="text-[15px] font-bold">
-          {t('plan.return.countdown', { days, date: props.fmt(result.timeline?.resignDate ?? '') })}
-        </p>
         <DateLines t={t} fmt={props.fmt} result={result} noticePeriodDays={props.noticePeriodDays} />
 
-        {/* Rule 9: one next thing. In Phase 0 that is the dates in a calendar,
-            the only thing this product can do that survives the tab closing. */}
+        {/* Rule 9: one next thing. Until the dates are in a calendar, that is
+            the calendar; after, the action list below takes over. */}
         <div className="space-y-1.5">
-          <p className="text-[14px] font-bold">{t('plan.return.next')}</p>
+          {addedOn == null && <p className="text-[14px] font-bold">{t('plan.return.next')}</p>}
           <CalendarButton
             t={t}
             fmt={props.fmt}
             onDownload={props.onDownload}
             downloaded={props.downloaded}
             movedFrom={props.movedFrom}
+            addedOn={addedOn}
           />
         </div>
 
-        <ReasonBox t={t} plan={plan} onReason={props.onReason} />
-        <LookingTap t={t} fmt={props.fmt} plan={plan} onLooking={props.onLooking} />
-        <ActionList
-          t={t}
-          lang={props.lang}
-          plan={plan}
-          today={props.today}
-          startApplyingBy={result.timeline?.startApplyingBy.date ?? null}
-          onTick={props.onTick}
-          onCompanies={props.onCompanies}
-          onBond={props.onBond}
-        />
+        <div className="space-y-4 border-t border-line pt-4">
+          <ReasonBox t={t} plan={plan} onReason={props.onReason} />
+          <LookingTap t={t} fmt={props.fmt} plan={plan} onLooking={props.onLooking} />
+        </div>
+        <div className="border-t border-line pt-4">
+          <ActionList
+            t={t}
+            lang={props.lang}
+            plan={plan}
+            today={props.today}
+            startApplyingBy={result.timeline?.startApplyingBy.date ?? null}
+            onTick={props.onTick}
+            onCompanies={props.onCompanies}
+            onBond={props.onBond}
+          />
+        </div>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <WorthLink t={t} lang={props.lang} />
-          <button type="button" onClick={props.onChangeDate} className="py-1 text-[13px] font-semibold text-ink-faint underline">
-            {t('plan.change')}
-          </button>
-          <button type="button" onClick={props.onStartOver} className="py-1 text-[13px] font-semibold text-ink-faint underline">
-            {t('plan.startOver')}
-          </button>
+        <div className="space-y-1 border-t border-line pt-3">
+          <WorthPanel {...props.worth} />
+          <div className="-ml-3.5 flex flex-wrap items-center gap-x-1">
+            <Button variant="ghost" size="sm" onClick={props.onChangeDate}>
+              {t('plan.change')}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={props.onStartOver}>
+              {t('plan.startOver')}
+            </Button>
+          </div>
         </div>
       </Card>
     </div>

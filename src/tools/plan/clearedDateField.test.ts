@@ -144,6 +144,13 @@ function findButtonByText(node: DOMNode, text: string): DOMNode | null {
   return null
 }
 
+/** Whether any node under `node` carries `text`, as a text node or an element's own text. */
+function hasText(node: DOMNode, text: string | RegExp): boolean {
+  const own = [(node as any).nodeValue, (node as any).textContent].filter((v) => typeof v === 'string') as string[]
+  if (own.some((v) => (typeof text === 'string' ? v === text : text.test(v)))) return true
+  return node.children.some((child) => hasText(child, text))
+}
+
 describe('DateField on door screen one (Plan)', () => {
   let doc: DOMDocument
   let container: DOMNode
@@ -220,90 +227,73 @@ describe('DateField on door screen one (Plan)', () => {
     expect(uncaughtError).toBeNull()
   })
 
-  it('clearing the join date leaves the "See my dates" button disabled, and filling a valid date enables it again', async () => {
+  it('clearing the join date keeps "Pick my resign date" pressable, and a press says what is missing instead of moving on', async () => {
     const root = ReactDOMClient.createRoot(container as any, {
       onUncaughtError(err: any) {
         uncaughtError = err
       },
     })
 
-    root.render(
-      React.createElement(
-        LangProvider,
-        null,
-        React.createElement(Plan, null),
-      ),
-    )
-
+    root.render(React.createElement(LangProvider, null, React.createElement(Plan, null)))
     await new Promise((resolve) => setTimeout(resolve, 50))
 
     const dateInput = findInputByLabelOrType(container, 'date')
-    expect(dateInput).not.toBeNull()
-
-    const reactPropsKey = Object.keys(dateInput!).find((k) => k.startsWith('__reactProps'))
-    const inputProps = (dateInput as any)[reactPropsKey!]
+    const inputProps = (dateInput as any)[Object.keys(dateInput!).find((k) => k.startsWith('__reactProps'))!]
     expect(inputProps.value).toBe('2022-01-12')
 
-    const button = findButtonByText(container, 'See my dates')
-    expect(button).not.toBeNull()
-    const buttonPropsKey = Object.keys(button!).find((k) => k.startsWith('__reactProps'))
-    let buttonProps = (button as any)[buttonPropsKey!]
-    expect(buttonProps.disabled).toBeFalsy()
+    // The example dates are on screen before anything is typed (rule 1).
+    expect(hasText(container, /^Your gratuity was already safe on /)).toBe(true)
 
-    // User clears the date field: button becomes disabled
     inputProps.onChange({ target: { value: '' } })
     await new Promise((resolve) => setTimeout(resolve, 50))
 
-    const disabledButton = findButtonByText(container, 'See my dates')
-    buttonProps = (disabledButton as any)[buttonPropsKey!]
-    expect(buttonProps.disabled).toBe(true)
+    // Not greyed out with no reason (A11Y-08): still pressable…
+    const button = findButtonByText(container, 'Pick my resign date')
+    expect(button).not.toBeNull()
+    const buttonProps = (button as any)[Object.keys(button!).find((k) => k.startsWith('__reactProps'))!]
+    expect(buttonProps.disabled).toBeFalsy()
+    expect(hasText(container, /^Your dates show here once/)).toBe(true)
+    expect(hasText(container, 'Pick the day you joined, and not a date after today.')).toBe(false)
 
-    // User enters a valid date: button is re-enabled
+    // …and a press names the problem under the field and stays on screen one.
+    buttonProps.onClick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(hasText(container, 'Pick the day you joined, and not a date after today.')).toBe(true)
+    expect(findButtonByText(container, 'Pick my resign date')).not.toBeNull()
+
+    // A valid date clears the message.
     inputProps.onChange({ target: { value: '2023-05-15' } })
     await new Promise((resolve) => setTimeout(resolve, 50))
-
-    const enabledButton = findButtonByText(container, 'See my dates')
-    buttonProps = (enabledButton as any)[buttonPropsKey!]
-    expect(buttonProps.disabled).toBe(false)
+    expect(hasText(container, 'Pick the day you joined, and not a date after today.')).toBe(false)
     expect(uncaughtError).toBeNull()
   })
 
-  it('clearing notice input on the first screen does not crash the component and disables the next button', async () => {
+  it('clearing notice input on the first screen does not crash, and a press names the notice as missing', async () => {
     const root = ReactDOMClient.createRoot(container as any, {
       onUncaughtError(err: any) {
         uncaughtError = err
       },
     })
 
-    root.render(
-      React.createElement(
-        LangProvider,
-        null,
-        React.createElement(Plan, null),
-      ),
-    )
-
+    root.render(React.createElement(LangProvider, null, React.createElement(Plan, null)))
     await new Promise((resolve) => setTimeout(resolve, 50))
 
     const noticeInput = findInputByLabelOrType(container, 'number')
     expect(noticeInput).not.toBeNull()
-
-    const reactPropsKey = Object.keys(noticeInput!).find((k) => k.startsWith('__reactProps'))
-    expect(reactPropsKey).toBeDefined()
-    const props = (noticeInput as any)[reactPropsKey!]
+    const props = (noticeInput as any)[Object.keys(noticeInput!).find((k) => k.startsWith('__reactProps'))!]
     expect(props.value).toBe(90)
 
     props.onChange({ target: { value: '' } })
-
     await new Promise((resolve) => setTimeout(resolve, 50))
-
     expect(uncaughtError).toBeNull()
 
-    const button = findButtonByText(container, 'See my dates')
-    expect(button).not.toBeNull()
-    const buttonPropsKey = Object.keys(button!).find((k) => k.startsWith('__reactProps'))
-    const buttonProps = (button as any)[buttonPropsKey!]
-    expect(buttonProps.disabled).toBe(true)
+    const button = findButtonByText(container, 'Pick my resign date')
+    const buttonProps = (button as any)[Object.keys(button!).find((k) => k.startsWith('__reactProps'))!]
+    expect(buttonProps.disabled).toBeFalsy()
+    buttonProps.onClick()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(hasText(container, 'Enter your notice in days, at least 1.')).toBe(true)
+    expect(uncaughtError).toBeNull()
   })
 
   it('gratuity renders without throwing when its date field is cleared', async () => {

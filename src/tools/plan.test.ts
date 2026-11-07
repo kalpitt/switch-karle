@@ -34,8 +34,29 @@ describe('the door writes each fact to its own record', () => {
     }
   })
 
-  it('asks for no money anywhere: rule 11 puts money after a date', () => {
-    expect(door).not.toMatch(/MoneyField|monthlyBasic|monthlyGross|formatINR/)
+  it('asks for no money on the way to a date: rule 11 puts it behind "what this is worth"', () => {
+    // The one money field lives in WorthPanel, and WorthPanel is drawn only
+    // where a resign date already exists: the recap and the return screen.
+    const worthPanel = door.match(/function WorthPanel\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(worthPanel).toMatch(/<MoneyField/)
+    expect(door.match(/<MoneyField/g)).toHaveLength(1)
+    expect(door).not.toMatch(/monthlyGross|monthlyBasic[^D]/)
+    const screens = door.match(/export function Plan\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(screens).not.toMatch(/<MoneyField|<WorthPanel/)
+    const recap = door.match(/function Recap\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    const returnScreen = door.match(/function ReturnScreen\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(recap).toMatch(/<WorthPanel/)
+    expect(returnScreen).toMatch(/<WorthPanel/)
+    // Basic + DA, never plain basic: the gratuity engine is on basic + DA.
+    expect(worthPanel).toMatch(/t\('gratuity\.basic'\)/)
+    expect(en['gratuity.basic']).toBe('Monthly basic + DA')
+  })
+
+  it('the basic + DA figure goes to currentJob, never to the plan, and not while on the example', () => {
+    const choose = door.match(/function chooseBasicDA\([\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(choose).toMatch(/if \(!touched\) return setJob/)
+    expect(choose).toMatch(/rememberCurrentJob\(\{ monthlyBasicDA: amount \}\)/)
+    expect(choose).not.toMatch(/savePlan/)
   })
 
   it('reads a skipped hike month back as skipped, not as the example month', () => {
@@ -87,11 +108,8 @@ describe('an untouched example is marked as an example on every screen, and neve
     expect(saveReason).toMatch(/if\s*\(touched\)\s*\{?[\s\S]*?savePlan\(/)
   })
 
-  it('renders ExampleNote with plan.example.laterNote on cliffs, dates, recap and return screen when untouched', () => {
-    expect(door).toMatch(/plan\.example\.laterNote/)
-
-    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
-    expect(cliffScreen).toMatch(/ExampleNote[\s\S]*?plan\.example\.laterNote/)
+  it('renders ExampleNote on the questions, and plan.example.laterNote on the dates, recap and return screen when untouched', () => {
+    expect(door).toMatch(/step === 'questions'[\s\S]*?!touched && <ExampleNote[\s\S]*?plan\.example\.note/)
 
     expect(door).toMatch(/step === 'dates'[\s\S]*?ExampleNote[\s\S]*?plan\.example\.laterNote/)
 
@@ -115,8 +133,8 @@ describe('the calendar download works on phones and says what happened', () => {
     expect(downloadDates).not.toMatch(/createObjectURL|revokeObjectURL|\.click\(\)/)
   })
 
-  it('shows plan.calendar.downloaded under the button only after a tap', () => {
-    expect(door).toMatch(/downloaded && \(/)
+  it('shows plan.calendar.downloaded under the button only after a tap, in a live region', () => {
+    expect(door).toMatch(/role="status"[^>]*>\s*\{downloaded \? t\('plan\.calendar\.downloaded'\) : null\}/)
     expect(door).toMatch(/plan\.calendar\.downloaded/)
     expect(en['plan.calendar.downloaded']).toBe(
       'dates.ics is in your downloads. Open it and your calendar app adds the dates.',
@@ -142,34 +160,41 @@ describe('the calendar download works on phones and says what happened', () => {
 
   it("plan.calendar.note no longer calls the dates 'your cliffs'", () => {
     expect(en['plan.calendar.note']).not.toMatch(/your cliffs/)
-    expect(en['plan.calendar.note']).toMatch(/the dates above/)
+    expect(en['plan.calendar.note']).toMatch(/your resign date/)
   })
 })
 
-describe('the week must be chosen before the dates, and each step opens at its top', () => {
-  it('CliffScreen gates "Next" on dateStepReachable instead of calling onNext directly', () => {
-    expect(door).toMatch(/import \{ chosenGratuityCliff, dateStepReachable, isGratuityCliff \} from ['"]\.\/fork['"]/)
-    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
-    expect(cliffScreen).toMatch(/dateStepReachable\(/)
-    expect(cliffScreen).toMatch(/<PrimaryButton onClick=\{handleNext\}>/)
+describe('the week is asked only when it changes a date, and each screen change moves focus', () => {
+  it('the questions cannot go on while a live fork is unanswered, and say why instead of greying out', () => {
+    expect(door).toMatch(/weekChangesADate\(forkCliffs, input\.asOf, input\.noticePeriodDays\)/)
+    expect(door).toMatch(/dateStepReachable\(coveredByAct, forkCliffs\.length === 2, job\.workWeekDays, weekMatters\)/)
+    const submit = door.match(/function submitQuestions\(\)[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(submit).toMatch(/if \(!reachable\) \{\s*\n\s*setWeekBlocked\(true\)/)
+    expect(submit.indexOf('setWeekBlocked(true)')).toBeLessThan(submit.indexOf("setStep('dates')"))
   })
 
-  it('the blocked re-ask of plan.week.ask uses the alarm colour already used for a late trade', () => {
-    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
-    expect(cliffScreen).toMatch(/blocked[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
+  it('the fork shows only when the week matters, and the blocked ask uses the alarm colour as an alert', () => {
+    const live = door.match(/function LiveDates\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(live).toMatch(/const fork = props\.coveredByAct && props\.weekMatters/)
+    expect(live).toMatch(/role=\{props\.weekBlocked \? 'alert' : undefined\}[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
   })
 
-  it('shows the plain week ask only when not blocked, and the alarm ask only when blocked', () => {
-    const cliffScreen = door.match(/function CliffScreen\([\s\S]*?\)\s*\{[\s\S]*?\n\}/)?.[0] ?? ''
-    expect(cliffScreen).toMatch(/!blocked && props\.workWeekDays === undefined[\s\S]*?plan\.week\.ask/)
-    expect(cliffScreen).toMatch(/blocked && props\.workWeekDays === undefined[\s\S]*?text-alarm[\s\S]*?plan\.week\.ask/)
+  it('never names one gratuity reading before the answer when the answer would change it', () => {
+    expect(door).toMatch(/gratuityToSpeakOf\(forkCliffs, job\.workWeekDays, weekMatters\)/)
   })
 
-  it('every step, repicking and recap swap scrolls the container back to its top, skipping the first mount', () => {
-    const scrollEffect = door.match(/\/\/ Every step, repicking and recap swap[\s\S]*?\n  \}, \[[\s\S]*?\]\)/)?.[0] ?? ''
-    expect(scrollEffect).toMatch(/mounted\.current = true\s*\n\s*return/)
-    expect(scrollEffect).toMatch(/scrollIntoView\(\{ block: 'start' \}\)/)
-    expect(scrollEffect).toMatch(/\[step, repicking, returning, hasResignDate\]/)
+  it('a screen change scrolls to its top and focuses its heading; loading a saved plan does not', () => {
+    const effect = door.match(/\/\/ Every screen change opens at its own top[\s\S]*?\n  \}\)/)?.[0] ?? ''
+    expect(effect).toMatch(/scrollIntoView\?\.\(\{ block: 'start' \}\)/)
+    expect(effect).toMatch(/\[data-step-heading\]/)
+    expect(effect).toMatch(/focus\?\.\(\{ preventScroll: true \}\)/)
+    const mount = door.match(/useEffect\(\(\) => \{\s*\n\s*const savedJob = loadCurrentJob\(\)[\s\S]*?\n  \}, \[\]\)/)?.[0] ?? ''
+    expect(mount).not.toMatch(/pendingFocus/)
+    for (const fn of ['submitQuestions', 'pickResignDate', 'goToQuestions', 'changeDate', 'startOver']) {
+      const body = door.match(new RegExp(`function ${fn}\\([\\s\\S]*?\\n  \\}`))?.[0] ?? ''
+      expect(body, fn).toMatch(/pendingFocus\.current = 'heading'/)
+    }
+    expect(door.match(/data-step-heading/g)!.length).toBeGreaterThanOrEqual(3)
   })
 })
 
@@ -182,11 +207,14 @@ describe('the late warning follows the date in the box, and impossible answers c
     expect(tradeOption).not.toMatch(/\{trade\.startApplyingByPassed && \(/)
   })
 
-  it('the cliff screen judges "ahead" and the gratuity line the way the engine does, notice included', () => {
-    const screen = door.match(/function CliffScreen\([\s\S]*?\n\}\n/)?.[0] ?? ''
-    expect(screen).toMatch(/stillAhead\(c, props\.today, props\.noticePeriodDays\)/)
-    expect(screen).not.toMatch(/cliffs\.filter\(\(c\) => !c\.passed\)/)
-    expect(screen).toMatch(/gratuityResignFrom\(chosen\.date, props\.noticePeriodDays\)/)
+  it('the dates judge "ahead" and the gratuity line the way the engine does, notice included', () => {
+    for (const name of ['LiveDates', 'DatesSummary']) {
+      const screen = door.match(new RegExp(`function ${name}\\([\\s\\S]*?\\n\\}\\n`))?.[0] ?? ''
+      expect(screen, name).toMatch(/stillAhead\(c, props\.today, props\.noticePeriodDays\)/)
+      expect(screen, name).not.toMatch(/cliffs\.filter\(\(c\) => !c\.passed\)/)
+    }
+    const screen = door.match(/function DatesSummary\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(screen).toMatch(/gratuityResignFrom\(speak\.date, props\.noticePeriodDays\)/)
     expect(screen).toMatch(/plan\.gratuity\.notice/)
     expect(en['plan.gratuity.notice']).toMatch(/you lose it/)
   })
@@ -195,9 +223,14 @@ describe('the late warning follows the date in the box, and impossible answers c
     expect(door).toMatch(/<DateField[\s\S]*?label=\{t\('plan\.q\.join'\)\}[\s\S]*?max=\{today === '' \? undefined : today\}/)
   })
 
-  it('the notice field cannot go below 1, and 0 or blank keeps "See my dates" disabled', () => {
+  it('the notice field cannot go below 1, and a missing answer is named under its field, not hidden behind a greyed button', () => {
     expect(door).toMatch(/<NumberField[\s\S]*?label=\{t\('plan\.q\.notice'\)\}[\s\S]*?min=\{1\}/)
-    expect(door).toMatch(/disabled=\{!questionsSubmittable\(answers\.joinDate, answers\.noticePeriodDays, today\)\}/)
+    expect(door).toMatch(/answerProblems\(answers\.joinDate, answers\.noticePeriodDays, today\)/)
+    expect(door).toMatch(/error=\{showErrors && problems\.includes\('join'\) \? t\('plan\.q\.err\.join'\) : undefined\}/)
+    expect(door).toMatch(/error=\{showErrors && problems\.includes\('notice'\) \? t\('plan\.q\.err\.notice'\) : undefined\}/)
+    // Disabled only before the page is live, and then it says so.
+    expect(door).toMatch(/disabled=\{today === ''\} aria-busy=\{today === ''\}/)
+    expect(door).toMatch(/today === '' \? t\('plan\.q\.loading'\) : t\('plan\.q\.next'\)/)
   })
 
   it('the notice field on the door opts into allowBlank', () => {

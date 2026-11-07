@@ -34,7 +34,7 @@ export function Label({ children, hint }: { children: ReactNode; hint?: string }
 const BOX =
   'rounded-xl border border-field bg-card px-3 transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus-within:border-saffron focus-within:ring-[3px] focus-within:ring-saffron/25'
 
-type FieldAria = { 'aria-labelledby'?: string; 'aria-describedby'?: string }
+type FieldAria = { 'aria-labelledby'?: string; 'aria-describedby'?: string; 'aria-invalid'?: true }
 
 /**
  * Label, hint and control, wired for a screen reader: the control is named by the
@@ -45,6 +45,7 @@ function Field({
   label,
   hint,
   required,
+  error,
   describedBy,
   after,
   children,
@@ -52,13 +53,17 @@ function Field({
   label: ReactNode
   hint?: string
   required?: boolean
+  /** Why the value cannot be used. Read out at once, marks the control invalid and describes it. */
+  error?: string
   /** Another element id that describes the control, e.g. an echo line. */
   describedBy?: (id: string) => string | undefined
   after?: (id: string) => ReactNode
   children: (aria: FieldAria) => ReactNode
 }) {
   const id = useId()
-  const described = [hint ? `${id}-hint` : undefined, describedBy?.(id)].filter(Boolean).join(' ')
+  const described = [hint ? `${id}-hint` : undefined, describedBy?.(id), error ? `${id}-err` : undefined]
+    .filter(Boolean)
+    .join(' ')
   return (
     <label className="block">
       <span className="block">
@@ -77,8 +82,17 @@ function Field({
           </span>
         )}
       </span>
-      {children({ 'aria-labelledby': `${id}-label`, 'aria-describedby': described || undefined })}
+      {children({
+        'aria-labelledby': `${id}-label`,
+        'aria-describedby': described || undefined,
+        ...(error ? { 'aria-invalid': true as const } : {}),
+      })}
       {after?.(id)}
+      {error && (
+        <span id={`${id}-err`} role="alert" className="mt-1 block text-[13px] font-semibold leading-snug text-alarm">
+          {error}
+        </span>
+      )}
     </label>
   )
 }
@@ -95,12 +109,13 @@ export function NumberField(props: {
   allowBlank?: boolean
   /** Whole numbers only (days, months, counts): phones show the plain digit pad. */
   integer?: boolean
+  error?: string
 }) {
   const min = props.min ?? 0
   const isFinite = Number.isFinite(props.value)
   const displayValue = isFinite ? props.value : props.allowBlank ? '' : 0
   return (
-    <Field label={props.label} hint={props.hint}>
+    <Field label={props.label} hint={props.hint} error={props.error}>
       {(aria) => (
       <span className={`mt-1.5 flex items-center gap-2 ${BOX}`}>
         <input
@@ -192,6 +207,7 @@ export function TextField(props: {
   type?: 'text' | 'date'
   required?: boolean
   max?: string
+  error?: string
 }) {
   const isDate = props.type === 'date'
   return (
@@ -199,6 +215,7 @@ export function TextField(props: {
       label={props.label}
       hint={props.hint}
       required={props.required}
+      error={props.error}
       after={isDate ? () => <DateEcho iso={props.value} /> : undefined}
     >
       {(aria) => (
@@ -413,6 +430,7 @@ export function DateField(props: {
   onChange: (v: string) => void
   required?: boolean
   max?: string
+  error?: string
 }) {
   return (
     <TextField
@@ -423,6 +441,7 @@ export function DateField(props: {
       type="date"
       required={props.required}
       max={props.max}
+      error={props.error}
     />
   )
 }
