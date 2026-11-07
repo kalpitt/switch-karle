@@ -17,8 +17,8 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
-import { loadOffer } from '../../data/defaults'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -58,9 +58,13 @@ function Body() {
   const [taxable, setTaxable] = useState(1_800_000)
   const [regime, setRegime] = useState<'new' | 'old'>('new')
   const [hydrated, setHydrated] = useState(false)
+  // The taxable income is seeded from the Decoder, which takes off the state's
+  // professional tax in the old regime, so its source is named (TR2-05).
+  const [ptId, setPtId] = useState(() => ptSourceId(DEFAULT_OFFER.state))
 
   useEffect(() => {
     const offer = loadOffer()
+    setPtId(ptSourceId(offer.state))
     const b = decodeOffer(offer)
     setTaxable(b.recommendedRegime === 'new' ? b.newRegime.taxableIncome : b.oldRegime.taxableIncome)
     setRegime(b.recommendedRegime)
@@ -109,7 +113,7 @@ function Body() {
           verdict={verdict}
           tone={result.postExitWindowNote ? 'amber' : 'leaf'}
         >
-          <Receipt ids={TOOL_SOURCES['esop-reality']} />
+          <Receipt ids={[...TOOL_SOURCES['esop-reality'], ptId]} />
         </ResultHero>
         <Card>
           <h3 className="mb-2 text-[15px] font-semibold">{t('esop-reality.vestTitle')}</h3>

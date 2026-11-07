@@ -86,6 +86,24 @@ describe('receipts on screen', () => {
     const src = readFileSync(new URL(screenOf(slug), import.meta.url), 'utf8')
     expect(src).toMatch(/<Receipt\b/)
   })
+
+  // An engine that takes off professional tax makes the state's PT entry part
+  // of the answer, so the receipt names it (TR2-05).
+  const PT_ENGINES = /from '\.\.\/\.\.\/engine\/(salary|hike|variable|taxDeclaration|compare|relocation)'/
+  const usesPt = statutory.filter((slug) =>
+    PT_ENGINES.test(readFileSync(new URL(`../tools/${slug}/index.tsx`, import.meta.url), 'utf8')),
+  )
+
+  it('finds the tools built on a professional-tax engine', () => {
+    expect(usesPt).toEqual(
+      expect.arrayContaining(['decoder', 'real-hike', 'variable-reality', 'tax-declaration', 'bonus-clawback', 'esop-reality', 'form16-shock']),
+    )
+  })
+
+  it.each(usesPt)('%s names the professional-tax source on its receipt', (slug) => {
+    const src = readFileSync(new URL(screenOf(slug), import.meta.url), 'utf8')
+    expect(src).toMatch(/ptSourceId\(/)
+  })
 })
 
 describe('info pages', () => {

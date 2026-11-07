@@ -17,7 +17,7 @@ import {
   ShareRow,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -104,7 +104,7 @@ function Body() {
           verdict={verdict}
           tone={atRiskPct > 15 ? 'amber' : 'leaf'}
         >
-          <Receipt ids={TOOL_SOURCES['variable-reality']} />
+          <Receipt ids={[...TOOL_SOURCES['variable-reality'], ptSourceId(template.state)]} />
         </ResultHero>
         <Card>
           <h3 className="mb-3 text-[15px] font-semibold">{t('variable-reality.table')}</h3>

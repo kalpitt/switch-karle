@@ -5,9 +5,9 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import { Card, ResultHeading, CopyButton, Disclaimer, Ledger, MoneyField, Receipt, ResultHero, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { decodeOffer } from '../../engine/salary'
-import { DECODER_STORAGE_KEY, loadOffer } from '../../data/defaults'
+import { DECODER_STORAGE_KEY, DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { computeTax, STANDARD_DEDUCTION } from '../../engine/tax'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -50,6 +50,9 @@ function Body() {
   const [hydrated, setHydrated] = useState(false)
   /** Where the numbers came from: fixture (example) vs decoder seed vs saved draft. */
   const [origin, setOrigin] = useState<'example' | 'decoder' | 'saved'>('example')
+  // The regime is seeded from the Decoder, whose old-regime figure takes off the
+  // state's professional tax, so its source is named (TR2-05).
+  const [ptId, setPtId] = useState(() => ptSourceId(DEFAULT_OFFER.state))
 
   useEffect(() => {
     let decoderHasData = false
@@ -58,7 +61,9 @@ function Body() {
     } catch {
       /* storage unavailable */
     }
-    const b = decodeOffer(loadOffer())
+    const offer = loadOffer()
+    setPtId(ptSourceId(offer.state))
+    const b = decodeOffer(offer)
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     // The worked example is a new-regime year; a decoded offer brings its own regime.
     setRegime(saved || decoderHasData ? b.recommendedRegime : 'new')
@@ -115,7 +120,7 @@ function Body() {
               { label: t('form16-shock.tds'), value: formatINR(result.tdsTotal) },
             ]}
           />
-          <Receipt ids={TOOL_SOURCES['form16-shock']} />
+          <Receipt ids={[...TOOL_SOURCES['form16-shock'], ptId]} />
         </ResultHero>
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('form16-shock.stdNote')}</p>
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('form16-shock.omit234')}</p>

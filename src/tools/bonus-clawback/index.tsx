@@ -21,7 +21,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -96,9 +96,14 @@ function Body() {
   const t = useT()
   const [draft, setDraft] = useState<Draft>(() => draftFrom(DEFAULT_OFFER))
   const [hydrated, setHydrated] = useState(false)
+  // The seeded taxable income comes from the Decoder, which takes off the
+  // state's professional tax in the old regime, so its source is named (TR2-05).
+  const [ptId, setPtId] = useState(() => ptSourceId(DEFAULT_OFFER.state))
 
   useEffect(() => {
-    const base = draftFrom(loadOffer())
+    const offer = loadOffer()
+    setPtId(ptSourceId(offer.state))
+    const base = draftFrom(offer)
     setDraft(migrate(readJson<LegacyDraft | null>(STORAGE_KEY, null), base) ?? base)
     setHydrated(true)
   }, [])
@@ -169,7 +174,7 @@ function Body() {
           verdict={verdict}
           tone={tone}
         >
-          <Receipt ids={TOOL_SOURCES['bonus-clawback']} />
+          <Receipt ids={[...TOOL_SOURCES['bonus-clawback'], ptId]} />
         </ResultHero>
         <Card className="space-y-2">
           <p className="tnum text-[13px] font-semibold">{servedLine}</p>

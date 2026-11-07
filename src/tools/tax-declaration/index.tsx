@@ -14,7 +14,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { taxDeclaration } from '../../engine/taxDeclaration'
 import { formatINR } from '../../engine/format'
 import { STATE_NAMES } from '../../engine/professionalTax'
@@ -89,7 +89,7 @@ function Body() {
           verdict={verdict}
           tone={result.recommendedRegime === 'new' ? 'leaf' : 'amber'}
         >
-          <Receipt ids={TOOL_SOURCES['tax-declaration']} />
+          <Receipt ids={[...TOOL_SOURCES['tax-declaration'], ptSourceId(offer.state)]} />
         </ResultHero>
         <Card className="space-y-2">
           <p className="tnum text-[13px]">{t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) })}</p>
