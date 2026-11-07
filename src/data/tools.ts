@@ -5,8 +5,6 @@ import { HR_SCRIPTS } from './hrScripts'
 
 export interface ToolDef {
   slug: string
-  category: 'offer' | 'exit' | 'documents' | 'landing'
-  stage: 0 | 1 | 2 | 3 | 4 | 5
   /** The one journey stage this tool belongs to (PRODUCT.md, "The seven stages"). */
   journey: 0 | 1 | 2 | 3 | 4 | 5 | 6
   icon: string
@@ -39,8 +37,6 @@ export const TOOLS_PAGE = 'tools' as const
 export const TOOLS: ToolDef[] = [
   {
     slug: 'decoder',
-    category: 'offer',
-    stage: 0,
     journey: 3,
     icon: 'decoder',
     titleKey: 'tab.decoder',
@@ -71,8 +67,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'offer-comparison',
-    category: 'offer',
-    stage: 1,
     journey: 3,
     icon: 'compare',
     titleKey: 'offer-comparison.title',
@@ -104,8 +98,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'resignation-letter',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'letter',
     titleKey: 'resignation-letter.title',
@@ -135,8 +127,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'real-hike',
-    category: 'offer',
-    stage: 1,
     journey: 2,
     icon: 'hike',
     titleKey: 'real-hike.title',
@@ -168,8 +158,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'variable-reality',
-    category: 'offer',
-    stage: 1,
     journey: 3,
     icon: 'variable',
     titleKey: 'variable-reality.title',
@@ -200,8 +188,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'bonus-clawback',
-    category: 'offer',
-    stage: 1,
     journey: 0,
     icon: 'clawback',
     titleKey: 'bonus-clawback.title',
@@ -231,8 +217,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'esop-reality',
-    category: 'offer',
-    stage: 1,
     journey: 3,
     icon: 'esop',
     titleKey: 'esop-reality.title',
@@ -264,8 +248,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'relocation',
-    category: 'offer',
-    stage: 1,
     journey: 3,
     icon: 'relocation',
     titleKey: 'relocation.title',
@@ -296,8 +278,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'fake-offer',
-    category: 'offer',
-    stage: 1,
     journey: 3,
     icon: 'scan',
     titleKey: 'fake-offer.title',
@@ -329,8 +309,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'notice-buyout',
-    category: 'exit',
-    stage: 2,
     journey: 0,
     icon: 'notice',
     titleKey: 'notice-buyout.title',
@@ -362,8 +340,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'gratuity',
-    category: 'exit',
-    stage: 2,
     journey: 0,
     icon: 'gratuity',
     titleKey: 'gratuity.title',
@@ -395,8 +371,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'leave-encashment',
-    category: 'exit',
-    stage: 2,
     journey: 0,
     icon: 'leave',
     titleKey: 'leave-encashment.title',
@@ -423,8 +397,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'fnf-checker',
-    category: 'exit',
-    stage: 2,
     journey: 5,
     icon: 'fnf',
     titleKey: 'fnf-checker.title',
@@ -456,8 +428,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'form16-shock',
-    category: 'exit',
-    stage: 2,
     journey: 6,
     icon: 'form16',
     titleKey: 'form16-shock.title',
@@ -489,8 +459,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'what-to-say',
-    category: 'documents',
-    stage: 3,
     // Its earliest situation's stage. Lists show it in every stage it has a
     // situation in (`listSections`); this is only where the hub page itself sits.
     journey: 2,
@@ -516,8 +484,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'manager-script',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'talk',
     titleKey: 'manager-script.title',
@@ -547,8 +513,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'counter-offer-reply',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'script',
     titleKey: 'hr.counter-offer-reply.title',
@@ -574,8 +538,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'expected-ctc',
-    category: 'documents',
-    stage: 3,
     journey: 2,
     icon: 'script',
     titleKey: 'hr.expected-ctc.title',
@@ -606,8 +568,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'early-release',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'script',
     titleKey: 'hr.early-release.title',
@@ -635,8 +595,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'buyout-ask',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'script',
     titleKey: 'hr.buyout-ask.title',
@@ -666,8 +624,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'decline-accepted',
-    category: 'documents',
-    stage: 3,
     journey: 3,
     icon: 'script',
     titleKey: 'hr.decline-accepted.title',
@@ -697,8 +653,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'recruiter-followup',
-    category: 'documents',
-    stage: 3,
     journey: 2,
     icon: 'script',
     titleKey: 'hr.recruiter-followup.title',
@@ -726,8 +680,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'counter-offer',
-    category: 'documents',
-    stage: 3,
     journey: 4,
     icon: 'counter',
     titleKey: 'counter-offer.title',
@@ -759,8 +711,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'handover-doc',
-    category: 'documents',
-    stage: 3,
     journey: 5,
     icon: 'handover',
     titleKey: 'handover-doc.title',
@@ -788,8 +738,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'relieving-chaser',
-    category: 'documents',
-    stage: 3,
     journey: 5,
     icon: 'chaser',
     titleKey: 'relieving-chaser.title',
@@ -818,8 +766,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'epf-transfer',
-    category: 'landing',
-    stage: 4,
     journey: 6,
     icon: 'epf',
     titleKey: 'epf-transfer.title',
@@ -851,8 +797,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'bgv-prep',
-    category: 'landing',
-    stage: 4,
     journey: 6,
     icon: 'bgv',
     titleKey: 'bgv-prep.title',
@@ -883,8 +827,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'insurance-gap',
-    category: 'landing',
-    stage: 4,
     journey: 5,
     icon: 'insurance',
     titleKey: 'insurance-gap.title',
@@ -914,8 +856,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'tax-declaration',
-    category: 'landing',
-    stage: 4,
     journey: 6,
     icon: 'tax',
     titleKey: 'tax-declaration.title',
@@ -944,8 +884,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'notice-tracker',
-    category: 'landing',
-    stage: 4,
     journey: 5,
     icon: 'notice-track',
     titleKey: 'notice-tracker.title',
@@ -977,8 +915,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'offer-goes-cold',
-    category: 'documents',
-    stage: 5,
     journey: 5,
     icon: 'chaser',
     titleKey: 'offer-goes-cold.title',
@@ -1009,8 +945,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'bond-scanner',
-    category: 'offer',
-    stage: 5,
     journey: 0,
     icon: 'bond',
     titleKey: 'bond-scanner.title',
@@ -1041,8 +975,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'redactor',
-    category: 'documents',
-    stage: 5,
     journey: 1,
     icon: 'redact',
     titleKey: 'redactor.title',
@@ -1074,8 +1006,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'clause-library',
-    category: 'documents',
-    stage: 5,
     journey: 0,
     icon: 'clauses',
     titleKey: 'clause-library.title',
@@ -1104,8 +1034,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'tracker',
-    category: 'landing',
-    stage: 0,
     journey: 1,
     icon: 'tracker',
     titleKey: 'tab.tracker',
@@ -1137,8 +1065,6 @@ export const TOOLS: ToolDef[] = [
   },
   {
     slug: 'prompts',
-    category: 'documents',
-    stage: 0,
     journey: 1,
     icon: 'prompts',
     titleKey: 'tab.prompts',

@@ -4,6 +4,7 @@ import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
   Card,
+  ResultHeading,
   CopyButton,
   DateField,
   Disclaimer,
@@ -232,51 +233,8 @@ function Body() {
 
   return (
     <div data-tool="fnf-checker" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('fnf-checker.formTitle')}</h2>
-        <PrivacyLine />
-        <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
-        <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
-        <MoneyField
-          label={t('fnf-checker.basic')}
-          placeholder={t('ui.money.placeholderMonthly')}
-          value={draft.monthlyBasic}
-          onChange={(v) => {
-            set({ monthlyBasic: v })
-            rememberCurrentJob({ monthlyBasic: v })
-          }}
-        />
-        <MoneyField label={t('fnf-checker.gross')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
-        <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
-        <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
-        <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
-        {draft.gratuityEligible && (
-          <>
-            <Toggle
-              label={t('gratuity.week5.label')}
-              checked={(workWeekDays ?? 5) === 5}
-              onChange={(v) => {
-                const week = v ? 5 : 6
-                setWorkWeekDays(week)
-                rememberCurrentJob({ workWeekDays: week })
-              }}
-            />
-            {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
-            {workWeekDays === undefined && (
-              <p className="text-[13px] leading-snug text-ink-soft">{t('gratuity.weekAssumed')}</p>
-            )}
-          </>
-        )}
-        <TextField
-          label={t('fnf-checker.mailHr')}
-          hint={t('fnf-checker.mailHrHint')}
-          value={draft.hrName}
-          onChange={(v) => set({ hrName: v })}
-        />
-        <TextField label={t('fnf-checker.mailYou')} value={draft.yourName} onChange={(v) => set({ yourName: v })} />
-        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         {result && verdict ? (
           <ResultHero
             sample={isExample}
@@ -354,6 +312,50 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="fnf-checker" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('fnf-checker.formTitle')}</h2>
+        <PrivacyLine />
+        <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
+        <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
+        <MoneyField
+          label={t('fnf-checker.basic')}
+          placeholder={t('ui.money.placeholderMonthly')}
+          value={draft.monthlyBasic}
+          onChange={(v) => {
+            set({ monthlyBasic: v })
+            rememberCurrentJob({ monthlyBasic: v })
+          }}
+        />
+        <MoneyField label={t('fnf-checker.gross')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
+        <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
+        <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
+        <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
+        {draft.gratuityEligible && (
+          <>
+            <Toggle
+              label={t('gratuity.week5.label')}
+              checked={(workWeekDays ?? 5) === 5}
+              onChange={(v) => {
+                const week = v ? 5 : 6
+                setWorkWeekDays(week)
+                rememberCurrentJob({ workWeekDays: week })
+              }}
+            />
+            {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
+            {workWeekDays === undefined && (
+              <p className="text-[13px] leading-snug text-ink-soft">{t('gratuity.weekAssumed')}</p>
+            )}
+          </>
+        )}
+        <TextField
+          label={t('fnf-checker.mailHr')}
+          hint={t('fnf-checker.mailHrHint')}
+          value={draft.hrName}
+          onChange={(v) => set({ hrName: v })}
+        />
+        <TextField label={t('fnf-checker.mailYou')} value={draft.yourName} onChange={(v) => set({ yourName: v })} />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
+      </Card>
     </div>
   )
 }

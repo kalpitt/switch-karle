@@ -853,6 +853,10 @@ function TradeOption(props: {
   // visitor with a warning about a date they never chose.
   const [value, setValue] = useState(() => pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
   const [missing, setMissing] = useState(false)
+  // The option's title names the card and the date field inside it, so the two
+  // "Resign date" fields on this screen are told apart (A11Y N6).
+  const titleId = useId()
+  const cleanId = useId()
 
   useEffect(() => {
     setValue(pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
@@ -887,13 +891,21 @@ function TradeOption(props: {
   return (
     <div
       data-trade={trade.id}
+      data-chosen={props.chosen || undefined}
+      role="group"
+      aria-labelledby={props.losesNothing ? `${titleId} ${cleanId}` : titleId}
       className={`space-y-2 rounded-xl border px-4 py-3 ${props.chosen ? 'border-saffron bg-saffron-soft' : 'border-line bg-card'}`}
     >
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="text-[15px] font-semibold">{t(`plan.trade.${trade.id}`)}</span>
+        <span id={titleId} className="text-[15px] font-semibold">
+          {t(`plan.trade.${trade.id}`)}
+        </span>
         {/* A fact about the date, not a recommendation: none is ever marked best. */}
         {props.losesNothing && (
-          <span className="inline-flex items-center gap-1 rounded-md bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf">
+          <span
+            id={cleanId}
+            className="inline-flex items-center gap-1 rounded-md bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf"
+          >
             <CheckIcon size={14} />
             {t('plan.trade.clean')}
           </span>
@@ -905,6 +917,7 @@ function TradeOption(props: {
       {needsPicker && (
         <DateField
           label={t('plan.trade.dateLabel')}
+          labelledBy={titleId}
           value={value}
           error={missing && !isIsoDate(value) ? t('plan.trade.err') : undefined}
           onChange={(v) => {
@@ -982,7 +995,11 @@ function WorthPanel(props: WorthProps) {
             <div role="status" aria-live="polite" className="space-y-2">
               {result.eligible ? (
                 <p className="text-[15px] font-semibold leading-snug">
-                  {t('plan.worth.amount', { date: fmt(props.lastWorkingDay), amount: formatINR(result.amount) })}
+                  {/* A capped amount is a ceiling, not a floor (TR2-15). */}
+                  {t(result.amount >= GRATUITY_CAP ? 'plan.worth.amountCapped' : 'plan.worth.amount', {
+                    date: fmt(props.lastWorkingDay),
+                    amount: formatINR(result.amount),
+                  })}
                 </p>
               ) : (
                 <p className="text-[15px] font-semibold leading-snug">
@@ -991,8 +1008,8 @@ function WorthPanel(props: WorthProps) {
               )}
               {result.eligible && (
                 <p className="text-[12px] leading-relaxed text-ink-soft">
-                  {t('gratuity.note.code-wages')}
-                  {result.amount >= GRATUITY_CAP ? ` ${t('gratuity.note.cap-applied')}` : ''}
+                  {/* More wages cannot lift a capped amount, so "treat it as the floor" is left out there. */}
+                  {result.amount >= GRATUITY_CAP ? t('gratuity.note.cap-applied') : t('gratuity.note.code-wages')}
                 </p>
               )}
             </div>
@@ -1064,6 +1081,9 @@ function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePerio
           <span className="font-semibold text-alarm">{t('plan.recap.forfeit')}</span>
         </p>
       ))}
+      {/* The last working day rests on our day-one count, the same convention the
+          tools that inherit it name on their receipts (TR2-02). */}
+      <Receipt ids={['last-working-day']} />
     </div>
   )
 }
@@ -1163,21 +1183,45 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
 }
 
 function LookingTap({ t, fmt, plan, onLooking }: Pick<RecapProps, 't' | 'fmt' | 'plan' | 'onLooking'>) {
-  if (plan.lookingSince != null) {
-    return <p className="text-[14px] font-semibold leading-snug">{t('plan.looking.since', { date: fmt(plan.lookingSince) })}</p>
-  }
-  // A door, not a task (Part 3): a text button, so it does not compete with
-  // the calendar button for "the one thing on this screen" (UX-09c).
+  // The button goes away when pressed, so focus would fall to <body> (A11Y N4).
+  // The "Looking since" line takes it instead, and sits in a status region
+  // that exists before the press so the new line is announced too.
+  const sinceRef = useRef<HTMLParagraphElement>(null)
+  const pressed = useRef(false)
+  useEffect(() => {
+    if (!pressed.current || plan.lookingSince == null) return
+    pressed.current = false
+    sinceRef.current?.focus()
+  }, [plan.lookingSince])
+  const since = plan.lookingSince
   return (
     <div className="space-y-0.5">
-      <button
-        type="button"
-        onClick={onLooking}
-        className="inline-flex min-h-[44px] items-center text-left text-[14px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
+      <p
+        ref={sinceRef}
+        role="status"
+        tabIndex={-1}
+        data-looking-since
+        className={since != null ? 'text-[14px] font-semibold leading-snug outline-none' : 'sr-only'}
       >
-        {t('plan.looking.cta')}
-      </button>
-      <p className="text-xs leading-relaxed text-ink-faint">{t('plan.looking.warning')}</p>
+        {since != null ? t('plan.looking.since', { date: fmt(since) }) : null}
+      </p>
+      {since == null && (
+        // A door, not a task (Part 3): a text button, so it does not compete with
+        // the calendar button for "the one thing on this screen" (UX-09c).
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              pressed.current = true
+              onLooking()
+            }}
+            className="inline-flex min-h-[44px] items-center text-left text-[14px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
+          >
+            {t('plan.looking.cta')}
+          </button>
+          <p className="text-xs leading-relaxed text-ink-faint">{t('plan.looking.warning')}</p>
+        </>
+      )}
     </div>
   )
 }

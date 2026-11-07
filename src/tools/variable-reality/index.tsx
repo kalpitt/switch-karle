@@ -6,6 +6,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   CompareBars,
   Disclaimer,
   InheritNote,
@@ -16,7 +17,7 @@ import {
   ShareRow,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -93,29 +94,8 @@ function Body() {
 
   return (
     <div data-tool="variable-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('variable-reality.formTitle')}</h2>
-        <PrivacyLine />
-        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
-        <MoneyField
-          label={t('decoder.field.variable.label')}
-          placeholder={t('ui.money.placeholder')}
-          value={draft.variable}
-          onChange={(v) => set({ variable: v })}
-        />
-        <NumberField
-          integer
-          label={t('variable-reality.months')}
-          hint={t('variable-reality.monthsHint')}
-          suffix={t('unit.months')}
-          max={12}
-          value={draft.monthsInFy}
-          onChange={(v) => set({ monthsInFy: v })}
-        />
-        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.variable-reality')}
@@ -124,7 +104,7 @@ function Body() {
           verdict={verdict}
           tone={atRiskPct > 15 ? 'amber' : 'leaf'}
         >
-          <Receipt ids={TOOL_SOURCES['variable-reality']} />
+          <Receipt ids={[...offerSources(TOOL_SOURCES['variable-reality'], template.gratuityInCtc), ptSourceId(template.state)]} />
         </ResultHero>
         <Card>
           <h3 className="mb-3 text-[15px] font-semibold">{t('variable-reality.table')}</h3>
@@ -166,6 +146,28 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="variable-reality" />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('variable-reality.formTitle')}</h2>
+        <PrivacyLine />
+        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <MoneyField
+          label={t('decoder.field.variable.label')}
+          placeholder={t('ui.money.placeholder')}
+          value={draft.variable}
+          onChange={(v) => set({ variable: v })}
+        />
+        <NumberField
+          integer
+          label={t('variable-reality.months')}
+          hint={t('variable-reality.monthsHint')}
+          suffix={t('unit.months')}
+          max={12}
+          value={draft.monthsInFy}
+          onChange={(v) => set({ monthsInFy: v })}
+        />
+        <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
+      </Card>
     </div>
   )
 }

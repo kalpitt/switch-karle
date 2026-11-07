@@ -3,8 +3,8 @@ import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
 import { useId } from 'react'
-import { Card, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
-import { ptSourceId, TOOL_SOURCES } from '../data/sources'
+import { Card, ResultHeading, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../data/sources'
 import { NextStep } from './NextStep'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
@@ -16,7 +16,8 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
   const isExample = JSON.stringify(b.input) === JSON.stringify(DEFAULT_OFFER)
 
   return (
-    <div className="-order-1 space-y-4 lg:order-none">
+    <div className="space-y-4 lg:order-last">
+      <ResultHeading />
       <ResultHero
         sample={isExample}
         sampleChip={t('results.exampleChip')}
@@ -42,7 +43,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
-        <Receipt ids={[...TOOL_SOURCES.decoder, ptSourceId(b.input.state)]} />
+        <Receipt ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
 
         <ShareRow
           copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}

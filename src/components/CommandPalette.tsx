@@ -140,14 +140,14 @@ export function CommandPalette() {
             ) : (
               <ul ref={listRef} id={`${id}-list`} role="listbox" aria-label={t('nav.search')} className="max-h-80 overflow-y-auto p-2">
                 {shown.map((item, i) => (
-                  <li
-                    key={item.slug}
-                    id={optionId(i)}
-                    role="option"
-                    aria-selected={i === active}
-                    data-index={i}
-                  >
+                  // The link itself is the option, so no focusable element sits
+                  // inside another interactive role (axe nested-interactive).
+                  <li key={item.slug} role="none">
                     <a
+                      id={optionId(i)}
+                      role="option"
+                      aria-selected={i === active}
+                      data-index={i}
                       href={item.href}
                       tabIndex={-1}
                       className={`relative block rounded-lg px-3 py-2.5 ${i === active ? 'bg-paper before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:rounded-full before:bg-saffron-bright' : ''}`}

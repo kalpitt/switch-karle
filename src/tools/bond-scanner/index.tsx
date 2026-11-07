@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, Disclaimer, TextArea, VerdictBanner } from '../../components/ui'
+import { Card, ResultHeading, Disclaimer, TextArea, VerdictBanner } from '../../components/ui'
 import { scanBondClause } from '../../engine/bondScan'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
@@ -37,11 +37,8 @@ function Body() {
 
   return (
     <div data-tool="bond-scanner" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('bond-scanner.formTitle')}</h2>
-        <TextArea label={t('bond-scanner.text')} hint={t('bond-scanner.textHint')} value={text} onChange={setText} rows={12} />
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         {isBlank ? (
           <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] font-semibold leading-snug text-ink-soft">
             {t('bond-scanner.verdict.blank')}
@@ -68,6 +65,10 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
         <NextStep from="bond-scanner" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('bond-scanner.formTitle')}</h2>
+        <TextArea label={t('bond-scanner.text')} hint={t('bond-scanner.textHint')} value={text} onChange={setText} rows={12} />
+      </Card>
     </div>
   )
 }

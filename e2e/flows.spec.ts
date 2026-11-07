@@ -105,6 +105,41 @@ test('home: the recap shows the first actions, and a start-applying date already
   await expect(page.getByText(/^Start applying by /)).toHaveCount(0)
 })
 
+test('home: "I want to start looking now" hands focus to the line that replaces it, and announces it', async ({ page }) => {
+  await open(page, '/')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await page.getByRole('button', { name: 'Resign on 1 June 2027' }).click()
+  const looking = page.getByRole('button', { name: 'I want to start looking now' })
+  await looking.focus()
+  await page.keyboard.press('Enter')
+  await expect(looking).toHaveCount(0)
+  const since = page.getByRole('status').filter({ hasText: /^Looking since 31 October 2026\./ })
+  await expect(since).toBeVisible()
+  await expect(since).toBeFocused()
+})
+
+test('home in Hindi: the start-looking line is announced and focused too', async ({ page }) => {
+  await open(page, '/hi/')
+  await page.getByRole('button', { name: 'मेरी resign date चुनें' }).click()
+  await page.locator('[data-trade]').getByRole('button').first().click()
+  await page.getByRole('button', { name: 'मुझे अभी से देखना शुरू करना है' }).click()
+  const since = page.getByRole('status').filter({ hasText: /से देख रहे हैं।/ })
+  await expect(since).toBeFocused()
+})
+
+test('home: each resign-date option is a named group, and its date field says which option it belongs to', async ({ page }) => {
+  await open(page, '/')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await expect(page.getByRole('group', { name: /^Leave sooner/ })).toBeVisible()
+  await expect(page.getByRole('group', { name: 'I already have a date' })).toBeVisible()
+  await expect(page.locator('[data-trade="keep-what-is-earned"] input[type="date"]')).toHaveAccessibleName(
+    'Leave sooner Resign date',
+  )
+  await expect(page.locator('[data-trade="own-date"] input[type="date"]')).toHaveAccessibleName(
+    'I already have a date Resign date',
+  )
+})
+
 test('home in Hindi: the same door, headline first', async ({ page }) => {
   await open(page, '/hi/')
   await expect(page.getByRole('heading', { level: 1, name: 'Resign करने का सबसे safe दिन ढूँढें।' })).toBeVisible()

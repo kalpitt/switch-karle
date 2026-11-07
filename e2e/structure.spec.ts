@@ -144,3 +144,14 @@ test('the situations have no pages of their own any more', async ({ page }) => {
     expect(res?.status(), path).toBe(404)
   }
 })
+
+test('on a phone the answer is first in reading order and has a heading', async ({ page }) => {
+  await open(page, '/gratuity/')
+  await expect(page.getByRole('heading', { level: 2, name: 'Your result' })).toHaveCount(1)
+  // The result heading comes before the form heading in the page, as it does on screen.
+  const order = await page.locator('main h2').allTextContents()
+  expect(order.indexOf('Your result')).toBeGreaterThanOrEqual(0)
+  expect(order.indexOf('Your result')).toBeLessThan(order.indexOf('Your service and pay'))
+  await open(page, '/hi/gratuity/')
+  await expect(page.getByRole('heading', { level: 2, name: 'आपका नतीजा' })).toHaveCount(1)
+})

@@ -49,8 +49,6 @@ describe('palette', () => {
     const testItems: ToolDef[] = [
       {
         slug: 'keyword-first',
-        category: 'exit',
-        stage: 2,
         journey: 2,
         icon: 'test',
         titleKey: 'kf.title',
@@ -63,8 +61,6 @@ describe('palette', () => {
       },
       {
         slug: 'title-second',
-        category: 'documents',
-        stage: 3,
         journey: 3,
         icon: 'test',
         titleKey: 'ts.title',
@@ -91,8 +87,6 @@ describe('palette', () => {
     const testTools: ToolDef[] = [
       {
         slug: 'letter',
-        category: 'documents',
-        stage: 3,
         journey: 3,
         icon: 'letter',
         titleKey: 'l.title',
@@ -105,8 +99,6 @@ describe('palette', () => {
       },
       {
         slug: 'tracker',
-        category: 'landing',
-        stage: 0,
         journey: 0,
         icon: 'tracker',
         titleKey: 'tr.title',

@@ -3,6 +3,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   Disclaimer,
   MoneyField,
   NumberField,
@@ -13,7 +14,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { taxDeclaration } from '../../engine/taxDeclaration'
 import { formatINR } from '../../engine/format'
 import { STATE_NAMES } from '../../engine/professionalTax'
@@ -79,6 +80,38 @@ function Body() {
 
   return (
     <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
+        <ResultHero
+          sample={isExample}
+          label={t('hero.tax-declaration')}
+          value={t(`regime.${result.recommendedRegime}`)}
+          verdict={verdict}
+          tone={result.recommendedRegime === 'new' ? 'leaf' : 'amber'}
+        >
+          <Receipt ids={[...TOOL_SOURCES['tax-declaration'], ptSourceId(offer.state)]} />
+        </ResultHero>
+        <Card className="space-y-2">
+          <p className="tnum text-[13px]">{t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) })}</p>
+          {result.recommendedRegime === 'new' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('tax-declaration.hraUseless')}</p>}
+          <h3 className="pt-2 text-[15px] font-semibold">{t('tax-declaration.proofs')}</h3>
+          {result.proofIds.map((id) => (
+            <p key={id} className="text-[14px] leading-relaxed text-ink-soft">
+              {t(`tax-declaration.proof.${id}`)}
+            </p>
+          ))}
+        </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copyResult')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
+        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="tax-declaration" />
+      </div>
       <Card className="space-y-3 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('tax-declaration.formTitle')}</h2>
         <PrivacyLine />
@@ -119,37 +152,6 @@ function Body() {
         />
         <Toggle label={t('tax-declaration.80c')} checked={draft.extra80C} onChange={(v) => set({ extra80C: v })} />
       </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
-        <ResultHero
-          sample={isExample}
-          label={t('hero.tax-declaration')}
-          value={t(`regime.${result.recommendedRegime}`)}
-          verdict={verdict}
-          tone={result.recommendedRegime === 'new' ? 'leaf' : 'amber'}
-        >
-          <Receipt ids={TOOL_SOURCES['tax-declaration']} />
-        </ResultHero>
-        <Card className="space-y-2">
-          <p className="tnum text-[13px]">{t('tax-declaration.hraRow', { amount: formatINR(result.hraExemptionAnnual) })}</p>
-          {result.recommendedRegime === 'new' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('tax-declaration.hraUseless')}</p>}
-          <h3 className="pt-2 text-[15px] font-semibold">{t('tax-declaration.proofs')}</h3>
-          {result.proofIds.map((id) => (
-            <p key={id} className="text-[14px] leading-relaxed text-ink-soft">
-              {t(`tax-declaration.proof.${id}`)}
-            </p>
-          ))}
-        </Card>
-        {!isExample && (
-          <ShareRow
-            copyText={copyText}
-            copyLabel={t('ui.copyResult')}
-            copiedLabel={t('ui.copied')}
-            printLabel={t('ui.print')}
-          />
-        )}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="tax-declaration" />
-      </div>
     </div>
   )
 }

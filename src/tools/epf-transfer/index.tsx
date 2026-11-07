@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, DateField, Disclaimer, Receipt, ResultHero, Select, Toggle } from '../../components/ui'
+import { Card, ResultHeading, DateField, Disclaimer, Receipt, ResultHero, Select, Toggle } from '../../components/ui'
 import { TOOL_SOURCES } from '../../data/sources'
 import { epfGuide, EPFO_MEMBER_PORTAL, type EpfIntent } from '../../engine/epf'
 import { readJson, writeJson } from '../../lib/storage'
@@ -70,29 +70,8 @@ function Body() {
 
   return (
     <div data-tool="epf-transfer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('epf-transfer.formTitle')}</h2>
-        <Select
-          label={t('epf-transfer.intent')}
-          value={draft.intent}
-          onChange={(v) => set({ intent: v })}
-          options={[
-            { value: 'transfer', label: t('epf-transfer.intent.transfer') },
-            { value: 'withdraw', label: t('epf-transfer.intent.withdraw') },
-          ]}
-        />
-        <DateField
-          label={t('epf-transfer.join')}
-          hint={t('epf-transfer.tenureScope')}
-          value={draft.joinDate}
-          onChange={(v) => set({ joinDate: v })}
-        />
-        <DateField label={t('epf-transfer.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
-        <Toggle label={t('epf-transfer.doe')} checked={draft.dateOfExitMarked} onChange={(v) => set({ dateOfExitMarked: v })} />
-        <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
-        <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.epf-transfer')}
@@ -126,6 +105,28 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="epf-transfer" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('epf-transfer.formTitle')}</h2>
+        <Select
+          label={t('epf-transfer.intent')}
+          value={draft.intent}
+          onChange={(v) => set({ intent: v })}
+          options={[
+            { value: 'transfer', label: t('epf-transfer.intent.transfer') },
+            { value: 'withdraw', label: t('epf-transfer.intent.withdraw') },
+          ]}
+        />
+        <DateField
+          label={t('epf-transfer.join')}
+          hint={t('epf-transfer.tenureScope')}
+          value={draft.joinDate}
+          onChange={(v) => set({ joinDate: v })}
+        />
+        <DateField label={t('epf-transfer.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
+        <Toggle label={t('epf-transfer.doe')} checked={draft.dateOfExitMarked} onChange={(v) => set({ dateOfExitMarked: v })} />
+        <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
+        <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
+      </Card>
     </div>
   )
 }

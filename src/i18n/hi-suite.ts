@@ -64,7 +64,6 @@ export const hiSuite: Record<string, string> = {
     'जिस employer पर Code कभी लागू नहीं हुआ, उसके लिए Code कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
   'plan.hike.line': 'आपका hike {month} में आता है। {date} को या उससे पहले resign किया तो वह कभी नहीं मिलेगा।',
   'plan.cliffs.none': 'आगे कुछ नहीं है। कोई date आपको यहाँ नहीं रोक रही।',
-  'plan.cliffs.next': 'अगला: date चुनें',
 
   'plan.dates.title': 'आप कब resign करना चाहते हैं?',
   'plan.trade.keep-the-hike': 'Hike का इंतज़ार करें',
@@ -89,7 +88,7 @@ export const hiSuite: Record<string, string> = {
   'plan.recap.applyNow': 'अभी apply शुरू करें। {date} निकल चुकी है।',
   'plan.recap.offerLate': 'जितनी जल्दी हो सके offer हाथ में लें। {date} निकल चुकी है।',
   'plan.recap.resign': '{date} को resign करें।',
-  'plan.recap.lwd': 'Last working day {date}, {days} दिन के notice के बाद।',
+  'plan.recap.lwd': 'Last working day {date}, हमारी गिनती से, {days} दिन के notice के बाद।',
   'plan.recap.forfeit': 'यह आप छोड़ रहे हैं',
   'plan.cliff.gratuity-5-day': '{date} की gratuity',
   'plan.cliff.gratuity-6-day': '{date} की gratuity',
@@ -113,6 +112,7 @@ export const hiSuite: Record<string, string> = {
   'plan.worth': 'आपकी gratuity कितने की है, देखें',
   'plan.worth.hint': 'Last drawn basic और dearness allowance, CTC नहीं। इसी device पर save होता है, और gratuity tool भी यही figure लेता है।',
   'plan.worth.amount': 'Last working day {date} हो तो आपकी gratuity कम से कम {amount} बनती है।',
+  'plan.worth.amountCapped': 'Last working day {date} हो तो आपकी gratuity {amount} बनती है, यानी cap जितनी।',
   'plan.worth.notYet': 'Last working day {date} हो तो आप अभी eligible नहीं होंगे, इसलिए कोई gratuity नहीं बनती।',
   'plan.worth.full': 'पूरा gratuity calculator खोलें',
   'plan.change': 'मेरी date बदलें',
@@ -170,11 +170,6 @@ export const hiSuite: Record<string, string> = {
   'home.trackerLink.cta': 'अपना application tracker खोलें →',
 
   // ---- Home: the journey ----
-  'home.pinned': 'Offer मिल गया है? इनसे शुरू करें',
-  'home.cat.offer': 'सामने रखा offer',
-  'home.cat.exit': 'निकलते वक़्त का पैसा',
-  'home.cat.documents': 'जो आपको लिखना है',
-  'home.cat.landing': 'नई job में पहुँचने पर',
   'journey.0.name': 'बस, अब यहाँ नहीं',
   'journey.0.what': 'आपने जाने का मन बना लिया है, अभी कहीं apply नहीं किया। जानिए छोड़ने की कीमत क्या है।',
   'journey.1.name': 'चुपचाप देख रहे हैं',
@@ -361,19 +356,14 @@ export const hiSuite: Record<string, string> = {
   'relocation.desc': 'देखें कि वही CTC दूसरे शहर में जाने पर आपका in-hand कैसे बदलता है।',
   'relocation.formTitle': 'वही salary, नया शहर',
   'relocation.fromState': 'किस राज्य से',
-  'relocation.fromMetro': 'HRA के लिए metro से',
   'relocation.toState': 'किस राज्य में',
-  'relocation.toMetro': 'HRA के लिए metro में',
   'relocation.fromCity': 'किस शहर से',
   'relocation.toCity': 'किस शहर में',
   'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad या Bengaluru — basic का 50% (Rule 279, Income-tax Rules, 2026)। बाक़ी कहीं भी 40%। सिर्फ़ old regime में।',
-  'relocation.rent': 'आप जो rent देते हैं / महीना',
   'relocation.fromRent': 'यहाँ rent / महीना',
   'relocation.toRent': 'वहाँ rent / महीना',
   'relocation.rentHint':
     'HRA exemption के लिए असल rent चाहिए। 0 = कोई exemption नहीं। ₹1 lakh/साल से ऊपर rent पर employer आमतौर पर landlord का PAN माँगता है।',
-  'relocation.metroWarn':
-    '{state} में HRA metro city नहीं है (सिर्फ़ Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru qualify करते हैं, Income-tax Rules, 2026 के Rule 279 के अनुसार)। आपने जो 50% वाला limb on किया है, वह वहाँ apply नहीं होगा।',
   'relocation.ptApprox':
     'Professional tax approximate है। Bihar, Jharkhand और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Tamil Nadu में Chennai का rate दिखाया गया है; Tamil Nadu के दूसरे शहर अपना rate खुद तय करते हैं। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ़ old-regime comparison के लिए दिखाई गई है।',
@@ -472,7 +462,8 @@ export const hiSuite: Record<string, string> = {
   'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
   'gratuity.weekAssumed': 'हम 5-day week मानकर चल रहे हैं। अगर आप हफ़्ते में छह दिन काम करते हैं, तो इसे बदल दें।',
   'gratuity.week5.hint': '5-day establishment में पाँचवें साल के 4 साल + 190 working days पर qualify होते हैं; 6-day वाले को 240 working days चाहिए। Weekly off नहीं गिनते। यह सबसे पहली मुमकिन date है — public holidays और unpaid या unearned leave से यह आगे खिसक सकती है।',
-  'gratuity.verdict.yes': 'Gratuity लगभग {amount}। आपके {years} completed years हैं, इसलिए आप eligible हैं।',
+  'gratuity.verdict.yes': 'Gratuity लगभग {amount}, {payable} payable years पर। आपके {years} completed years हैं, इसलिए आप eligible हैं।',
+  'gratuity.verdict.capped': 'Gratuity {amount}, यानी cap जितनी। आपके {years} completed years हैं, इसलिए आप eligible हैं।',
   'gratuity.formula': 'हिसाब: 15/26 × last drawn basic + DA × payable years।',
   'gratuity.verdict.no': 'अभी नहीं: अब तक {years} completed years।',
   'gratuity.flip': 'यह बदलने वाली अगली date: {date}।',
@@ -495,9 +486,6 @@ export const hiSuite: Record<string, string> = {
   'leave-encashment.basis': 'Daily rate',
   'leave-encashment.basis.26': '÷ 26 (working-day convention)',
   'leave-encashment.basis.30': '÷ 30 (calendar-month convention)',
-  'leave-encashment.reason': 'आप क्यों छोड़ रहे हैं',
-  'leave-encashment.reason.resign': 'Resignation (switch)',
-  'leave-encashment.reason.retire': 'Retirement / superannuation',
   'leave-encashment.verdict.resign': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.verdict.retire': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.caseNote': 'Bombay High Court ने CIT v. D.P. Malhotra में कहा था कि "retirement, whether on superannuation or otherwise" resignation को भी cover करता है।',
@@ -605,9 +593,9 @@ export const hiSuite: Record<string, string> = {
   'resignation-letter.empId': 'Employee ID (चाहें तो)',
   'resignation-letter.empIdHint': 'सिर्फ़ इसी page पर रहता है।',
   'resignation-letter.copyBlocked': 'Letter copy करने के लिए company, अपना role, अपने manager का नाम और अपना नाम भरें।',
-  'resignation-letter.earliestJoin': 'EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी last working day के अगले दिन।',
+  'resignation-letter.earliestJoin': 'दोनों गिनतियों में EPFO overlap के बिना सबसे जल्दी join date: {date} — यानी बाद वाले last working day के अगले दिन।',
   'resignation-letter.epfo':
-    'आपकी नई join date उस last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
+    'ऊपर की दोनों गिनतियों में से कम से कम एक में आपकी नई join date last working day पर या उससे पहले है। EPFO का portal अक्सर overlapping दिनों पर दो employers mark नहीं कर पाता — exit date record कराएं, या join date आगे बढ़ाएं। यह portal का behaviour है, कोई कानून नहीं।',
   'resignation-letter.body.professional':
     'प्रिय {manager},\n\nकृपया इस letter को {company} में {role} के पद से मेरा resignation मानें, दिनांक {date}। Notice serve किया जाएगा। Last working day {lwd} होगा।\n\nएक written handover share किया जाएगा और एक clean transition के लिए उपलब्धता रहेगी। कृपया receipt और relieving process confirm करें।\n\nसादर',
   'resignation-letter.body.grateful':
@@ -898,6 +886,7 @@ export const hiSuite: Record<string, string> = {
   'redactor.download': 'PNG Download करें',
   'redactor.busy': 'Render हो रहा है…',
   'redactor.preview': 'Masked Preview',
+  'redactor.disclaimer': 'यह pattern match है, guarantee नहीं। Share करने से पहले masked text खुद पढ़ लें।',
 
   // ---- Clause library ----
   'clause-library.title': 'Offer letter की clauses, आसान भाषा में',
@@ -978,6 +967,7 @@ export const hiSuite: Record<string, string> = {
   'ui.privacyErase': 'मिटाएं',
   'ui.privacyCheck': 'कैसे check करें',
   'ui.disclaimerContract': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। आपका अपना contract और letters ही तय करते हैं।',
+  'ui.resultHeading': 'आपका नतीजा',
   'resignation-letter.verdictNext':
     'यह resignation वाले दिन को पहला दिन गिनता है। अगर letter में notice उस date “से” गिना जाता है, तो यह {lwdNext} हो सकता है। आपके letter की wording जो date दे, वही लिखें।',
 
@@ -1043,7 +1033,6 @@ export const hiSuite: Record<string, string> = {
   'sources.checkedOn': '{date} को check किया',
   'sources.lookedOn': 'आख़िरी बार {date} को देखा',
   'sources.labelledOn': '{date} को label किया',
-  'sources.openDoc': 'Document खोलें',
   'sources.usedBy': 'इनमें इस्तेमाल: {tools}',
   'sources.status.verified': 'Source से check किया',
   'sources.status.awaiting-ca': 'अभी chartered accountant ने check नहीं किया',

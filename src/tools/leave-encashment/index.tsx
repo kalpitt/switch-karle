@@ -5,6 +5,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   Disclaimer,
   Ledger,
   MoneyField,
@@ -96,31 +97,8 @@ function Body() {
 
   return (
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('leave-encashment.formTitle')}</h2>
-        <PrivacyLine />
-        <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
-        <MoneyField
-          label={t('leave-encashment.basic')}
-          placeholder={t('ui.money.placeholderMonthly')}
-          value={draft.monthlyBasic}
-          onChange={(v) => {
-            set({ monthlyBasic: v })
-            rememberCurrentJob({ monthlyBasic: v })
-          }}
-        />
-        <Select
-          label={t('leave-encashment.basis')}
-          value={draft.dailyBasis}
-          onChange={(v) => set({ dailyBasis: v })}
-          options={[
-            { value: '26', label: t('leave-encashment.basis.26') },
-            { value: '30', label: t('leave-encashment.basis.30') },
-          ]}
-        />
-        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
-      </Card>
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         <ResultHero
           sample={isExample}
           label={t('hero.leave-encashment')}
@@ -151,6 +129,30 @@ function Body() {
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
         <NextStep from="leave-encashment" />
       </div>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('leave-encashment.formTitle')}</h2>
+        <PrivacyLine />
+        <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
+        <MoneyField
+          label={t('leave-encashment.basic')}
+          placeholder={t('ui.money.placeholderMonthly')}
+          value={draft.monthlyBasic}
+          onChange={(v) => {
+            set({ monthlyBasic: v })
+            rememberCurrentJob({ monthlyBasic: v })
+          }}
+        />
+        <Select
+          label={t('leave-encashment.basis')}
+          value={draft.dailyBasis}
+          onChange={(v) => set({ dailyBasis: v })}
+          options={[
+            { value: '26', label: t('leave-encashment.basis.26') },
+            { value: '30', label: t('leave-encashment.basis.30') },
+          ]}
+        />
+        <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
+      </Card>
     </div>
   )
 }

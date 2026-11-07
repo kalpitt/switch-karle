@@ -47,11 +47,14 @@ function Field({
   required,
   error,
   describedBy,
+  labelledBy,
   after,
   children,
 }: {
   label: ReactNode
   hint?: string
+  /** Another element id read before the label, e.g. the title of the option a field sits in. */
+  labelledBy?: string
   required?: boolean
   /** Why the value cannot be used. Read out at once, marks the control invalid and describes it. */
   error?: string
@@ -83,7 +86,7 @@ function Field({
         )}
       </span>
       {children({
-        'aria-labelledby': `${id}-label`,
+        'aria-labelledby': labelledBy ? `${labelledBy} ${id}-label` : `${id}-label`,
         'aria-describedby': described || undefined,
         ...(error ? { 'aria-invalid': true as const } : {}),
       })}
@@ -188,9 +191,11 @@ export function Toggle(props: {
     >
       <Label hint={props.hint}>{props.label}</Label>
       <span
+        data-switch-track
         className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${props.checked ? 'bg-ink' : 'bg-field'}`}
       >
         <span
+          data-switch-knob
           className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${props.checked ? 'translate-x-[18px]' : 'translate-x-0.5'}`}
         />
       </span>
@@ -208,11 +213,14 @@ export function TextField(props: {
   required?: boolean
   max?: string
   error?: string
+  /** See Field: an id read before the label. */
+  labelledBy?: string
 }) {
   const isDate = props.type === 'date'
   return (
     <Field
       label={props.label}
+      labelledBy={props.labelledBy}
       hint={props.hint}
       required={props.required}
       error={props.error}
@@ -431,10 +439,13 @@ export function DateField(props: {
   required?: boolean
   max?: string
   error?: string
+  /** See Field: an id read before the label. */
+  labelledBy?: string
 }) {
   return (
     <TextField
       label={props.label}
+      labelledBy={props.labelledBy}
       hint={props.hint}
       value={props.value}
       onChange={props.onChange}
@@ -619,6 +630,17 @@ function ToneIcon({ tone }: { tone: Tone }) {
 }
 
 type Tone = 'leaf' | 'alarm' | 'amber' | 'neutral'
+
+/**
+ * A heading for the result column, for screen-reader heading navigation only:
+ * the answer is the first thing on a phone, and without this the page outline
+ * stopped at the form's heading (A11Y N5). Kept outside the live region so it is
+ * not re-read every time the answer changes.
+ */
+export function ResultHeading() {
+  const t = useT()
+  return <h2 className="sr-only">{t('ui.resultHeading')}</h2>
+}
 
 /**
  * The answer, first and biggest (VIS-02): a label, one figure, then the sentence that

@@ -111,8 +111,7 @@ if (tools.includes(`slug: '${slug}'`)) {
 }
 const row = `  {
     slug: '${slug}',
-    category: 'offer',
-    stage: 1,
+    journey: 0, // TODO: the journey stage 0–6 this tool belongs to (PRODUCT.md, "The seven stages")
     icon: '${slug}',
     titleKey: '${slug}.title',
     descKey: '${slug}.desc',
@@ -155,5 +154,5 @@ console.log(`  ${engineFile}`)
 console.log(`  ${testFile}  (golden should FAIL until you implement)`)
 console.log(`  ${islandFile}`)
 console.log('  registry + en.ts + ToolIslands.astro patched')
-console.log('  set journey: 0–6 on the registry row and add its next step to NEXT_STEP in src/data/journey.ts (journey.test.ts fails until you do)')
+console.log('  journey is 0 (a placeholder): set it to 0–6 on the registry row and add its next step to NEXT_STEP in src/data/journey.ts (journey.test.ts fails until you do)')
 console.log('Next: make the golden pass, then npm test && npm run typecheck && npm run lint && npm run build && npm run check:seo')

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { scanOfferScam } from '../../engine/offerScam'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
-import { Card, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
+import { Card, ResultHeading, Disclaimer, TextArea, TextField, VerdictBanner } from '../../components/ui'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, type Lang } from '../../i18n'
 
@@ -81,31 +81,8 @@ function Body() {
 
   return (
     <div data-tool="fake-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('fake-offer.formTitle')}</h2>
-        <TextField
-          label={t('fake-offer.company')}
-          value={draft.company}
-          onChange={(v) => set({ company: v })}
-          placeholder="Acme Technologies"
-        />
-        <TextField
-          label={t('fake-offer.email')}
-          hint={t('fake-offer.emailHint')}
-          value={draft.emailDomain}
-          onChange={onEmail}
-          placeholder="hr@acme.com"
-        />
-        <TextArea
-          label={t('fake-offer.text')}
-          hint={t('fake-offer.textHint')}
-          value={draft.offerText}
-          onChange={(v) => set({ offerText: v })}
-          rows={8}
-        />
-      </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
         {isBlank ? (
           <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] font-semibold leading-snug text-ink-soft">
             {t('fake-offer.verdict.blank')}
@@ -144,6 +121,30 @@ function Body() {
             would be the wrong advice (N3). */}
         <NextStep from="fake-offer" hidden={isBlank || reds.length > 0} />
       </div>
+
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('fake-offer.formTitle')}</h2>
+        <TextField
+          label={t('fake-offer.company')}
+          value={draft.company}
+          onChange={(v) => set({ company: v })}
+          placeholder="Acme Technologies"
+        />
+        <TextField
+          label={t('fake-offer.email')}
+          hint={t('fake-offer.emailHint')}
+          value={draft.emailDomain}
+          onChange={onEmail}
+          placeholder="hr@acme.com"
+        />
+        <TextArea
+          label={t('fake-offer.text')}
+          hint={t('fake-offer.textHint')}
+          value={draft.offerText}
+          onChange={(v) => set({ offerText: v })}
+          rows={8}
+        />
+      </Card>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
 import {
   Card,
+  ResultHeading,
   CompareBars,
   Disclaimer,
   InheritNote,
@@ -20,7 +21,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { TOOL_SOURCES } from '../../data/sources'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -154,6 +155,57 @@ function Body() {
 
   return (
     <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div className="space-y-4 lg:order-last">
+        <ResultHeading />
+        <ResultHero
+          sample={isExample}
+          label={t('hero.real-hike')}
+          value={`${bank}%`}
+          delta={bank !== paper ? { text: t('hero.real-hike.paper', { paper }), tone: bank < paper ? 'loss' : 'gain' } : undefined}
+          verdict={verdict}
+          tone={bank < paper ? 'amber' : 'leaf'}
+        >
+          <CompareBars
+            rows={[
+              { label: t('real-hike.row.paper'), display: `${paper}%`, value: paper },
+              { label: t('real-hike.row.bank'), display: `${bank}%`, value: bank, strong: true },
+            ]}
+          />
+          <Receipt
+            ids={[
+              ...offerSources(TOOL_SOURCES['real-hike'], template.gratuityInCtc),
+              ptSourceId(draft.currentState),
+              ptSourceId(draft.nextState),
+            ]}
+          />
+        </ResultHero>
+        <Card className="space-y-2">
+          <Ledger
+            rows={[
+              {
+                label: t('real-hike.row.bank'),
+                value: `${formatINR(result.currentRunRateMonthly)} → ${formatINR(result.nextRunRateMonthly)}`,
+                strong: true,
+              },
+              { label: t('real-hike.row.paper'), value: `${formatLPA(result.currentCtc)} → ${formatLPA(result.nextCtc)}` },
+            ]}
+          />
+          {result.joiningBonusExcluded && <p className="text-[14px] leading-relaxed text-ink-soft">{t('real-hike.bonusNote')}</p>}
+          {result.regimeFlip && <p className="text-[14px] leading-relaxed text-amberflag">{t('real-hike.regimeFlip')}</p>}
+          {result.haircutApplied && <p className="text-[14px] leading-relaxed text-ink-soft">{t('real-hike.haircutNote')}</p>}
+        </Card>
+        {!isExample && (
+          <ShareRow
+            copyText={copyText}
+            copyLabel={t('ui.copyResult')}
+            copiedLabel={t('ui.copied')}
+            printLabel={t('ui.print')}
+          />
+        )}
+        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        <NextStep from="real-hike" />
+      </div>
+
       <Card className="space-y-3 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('real-hike.formTitle')}</h2>
         <PrivacyLine />
@@ -189,50 +241,6 @@ function Body() {
         />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
-
-      <div className="-order-1 space-y-4 lg:order-none">
-        <ResultHero
-          sample={isExample}
-          label={t('hero.real-hike')}
-          value={`${bank}%`}
-          delta={bank !== paper ? { text: t('hero.real-hike.paper', { paper }), tone: bank < paper ? 'loss' : 'gain' } : undefined}
-          verdict={verdict}
-          tone={bank < paper ? 'amber' : 'leaf'}
-        >
-          <CompareBars
-            rows={[
-              { label: t('real-hike.row.paper'), display: `${paper}%`, value: paper },
-              { label: t('real-hike.row.bank'), display: `${bank}%`, value: bank, strong: true },
-            ]}
-          />
-          <Receipt ids={TOOL_SOURCES['real-hike']} />
-        </ResultHero>
-        <Card className="space-y-2">
-          <Ledger
-            rows={[
-              {
-                label: t('real-hike.row.bank'),
-                value: `${formatINR(result.currentRunRateMonthly)} → ${formatINR(result.nextRunRateMonthly)}`,
-                strong: true,
-              },
-              { label: t('real-hike.row.paper'), value: `${formatLPA(result.currentCtc)} → ${formatLPA(result.nextCtc)}` },
-            ]}
-          />
-          {result.joiningBonusExcluded && <p className="text-[14px] leading-relaxed text-ink-soft">{t('real-hike.bonusNote')}</p>}
-          {result.regimeFlip && <p className="text-[14px] leading-relaxed text-amberflag">{t('real-hike.regimeFlip')}</p>}
-          {result.haircutApplied && <p className="text-[14px] leading-relaxed text-ink-soft">{t('real-hike.haircutNote')}</p>}
-        </Card>
-        {!isExample && (
-          <ShareRow
-            copyText={copyText}
-            copyLabel={t('ui.copyResult')}
-            copiedLabel={t('ui.copied')}
-            printLabel={t('ui.print')}
-          />
-        )}
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="real-hike" />
-      </div>
     </div>
   )
 }
