@@ -12,7 +12,7 @@ import {
 } from '../../engine/switchCalendar'
 import { isIsoDate } from '../../engine/dates'
 import { loadCurrentJob, rememberCurrentJob, type CurrentJob } from '../../data/currentJob'
-import { erasePlan, loadPlan, savePlan, type Plan } from '../../data/plan'
+import { erasePlan, loadPlan, savePlan, tickAction, untickAction, type ActionId, type Plan } from '../../data/plan'
 import { downloadBlob } from '../../lib/downloadBlob'
 import { buildDatesIcs, DATES_ICS_FILENAME } from '../../lib/ics'
 import { formatLongDate, formatMonthYear } from '../../lib/formatDate'
@@ -24,6 +24,7 @@ import { useLang, useT, type Lang } from '../../i18n'
 import { chosenGratuityCliff, dateStepReachable, isGratuityCliff } from './fork'
 import { hikeMonthOrder } from './hikeMonthOrder'
 import { planIcsEvents, planSiteUrl } from './planEvents'
+import { ActionList } from './ActionList'
 
 /**
  * The front door: three questions, the dates they produce, and a date to leave
@@ -219,6 +220,39 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     }
   }
 
+  function tickBox(id: ActionId, ticked: boolean) {
+    if (touched) {
+      if (ticked) tickAction(id, today)
+      else untickAction(id)
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => {
+        const ticks = { ...p.ticks }
+        if (ticked) ticks[id] = today
+        else delete ticks[id]
+        return { ...p, ticks }
+      })
+    }
+  }
+
+  function saveCompanies(names: string[]) {
+    if (touched) {
+      savePlan({ companies: names })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, companies: names.filter((n) => n.trim() !== '') }))
+    }
+  }
+
+  function chooseBond(hasBond: boolean) {
+    if (touched) {
+      savePlan({ hasBond })
+      setPlan(loadPlan())
+    } else {
+      setPlan((p) => ({ ...p, hasBond }))
+    }
+  }
+
   function goToQuestions() {
     setReturning(false)
     setRepicking(false)
@@ -270,6 +304,9 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     onDownload: downloadDates,
     onLooking: startLooking,
     onReason: saveReason,
+    onTick: tickBox,
+    onCompanies: saveCompanies,
+    onBond: chooseBond,
   }
 
   if (returning && plan.resignDate != null) {
@@ -675,6 +712,9 @@ interface RecapProps {
   onDownload: () => void
   onLooking: () => void
   onReason: (text: string) => void
+  onTick: (id: ActionId, ticked: boolean) => void
+  onCompanies: (names: string[]) => void
+  onBond: (hasBond: boolean) => void
   onChangeDate: () => void
 }
 
@@ -868,6 +908,16 @@ function ReturnScreen(
 
         <ReasonBox t={t} plan={plan} onReason={props.onReason} />
         <LookingTap t={t} fmt={props.fmt} plan={plan} onLooking={props.onLooking} />
+        <ActionList
+          t={t}
+          lang={props.lang}
+          plan={plan}
+          today={props.today}
+          startApplyingBy={result.timeline?.startApplyingBy.date ?? null}
+          onTick={props.onTick}
+          onCompanies={props.onCompanies}
+          onBond={props.onBond}
+        />
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <WorthLink t={t} lang={props.lang} />

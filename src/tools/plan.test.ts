@@ -48,7 +48,7 @@ describe('the door writes each fact to its own record', () => {
   })
 })
 
-describe('Phase 0 renders no outbound action', () => {
+describe('outbound actions stay behind the unlock', () => {
   const outbound = ACTION_IDS.slice(4)
 
   it('the outbound ids exist to be checked against', () => {
@@ -56,14 +56,15 @@ describe('Phase 0 renders no outbound action', () => {
     expect(outbound).toContain('update-public-headline')
   })
 
-  it('no action id at all reaches the screen — the tick boxes are Phase 1', () => {
+  it('the door file draws no action itself — ActionList does, off visibleActions', () => {
     for (const id of ACTION_IDS) expect(door).not.toContain(id)
+    expect(door).toMatch(/<ActionList/)
   })
 
-  it('and no English copy for one has been written either', () => {
-    for (const id of outbound) {
-      expect(Object.keys(en).some((key) => key.includes(id))).toBe(false)
-    }
+  it('ActionList only maps what visibleActions returned, never ACTIONS directly', () => {
+    const list = readFileSync(join(toolsDir, 'plan', 'ActionList.tsx'), 'utf8')
+    expect(list).toMatch(/visibleActions\(/)
+    expect(list).not.toMatch(/ACTIONS\.map|ACTION_IDS/)
   })
 
   it('the looking tap sets lookingSince and never touches the resign date', () => {
