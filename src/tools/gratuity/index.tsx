@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { gratuity } from '../../engine/gratuity'
+import { gratuity, GRATUITY_CAP } from '../../engine/gratuity'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import {
@@ -129,7 +129,15 @@ function Body() {
   const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
   const verdict = result
     ? result.eligible
-      ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
+      ? // The multiplier is said, so ×completed years is not mistaken for it (TR2-14);
+        // a capped amount is the ceiling, not an "about" (TR2-15).
+        result.amount >= GRATUITY_CAP
+        ? t('gratuity.verdict.capped', { amount: formatINR(result.amount), years: result.completedYears })
+        : t('gratuity.verdict.yes', {
+            amount: formatINR(result.amount),
+            payable: result.payableYears,
+            years: result.completedYears,
+          })
       : t('gratuity.verdict.no', { years: result.completedYears })
     : null
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))

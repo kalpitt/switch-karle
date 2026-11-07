@@ -995,7 +995,11 @@ function WorthPanel(props: WorthProps) {
             <div role="status" aria-live="polite" className="space-y-2">
               {result.eligible ? (
                 <p className="text-[15px] font-semibold leading-snug">
-                  {t('plan.worth.amount', { date: fmt(props.lastWorkingDay), amount: formatINR(result.amount) })}
+                  {/* A capped amount is a ceiling, not a floor (TR2-15). */}
+                  {t(result.amount >= GRATUITY_CAP ? 'plan.worth.amountCapped' : 'plan.worth.amount', {
+                    date: fmt(props.lastWorkingDay),
+                    amount: formatINR(result.amount),
+                  })}
                 </p>
               ) : (
                 <p className="text-[15px] font-semibold leading-snug">
@@ -1004,8 +1008,8 @@ function WorthPanel(props: WorthProps) {
               )}
               {result.eligible && (
                 <p className="text-[12px] leading-relaxed text-ink-soft">
-                  {t('gratuity.note.code-wages')}
-                  {result.amount >= GRATUITY_CAP ? ` ${t('gratuity.note.cap-applied')}` : ''}
+                  {/* More wages cannot lift a capped amount, so "treat it as the floor" is left out there. */}
+                  {result.amount >= GRATUITY_CAP ? t('gratuity.note.cap-applied') : t('gratuity.note.code-wages')}
                 </p>
               )}
             </div>
