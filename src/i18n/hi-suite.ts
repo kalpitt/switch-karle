@@ -900,6 +900,7 @@ export const hiSuite: Record<string, string> = {
   'redactor.download': 'PNG Download करें',
   'redactor.busy': 'Render हो रहा है…',
   'redactor.preview': 'Masked Preview',
+  'redactor.disclaimer': 'यह pattern match है, guarantee नहीं। Share करने से पहले masked text खुद पढ़ लें।',
 
   // ---- Clause library ----
   'clause-library.title': 'Offer letter की clauses, आसान भाषा में',

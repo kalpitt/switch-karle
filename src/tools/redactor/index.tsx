@@ -79,7 +79,8 @@ function Body() {
           </button>
           <PrintButton label={t('ui.print')} />
         </div>
-        <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
+        {/* No tax figure here, so not the tax-rules disclaimer (TR2-16). */}
+        <Disclaimer>{t('redactor.disclaimer')}</Disclaimer>
         <NextStep from="redactor" />
       </div>
       <Card className="space-y-3 lg:sticky lg:top-20 no-print">

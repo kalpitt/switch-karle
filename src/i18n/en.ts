@@ -942,6 +942,7 @@ export const en: Record<string, string> = {
   'redactor.download': 'Download PNG',
   'redactor.busy': 'Rendering…',
   'redactor.preview': 'Masked preview',
+  'redactor.disclaimer': 'A pattern match, not a guarantee. Read the masked text yourself before you share it.',
 
   'clause-library.title': 'Offer letter clauses explained',
   'clause-library.desc': 'Plain-English notes on notice, bond, variable and PF clauses.',
