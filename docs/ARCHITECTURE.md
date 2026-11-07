@@ -21,7 +21,7 @@ domain question is settled and must not be re-opened.
 src/
   engine/          pure TS — never imports react (purity.test.ts)
   tools/<slug>/    one island per tool (form + result); the seven script
-                   slugs and `what-to-say` share tools/what-to-say,
+                   situations live inside tools/what-to-say (no own page),
                    tools/home + tools/plan are the home page and
                    tools/all-tools is /tools/ — none of those three are
                    registry tools
@@ -73,7 +73,7 @@ Tool names are the plain names of COPY-05 (decision 5, 2026-10-31); a tool's
 former names sit in its `keywords`, so search still finds "Decoder" or
 "Prompt Studio". Slugs did not change.
 
-**What to say: one page, seven addresses.** The seven scripts (`SCRIPT_SLUGS`
+**What to say: one page, seven situations.** The seven scripts (`SCRIPT_SLUGS`
 in `data/hrScripts.ts`) are situations of one page, `what-to-say`
 (decision 4, 2026-10-31). In the registry each script keeps its `ToolDef`, its
 `journey` stage and its slug, and carries `partOf: 'what-to-say'`; the
@@ -81,17 +81,23 @@ in `data/hrScripts.ts`) are situations of one page, `what-to-say`
 "What to say" row per stage that has any (stages 2, 3 and 4), linking to that
 stage's first situation; search lists the page and every situation.
 
-GitHub Pages cannot send redirects, so each old script address stays a real,
-prerendered page: `/expected-ctc/` renders the What to say island with that
-situation picked, with its own title, description and self-canonical, and
-stays in the sitemap. `/what-to-say/` opens on the picker with nothing picked.
-Picking a situation swaps it in place (`history.pushState` to that
-situation's own address, the tab title follows, Back and Forward walk the
-picks), so a reload, a shared link, the language switch and the offline copy
-all land on the same situation. Nothing was renamed in storage: the scripts
-keep no draft of their own, and the resignation talk script still only reads
-`switchkarle.resignation.v1`. The What to say page shows no Next link until a
-situation is picked; after that, Next follows that situation's `NEXT_STEP`.
+Since 2026-11-07 (Kalpit: no users yet, so no old addresses to keep) the
+situations have no pages of their own. `pageTools()` in `data/tools.ts` leaves
+them out of the routes and the sitemap, and `scripts/check-seo.mjs`
+(`pageSlugs`) does the same. Every link to a situation goes through
+`toolHref()` in `lib/toolHref.ts`: `/what-to-say/#buyout-ask` (or
+`/hi/what-to-say/#buyout-ask`). The hash names a situation, never anything
+typed. `/what-to-say/` opens on the picker with nothing picked; the island
+reads the hash on load and on `hashchange`/`popstate`. Picking a situation
+swaps it in place (`history.pushState` to `#<slug>`, the tab title follows,
+Back and Forward walk the picks), and the language switch carries the hash to
+the twin (`setLang` in `i18n/index.ts`), so a reload, a shared link and the
+other language land on the same situation. Nothing was renamed in storage:
+the scripts keep no draft of their own, and the resignation talk script still
+only reads `switchkarle.resignation.v1`. The What to say page shows no Next
+link until a situation is picked; after that, Next follows that situation's
+`NEXT_STEP`. `decline-accepted` is the one situation whose Next goes back to
+the plan before stage 6 (the person just backed out of an offer).
 
 ## Head contract
 

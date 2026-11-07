@@ -35,13 +35,13 @@ for what that decision is and why.
 | `/fnf-checker/` | Does this full-and-final sheet add up, or do I owe them? |
 | `/form16-shock/` | Two Form-16s this year — what extra tax is waiting? |
 | `/resignation-letter/` | What does the resignation letter say, and what is my last working day? |
-| `/manager-script/` | What do I actually say when I resign in person? |
-| `/expected-ctc/` | How do I answer expected CTC without boxing myself in? |
-| `/early-release/` | How do I ask to leave before notice ends? |
-| `/buyout-ask/` | How do I ask HR what the buyout number is? |
-| `/decline-accepted/` | How do I withdraw an acceptance cleanly? |
-| `/counter-offer-reply/` | How do I close a counter-offer in writing? |
-| `/recruiter-followup/` | How do I nudge a recruiter once? |
+| `/what-to-say/#manager-script` | What do I actually say when I resign in person? |
+| `/what-to-say/#expected-ctc` | How do I answer expected CTC without boxing myself in? |
+| `/what-to-say/#early-release` | How do I ask to leave before notice ends? |
+| `/what-to-say/#buyout-ask` | How do I ask HR what the buyout number is? |
+| `/what-to-say/#decline-accepted` | How do I withdraw an acceptance cleanly? |
+| `/what-to-say/#counter-offer-reply` | How do I close a counter-offer in writing? |
+| `/what-to-say/#recruiter-followup` | How do I nudge a recruiter once? |
 | `/counter-offer/` | Is this counter actually better than the outside offer? |
 | `/handover-doc/` | What do I leave behind so the work does not fall over? |
 | `/relieving-chaser/` | What do I send on day 7, 14 and 30 if relieving has not come? |

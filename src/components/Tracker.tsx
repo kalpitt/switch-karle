@@ -32,7 +32,6 @@ import { writeHandoff } from '../data/defaults'
 import { TOOLS } from '../data/tools'
 import { formatLPA } from '../engine/format'
 import { useLang, useT } from '../i18n'
-import { withLang } from '../lib/langPath'
 import { todayIso } from '../lib/today'
 import { formatDate } from '../lib/formatDate'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
@@ -40,6 +39,7 @@ import { EraseData } from './EraseData'
 import { SweepPanel } from './SweepPanel'
 import { buttonClass } from './buttonClass'
 import { MoreIcon } from './icons'
+import { toolHref } from '../lib/toolHref'
 
 const L = 100_000
 
@@ -856,7 +856,7 @@ function ApplicationCard({
               return (
                 <a
                   key={slug}
-                  href={withLang(lang, slug)}
+                  href={toolHref(lang, slug)}
                   onClick={
                     isPrefilledThis
                       ? () =>

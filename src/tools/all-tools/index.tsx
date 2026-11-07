@@ -4,6 +4,7 @@ import { TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
 import { ChevronRight } from '../../components/icons'
+import { toolHref } from '../../lib/toolHref'
 
 /**
  * /tools/: every tool, grouped by the seven journey stages (PRODUCT.md). The one
@@ -71,7 +72,7 @@ function EntryRow({ entry }: { entry: ListEntry }) {
   return (
     <li>
       <a
-        href={withLang(lang, target.slug)}
+        href={toolHref(lang, target.slug)}
         data-entry={entry.kind === 'tool' ? entry.tool.slug : entry.group.slug}
         className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
       >

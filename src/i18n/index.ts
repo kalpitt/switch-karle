@@ -96,7 +96,9 @@ export function LangProvider({ children, initialLang = 'en' }: { children: React
         const base = import.meta.env.BASE_URL || '/'
         const target = next === 'hi' ? hindiPath(window.location.pathname, base) : englishPath(window.location.pathname, base)
         if (target !== window.location.pathname) {
-          window.location.assign(target)
+          // The hash names what is on screen (a What to say situation), never
+          // anything typed, so the twin opens on the same thing.
+          window.location.assign(target + window.location.hash)
           return
         }
       }

@@ -9,7 +9,7 @@ import { isScriptSlug, type ScriptSlug } from '../../data/hrScripts'
 import { WHAT_TO_SAY, toolBySlug, type ToolDef } from '../../data/tools'
 import { whatToSayGroups } from '../../data/journey'
 import { formatLongDate } from '../../lib/formatDate'
-import { slugFromPath, withLang } from '../../lib/langPath'
+import { withLang } from '../../lib/langPath'
 import { toolTitle, withBrand } from '../../lib/pageTitle'
 import { readJson } from '../../lib/storage'
 import { dictionaries, useLang, useT, type Lang } from '../../i18n'
@@ -19,26 +19,40 @@ const RESIGNATION_KEY = 'switchkarle.resignation.v1' as const
 
 type Preset = 'supportive' | 'counter-risk' | 'hostile'
 
+/** The situation the address names: `#buyout-ask`, or none. */
+function situationFromHash(): ScriptSlug | null {
+  const at = decodeURIComponent(window.location.hash.replace(/^#/, ''))
+  return isScriptSlug(at) ? at : null
+}
+
 /**
  * What to say (decision 4, 2026-10-31): the seven scripts on one page with a
- * situation picker. /what-to-say/ opens on the picker; each situation's own
- * address (/expected-ctc/, /hi/manager-script/, …) is a real page that renders
- * this same island with that situation picked, so old links, bookmarks and the
- * offline copy keep working. Picking another situation swaps it in place and
- * moves the address to that situation's page, so reload, share and Back agree.
+ * situation picker. Since 2026-11-07 it is the only page: the situations have
+ * no addresses of their own. The picked situation lives in the hash
+ * (/what-to-say/#expected-ctc), which carries no personal data, so a link from
+ * another tool, reload, share and Back all land on the same situation.
  */
-export default function WhatToSayTool({ slug, lang = 'en' }: { slug: string; lang?: Lang }) {
-  const [situation, setSituation] = useState<ScriptSlug | null>(isScriptSlug(slug) ? slug : null)
+export default function WhatToSayTool({ lang = 'en' }: { lang?: Lang }) {
+  const [situation, setSituation] = useState<ScriptSlug | null>(null)
+  /** Bumped when the address picks a situation, so the body can move focus to it. */
+  const [arrived, setArrived] = useState(0)
   const first = useRef(true)
 
-  // Back and Forward walk through the situations picked here.
+  // The address picks the situation: on load, and on Back, Forward or a
+  // same-page link (a Next link from one situation to another).
   useEffect(() => {
-    const onPop = () => {
-      const at = slugFromPath(window.location.pathname, import.meta.env.BASE_URL || '/')
-      setSituation(isScriptSlug(at) ? at : null)
+    setSituation(situationFromHash())
+    const onNav = () => {
+      const at = situationFromHash()
+      setSituation(at)
+      if (at) setArrived((n) => n + 1)
     }
-    window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
+    window.addEventListener('popstate', onNav)
+    window.addEventListener('hashchange', onNav)
+    return () => {
+      window.removeEventListener('popstate', onNav)
+      window.removeEventListener('hashchange', onNav)
+    }
   }, [])
 
   // The tab names the situation on screen, as the page's own <title> does.
@@ -53,23 +67,38 @@ export default function WhatToSayTool({ slug, lang = 'en' }: { slug: string; lan
 
   const pick = (next: ScriptSlug) => {
     if (next === situation) return
-    window.history.pushState(null, '', withLang(lang, next))
+    window.history.pushState(null, '', `${withLang(lang, WHAT_TO_SAY)}#${next}`)
     setSituation(next)
   }
 
+  // Always the one page: the language switch and the nav point at What to say.
   return (
-    <IslandRoot lang={lang} current={situation ?? WHAT_TO_SAY}>
-      <Body situation={situation} onPick={pick} />
+    <IslandRoot lang={lang} current={WHAT_TO_SAY}>
+      <Body situation={situation} onPick={pick} arrived={arrived} />
     </IslandRoot>
   )
 }
 
-function Body({ situation, onPick }: { situation: ScriptSlug | null; onPick: (slug: ScriptSlug) => void }) {
+function Body({
+  situation,
+  onPick,
+  arrived,
+}: {
+  situation: ScriptSlug | null
+  onPick: (slug: ScriptSlug) => void
+  arrived: number
+}) {
   const t = useT()
   const headingRef = useRef<HTMLHeadingElement>(null)
   const headingId = useId()
   const def = situation ? toolBySlug(situation) : undefined
   const [announce, setAnnounce] = useState('')
+
+  // A situation picked by the address after load (a Next link further down
+  // this page) puts its heading in view and in focus, as a click on the picker does.
+  useEffect(() => {
+    if (arrived > 0) requestAnimationFrame(() => headingRef.current?.focus())
+  }, [arrived])
 
   const pick = (slug: ScriptSlug) => {
     // From the full list the picker turns into a row of chips, so the link that
@@ -119,8 +148,9 @@ function Body({ situation, onPick }: { situation: ScriptSlug | null; onPick: (sl
 /**
  * The situations, stage by stage. With nothing picked it is a list with each
  * situation's one-liner; once one is picked it folds into chips above the script.
- * Each entry is a real link to the situation's page: it works before the page
- * is interactive and opens in a new tab; a plain click swaps in place.
+ * Each entry is a real link to this page with the situation in the hash: it
+ * works before the page is interactive and opens in a new tab; a plain click
+ * swaps in place.
  */
 function SituationPicker({ current, onPick }: { current: ScriptSlug | null; onPick: (slug: ScriptSlug) => void }) {
   const t = useT()
@@ -146,9 +176,9 @@ function SituationPicker({ current, onPick }: { current: ScriptSlug | null; onPi
             {group.situations.map((s) => (
               <li key={s.slug}>
                 {current ? (
-                  <Chip tool={s} href={withLang(lang, s.slug)} active={s.slug === current} onClick={click(s.slug)} />
+                  <Chip tool={s} href={`${withLang(lang, WHAT_TO_SAY)}#${s.slug}`} active={s.slug === current} onClick={click(s.slug)} />
                 ) : (
-                  <Row tool={s} href={withLang(lang, s.slug)} onClick={click(s.slug)} />
+                  <Row tool={s} href={`${withLang(lang, WHAT_TO_SAY)}#${s.slug}`} onClick={click(s.slug)} />
                 )}
               </li>
             ))}

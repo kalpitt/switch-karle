@@ -6,6 +6,7 @@ import { filterPalette, paletteItems } from '../lib/palette'
 import { useLang, useT } from '../i18n'
 import { useDialog } from './useDialog'
 import { CloseIcon, SearchIcon } from './icons'
+import { toolHref } from '../lib/toolHref'
 
 export function CommandPalette() {
   const t = useT()
@@ -35,7 +36,7 @@ export function CommandPalette() {
 
   useDialog(open, panelRef, () => setOpen(false), inputRef)
 
-  const items = useMemo(() => paletteItems(TOOLS, withLang(lang), (slug) => withLang(lang, slug)), [lang])
+  const items = useMemo(() => paletteItems(TOOLS, withLang(lang), (slug) => toolHref(lang, slug)), [lang])
   const shown = useMemo(() => filterPalette(items, query, t), [items, query, t])
 
   // A new query starts from the top hit.

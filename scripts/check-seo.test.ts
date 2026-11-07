@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checkAnalytics, checkHtmlHead, checkRobots, checkSitemap } from './check-seo.mjs'
+import { checkAnalytics, checkHtmlHead, checkRobots, checkSitemap, pageSlugs } from './check-seo.mjs'
 
 const VALID_HEAD = `
 <!DOCTYPE html>
@@ -186,5 +186,17 @@ describe('check-seo: robots and sitemap contracts', () => {
     expect(result.errors).toContain('check-seo: FAIL — sitemap-index is not allowed')
     expect(result.errors).not.toContain('check-seo: FAIL — sitemap missing home https://switchkarle.in/')
     expect(result.errors).not.toContain('check-seo: FAIL — sitemap missing Hindi home https://switchkarle.in/hi/')
+  })
+})
+
+describe('pageSlugs', () => {
+  it('skips What to say situations, which have no page of their own', () => {
+    const src = `[
+  { slug: 'gratuity', hasIsland: true },
+  { slug: 'what-to-say', hasIsland: true },
+  { slug: 'buyout-ask', partOf: 'what-to-say', hasIsland: true },
+  { slug: 'decoder', hasIsland: true },
+]`
+    expect(pageSlugs(src)).toEqual(['gratuity', 'what-to-say', 'decoder'])
   })
 })

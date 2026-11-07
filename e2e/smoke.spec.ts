@@ -12,6 +12,11 @@ test('the sitemap lists both languages', () => {
   expect(routes).toContain('/')
   expect(routes).toContain('/hi/')
   expect(routes.length).toBeGreaterThan(20)
+  // What to say is the one page; its situations are picked inside it (2026-11-07).
+  expect(routes).toContain('/what-to-say/')
+  for (const gone of ['/expected-ctc/', '/buyout-ask/', '/manager-script/', '/hi/decline-accepted/']) {
+    expect(routes).not.toContain(gone)
+  }
 })
 
 for (const route of routes) {

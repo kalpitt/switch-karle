@@ -98,8 +98,12 @@ describe('one next thing', () => {
     }
   })
 
+  // The one exit before stage 6 (decided 2026-11-07): someone who backed out
+  // of an accepted offer has nothing to resign from, so Next takes them home.
+  const BACK_TO_PLAN_EARLY = ['decline-accepted']
+
   it('from any tool, reaches the end of stage 6 and the plan without a cycle', () => {
-    for (const start of slugs) {
+    for (const start of slugs.filter((slug) => !BACK_TO_PLAN_EARLY.includes(slug))) {
       const seen = new Set<string>()
       let at = start
       let reachedStage6 = false
@@ -116,6 +120,13 @@ describe('one next thing', () => {
     }
   })
 
+  it('sends only decline-accepted back to the plan before stage 6, and nothing else leads into it', () => {
+    expect(nextFor('decline-accepted')).toEqual({ kind: 'plan' })
+    const early = slugs.filter((slug) => nextFor(slug)?.kind === 'plan' && stageOf(slug) < 6)
+    expect(early).toEqual(BACK_TO_PLAN_EARLY)
+    expect(Object.values(NEXT_STEP)).not.toContain('decline-accepted')
+  })
+
   it('walks the main chain from gratuity through all 33 main-path tools in stage order', () => {
     const walk: string[] = []
     let at: string | undefined = 'gratuity'
@@ -127,10 +138,10 @@ describe('one next thing', () => {
     expect(walk.length).toBe(33)
     expect(walk.map(stageOf)).toEqual([...walk.map(stageOf)].sort((a, b) => a - b))
     // The two side paths and the What to say picker page are the only pages off the
-    // main chain, and all three rejoin it.
+    // main chain: the picker and offer-goes-cold rejoin it, decline-accepted goes home.
     expect(slugs.filter((slug) => !walk.includes(slug)).sort()).toEqual(['decline-accepted', 'offer-goes-cold', 'what-to-say'])
     expect(nextFor('what-to-say')).toEqual({ kind: 'tool', slug: 'expected-ctc' })
-    expect(nextFor('decline-accepted')).toEqual({ kind: 'tool', slug: 'resignation-letter' })
+    expect(nextFor('decline-accepted')).toEqual({ kind: 'plan' })
     expect(nextFor('offer-goes-cold')).toEqual({ kind: 'tool', slug: 'notice-tracker' })
     expect(nextFor('form16-shock')).toEqual({ kind: 'plan' })
   })

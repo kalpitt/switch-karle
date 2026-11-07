@@ -22,9 +22,10 @@ export interface ToolDef {
   keywords?: string[]
   /**
    * A situation inside another page rather than a tool of its own: the seven
-   * "What to say" scripts keep their own URLs (old links and bookmarks work),
-   * but each renders the one What to say page with itself picked. Lists show
-   * the group once per stage instead of each situation (see `listSections`).
+   * "What to say" scripts have no page or sitemap entry (decided 2026-11-07,
+   * no users yet, so no old addresses to keep). A link to one opens What to
+   * say with it picked (`toolHref`, `/what-to-say/#<slug>`). Lists show the
+   * group once per stage instead of each situation (see `listSections`).
    */
   partOf?: typeof WHAT_TO_SAY
 }
@@ -1169,6 +1170,11 @@ export function toolBySlug(slug: string): ToolDef | undefined {
   return TOOLS.find((t) => t.slug === slug)
 }
 
+/** Every tool that is a page of its own: What to say's situations live inside it. */
+export function pageTools(): ToolDef[] {
+  return TOOLS.filter((t) => !t.partOf)
+}
+
 export function islandTools(): ToolDef[] {
-  return TOOLS.filter((t) => t.hasIsland)
+  return pageTools().filter((t) => t.hasIsland)
 }
