@@ -233,13 +233,22 @@ be silently dropped, the trap described above.
 Built 2026-09-07 on `feat/plan-phase-0`. The home page is `src/tools/home/`,
 which keeps `data-tool="home"` on its wrapper (`check:base` asserts
 `dist/index.html` is the home island) and renders `src/tools/plan/` inside it.
-The board and the tool grid are pushed below, and neither renders on the return
-screen.
+The tracker link and the tool list render under the questions screen only —
+not under the trades, the recap or the return screen.
+
+Three screens since 2026-11-07 (polish batch 8): the three questions with their
+dates recomputed live beside them, then the dates and the trades to pick a
+resign date from, then the recap. The work-week fork is asked on screen one and
+only when the answer changes a date (`weekChangesADate` in
+`src/tools/plan/fork.ts`); a press that cannot go on names the missing answer
+under its field. "What this is worth" opens one basic + DA field inside the
+recap and answers with `gratuity()` on the plan's last working day; the figure
+lives on the current-job record, never the plan.
 
 | Record | Key | Holds |
 |---|---|---|
 | `src/data/currentJob.ts` | `switchkarle.current-job.v1` | facts about the employer: pay, `noticePeriodDays`, `joinDate`, `workWeekDays`, `coveredByAct` |
-| `src/data/plan.ts` | `switchkarle.plan.v1` | what the plan invented: `reason`, `hikeCreditMonth` + `hikeCreditYear`, `resignDate`, `lookingSince`, `ticks`, `companies` |
+| `src/data/plan.ts` | `switchkarle.plan.v1` | what the plan invented: `reason`, `hikeCreditMonth` + `hikeCreditYear`, `resignDate`, `lookingSince`, `ticks`, `companies`, `hasBond`, `calendarAddedOn` |
 
 **One home per fact, and it is load-bearing.** A join date in both records is
 how someone types it once and sees two different gratuity dates.
@@ -249,7 +258,7 @@ all** — the `dates.ics` file is built from it and may land in a work calendar.
 
 The plan record does **not** echo its draft on mount: it is written from
 discrete answers (submitting the three questions, tapping a trade, tapping
-"start looking", saving a reason), never from continuous typing. So `loadPlan`
+"start looking", saving a reason, downloading `dates.ics`), never from continuous typing. So `loadPlan`
 calls `releaseBootEcho` for the reason the section above gives — left armed, the
 skip would swallow the session's first real save, which for a first-time visitor
 is their resign date.

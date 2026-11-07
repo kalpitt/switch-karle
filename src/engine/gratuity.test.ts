@@ -168,13 +168,13 @@ describe('gratuityEligibilityDate — the same s.54(B)(a) date, answerable in th
  * and told a shrinking startup's staff that nothing statutory held them.
  */
 describe('the ten-employee threshold is asked the way the Code states it', () => {
-  it('asks whether the employer has ALWAYS had fewer than ten, not whether it has now', async () => {
+  it('asks whether the employer has EVER had ten or more, not whether it has now', async () => {
     const { en } = await import('../i18n/en')
     const { hiSuite } = await import('../i18n/hi-suite')
-    expect(en['plan.act.label']).toMatch(/always had fewer than ten/)
+    expect(en['plan.act.label']).toMatch(/never had ten or more/)
     expect(en['gratuity.coveredHint']).toMatch(/any day of the last twelve months/)
     expect(en['gratuity.coveredHint']).toMatch(/s\.1\(8\)/)
-    expect(hiSuite['plan.act.label']).toMatch(/हमेशा/)
+    expect(hiSuite['plan.act.label']).toMatch(/कभी भी दस या ज़्यादा/)
     expect(hiSuite['gratuity.coveredHint']).toMatch(/s\.1\(8\)/)
   })
 })

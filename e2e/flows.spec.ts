@@ -24,12 +24,13 @@ async function answerThreeQuestions(page: Page) {
   await open(page, '/')
   await page.locator('main input[type="date"]').fill('2023-04-10')
   await page.locator('main input[type="number"]').fill('60')
-  await page.getByRole('button', { name: 'See my dates' }).click()
-  // Five-day or six-day week, then the date, then the recap.
-  await page.locator('main button').first().click()
-  await page.getByRole('button', { name: 'Next: pick a date' }).click()
-  await page.getByRole('button', { name: 'Use this date' }).first().click()
-  await expect(page.getByRole('heading', { name: 'Your dates.' })).toBeVisible()
+  // The dates follow the answers live; the work week is asked because, for
+  // this join date, it changes the gratuity date.
+  await page.getByRole('button', { name: /^I work five days a week/ }).click()
+  await expect(page.getByText(/^Your gratuity is safe from /)).toBeVisible()
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await page.getByRole('button', { name: /^Resign on / }).first().click()
+  await expect(page.getByRole('heading', { name: 'Your plan' })).toBeVisible()
 }
 
 test('home: three questions lead to dated steps that are still there after a reload', async ({ page }) => {
@@ -38,6 +39,63 @@ test('home: three questions lead to dated steps that are still there after a rel
   await page.reload()
   await expect(page.getByText(/^Resign on /)).toBeVisible()
   await expect(page.locator('main input[type="date"]')).toHaveCount(0)
+})
+
+test('home: the example dates are on screen before anything is typed, and change as you answer', async ({ page }) => {
+  await open(page, '/')
+  await expect(page.getByRole('heading', { level: 1, name: 'Find the safest day to resign.' })).toBeVisible()
+  // Six-day reading: fourth anniversary Monday 12 January 2026, plus 240
+  // Monday-to-Saturday working days = 40 weeks, ending Saturday 17 October.
+  await expect(page.getByText(/^Your gratuity was already safe on 17 October 2026/)).toBeVisible()
+  await expect(page.getByText(/^Your hike lands in May 2027\./)).toBeVisible()
+  // Both readings behind Ravi: the week would change nothing, so it is not asked.
+  await expect(page.getByRole('button', { name: /^I work five days a week/ })).toHaveCount(0)
+
+  await page.getByLabel('Which month does the hike actually reach your account?').selectOption({ label: 'Not sure, skip' })
+  await expect(page.getByText(/^Your hike lands/)).toHaveCount(0)
+})
+
+test('home: a press with something missing says what, and the week is asked only when it matters', async ({ page }) => {
+  await open(page, '/')
+  await page.locator('main input[type="number"]').fill('')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await expect(page.getByRole('alert').filter({ hasText: 'Enter your notice in days, at least 1.' })).toBeVisible()
+  await expect(page.locator('main input[type="number"]')).toBeFocused()
+
+  await page.locator('main input[type="number"]').fill('60')
+  await page.locator('main input[type="date"]').fill('2023-04-10')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await expect(page.getByRole('alert').filter({ hasText: 'Tap your work week to go on.' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /^I work five days a week/ })).toBeFocused()
+
+  await page.getByRole('button', { name: /^I work six days a week/ }).click()
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await expect(page.getByRole('heading', { name: 'When do you want to resign?' })).toBeFocused()
+})
+
+test('home: "what this is worth" answers in rupees inside the recap', async ({ page }) => {
+  await open(page, '/')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await expect(page.getByText('Loses nothing')).toBeVisible()
+  await page.getByRole('button', { name: 'Resign on 1 June 2027' }).click()
+  await expect(page.getByRole('heading', { name: 'Your plan' })).toBeFocused()
+  // No tool list under the recap (IA-17).
+  await expect(page.getByText(/^All \d+ tools/)).toHaveCount(0)
+
+  await page.getByRole('button', { name: 'See what your gratuity is worth' }).click()
+  await page.getByLabel('Monthly basic + DA').fill('72000')
+  // 15/26 × ₹72,000 × 6 payable years (5 years 7 months to 29 August 2027).
+  await expect(
+    page.getByText('With a last working day of 29 August 2027, your gratuity comes to at least ₹2,49,231.'),
+  ).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Open the full gratuity calculator' })).toHaveAttribute('href', '/gratuity/')
+})
+
+test('home in Hindi: the same door, headline first', async ({ page }) => {
+  await open(page, '/hi/')
+  await expect(page.getByRole('heading', { level: 1, name: 'Resign करने का सबसे safe दिन ढूँढें।' })).toBeVisible()
+  await page.getByRole('button', { name: 'मेरी resign date चुनें' }).click()
+  await expect(page.getByRole('heading', { name: 'आप कब resign करना चाहते हैं?' })).toBeVisible()
 })
 
 test('decoder: changing the CTC changes the in-hand figure, and the bar matches its percent', async ({ page }) => {
@@ -117,7 +175,7 @@ test('a browser that cannot save is told so once', async ({ page }) => {
   await expect(notice).toBeHidden()
   await page.locator('main input[type="number"]').fill('45')
   await page.locator('main input[type="date"]').fill('2023-04-10')
-  await page.getByRole('button', { name: 'See my dates' }).click()
+  await page.getByRole('button', { name: /^I work five days a week/ }).click()
   await expect(notice).toBeVisible()
   await page.getByRole('button', { name: 'OK', exact: true }).click()
   await expect(notice).toBeHidden()

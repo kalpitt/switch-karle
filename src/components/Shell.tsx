@@ -26,7 +26,8 @@ export function Shell({ current, children }: { current: string; children: ReactN
   const tool = current === 'home' ? undefined : TOOLS.find((x) => x.slug === current)
   // The pages about the site name themselves with their own <h1>, like tools do.
   const infoPage = (INFO_PAGES as readonly string[]).includes(current)
-  const Brand = tool || infoPage || current === '404' ? 'p' : 'h1'
+  // The home page names itself too: the plan's headline is its <h1> (COPY-03).
+  const Brand = tool || infoPage || current === '404' || current === 'home' ? 'p' : 'h1'
   // The page this one is a twin of. The 404 has no twin, so its toggle goes home.
   const slug = tool ? tool.slug : current === 'home' || current === '404' ? '' : current
   const pick = current === '404' ? undefined : setLang
