@@ -14,9 +14,9 @@ import type { RedFlag, SalaryBreakdown } from './types'
  * are enforceable only as a genuine pre-estimate of training cost (Contract
  * Act s.74); blanket penalties and restraints on joining competitors after
  * exit are void (s.27). Practical enforcement is F&F deduction and relieving-
- * letter withholding. Cognizant cut notice to 30 days in 2023; Flipkart,
- * Razorpay, Swiggy run 30-day standards. Pasted-letter bond/probation
- * patterns live in `bondScan.ts`.
+ * letter withholding. No named-company claims here: none had a primary
+ * source, so they were removed (decided 2026-11-07). Pasted-letter
+ * bond/probation patterns live in `bondScan.ts`.
  */
 
 interface Rule {
@@ -35,7 +35,7 @@ const RULES: Rule[] = [
       severity: b.input.noticePeriodDays >= 90 ? 'red' : 'amber',
       title: `${b.input.noticePeriodDays}-day notice period`,
       detail:
-        'No Indian law requires a 90-day notice — it is purely contractual. Long notice periods make you less hirable (companies prefer 30-day joiners) and weaken your negotiating power in your NEXT switch. Market has moved: Cognizant cut to 30 days in 2023; Flipkart, Razorpay and Swiggy run 30-day standards.',
+        'No Indian law requires a 90-day notice — it is purely contractual. Long notice periods make you less hirable (companies prefer 30-day joiners) and weaken your negotiating power in your NEXT switch.',
       negotiationTip:
         'Ask: "Can we put a 30–60 day notice, or a buyout clause where either side can pay in lieu of notice?" Get the buyout formula in writing.',
     }),
