@@ -36,3 +36,10 @@ export function withLang(lang: Lang, slug = ''): string {
   if (lang === 'hi') return withBase(slug ? `hi/${slug}` : 'hi')
   return withBase(slug)
 }
+
+/** The page slug in a pathname, in either language: '' for home, 'gratuity' for /hi/gratuity/. */
+export function slugFromPath(pathname: string, base: string): string {
+  const prefix = base.endsWith('/') ? base : `${base}/`
+  const en = englishPath(pathname, base)
+  return (en.startsWith(prefix) ? en.slice(prefix.length) : en).replace(/^\/+|\/+$/g, '')
+}

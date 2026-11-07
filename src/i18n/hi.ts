@@ -86,13 +86,13 @@ export const hi: Record<string, string> = {
   'nav.main': 'मुख्य',
   'home.kicker': 'तीन सवाल, फिर नौकरी छोड़ने से पहले की ज़रूरी dates।',
   'home.allTools': 'सभी {n} tools: offers, notice, F&F, PF और tax',
-  'home.decoder.desc': 'CTC से असल in-hand कितना बनता है, और notice period, bond व variable pay के red flags।',
+  'home.decoder.desc': 'देखें कि CTC से हर महीने असल में कितना bank में आता है, और offer में किन बातों पर सवाल करें।',
   'home.tracker.desc': 'हर application, उसका CTC और next step एक private board पर रखें।',
-  'home.prompts.desc': 'Prompt कॉपी करके अपने AI में डालें। यह app आपका data कहीं नहीं भेजता।',
+  'home.prompts.desc': 'Companies की research और तैयारी के लिए तैयार prompts, अपने AI में चलाएं।',
 
-  'tab.decoder': 'डिकोडर',
-  'tab.tracker': 'ट्रैकर',
-  'tab.prompts': 'प्रॉम्प्ट्स',
+  'tab.decoder': 'In-hand salary calculator',
+  'tab.tracker': 'Application tracker',
+  'tab.prompts': 'AI prompts',
 
   // ---- Common ----
   'common.delete': 'हटाएं',
@@ -265,7 +265,7 @@ export const hi: Record<string, string> = {
   'tracker.example.action.round2': 'Hiring manager के साथ round 2',
   'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
   'tracker.doorway.label': 'अगला कदम:',
-  'tracker.doorway.prefilled': 'Decoder इसी CTC के साथ खुलेगा।',
+  'tracker.doorway.prefilled': 'In-hand salary calculator इसी CTC के साथ खुलेगा।',
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.saveFailed.title': 'यह board save नहीं हुआ।',
   'tracker.saveFailed.body':
@@ -352,14 +352,14 @@ export const hi: Record<string, string> = {
   'coverage.sweepAgain': 'फिर से email से भरें',
 
   // ---- Prompt Studio ----
-  'promptStudio.title': 'Prompt Studio',
+  'promptStudio.title': 'Prompt चुनें',
   'promptStudio.description': 'एक prompt चुनें और उसे अपने AI (ChatGPT, Claude या Gemini) में copy करें। जवाब यहाँ वापस paste करें ताकि वह उसी application के साथ रहे।',
   'promptStudio.personalizeFor': 'किसकी details इस्तेमाल करें',
   'promptStudio.genericOption': 'कोई application नहीं (general prompt)',
   'promptStudio.emptyTitle': 'इन prompts को personalize करने के लिए एक application track करें।',
   'promptStudio.emptyBody':
-    'नीचे दिए prompts generically भी काम करते हैं — Tracker में company, role, CTC और notice period जोड़कर ज़्यादा sharp, नाम-specific prompts पाएं।',
-  'promptStudio.goToTracker': 'Tracker पर जाएं',
+    'नीचे दिए prompts generically भी काम करते हैं — Application tracker में company, role, CTC और notice period जोड़कर ज़्यादा sharp, नाम-specific prompts पाएं।',
+  'promptStudio.goToTracker': 'Application tracker खोलें',
   'category.research': 'Research',
   'category.prepare': 'तैयारी',
   'category.negotiate': 'बातचीत',
@@ -391,9 +391,9 @@ export const hi: Record<string, string> = {
   'template.outreach.description': 'छोटे LinkedIn messages: एक connection note, एक InMail और एक follow-up।',
   'template.offer-compare.title': 'Offers में से चुनें',
   'template.offer-compare.description': 'हर offer का पैसा, risk और growth एक साथ रखता है, फिर आपके AI से एक चुनवाता है।',
-  'template.offer-extract.title': 'Offer letter → Decoder auto-fill',
+  'template.offer-extract.title': 'Offer letter → in-hand calculator में auto-fill',
   'template.offer-extract.description':
-    'पूरा offer letter paste करें — आपका AI Decoder के लिए ज़रूरी हर field निकाल देगा, वापस paste करने के लिए तैयार।',
+    'पूरा offer letter paste करें — आपका AI in-hand salary calculator के लिए ज़रूरी हर field निकाल देगा, वापस paste करने के लिए तैयार।',
 
   // ---- Red-flag overrides (UI layer only; engine strings stay canonical English) ----
   'flag.notice-period.title': '{days} दिन का notice period',

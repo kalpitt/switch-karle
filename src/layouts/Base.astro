@@ -4,6 +4,7 @@ import { englishPath, hindiPath } from '../lib/langPath'
 import type { Lang } from '../i18n'
 import { en } from '../i18n/en'
 import { hi } from '../i18n/hi'
+import { BRAND, withBrand } from '../lib/pageTitle'
 
 interface Props {
   title: string
@@ -20,8 +21,8 @@ const base = import.meta.env.BASE_URL || '/'
 const canonical = new URL(Astro.url.pathname, Astro.site).href
 const enHref = new URL(englishPath(Astro.url.pathname, base), Astro.site).href
 const hiHref = new URL(hindiPath(Astro.url.pathname, base), Astro.site).href
-const brand = lang === 'hi' ? 'स्विच कर ले' : 'Switch Karle'
-const fullTitle = slug ? `${title} — ${brand}` : title
+const brand = BRAND[lang]
+const fullTitle = slug ? withBrand(title, lang) : title
 const htmlLang = lang === 'hi' ? 'hi' : 'en'
 // Server-side only: these strings are rendered into the HTML, never bundled.
 const t = (key: string) => (lang === 'hi' ? hi[key] : undefined) ?? en[key] ?? key

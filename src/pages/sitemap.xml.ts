@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import { SITE } from '../../site.config.mjs'
-import { TOOLS } from '../data/tools'
+import { TOOLS, TOOLS_PAGE } from '../data/tools'
 import { INFO_PAGES } from '../data/infoPages'
 
 function siteRoot(): string {
@@ -12,7 +12,7 @@ function siteRoot(): string {
 /** English + Hindi twins. Do not introduce a sitemap-index. */
 export const GET: APIRoute = () => {
   const root = siteRoot()
-  const slugs = [...TOOLS.map((t) => t.slug), ...INFO_PAGES]
+  const slugs = [TOOLS_PAGE, ...TOOLS.map((t) => t.slug), ...INFO_PAGES]
   const en = [`${root}/`, ...slugs.map((slug) => `${root}/${slug}/`)]
   const hi = [`${root}/hi/`, ...slugs.map((slug) => `${root}/hi/${slug}/`)]
   const locs = [...en, ...hi]

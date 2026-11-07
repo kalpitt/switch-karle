@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro'
+import AllToolsPage from '../../tools/all-tools/index'
+import { TOOLS_PAGE } from '../../data/tools'
+import { hiDictionary } from '../../i18n/hi-dictionary'
+---
+
+<Base title={hiDictionary['toolsPage.seoTitle']!} description={hiDictionary['toolsPage.description']!} slug={TOOLS_PAGE} lang="hi">
+  <AllToolsPage client:load lang="hi" />
+</Base>

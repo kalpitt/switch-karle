@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { TOOLS } from './tools'
+import { TOOLS, TOOLS_PAGE } from './tools'
+import { INFO_PAGES } from './infoPages'
 import { JOURNEY_IDS, journeySections } from './journey'
 import { NOTICE_TOOL } from './noticeLinks'
 import { STAGE_ACTIONS } from './stageActions'
@@ -13,6 +14,10 @@ describe('tool registry', () => {
     for (const slug of slugs) {
       expect(slug).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     }
+  })
+
+  it('does not take the all-tools page’s or an info page’s address', () => {
+    for (const slug of [TOOLS_PAGE, ...INFO_PAGES]) expect(TOOLS.some((t) => t.slug === slug), slug).toBe(false)
   })
 
   it('does not occupy the hi slug — /hi/ is the language prefix', () => {

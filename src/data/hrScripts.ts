@@ -28,7 +28,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'expected-ctc',
     titleKey: 'hr.expected-ctc.title',
     descKey: 'hr.expected-ctc.desc',
-    seoTitle: 'Expected CTC script',
+    seoTitle: 'Expected CTC reply',
     seoDescription: 'A copy-paste reply when a recruiter asks for your expected CTC. Stays on this device.',
     body: '',
   },
@@ -36,7 +36,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'early-release',
     titleKey: 'hr.early-release.title',
     descKey: 'hr.early-release.desc',
-    seoTitle: 'Early release script',
+    seoTitle: 'Early release email',
     seoDescription: 'Ask your current employer to shorten notice. Copy, then send from your own mail.',
     body: '',
   },
@@ -44,7 +44,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'buyout-ask',
     titleKey: 'hr.buyout-ask.title',
     descKey: 'hr.buyout-ask.desc',
-    seoTitle: 'Notice buyout ask',
+    seoTitle: 'Notice buyout email',
     seoDescription: 'Ask HR whether unserved notice can be bought out, and on what basis.',
     body: '',
   },
@@ -52,7 +52,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'decline-accepted',
     titleKey: 'hr.decline-accepted.title',
     descKey: 'hr.decline-accepted.desc',
-    seoTitle: 'Decline after accepting',
+    seoTitle: 'Decline-after-accepting email',
     seoDescription: 'A careful decline after you already said yes. Not legal advice.',
     body: '',
   },
@@ -60,7 +60,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'counter-offer-reply',
     titleKey: 'hr.counter-offer-reply.title',
     descKey: 'hr.counter-offer-reply.desc',
-    seoTitle: 'Counter-offer reply',
+    seoTitle: 'Counter-offer reply email',
     seoDescription: 'Turn down a counter-offer from your current employer, in writing and on good terms.',
     body: '',
   },
@@ -68,16 +68,17 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'recruiter-followup',
     titleKey: 'hr.recruiter-followup.title',
     descKey: 'hr.recruiter-followup.desc',
-    seoTitle: 'Recruiter follow-up',
+    seoTitle: 'Recruiter follow-up email',
     seoDescription: 'A short follow-up after an interview or a promised offer timeline.',
     body: '',
   },
 }
 
 /**
- * Every slug the one Scripts tool serves. `manager-script` is the spoken one —
- * it takes a tone instead of a template — but it is the same tool: pick the
- * situation, get words you can use. Its own URL is kept.
+ * Every situation the one What to say page serves (`what-to-say`, decision 4).
+ * `manager-script` is the spoken one — it takes a tone instead of a template —
+ * but it is the same page: pick the situation, get words you can use. Each
+ * keeps its own URL, which renders What to say with that situation picked.
  */
 export const SCRIPT_SLUGS = [...HR_SCRIPT_SLUGS, 'manager-script'] as const
 
