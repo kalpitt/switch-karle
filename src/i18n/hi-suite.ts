@@ -62,7 +62,7 @@ export const hiSuite: Record<string, string> = {
   'plan.act.hint': 'तो gratuity के लिए Code on Social Security आप पर लागू नहीं होता। अगर पिछले बारह महीनों में किसी भी दिन दस या ज़्यादा लोग थे, या employer कभी Code के तहत आ चुका है, तो Code अब भी लागू है। फिर भी company अपनी policy से gratuity दे सकती है।',
   'plan.act.none':
     'जिस employer पर Code कभी लागू नहीं हुआ, उसके लिए Code कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
-  'plan.hike.line': 'आपका hike {month} में आता है। {date} से पहले resign किया तो वह कभी नहीं मिलेगा।',
+  'plan.hike.line': 'आपका hike {month} में आता है। {date} को या उससे पहले resign किया तो वह कभी नहीं मिलेगा।',
   'plan.cliffs.none': 'आगे कुछ नहीं है। कोई date आपको यहाँ नहीं रोक रही।',
   'plan.cliffs.next': 'अगला: date चुनें',
 

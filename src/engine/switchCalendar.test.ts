@@ -326,9 +326,21 @@ describe('forfeited — never silently dropped', () => {
     expect(judged['gratuity-5-day']!.forfeited).toBe(false)
   })
 
-  it('resigning on the cliff itself does not forfeit it', () => {
-    const judged = byId(markForfeited(cliffs({ ...RAVI, workWeekDays: 5 }), '2027-05-31'))
-    expect(judged['hike']!.forfeited).toBe(false)
+  it('resigning on the last day of the hike month still gives the hike up; the next day keeps it', () => {
+    // Hike cliff 31 May 2027. Resigning that day puts you on notice the day it
+    // lands, and the plan's "Resign on 1 June 2027" card says the same.
+    const onCliff = byId(markForfeited(cliffs({ ...RAVI, workWeekDays: 5 }), '2027-05-31'))
+    const dayAfter = byId(markForfeited(cliffs({ ...RAVI, workWeekDays: 5 }), '2027-06-01'))
+    expect(onCliff['hike']!.forfeited).toBe(true)
+    expect(dayAfter['hike']!.forfeited).toBe(false)
+  })
+
+  it('the clean date the plan offers is never one that gives anything up', () => {
+    const list = cliffs({ ...RAVI, workWeekDays: 5 })
+    const clean = earliestCleanDate(list, RAVI.asOf, RAVI.noticePeriodDays)
+    expect(clean).toBe('2027-06-01')
+    const judged = markForfeited(list, clean, RAVI.noticePeriodDays)
+    expect(judged.every((c) => c.forfeited === false)).toBe(true)
   })
 
   it('switchCalendar judges every cliff once the date is on the plan', () => {
