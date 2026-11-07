@@ -4,7 +4,7 @@ import { dictionaries } from '../i18n'
 import { STATE_NAMES } from '../engine/professionalTax'
 import type { StateCode } from '../engine/types'
 import { INFO_PAGES } from './infoPages'
-import { CORRECTIONS, ptSourceId, SOURCES, sourceById, TOOL_SOURCES, verifiedRange } from './sources'
+import { CORRECTIONS, offerSources, ptSourceId, SOURCES, sourceById, TOOL_SOURCES, verifiedRange } from './sources'
 import { TOOLS } from './tools'
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
@@ -59,6 +59,12 @@ describe('sources registry', () => {
     }
     expect(ptSourceId('KA')).toBe('pt-KA')
     expect(ptSourceId('MH')).toBe('pt-other')
+  })
+
+  it('names the gratuity-in-CTC convention only when gratuity is inside the CTC', () => {
+    expect(offerSources(TOOL_SOURCES.decoder, true)).toContain('gratuity-accrual')
+    expect(offerSources(TOOL_SOURCES.decoder, false)).not.toContain('gratuity-accrual')
+    expect(offerSources(TOOL_SOURCES.decoder, false)).toHaveLength(TOOL_SOURCES.decoder.length - 1)
   })
 
   it('dates the footer chip from verified rules only', () => {

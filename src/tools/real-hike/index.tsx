@@ -21,7 +21,7 @@ import {
   Toggle,
 } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
-import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
 import { useT, useLang, type Lang } from '../../i18n'
@@ -171,7 +171,13 @@ function Body() {
               { label: t('real-hike.row.bank'), display: `${bank}%`, value: bank, strong: true },
             ]}
           />
-          <Receipt ids={[...TOOL_SOURCES['real-hike'], ptSourceId(draft.currentState), ptSourceId(draft.nextState)]} />
+          <Receipt
+            ids={[
+              ...offerSources(TOOL_SOURCES['real-hike'], template.gratuityInCtc),
+              ptSourceId(draft.currentState),
+              ptSourceId(draft.nextState),
+            ]}
+          />
         </ResultHero>
         <Card className="space-y-2">
           <Ledger

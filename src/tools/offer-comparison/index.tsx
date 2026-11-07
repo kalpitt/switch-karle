@@ -19,7 +19,7 @@ import {
   ShareRow,
   Toggle,
 } from '../../components/ui'
-import { ptSourceId, TOOL_SOURCES } from '../../data/sources'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../../data/sources'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { DEFAULT_OFFER, loadOffer } from '../../data/defaults'
 import { readJson, writeJson } from '../../lib/storage'
@@ -162,7 +162,12 @@ function CompareBody() {
               strong: i === winner,
             }))}
           />
-          <Receipt ids={[...TOOL_SOURCES['offer-comparison'], ...slots.map((s) => ptSourceId(s.offer.state))]} />
+          <Receipt
+            ids={[
+              ...offerSources(TOOL_SOURCES['offer-comparison'], slots.some((s) => s.offer.gratuityInCtc)),
+              ...slots.map((s) => ptSourceId(s.offer.state)),
+            ]}
+          />
         </ResultHero>
         {slots.length === 2 ? (
           <Card>

@@ -471,6 +471,15 @@ export const TOOL_SOURCES = {
   'notice-buyout': ['notice-buyout-divisor'],
 } as const satisfies Record<string, readonly string[]>
 
+/**
+ * An offer-engine receipt as the answer used it: `gratuity-accrual` names the
+ * 4.81% gratuity-inside-CTC convention, which no figure uses when no offer
+ * counts gratuity inside its CTC (TR2-12).
+ */
+export function offerSources(ids: readonly string[], gratuityInCtc: boolean): readonly string[] {
+  return gratuityInCtc ? ids : ids.filter((id) => id !== 'gratuity-accrual')
+}
+
 /** The professional-tax entry for a state: its own when verified, otherwise the open one. */
 export function ptSourceId(state: StateCode): string {
   return BY_ID.has(`pt-${state}`) ? `pt-${state}` : 'pt-other'

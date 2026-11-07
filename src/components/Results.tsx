@@ -4,7 +4,7 @@ import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
 import { useId } from 'react'
 import { Card, ResultHeading, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
-import { ptSourceId, TOOL_SOURCES } from '../data/sources'
+import { offerSources, ptSourceId, TOOL_SOURCES } from '../data/sources'
 import { NextStep } from './NextStep'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
@@ -43,7 +43,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
-        <Receipt ids={[...TOOL_SOURCES.decoder, ptSourceId(b.input.state)]} />
+        <Receipt ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
 
         <ShareRow
           copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
