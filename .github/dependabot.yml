@@ -10,6 +10,13 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # @vite-pwa/astro 2 is a rewrite on Rolldown/Vite 8. Tried 2026-11-07 on
+      # Vite 6: it needs an extra `rolldown` install, and its service worker
+      # silently drops every includeAssets file (icons.svg, favicons, app icons)
+      # from the offline cache. Revisit when the site itself moves to Vite 8.
+      - dependency-name: '@vite-pwa/astro'
+        update-types: ['version-update:semver-major']
     groups:
       minor-and-patch:
         update-types: [minor, patch]
