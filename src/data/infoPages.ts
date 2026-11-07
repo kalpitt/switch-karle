@@ -7,7 +7,7 @@ export type InfoPage = (typeof INFO_PAGES)[number]
 
 /** When each page's text last changed in substance. Shown at the foot of the page. */
 export const INFO_PAGE_UPDATED: Record<InfoPage, string> = {
-  about: '2026-11-03',
+  about: '2026-11-07',
   sources: '2026-11-03',
   privacy: '2026-11-01',
   terms: '2026-11-01',
