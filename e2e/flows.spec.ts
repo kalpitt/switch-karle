@@ -91,6 +91,20 @@ test('home: "what this is worth" answers in rupees inside the recap', async ({ p
   await expect(page.getByRole('link', { name: 'Open the full gratuity calculator' })).toHaveAttribute('href', '/gratuity/')
 })
 
+test('home: the recap shows the first actions, and a start-applying date already gone says so', async ({ page }) => {
+  await open(page, '/')
+  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  const own = page.locator('[data-trade="own-date"]')
+  await own.locator('input[type="date"]').fill('2026-11-20')
+  await own.getByRole('button', { name: 'Resign on 20 November 2026' }).click()
+  await expect(page.getByRole('heading', { name: 'Your plan' })).toBeFocused()
+  // N5: the action list is on the first visit, not only after a reload.
+  await expect(page.getByRole('heading', { name: 'Your first ten actions' })).toBeVisible()
+  // UX-07: on 90 days' notice the start-applying date is long gone.
+  await expect(page.getByText(/^Start applying now\. .* has already passed\.$/)).toBeVisible()
+  await expect(page.getByText(/^Start applying by /)).toHaveCount(0)
+})
+
 test('home in Hindi: the same door, headline first', async ({ page }) => {
   await open(page, '/hi/')
   await expect(page.getByRole('heading', { level: 1, name: 'Resign करने का सबसे safe दिन ढूँढें।' })).toBeVisible()
@@ -117,6 +131,26 @@ test('decoder: changing the CTC changes the in-hand figure, and the bar matches 
     }
   })
   expect(Math.abs(barPct - textPct)).toBeLessThan(1.5)
+})
+
+test('decoder: "Use my numbers" puts the cursor in a field the visitor can see', async ({ page }) => {
+  await open(page, '/decoder/')
+  await page.getByRole('button', { name: /^Use my numbers/ }).first().click()
+  const focused = await page.evaluate(() => {
+    const el = document.activeElement as HTMLElement | null
+    if (!el) return null
+    return { tag: el.tagName, visible: el.getClientRects().length > 0 && !el.closest('details:not([open])') }
+  })
+  expect(focused?.tag).toMatch(/^(INPUT|SELECT|TEXTAREA)$/)
+  expect(focused?.visible).toBe(true)
+})
+
+test('a missing Hindi page is in Hindi, and its other-language button goes to the English home', async ({ page }) => {
+  await page.goto('/hi/no-such-page/')
+  await expect(page.getByRole('heading', { level: 1, name: 'यह page मौजूद नहीं है।' })).toBeVisible()
+  const english = page.getByRole('link', { name: 'English home' })
+  await expect(english).toHaveAttribute('href', '/')
+  await expect(page.getByRole('link', { name: 'होम page पर जाएं' })).toHaveAttribute('href', '/hi/')
 })
 
 test('language toggle keeps you on the same tool', async ({ page }) => {
@@ -179,4 +213,34 @@ test('a browser that cannot save is told so once', async ({ page }) => {
   await expect(notice).toBeVisible()
   await page.getByRole('button', { name: 'OK', exact: true }).click()
   await expect(notice).toBeHidden()
+})
+
+test('tracker: keyboard focus follows the form and the card, and each change is announced', async ({ page }) => {
+  await open(page, '/tracker/')
+  await page.getByRole('button', { name: '+ Add application' }).click()
+  await expect(page.getByRole('textbox', { name: 'Company', exact: true })).toBeFocused()
+  await page.getByRole('textbox', { name: 'Company', exact: true }).fill('Acme')
+  await page.getByRole('textbox', { name: 'Role', exact: true }).fill('Analyst')
+  await page.getByRole('button', { name: 'Add application', exact: true }).click()
+  await expect(page.getByRole('button', { name: '+ Add application' })).toBeFocused()
+  await expect(page.getByRole('status').filter({ hasText: /^Added Acme to / })).toHaveCount(1)
+
+  await page.getByRole('button', { name: 'Move to next stage' }).click()
+  await expect(page.getByRole('button', { name: 'Move to next stage' })).toBeFocused()
+  await expect(page.getByRole('status').filter({ hasText: /^Moved Acme to / })).toHaveCount(1)
+})
+
+test('backup dialog holds focus and gives it back on Escape', async ({ page }) => {
+  await open(page, '/')
+  const opener = page.getByRole('button', { name: 'Back up or restore' })
+  await opener.click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.locator(':focus')).toHaveCount(1)
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab')
+    await expect(dialog.locator(':focus')).toHaveCount(1)
+  }
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(opener).toBeFocused()
 })

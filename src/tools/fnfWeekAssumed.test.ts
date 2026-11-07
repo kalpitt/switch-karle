@@ -12,10 +12,11 @@ const island = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'fnf-c
  * keeps the five-day reading, and says so wherever it changes the answer.
  */
 describe('the F&F checker says when it assumed a five-day week', () => {
-  it('shows the line only when the week is unknown and gratuity is flagged missing', () => {
+  it('shows the line only when the week is unknown, gratuity is flagged missing, and a six-day week would change it', () => {
     expect(island).toMatch(
-      /workWeekDays === undefined && result != null && result\.gratuityNotOnSheet > 0 && \([\s\S]*?fnf-checker\.weekAssumed/,
+      /workWeekDays === undefined && result != null && result\.gratuityNotOnSheet > 0 && weekChangesGratuity && \([\s\S]*?fnf-checker\.weekAssumed/,
     )
+    expect(island).toMatch(/auditFnF\(\{ \.\.\.input, workWeekDays: 6 \}\)\.gratuityNotOnSheet !== result\.gratuityNotOnSheet/)
   })
 
   it('names the assumption and the six-day consequence, in both languages', () => {

@@ -11,6 +11,13 @@ export interface FnFInput {
   joinDate: string
   lastWorkingDay: string
   monthlyBasic: number
+  /**
+   * Monthly basic + dearness allowance, when the user has given it anywhere
+   * (the plan's "what this is worth" or the gratuity tool). Gratuity is paid
+   * on wages, which are basic + DA, so the gratuity line uses this figure and
+   * falls back to `monthlyBasic` only when it is missing.
+   */
+  monthlyBasicDA?: number
   monthlyGross: number
   unpaidLeaveDays: number
   payslipLines: FnFPayslipLine[]
@@ -108,7 +115,7 @@ export function auditFnF(input: FnFInput): FnFResult {
 
   if (input.gratuityEligible) {
     const g = gratuity({
-      lastDrawnBasicDA: input.monthlyBasic,
+      lastDrawnBasicDA: input.monthlyBasicDA != null && input.monthlyBasicDA > 0 ? input.monthlyBasicDA : input.monthlyBasic,
       joinDate: input.joinDate,
       exitDate: input.lastWorkingDay,
       coveredByAct: input.coveredByAct ?? true,

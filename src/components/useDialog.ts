@@ -1,8 +1,19 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+// Anything with tabindex="-1" is focusable by script but not by Tab, so it is
+// left out: counting it made Tab from the palette's last button leave the panel.
+const NOT_SKIPPED = ':not([tabindex="-1"])'
+const FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]',
+]
+  .map((s) => s + NOT_SKIPPED)
+  .join(', ')
 
 /**
  * What makes a custom overlay behave like a real modal dialog while it is open:

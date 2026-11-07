@@ -437,8 +437,12 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
         <Card className="space-y-4">
           <StepHeading>{t('plan.q.title')}</StepHeading>
           {!touched && <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.note')} />}
-          <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-            <div className="space-y-4">
+          {/* On a phone the button follows the three fields and the live dates
+              come after it, so the one thing this screen asks for is in reach
+              (MOB-07). On a wide screen the dates sit in their own column
+              beside the fields, with the button under the fields. */}
+          <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-x-8 lg:gap-y-4">
+            <div className="space-y-4 lg:col-start-1 lg:row-start-1">
               <DateField
                 label={t('plan.q.join')}
                 hint={t('plan.q.joinHint')}
@@ -477,6 +481,15 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
               />
             </div>
 
+            {/* Never greyed out with no reason: before the page is live it says
+                it is loading (a tap there would be lost, UX-09c); after that a
+                press with something missing says what, under the field. */}
+            <div className="lg:col-start-1 lg:row-start-2">
+              <Button onClick={submitQuestions} disabled={today === ''} aria-busy={today === ''} className="w-full lg:w-auto">
+                {today === '' ? t('plan.q.loading') : t('plan.q.next')}
+              </Button>
+            </div>
+
             <LiveDates
               t={t}
               fmt={fmt}
@@ -497,12 +510,6 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
               onChooseCoverage={chooseCoverage}
             />
           </div>
-          {/* Never greyed out with no reason: before the page is live it says
-              it is loading (a tap there would be lost, UX-09c); after that a
-              press with something missing says what, under the field. */}
-          <Button onClick={submitQuestions} disabled={today === ''} aria-busy={today === ''} className="w-full lg:w-auto">
-            {today === '' ? t('plan.q.loading') : t('plan.q.next')}
-          </Button>
         </Card>
       )}
 
@@ -583,6 +590,14 @@ function StepHeading({ children }: { children: ReactNode }) {
   )
 }
 
+/**
+ * The rules a gratuity *date* stands on: who qualifies and when, and the
+ * 4-years-plus reading of s.54 that is still waiting on a lawyer. The amount,
+ * wage and cap entries in `TOOL_SOURCES.gratuity` belong under an amount, so
+ * they stay in "what this is worth".
+ */
+const GRATUITY_DATE_SOURCES = ['gratuity-eligibility', 'gratuity-four-years-plus'] as const
+
 /** "Safe since…" or "safe from…, N days away", for the one reading the screen may name. */
 function gratuitySentence(t: T, fmt: (iso: string) => string, cliff: Cliff): string {
   return cliff.passed
@@ -624,7 +639,7 @@ function LiveDates(props: {
   return (
     <section
       aria-labelledby={titleId}
-      className="space-y-3 border-t border-line pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+      className="space-y-3 border-t border-line pt-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
     >
       <h3 id={titleId} className="text-[14px] font-semibold leading-snug text-ink-soft">
         {t('plan.cliffs.title')}
@@ -672,10 +687,13 @@ function LiveDates(props: {
           <div aria-live="polite" className="space-y-2.5">
             {!props.coveredByAct && <p className="text-[15px] leading-snug">{t('plan.act.none')}</p>}
             {props.coveredByAct && props.speak != null && (
-              <p className="flex gap-2 text-[15px] leading-snug">
-                {props.speak.passed && <CheckIcon size={16} className="mt-[3px] text-leaf" />}
-                <span>{gratuitySentence(t, fmt, props.speak)}</span>
-              </p>
+              <div className="space-y-1">
+                <p className="flex gap-2 text-[15px] leading-snug">
+                  {props.speak.passed && <CheckIcon size={16} className="mt-[3px] text-leaf" />}
+                  <span>{gratuitySentence(t, fmt, props.speak)}</span>
+                </p>
+                <Receipt ids={GRATUITY_DATE_SOURCES} />
+              </div>
             )}
             {hike != null && props.hikeLabel != null && (
               <p className="text-[15px] leading-snug">
@@ -767,7 +785,10 @@ function DatesSummary(props: {
           {/* s.54(B)(a) counts days actually worked, not calendar days, and
               this engine does not model public holidays or unearned leave —
               both only push the date later, never earlier. */}
-          {!speak.passed && <p className="text-[13px] text-ink-soft">{t('plan.gratuity.workingDays')}</p>}
+          {/* Said in the already-passed case too: that date rests on the same
+              4-years-plus reading, not on five full years (TR2-01). */}
+          <p className="text-[13px] text-ink-soft">{t('plan.gratuity.workingDays')}</p>
+          <Receipt ids={GRATUITY_DATE_SOURCES} />
         </>
       )}
       {hike != null && props.hikeLabel != null && (
@@ -1014,15 +1035,27 @@ interface RecapProps {
   onChangeDate: () => void
 }
 
-function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePeriodDays'>) {
+function DateLines(props: Pick<RecapProps, 't' | 'fmt' | 'result' | 'noticePeriodDays' | 'today'>) {
   const { t, fmt, result } = props
   const line = result.timeline
   if (line == null) return null
   const forfeited = result.cliffs.filter((c) => c.forfeited === true)
+  // A date already gone is not an instruction any more: say so (UX-07).
+  const gone = (iso: string) => props.today !== '' && iso < props.today
+  const apply = line.startApplyingBy.date
+  const offer = line.needOfferBy.date
   return (
     <div className="space-y-1 text-[15px] leading-relaxed">
-      <p>{t('plan.recap.apply', { date: fmt(line.startApplyingBy.date) })}</p>
-      <p>{t('plan.recap.offer', { date: fmt(line.needOfferBy.date) })}</p>
+      {gone(apply) ? (
+        <p className="font-semibold text-alarm">{t('plan.recap.applyNow', { date: fmt(apply) })}</p>
+      ) : (
+        <p>{t('plan.recap.apply', { date: fmt(apply) })}</p>
+      )}
+      {gone(offer) ? (
+        <p className="font-semibold text-alarm">{t('plan.recap.offerLate', { date: fmt(offer) })}</p>
+      ) : (
+        <p>{t('plan.recap.offer', { date: fmt(offer) })}</p>
+      )}
       <p className="font-bold">{t('plan.recap.resign', { date: fmt(line.resignDate) })}</p>
       <p>{t('plan.recap.lwd', { date: fmt(line.lastWorkingDay.date), days: props.noticePeriodDays })}</p>
       {forfeited.map((cliff) => (
@@ -1157,7 +1190,7 @@ function Recap(props: RecapProps) {
       {!props.touched && (
         <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={props.onExampleChip} />
       )}
-      <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} />
+      <DateLines t={t} fmt={props.fmt} result={props.result} noticePeriodDays={props.noticePeriodDays} today={props.today} />
       <CalendarButton
         t={t}
         fmt={props.fmt}
@@ -1168,6 +1201,20 @@ function Recap(props: RecapProps) {
       <div className="space-y-4 border-t border-line pt-4">
         <ReasonBox t={t} plan={props.plan} onReason={props.onReason} />
         <LookingTap t={t} fmt={props.fmt} plan={props.plan} onLooking={props.onLooking} />
+      </div>
+      {/* The first actions on the first visit too, not only after a reload
+          (N5): the same list the return screen shows. */}
+      <div className="border-t border-line pt-4">
+        <ActionList
+          t={t}
+          lang={props.lang}
+          plan={props.plan}
+          today={props.today}
+          startApplyingBy={props.result.timeline?.startApplyingBy.date ?? null}
+          onTick={props.onTick}
+          onCompanies={props.onCompanies}
+          onBond={props.onBond}
+        />
       </div>
       <div className="space-y-1 border-t border-line pt-3">
         <WorthPanel {...props.worth} />
@@ -1207,7 +1254,7 @@ function ReturnScreen(
         {!props.touched && (
           <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={props.onExampleChip} />
         )}
-        <DateLines t={t} fmt={props.fmt} result={result} noticePeriodDays={props.noticePeriodDays} />
+        <DateLines t={t} fmt={props.fmt} result={result} noticePeriodDays={props.noticePeriodDays} today={props.today} />
 
         {/* Rule 9: one next thing. Until the dates are in a calendar, that is
             the calendar; after, the action list below takes over. */}
