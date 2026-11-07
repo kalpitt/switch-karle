@@ -853,6 +853,10 @@ function TradeOption(props: {
   // visitor with a warning about a date they never chose.
   const [value, setValue] = useState(() => pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
   const [missing, setMissing] = useState(false)
+  // The option's title names the card and the date field inside it, so the two
+  // "Resign date" fields on this screen are told apart (A11Y N6).
+  const titleId = useId()
+  const cleanId = useId()
 
   useEffect(() => {
     setValue(pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
@@ -887,13 +891,20 @@ function TradeOption(props: {
   return (
     <div
       data-trade={trade.id}
+      role="group"
+      aria-labelledby={props.losesNothing ? `${titleId} ${cleanId}` : titleId}
       className={`space-y-2 rounded-xl border px-4 py-3 ${props.chosen ? 'border-saffron bg-saffron-soft' : 'border-line bg-card'}`}
     >
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="text-[15px] font-semibold">{t(`plan.trade.${trade.id}`)}</span>
+        <span id={titleId} className="text-[15px] font-semibold">
+          {t(`plan.trade.${trade.id}`)}
+        </span>
         {/* A fact about the date, not a recommendation: none is ever marked best. */}
         {props.losesNothing && (
-          <span className="inline-flex items-center gap-1 rounded-md bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf">
+          <span
+            id={cleanId}
+            className="inline-flex items-center gap-1 rounded-md bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf"
+          >
             <CheckIcon size={14} />
             {t('plan.trade.clean')}
           </span>
@@ -905,6 +916,7 @@ function TradeOption(props: {
       {needsPicker && (
         <DateField
           label={t('plan.trade.dateLabel')}
+          labelledBy={titleId}
           value={value}
           error={missing && !isIsoDate(value) ? t('plan.trade.err') : undefined}
           onChange={(v) => {

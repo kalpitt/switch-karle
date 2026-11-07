@@ -47,11 +47,14 @@ function Field({
   required,
   error,
   describedBy,
+  labelledBy,
   after,
   children,
 }: {
   label: ReactNode
   hint?: string
+  /** Another element id read before the label, e.g. the title of the option a field sits in. */
+  labelledBy?: string
   required?: boolean
   /** Why the value cannot be used. Read out at once, marks the control invalid and describes it. */
   error?: string
@@ -83,7 +86,7 @@ function Field({
         )}
       </span>
       {children({
-        'aria-labelledby': `${id}-label`,
+        'aria-labelledby': labelledBy ? `${labelledBy} ${id}-label` : `${id}-label`,
         'aria-describedby': described || undefined,
         ...(error ? { 'aria-invalid': true as const } : {}),
       })}
@@ -208,11 +211,14 @@ export function TextField(props: {
   required?: boolean
   max?: string
   error?: string
+  /** See Field: an id read before the label. */
+  labelledBy?: string
 }) {
   const isDate = props.type === 'date'
   return (
     <Field
       label={props.label}
+      labelledBy={props.labelledBy}
       hint={props.hint}
       required={props.required}
       error={props.error}
@@ -431,10 +437,13 @@ export function DateField(props: {
   required?: boolean
   max?: string
   error?: string
+  /** See Field: an id read before the label. */
+  labelledBy?: string
 }) {
   return (
     <TextField
       label={props.label}
+      labelledBy={props.labelledBy}
       hint={props.hint}
       value={props.value}
       onChange={props.onChange}
