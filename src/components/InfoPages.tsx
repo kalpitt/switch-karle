@@ -83,6 +83,12 @@ function About() {
       <p className="text-lg font-semibold leading-snug text-ink">{t('about.lead')}</p>
       <Section title={t('about.why.title')}>
         <div className="space-y-3">
+          <figure className="border-l-2 border-saffron pl-4">
+            <blockquote>
+              <p>“{t('about.why.story')}”</p>
+            </blockquote>
+            <figcaption className="mt-2 text-[14px] font-semibold text-ink-soft">— {t('about.why.signoff')}</figcaption>
+          </figure>
           <p>{t('about.why.p1')}</p>
           <p>{t('about.why.p2')}</p>
         </div>

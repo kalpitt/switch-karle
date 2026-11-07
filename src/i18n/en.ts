@@ -1265,8 +1265,10 @@ export const en: Record<string, string> = {
   'about.why.title': 'Why it exists',
   'about.why.p1':
     'Deciding to leave a job is rarely the hard part. Working out what leaving costs is. Your gratuity may be three weeks away. A joining bonus from last year may still be clawed back. A “30% hike” may put only a little more in your bank each month.',
-  'about.why.p2':
-    'Switch Karle started when colleagues wanted to leave and could not work out the first step. It does that arithmetic for you, in English and Hindi, before you say a word to your manager.',
+  'about.why.story':
+    'A few colleagues of mine decided to leave. Three months later I asked how it was going. They were still there, stuck on problems they could not untangle. Over the past year many more people have come to me wanting to switch. Some had lost their jobs in the AI boom. Most simply could not see the first step. A switch can stall for a hundred reasons. I built Switch Karle to make it simpler.',
+  'about.why.signoff': 'Kalpit',
+  'about.why.p2': 'Switch Karle does that arithmetic for you, in English and Hindi, before you say a word to your manager.',
   'about.what.title': 'What it covers',
   'about.what.p':
     'The whole switch, from “I’m done here” to your first 90 days in the new job: what an offer really pays, the dates that matter before you resign, what to say to your manager and HR, what you are owed when you leave, and the PF, insurance and tax steps after you join.',
