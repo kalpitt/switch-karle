@@ -64,7 +64,6 @@ export const hiSuite: Record<string, string> = {
     'जिस employer पर Code कभी लागू नहीं हुआ, उसके लिए Code कोई gratuity date तय नहीं करता। कानूनन कोई date आपको यहाँ नहीं रोक रही।',
   'plan.hike.line': 'आपका hike {month} में आता है। {date} को या उससे पहले resign किया तो वह कभी नहीं मिलेगा।',
   'plan.cliffs.none': 'आगे कुछ नहीं है। कोई date आपको यहाँ नहीं रोक रही।',
-  'plan.cliffs.next': 'अगला: date चुनें',
 
   'plan.dates.title': 'आप कब resign करना चाहते हैं?',
   'plan.trade.keep-the-hike': 'Hike का इंतज़ार करें',
@@ -171,11 +170,6 @@ export const hiSuite: Record<string, string> = {
   'home.trackerLink.cta': 'अपना application tracker खोलें →',
 
   // ---- Home: the journey ----
-  'home.pinned': 'Offer मिल गया है? इनसे शुरू करें',
-  'home.cat.offer': 'सामने रखा offer',
-  'home.cat.exit': 'निकलते वक़्त का पैसा',
-  'home.cat.documents': 'जो आपको लिखना है',
-  'home.cat.landing': 'नई job में पहुँचने पर',
   'journey.0.name': 'बस, अब यहाँ नहीं',
   'journey.0.what': 'आपने जाने का मन बना लिया है, अभी कहीं apply नहीं किया। जानिए छोड़ने की कीमत क्या है।',
   'journey.1.name': 'चुपचाप देख रहे हैं',
@@ -362,19 +356,14 @@ export const hiSuite: Record<string, string> = {
   'relocation.desc': 'देखें कि वही CTC दूसरे शहर में जाने पर आपका in-hand कैसे बदलता है।',
   'relocation.formTitle': 'वही salary, नया शहर',
   'relocation.fromState': 'किस राज्य से',
-  'relocation.fromMetro': 'HRA के लिए metro से',
   'relocation.toState': 'किस राज्य में',
-  'relocation.toMetro': 'HRA के लिए metro में',
   'relocation.fromCity': 'किस शहर से',
   'relocation.toCity': 'किस शहर में',
   'relocation.metroHint': 'Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad या Bengaluru — basic का 50% (Rule 279, Income-tax Rules, 2026)। बाक़ी कहीं भी 40%। सिर्फ़ old regime में।',
-  'relocation.rent': 'आप जो rent देते हैं / महीना',
   'relocation.fromRent': 'यहाँ rent / महीना',
   'relocation.toRent': 'वहाँ rent / महीना',
   'relocation.rentHint':
     'HRA exemption के लिए असल rent चाहिए। 0 = कोई exemption नहीं। ₹1 lakh/साल से ऊपर rent पर employer आमतौर पर landlord का PAN माँगता है।',
-  'relocation.metroWarn':
-    '{state} में HRA metro city नहीं है (सिर्फ़ Mumbai, Kolkata, Delhi, Chennai, Hyderabad, Pune, Ahmedabad और Bengaluru qualify करते हैं, Income-tax Rules, 2026 के Rule 279 के अनुसार)। आपने जो 50% वाला limb on किया है, वह वहाँ apply नहीं होगा।',
   'relocation.ptApprox':
     'Professional tax approximate है। Bihar, Jharkhand और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Tamil Nadu में Chennai का rate दिखाया गया है; Tamil Nadu के दूसरे शहर अपना rate खुद तय करते हैं। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ़ old-regime comparison के लिए दिखाई गई है।',
@@ -497,9 +486,6 @@ export const hiSuite: Record<string, string> = {
   'leave-encashment.basis': 'Daily rate',
   'leave-encashment.basis.26': '÷ 26 (working-day convention)',
   'leave-encashment.basis.30': '÷ 30 (calendar-month convention)',
-  'leave-encashment.reason': 'आप क्यों छोड़ रहे हैं',
-  'leave-encashment.reason.resign': 'Resignation (switch)',
-  'leave-encashment.reason.retire': 'Retirement / superannuation',
   'leave-encashment.verdict.resign': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.verdict.retire': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.caseNote': 'Bombay High Court ने CIT v. D.P. Malhotra में कहा था कि "retirement, whether on superannuation or otherwise" resignation को भी cover करता है।',
@@ -1047,7 +1033,6 @@ export const hiSuite: Record<string, string> = {
   'sources.checkedOn': '{date} को check किया',
   'sources.lookedOn': 'आख़िरी बार {date} को देखा',
   'sources.labelledOn': '{date} को label किया',
-  'sources.openDoc': 'Document खोलें',
   'sources.usedBy': 'इनमें इस्तेमाल: {tools}',
   'sources.status.verified': 'Source से check किया',
   'sources.status.awaiting-ca': 'अभी chartered accountant ने check नहीं किया',
