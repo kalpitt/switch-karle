@@ -9,8 +9,9 @@ technical block.
 
 ## Where direction lives
 
-Two files, both owned by Kalpit. **Agents never edit either one** — propose
-changes in a handoff and he applies them.
+Two files, both owned by Kalpit. **Agents never merge a change to either one.**
+Since 2026-11-07 an agent may propose an edit as its own pull request, labelled
+as a direction change, and only Kalpit merges it.
 
 - **`PRODUCT.md`** — what this is, who it is for, where their journey starts and
   ends, what we do at each stage, and what we refuse to do. Read it first. It

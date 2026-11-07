@@ -1,7 +1,7 @@
 # ROADMAP — Switch Karle
 
-Kalpit owns this file. Agents never edit it: propose changes in a handoff and
-he applies them. 
+Kalpit owns this file. Agents may propose edits only as a pull request that
+Kalpit merges himself (decided 2026-11-07).
 
 ## Settled — do not re-open
 
@@ -9,8 +9,8 @@ These have been decided. Re-opening them wastes time:
 
 - **Domain: `switchkarle.fyi`.** Bought 2026-08-22 on Spaceship, DNS pointed at
   Cloudflare. Nothing to buy, no TLD to choose.
-- **Connecting the domain is deliberately held.** Kalpit cuts over once the
-  site is complete, while user count is still zero. Do not prompt him about it.
+- **The domain is connected.** The site moved to `switchkarle.fyi` on
+  2026-10-31 (PR #71).
 - **No redirect from `kalpit.me/switch-karle/`.** Owner decision. Old links
   need no preservation.
 - **Notes mode is deleted**, not parked in code. The replacement is the
@@ -51,14 +51,6 @@ These have been decided. Re-opening them wastes time:
   is reversed. That is a real outcome, not a formality.
 - **The ten-person test, round two.** Run it the week the door ships, not after
   "the site is complete".
-- **Say what the site is, on the home page.** Rewrite the tagline to cover the
-  full switch ("From 'I'm done here' to surviving notice and day 90") and show
-  it on the home page.
-  *Why:* First-time visitors currently land on an empty board and cannot tell
-  what the site does.
-- **Fix link paths before domain cutover.** Clean up subfolder links and build
-  checks across 404, manifest, and share cards.
-  *Why:* Moving to `switchkarle.fyi` should be a simple, zero-risk switch.
 
 `docs/DIRECTION.md` is deleted when the trial result is recorded here, whichever
 way it goes. Anything in it still worth keeping moves into these lists or into
@@ -73,23 +65,20 @@ the pull request that builds it, before it goes.
   three tools that keep their own join date move onto the shared record. The
   tracker accepts a company with no job title.
   *Why:* the plan is worth little if nothing follows picking a date.
+  *Status 2026-11-07:* the ten actions and the return screen shipped (PR #69);
+  plan dates now fill gratuity, F&F, the letter and the notice tracker (PR #89).
 - **The tools move behind their stages.** *After the trial passes.* Phase 2 of
   `docs/DIRECTION.md`: every tool gets exactly one journey stage, the plan shows
   the current stage's tools, and "All tools" keeps the rest and the search. The
   registry's four buckets and the seven stages in `PRODUCT.md` disagree on real
   rows, and reconciling them is Kalpit's call, not an agent's.
   *Why:* the home page stops being a grid.
+  *Status 2026-11-07:* every tool has one stage (PR #87, mapping approved by
+  Kalpit 2026-10-31) and ends with a Next link in stage order (PR #89).
 - **An archive for closed applications.** Let users mark jobs as rejected,
   ghosted, or withdrawn without deleting the card.
   *Why:* Deleting cards wipes their memory, causing email sweeps to keep
   finding and re-importing rejected jobs.
-- **Intent words in tool search.** Make search find tools when users type
-  common words like "job", "quit", "hike", or "in-hand".
-  *Why:* Typing "quit" or "in hand" currently returns zero results.
-- **Notice period fear guide: when an offer goes cold.** Practical advice and
-  a prompt template for when a hiring company goes quiet forty days into notice.
-  *Why:* An offer disappearing while you have already resigned is the worst fear
-  in the whole switch.
 
 ## Later
 
@@ -100,10 +89,19 @@ the pull request that builds it, before it goes.
 - **Browser panic switch.** A quick keyboard shortcut that immediately disguises
   the screen as generic office work.
   *Why:* Open-plan offices need instant camouflage when someone walks past.
-- **Surviving the first 90 days.** Tools to handle PF transfer, background
-  checks, and the tax shock from two Form-16s.
-  *Why:* The switch does not end when you accept the offer; it ends when your
-  first tax filing and PF transfer clear.
+
+## Done
+
+Shipped, kept here so they are not proposed again:
+
+- **Say what the site is, on the home page.** The full-switch line is on the
+  home page; since 2026-11-07 it sits above "Find the safest day to resign."
+- **Link paths fixed before the domain cutover.** `check:base` guards them.
+- **Intent words in tool search.** "quit", "in hand", "hike" and Hindi words
+  find tools (`src/lib/palette.test.ts`).
+- **When an offer goes cold.** The `offer-goes-cold` tool.
+- **Surviving the first 90 days.** PF transfer, BGV prep, tax declaration and
+  the two-Form-16 shock all ship.
 
 ## Waiting on Kalpit
 
