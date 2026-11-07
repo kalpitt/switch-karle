@@ -70,6 +70,12 @@ export interface Plan {
    * `true` the user chose, never inferred; it gates the bond-check action.
    */
   hasBond?: boolean
+  /**
+   * The day `dates.ics` was last downloaded for this resign date. Cleared when
+   * the date moves, because the file in their downloads carries the old one.
+   * Lets the return screen stop asking for the calendar every visit (UX-09).
+   */
+  calendarAddedOn?: string
 }
 
 /**
@@ -89,6 +95,7 @@ const FIELDS = [
   'ticks',
   'companies',
   'hasBond',
+  'calendarAddedOn',
 ] as const
 
 function nonEmptyString(v: unknown): v is string {
@@ -120,6 +127,7 @@ const CLEAN: { [K in (typeof FIELDS)[number]]: (v: unknown) => Plan[K] | undefin
   companies: (v) =>
     Array.isArray(v) ? v.filter(nonEmptyString).map((name) => name.trim()) : undefined,
   hasBond: (v) => (typeof v === 'boolean' ? v : undefined),
+  calendarAddedOn: (v) => (isIsoDate(v) ? v : undefined),
 }
 
 /** Keep only the known fields, and only values that pass that field's own test. */
