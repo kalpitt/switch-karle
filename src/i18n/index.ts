@@ -21,7 +21,7 @@ export type Lang = 'en' | 'hi'
 export const dictionaries: Record<Lang, Record<string, string>> = { en: {}, hi: {} }
 const loaded = new Set<Lang>()
 
-async function loadDictionary(lang: Lang): Promise<void> {
+export async function loadDictionary(lang: Lang): Promise<void> {
   if (loaded.has(lang)) return
   dictionaries[lang] = lang === 'hi' ? (await import('./hi-dictionary')).hiDictionary : (await import('./en')).en
   loaded.add(lang)

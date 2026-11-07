@@ -86,6 +86,8 @@ export const hiSuite: Record<string, string> = {
   'plan.recap.title': 'आपका plan',
   'plan.recap.apply': 'Apply करना {date} तक शुरू कर दें।',
   'plan.recap.offer': '{date} तक offer हाथ में।',
+  'plan.recap.applyNow': 'अभी apply शुरू करें। {date} निकल चुकी है।',
+  'plan.recap.offerLate': 'जितनी जल्दी हो सके offer हाथ में लें। {date} निकल चुकी है।',
   'plan.recap.resign': '{date} को resign करें।',
   'plan.recap.lwd': 'Last working day {date}, {days} दिन के notice के बाद।',
   'plan.recap.forfeit': 'यह आप छोड़ रहे हैं',
@@ -539,7 +541,9 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
   'fnf-checker.weekAssumed':
-    'यह 5-day week मानकर है। 6-day week पर इन्हीं dates के लिए पाँचवें साल में 190 नहीं, 240 working days चाहिए, इसलिए gratuity शायद अभी due न हो। Check करने के लिए home page पर work week वाला सवाल answer करें।',
+    'यह 5-day week मानकर है। 6-day week पर इन्हीं dates के लिए पाँचवें साल में 190 नहीं, 240 working days चाहिए, इसलिए gratuity शायद अभी due न हो। Check करने के लिए gratuity calculator में अपना work week चुनें।',
+  'fnf-checker.basicDAUsed':
+    'यहाँ gratuity आपके basic + DA {amount} पर गिनी गई है, जो आपने अपने plan या gratuity calculator में डाला था, ऊपर वाले monthly basic पर नहीं।',
   'fnf-checker.flag.gratuity-missing':
     'इस sheet में gratuity की line नहीं है। आपकी service पर यह कम से कम ₹{amount} बनता है। अगर आप Code on Social Security, 2020 के तहत eligible हैं, तो HR से writing में settlement में शामिल करने को कहें।',
 
@@ -950,10 +954,10 @@ export const hiSuite: Record<string, string> = {
   'receipt.label': 'स्रोत:',
   'receipt.checked': '{items} ({date} को check किया)',
   'receipt.convention': 'Convention है, कानून नहीं: {text}',
-  'receipt.awaiting-ca': 'अभी chartered accountant ने check नहीं किया: {text}',
-  'receipt.awaiting-lawyer': 'अभी lawyer ने check नहीं किया: {text}',
-  'receipt.open': '{n} बातें अभी किसी chartered accountant या lawyer ने check नहीं कीं',
-  'receipt.openOne': '1 बात अभी किसी chartered accountant या lawyer ने check नहीं की',
+  'receipt.awaiting-ca': 'Chartered accountant का review अभी बाक़ी: {text}',
+  'receipt.awaiting-lawyer': 'Lawyer का review अभी बाक़ी: {text}',
+  'receipt.open': '{n} बातों का chartered accountant या lawyer से review अभी बाक़ी है',
+  'receipt.openOne': '1 बात का chartered accountant या lawyer से review अभी बाक़ी है',
   'receipt.link': 'हम numbers कैसे check करते हैं',
   'ui.privacyLine': 'आप जो type करते हैं, वह कहीं नहीं भेजा जाता। यह इसी browser में save होता है ताकि दोबारा न लिखना पड़े।',
   'ui.privacyErase': 'मिटाएं',

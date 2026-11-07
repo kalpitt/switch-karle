@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Lang } from '../i18n'
-import { useLang, useT } from '../i18n'
+import { loadDictionary, useLang, useT } from '../i18n'
 import { isHiPath, withLang } from '../lib/langPath'
 import { IslandRoot } from './IslandRoot'
 import { buttonClass } from './buttonClass'
@@ -8,12 +8,22 @@ import { buttonClass } from './buttonClass'
 /**
  * The one 404 page. GitHub Pages serves the same 404.html for every missing URL,
  * English or Hindi, so the language is read from the address once the page is
- * running: a miss under /hi/ gets the Hindi page, header and all.
+ * running: a miss under /hi/ gets the Hindi page, header and all. The page is
+ * served with `lang="en"`, so only the English strings were downloaded: the
+ * Hindi ones are fetched first, or every string would fall back to English
+ * (N2).
  */
 export default function NotFoundPage() {
   const [lang, setLang] = useState<Lang>('en')
   useEffect(() => {
-    if (isHiPath(window.location.pathname, import.meta.env.BASE_URL || '/')) setLang('hi')
+    if (!isHiPath(window.location.pathname, import.meta.env.BASE_URL || '/')) return
+    let live = true
+    void loadDictionary('hi').then(() => {
+      if (live) setLang('hi')
+    })
+    return () => {
+      live = false
+    }
   }, [])
   return (
     <IslandRoot key={lang} current="404" lang={lang}>

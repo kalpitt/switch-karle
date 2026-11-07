@@ -589,7 +589,13 @@ function UseMine() {
   const ref = useRef<HTMLButtonElement>(null)
   const jump = () => {
     const tool = ref.current?.closest('[data-tool]')
-    const field = tool?.querySelector<HTMLElement>('input:not([type="hidden"]), select, textarea')
+    // The first field the visitor can see: one inside a closed <details> (the
+    // Decoder's AutoFill box) or otherwise not rendered cannot take focus, so
+    // the tap would do nothing (N1).
+    const fields = tool?.querySelectorAll<HTMLElement>('input:not([type="hidden"]), select, textarea') ?? []
+    const field = [...fields].find(
+      (el) => !el.closest('details:not([open])') && el.getClientRects().length > 0 && !el.hasAttribute('disabled'),
+    )
     if (!field) return
     field.scrollIntoView({ block: 'center', behavior: 'smooth' })
     field.focus({ preventScroll: true })

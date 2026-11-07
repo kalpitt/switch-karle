@@ -140,8 +140,9 @@ function Body() {
             </Card>
           ))}
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
-        {/* Hard stops on the letter: moving on to resigning would be the wrong advice. */}
-        <NextStep from="fake-offer" hidden={!isBlank && reds.length > 0} />
+        {/* Nothing checked yet, or hard stops on the letter: moving on to resigning
+            would be the wrong advice (N3). */}
+        <NextStep from="fake-offer" hidden={isBlank || reds.length > 0} />
       </div>
     </div>
   )

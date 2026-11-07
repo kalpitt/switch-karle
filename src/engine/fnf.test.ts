@@ -87,6 +87,18 @@ describe('gratuity in the F&F checker follows the work week', () => {
     expect(r.gratuityNotOnSheet).toBe(0)
     expect(r.flags.map((f) => f.id)).not.toContain('gratuity-missing')
   })
+
+  // Same dates, basic + DA ₹45,000 given elsewhere: 45,000 × 15/26 × 5 years
+  // = ₹1,29,807.69, rounded to ₹1,29,808. The plain-basic field is ignored for
+  // gratuity once basic + DA is known.
+  it('uses basic + DA for gratuity when it is known, not the plain basic', () => {
+    const r = auditFnF({ ...FIVE_DAY_LEAVER, monthlyBasicDA: 45_000 })
+    expect(r.gratuityNotOnSheet).toBe(129_808)
+  })
+
+  it('falls back to the plain basic when basic + DA is missing or zero', () => {
+    expect(auditFnF({ ...FIVE_DAY_LEAVER, monthlyBasicDA: 0 }).gratuityNotOnSheet).toBe(144_231)
+  })
 })
 
 /**
