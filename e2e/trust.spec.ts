@@ -37,6 +37,16 @@ test('every footer links to the four pages and the source code', async ({ page }
   }
   await expect(footer.locator('a[href="https://github.com/kalpitt/switch-karle"]')).toBeVisible()
   await expect(footer.locator('a[href="/sources/"]').first()).toContainText('Sources checked')
+  // One privacy line (decided 2026-11-07), not a second "never leaves this device".
+  await expect(footer).toContainText('Runs in your browser. Nothing you type is sent anywhere.')
+  await expect(footer).not.toContainText('never leaves this device')
+})
+
+test('the Hindi footer carries the same single privacy line', async ({ page }) => {
+  await page.goto('/hi/gratuity/')
+  const footer = page.locator('footer').last()
+  await expect(footer).toContainText('आपके browser में चलता है। आप जो type करते हैं, वह कहीं नहीं भेजा जाता।')
+  await expect(footer).not.toContainText('इस device से बाहर कभी नहीं जाता')
 })
 
 test('a statutory verdict carries its receipt, and the form says what happens to what you type', async ({ page }) => {

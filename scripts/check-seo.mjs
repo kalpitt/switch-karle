@@ -65,12 +65,30 @@ export function checkHtmlHead(html, rel = 'page.html', titles = new Map()) {
   const normalizedTitle = rawTitle ? rawTitle.trim().replace(/\s+/g, ' ').toLowerCase() : ''
   if (!rawTitle || !normalizedTitle) {
     errors.push(`check-seo: FAIL — ${rel} missing <title>`)
-  } else if (titles.has(normalizedTitle)) {
-    errors.push(`check-seo: FAIL — duplicate title "${rawTitle}" on ${rel} and ${titles.get(normalizedTitle)}`)
   } else {
-    titles.set(normalizedTitle, rel)
+    // Unique within a language. A Hindi twin may share its English page's title
+    // (hreflang ties the two): since 2026-11-07 the brand is "Switch Karle" in
+    // both, and some Hindi tool names are the English words.
+    const key = `${/^hi(?:[\\/]|$)/.test(rel) ? 'hi' : 'en'}:${normalizedTitle}`
+    if (titles.has(key)) {
+      errors.push(`check-seo: FAIL — duplicate title "${rawTitle}" on ${rel} and ${titles.get(key)}`)
+    } else {
+      titles.set(key, rel)
+    }
   }
   return { ok: errors.length === 0, errors }
+}
+
+/**
+ * The registry slugs that are pages of their own. An entry with `partOf` is a
+ * What to say situation, which lives inside that page (`/what-to-say/#slug`)
+ * and has no address or sitemap entry of its own (decided 2026-11-07).
+ */
+export function pageSlugs(toolsSource) {
+  const entries = [...toolsSource.matchAll(/slug:\s*'([a-z0-9-]+)'/g)]
+  return entries
+    .filter((m, i) => !/\bpartOf:/.test(toolsSource.slice(m.index, entries[i + 1]?.index ?? toolsSource.length)))
+    .map((m) => m[1])
 }
 
 export function checkSitemap(sitemap, slugs, base = BASE, site = SITE) {
@@ -209,7 +227,7 @@ export function runSeoCheck(options = {}) {
     failed = true
   } else {
     const sitemap = readFileSync(sitemapPath, 'utf8')
-    const slugs = [...readFileSync(toolsPath, 'utf8').matchAll(/slug:\s*'([a-z0-9-]+)'/g)].map((m) => m[1])
+    const slugs = pageSlugs(readFileSync(toolsPath, 'utf8'))
     const { ok, errors } = checkSitemap(sitemap, slugs, base, site)
     if (!ok) {
       for (const err of errors) console.error(err)

@@ -92,9 +92,10 @@ export const PLAN_TARGET = 'plan' as const
  * map holds only the order of the walk. `journey.test.ts` checks that every
  * tool has an entry, that no link steps back a stage, and that no chain cycles.
  *
- * Two side paths join the main chain rather than sit on it: decline-accepted
- * (backing out of an accepted offer) and offer-goes-cold (an offer going quiet
- * during notice). fake-offer and relieving-chaser skip past them.
+ * Two side paths leave the main chain: decline-accepted (backing out of an
+ * accepted offer) goes back to the plan (decided 2026-11-07), and
+ * offer-goes-cold (an offer going quiet during notice) rejoins at the notice
+ * tracker. fake-offer and relieving-chaser skip past them.
  */
 export const NEXT_STEP: Readonly<Record<string, string>> = {
   // 0 I'm done here
@@ -122,7 +123,8 @@ export const NEXT_STEP: Readonly<Record<string, string>> = {
   'esop-reality': 'relocation',
   relocation: 'fake-offer',
   'fake-offer': 'resignation-letter',
-  'decline-accepted': 'resignation-letter',
+  // Backed out of an accepted offer: nothing to resign from, so back to the plan.
+  'decline-accepted': PLAN_TARGET,
   // 4 Telling them
   'resignation-letter': 'manager-script',
   'manager-script': 'counter-offer',

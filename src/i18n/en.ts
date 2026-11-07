@@ -166,7 +166,8 @@ export const en: Record<string, string> = {
   'app.skipToContent': 'Skip to content',
   'app.tagline': 'The whole job switch, from “I’m done here” to surviving notice and day 90.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
-  'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source ·',
+  'app.footer.badge': 'Runs in your browser. Nothing you type is sent anywhere.',
+  'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source',
   'app.footer.privacy': 'your data never leaves this device',
   'app.footer.verified': 'Sources checked {from} – {to}',
   'app.footer.feedback': 'Found a wrong number or a bug? Tell me:',
@@ -529,6 +530,7 @@ export const en: Record<string, string> = {
   'gratuity.covered': 'Employer has had 10 or more staff, now or in the past',
   'gratuity.coveredHint': 'Gratuity under the Code on Social Security, 2020 covers an establishment with ten or more employees on any day of the last twelve months, and keeps covering it if numbers later fall (First Schedule item V; s.1(8)). We ask; we do not assume.',
   'gratuity.week5.label': '5-day work week (Sat–Sun off)',
+  'gratuity.weekAssumed': 'We assume a five-day week. Switch this if you work six days.',
   'gratuity.week5.hint': 'A 5-day establishment qualifies at 4 years + 190 working days into year five; a 6-day one needs 240 working days. Weekly offs do not count. This is the earliest date — public holidays and unpaid or unearned leave push it later.',
   'gratuity.verdict.yes': 'About {amount} in gratuity. You have {years} completed years, so you qualify.',
   'gratuity.formula': 'Worked out as 15/26 × last drawn basic + DA × payable years.',
@@ -614,7 +616,7 @@ export const en: Record<string, string> = {
   'fnf-checker.flag.negative-net': 'You may owe them — recomputed net is −₹{amount}; recoveries exceed earnings.',
   'fnf-checker.flag.notice-recovery': '₹{amount} recovered as notice — verify the basis (basic vs gross) and divisor in your appointment letter.',
   'fnf-checker.weekAssumed':
-    'This assumes a five-day week. On a six-day week the same dates need 240 working days in year five, not 190, so gratuity may not be due yet. Set your work week in the gratuity calculator to check.',
+    'This assumes a five-day week. On a six-day week the same dates need 240 working days in year five, not 190, so gratuity may not be due yet. Switch the work week above if you work six days.',
   'fnf-checker.basicDAUsed':
     'Gratuity here uses your basic + DA of {amount}, the figure you gave in your plan or the gratuity calculator, not the monthly basic above.',
   'fnf-checker.flag.gratuity-missing':
@@ -968,6 +970,7 @@ export const en: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'Your offer',
+  'decoder.stickyLabel': 'In your bank {amount}/month',
   'decoder.seeded':
     'CTC and notice period carried from a tracker card. Everything else is from the offer you last saved here, so check it before you trust the result.',
   'decoder.field.ctc.label': 'Total CTC',

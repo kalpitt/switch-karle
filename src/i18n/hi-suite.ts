@@ -470,6 +470,7 @@ export const hiSuite: Record<string, string> = {
   'gratuity.covered': 'Employer के पास अभी या पहले कभी 10 या ज़्यादा लोग रहे हैं',
   'gratuity.coveredHint': 'Code on Social Security, 2020 के तहत gratuity उस establishment पर लागू होती है जहाँ पिछले बारह महीनों में किसी भी दिन दस या ज़्यादा employees रहे हों, और बाद में संख्या घटने पर भी लागू रहती है (First Schedule item V; s.1(8))। हम पूछते हैं; मानकर नहीं चलते।',
   'gratuity.week5.label': '5-day work week (शनि–रवि बंद)',
+  'gratuity.weekAssumed': 'हम 5-day week मानकर चल रहे हैं। अगर आप हफ़्ते में छह दिन काम करते हैं, तो इसे बदल दें।',
   'gratuity.week5.hint': '5-day establishment में पाँचवें साल के 4 साल + 190 working days पर qualify होते हैं; 6-day वाले को 240 working days चाहिए। Weekly off नहीं गिनते। यह सबसे पहली मुमकिन date है — public holidays और unpaid या unearned leave से यह आगे खिसक सकती है।',
   'gratuity.verdict.yes': 'Gratuity लगभग {amount}। आपके {years} completed years हैं, इसलिए आप eligible हैं।',
   'gratuity.formula': 'हिसाब: 15/26 × last drawn basic + DA × payable years।',
@@ -555,7 +556,7 @@ export const hiSuite: Record<string, string> = {
   'fnf-checker.flag.negative-net': 'आपको उन्हें देना पड़ सकता है — recomputed net −₹{amount} है; recoveries earnings से ज़्यादा हैं।',
   'fnf-checker.flag.notice-recovery': '₹{amount} notice के नाम पर recover हुआ है — appointment letter में basis (basic बनाम gross) और divisor check करें।',
   'fnf-checker.weekAssumed':
-    'यह 5-day week मानकर है। 6-day week पर इन्हीं dates के लिए पाँचवें साल में 190 नहीं, 240 working days चाहिए, इसलिए gratuity शायद अभी due न हो। Check करने के लिए gratuity calculator में अपना work week चुनें।',
+    'यह 5-day week मानकर है। 6-day week पर इन्हीं dates के लिए पाँचवें साल में 190 नहीं, 240 working days चाहिए, इसलिए gratuity शायद अभी due न हो। अगर आप हफ़्ते में छह दिन काम करते हैं, तो ऊपर work week बदल दें।',
   'fnf-checker.basicDAUsed':
     'यहाँ gratuity आपके basic + DA {amount} पर गिनी गई है, जो आपने अपने plan या gratuity calculator में डाला था, ऊपर वाले monthly basic पर नहीं।',
   'fnf-checker.flag.gratuity-missing':

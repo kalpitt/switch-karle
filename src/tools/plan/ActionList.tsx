@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { nextAction, visibleActions, type ActionDef } from '../../data/actions'
 import type { ActionId, Plan } from '../../data/plan'
 import { TextArea } from '../../components/ui'
-import { withLang } from '../../lib/langPath'
 import type { Lang } from '../../i18n'
+import { toolHref } from '../../lib/toolHref'
 
 type T = (key: string, vars?: Record<string, string | number>) => string
 
@@ -77,7 +77,7 @@ function ActionRow(props: {
 }) {
   const { a, t, plan } = props
   const ticked = plan.ticks?.[a.id] != null
-  const href = a.where.startsWith('tool:') ? withLang(props.lang, a.where.slice(5)) : null
+  const href = a.where.startsWith('tool:') ? toolHref(props.lang, a.where.slice(5)) : null
   return (
     <li className={`rounded-xl border px-3 py-2.5 ${props.isNext ? 'border-saffron' : 'border-line'}`}>
       <label className="flex cursor-pointer items-start gap-2.5">

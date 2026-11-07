@@ -20,9 +20,9 @@ import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { NOTICE_TOOL } from '../../data/noticeLinks'
 import { TOOLS } from '../../data/tools'
 import { formatLongDate } from '../../lib/formatDate'
-import { withLang } from '../../lib/langPath'
 import { readJson, writeJson } from '../../lib/storage'
 import { useLang, useT, type Lang } from '../../i18n'
+import { toolHref } from '../../lib/toolHref'
 
 const STORAGE_KEY = 'switchkarle.notice.v1' as const
 
@@ -48,7 +48,7 @@ function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done:
   if (!tool) return null
   return (
     <a
-      href={withLang(lang, slug)}
+      href={toolHref(lang, slug)}
       className="no-print inline-flex min-h-[44px] shrink-0 items-center rounded-xl border border-line-strong px-3 text-[13px] font-semibold text-ink-soft transition-colors hover:border-field hover:text-ink"
     >
       {t('notice-tracker.open', { tool: t(tool.titleKey) })}

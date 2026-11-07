@@ -3,6 +3,7 @@ import { nextFor } from '../data/journey'
 import { withLang } from '../lib/langPath'
 import { useLang, useT } from '../i18n'
 import { ChevronRight } from './icons'
+import { toolHref } from '../lib/toolHref'
 
 /**
  * One next thing under a tool's result (PRODUCT.md rule 9, UX-14, IA-02): a
@@ -26,7 +27,7 @@ export function NextStep({ from, hidden = false }: { from: string; hidden?: bool
     tool && here && tool.journey > here.journey
       ? t('next.label.stage', { stage: t(`journey.${tool.journey}.name`) })
       : t('next.label')
-  const href = tool ? withLang(lang, tool.slug) : withLang(lang)
+  const href = tool ? toolHref(lang, tool.slug) : withLang(lang)
   const title = tool ? t(tool.titleKey) : t('next.plan.title')
   const desc = tool ? t(tool.descKey) : t('next.plan.desc')
 

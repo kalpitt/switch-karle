@@ -101,11 +101,11 @@ export function Shell({ current, children }: { current: string; children: ReactN
           <div>
             <p className="flex items-start gap-2 text-[14px] font-semibold leading-snug text-ink">
               <ShieldCheck size={18} className="mt-px text-leaf" />
-              {t('app.privacyBadge')}
+              {t('app.footer.badge')}
             </p>
-            <p className="mt-3 max-w-[60ch]">
-              {t('app.footer.rules')} {t('app.footer.privacy')}
-            </p>
+            {/* Decided 2026-11-07: one privacy line, the badge above. `app.footer.privacy`
+                is no longer rendered; its key stays in the dictionaries. */}
+            <p className="mt-3 max-w-[60ch]">{t('app.footer.rules')}</p>
             {/* The dates come from the sources registry: the oldest and newest check of a
                 verified rule. One hand-set date for the whole site could not be true. */}
             <a

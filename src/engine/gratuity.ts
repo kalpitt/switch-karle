@@ -10,7 +10,8 @@ export interface GratuityInput {
   /**
    * Working days per week at the establishment. Sets the s.54 fast-path
    * threshold into year five: 190 days on a 5-day week, 240 on a 6-day week.
-   * Defaults to 6 (the more common schedule).
+   * Defaults to 5 until the person says otherwise (decided 2026-11-07,
+   * Kalpit): the screen says the five-day week is assumed.
    */
   workWeekDays?: 5 | 6
 }
@@ -136,7 +137,7 @@ function payableYearsFor(joinISO: string, exitISO: string, completedYears: numbe
  */
 export function gratuityEligibilityDate(
   joinDate: string,
-  workWeekDays: 5 | 6 = 6,
+  workWeekDays: 5 | 6 = 5,
   coveredByAct = true,
 ): string | null {
   if (!coveredByAct) return null
@@ -158,7 +159,7 @@ function flipDateWhenIneligible(
 }
 
 export function gratuity(input: GratuityInput): GratuityResult {
-  const workWeekDays = input.workWeekDays ?? 6
+  const workWeekDays = input.workWeekDays ?? 5
   const fastPathDays = FAST_PATH_DAYS[workWeekDays]
   const lastDrawnBasicDA = Math.max(0, input.lastDrawnBasicDA)
   // completedYears/daysIntoCurrentYear are threshold-independent; the s.54

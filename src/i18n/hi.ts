@@ -26,7 +26,8 @@ export const hi: Record<string, string> = {
   'app.skipToContent': 'सीधे content पर जाएं',
   'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई नौकरी के day 90 तक।',
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
-  'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source ·',
+  'app.footer.badge': 'आपके browser में चलता है। आप जो type करते हैं, वह कहीं नहीं भेजा जाता।',
+  'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source',
   'app.footer.privacy': 'आपका data इस device से बाहर कभी नहीं जाता',
   'app.footer.verified': 'Sources {from} से {to} के बीच check किए गए',
   'app.footer.feedback': 'कोई number ग़लत लगा या bug मिला? मुझे बताएं:',
@@ -112,6 +113,7 @@ export const hi: Record<string, string> = {
 
   // ---- Decoder form ----
   'decoder.title': 'आपका offer',
+  'decoder.stickyLabel': 'आपके bank में {amount}/month',
   'decoder.seeded':
     'CTC और notice period एक tracker card से आए हैं। बाक़ी सब आपके यहाँ पिछली बार save किए offer से है, इसलिए result पर भरोसा करने से पहले जाँच लें।',
   'decoder.field.ctc.label': 'Total CTC',
@@ -398,7 +400,7 @@ export const hi: Record<string, string> = {
   // ---- Red-flag overrides (UI layer only; engine strings stay canonical English) ----
   'flag.notice-period.title': '{days} दिन का notice period',
   'flag.notice-period.detail':
-    'कोई भारतीय कानून 90 दिन का notice ज़रूरी नहीं बनाता — यह पूरी तरह contractual है। लंबा notice period आपको कम hirable बनाता है (companies 30-दिन में join करने वालों को prefer करती हैं) और आपकी अगली switch में negotiating power कमज़ोर करता है। Market बदल चुका है: Cognizant ने 2023 में 30 दिन कर दिया; Flipkart, Razorpay और Swiggy 30-दिन का standard रखते हैं।',
+    'कोई भारतीय कानून 90 दिन का notice ज़रूरी नहीं बनाता — यह पूरी तरह contractual है। लंबा notice period आपको कम hirable बनाता है (companies 30-दिन में join करने वालों को prefer करती हैं) और आपकी अगली switch में negotiating power कमज़ोर करता है।',
   'flag.notice-period.tip':
     'पूछें: "क्या हम 30–60 दिन का notice रख सकते हैं, या एक buyout clause जहां कोई भी पक्ष notice के बदले पैसे दे सके?" Buyout formula लिखित में लें।',
 

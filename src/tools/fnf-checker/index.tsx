@@ -72,7 +72,9 @@ function Body() {
   const [example, setExample] = useState<Draft | null>(DEFAULT_DRAFT)
   /** The plan dates placed on boot; empty when the tool had its own saved draft. */
   const [seeded, setSeeded] = useState<PlanDates>({})
-  // Read, never written here: the door asks it. Unknown is handled by the engine.
+  // Shared with the door and the gratuity calculator. Unknown reads as five
+  // days in the engine; the switch below lets the person pick here too, and
+  // writes the answer back so every tool agrees (decided 2026-11-07).
   const [workWeekDays, setWorkWeekDays] = useState<5 | 6 | undefined>(undefined)
   // Same: read-only from the door's coveredByAct answer. A user who told the
   // door their employer never had ten employees must not get a gratuity flag
@@ -248,6 +250,23 @@ function Body() {
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
         <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
+        {draft.gratuityEligible && (
+          <>
+            <Toggle
+              label={t('gratuity.week5.label')}
+              checked={(workWeekDays ?? 5) === 5}
+              onChange={(v) => {
+                const week = v ? 5 : 6
+                setWorkWeekDays(week)
+                rememberCurrentJob({ workWeekDays: week })
+              }}
+            />
+            {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
+            {workWeekDays === undefined && (
+              <p className="text-[13px] leading-snug text-ink-soft">{t('gratuity.weekAssumed')}</p>
+            )}
+          </>
+        )}
         <TextField
           label={t('fnf-checker.mailHr')}
           hint={t('fnf-checker.mailHrHint')}
