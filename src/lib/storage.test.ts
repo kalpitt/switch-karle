@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { migrateJson, readJson, reconcile, resetBootEchoForTests, writeJson } from './storage'
+import { migrateJson, readJson, reconcile, resetBootEchoForTests, STORAGE_BLOCKED_EVENT, writeJson } from './storage'
 import type { StorageKey } from './storage'
 
 class MemoryStorage {
@@ -174,5 +174,50 @@ describe('reconcile: saved drafts from older versions', () => {
   it('passes non-object fallbacks through unchanged', () => {
     expect(reconcile(5, 0)).toBe(5)
     expect(reconcile([3], [] as number[])).toEqual([3])
+  })
+})
+
+describe('storage blocked notice', () => {
+  class ThrowingStorage extends MemoryStorage {
+    override setItem(): void {
+      throw new Error('QuotaExceededError')
+    }
+  }
+
+  function listen() {
+    const target = new EventTarget()
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: target })
+    let fired = 0
+    target.addEventListener(STORAGE_BLOCKED_EVENT, () => fired++)
+    return () => fired
+  }
+
+  afterEach(() => {
+    Reflect.deleteProperty(globalThis, 'window')
+  })
+
+  it('fires once when a real write cannot be stored', () => {
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: new ThrowingStorage() })
+    resetBootEchoForTests()
+    const fired = listen()
+    expect(writeJson('switchkarle.demo.v1', { n: 1 })).toBe(false)
+    expect(writeJson('switchkarle.demo.v1', { n: 2 })).toBe(false)
+    expect(fired()).toBe(1)
+  })
+
+  it('stays quiet for the boot echo of a tool’s own defaults', () => {
+    Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: new ThrowingStorage() })
+    resetBootEchoForTests()
+    const fired = listen()
+    readJson('switchkarle.demo.v1', { n: 0 })
+    expect(writeJson('switchkarle.demo.v1', { n: 0 })).toBe(false)
+    expect(fired()).toBe(0)
+  })
+
+  it('stays quiet when storage works', () => {
+    install()
+    const fired = listen()
+    expect(writeJson('switchkarle.demo.v1', { n: 1 })).toBe(true)
+    expect(fired()).toBe(0)
   })
 })

@@ -1,5 +1,8 @@
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
+import { formatINR } from '../engine/format'
+import { useLang } from '../i18n'
+import { formatLongDate } from '../lib/formatDate'
 import { parseINRInput } from '../lib/money'
 import { noticeLooksLikeMonths, noticeMonthsToDays } from '../lib/noticeMonths'
 
@@ -17,8 +20,62 @@ export function Label({ children, hint }: { children: ReactNode; hint?: string }
       {/* block + leading-snug: an inline 13px span inside a 16px/24px line box left wrapped
           labels with 24px gaps between their lines. */}
       <span className="block text-[13px] font-semibold leading-snug text-ink">{children}</span>
-      {hint && <span className="mt-0.5 block text-[13px] leading-snug text-ink-faint">{hint}</span>}
+      {hint && <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">{hint}</span>}
     </span>
+  )
+}
+
+/** The bordered box every text-like control sits in. `field` is a 3:1 border; the
+ *  ring is the focus indicator, since the inputs inside draw no outline of their own. */
+const BOX =
+  'rounded-xl border border-field bg-paper px-3 focus-within:border-saffron focus-within:ring-2 focus-within:ring-saffron/40'
+
+type FieldAria = { 'aria-labelledby'?: string; 'aria-describedby'?: string }
+
+/**
+ * Label, hint and control, wired for a screen reader: the control is named by the
+ * label alone and described by the hint (and any echo line), instead of reading the
+ * whole hint as its name on every focus. The outer <label> keeps the large click area.
+ */
+function Field({
+  label,
+  hint,
+  required,
+  describedBy,
+  after,
+  children,
+}: {
+  label: ReactNode
+  hint?: string
+  required?: boolean
+  /** Another element id that describes the control, e.g. an echo line. */
+  describedBy?: (id: string) => string | undefined
+  after?: (id: string) => ReactNode
+  children: (aria: FieldAria) => ReactNode
+}) {
+  const id = useId()
+  const described = [hint ? `${id}-hint` : undefined, describedBy?.(id)].filter(Boolean).join(' ')
+  return (
+    <label className="block">
+      <span className="block">
+        <span id={`${id}-label`} className="block text-[13px] font-semibold leading-snug text-ink">
+          {label}
+          {required && (
+            <span aria-hidden className="text-alarm">
+              {' '}
+              *
+            </span>
+          )}
+        </span>
+        {hint && (
+          <span id={`${id}-hint`} className="mt-0.5 block text-[13px] leading-snug text-ink-soft">
+            {hint}
+          </span>
+        )}
+      </span>
+      {children({ 'aria-labelledby': `${id}-label`, 'aria-describedby': described || undefined })}
+      {after?.(id)}
+    </label>
   )
 }
 
@@ -32,18 +89,21 @@ export function NumberField(props: {
   max?: number
   min?: number
   allowBlank?: boolean
+  /** Whole numbers only (days, months, counts): phones show the plain digit pad. */
+  integer?: boolean
 }) {
   const min = props.min ?? 0
   const isFinite = Number.isFinite(props.value)
   const displayValue = isFinite ? props.value : props.allowBlank ? '' : 0
   return (
-    <label className="block">
-      <Label hint={props.hint}>{props.label}</Label>
-      <span className="mt-1.5 flex items-center gap-2 rounded-xl border border-line bg-paper px-3 focus-within:border-saffron">
+    <Field label={props.label} hint={props.hint}>
+      {(aria) => (
+      <span className={`mt-1.5 flex items-center gap-2 ${BOX}`}>
         <input
+          {...aria}
           type="number"
-          inputMode="decimal"
-          className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
+          inputMode={props.integer ? 'numeric' : 'decimal'}
+          className="tnum w-full bg-transparent py-3 text-[15px] font-medium outline-none"
           value={displayValue}
           min={min}
           max={props.max}
@@ -56,9 +116,10 @@ export function NumberField(props: {
             props.onChange(Math.max(min, Number(e.target.value)))
           }}
         />
-        {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-faint">{props.suffix}</span>}
+        {props.suffix && <span className="shrink-0 text-xs font-medium text-ink-soft">{props.suffix}</span>}
       </span>
-    </label>
+      )}
+    </Field>
   )
 }
 
@@ -84,7 +145,7 @@ export function NoticeMonthsNudge(props: {
       <button
         type="button"
         onClick={() => props.onUse(days)}
-        className="ml-1 inline-block cursor-pointer rounded-full border border-amberflag/40 bg-card px-2 py-0.5 text-xs font-bold hover:underline"
+        className="ml-1 mt-1 inline-flex min-h-[44px] cursor-pointer items-center rounded-full border border-amberflag/40 bg-card px-3 text-xs font-bold hover:underline"
       >
         {props.t('ui.noticeMonthsUse', { days })}
       </button>
@@ -104,11 +165,11 @@ export function Toggle(props: {
       role="switch"
       aria-checked={props.checked}
       onClick={() => props.onChange(!props.checked)}
-      className="flex w-full items-center justify-between gap-3 rounded-xl border border-line bg-paper px-3 py-2.5 text-left"
+      className="flex min-h-[48px] w-full items-center justify-between gap-3 rounded-xl border border-line bg-paper px-3 py-2.5 text-left"
     >
       <Label hint={props.hint}>{props.label}</Label>
       <span
-        className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${props.checked ? 'bg-saffron' : 'bg-line'}`}
+        className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${props.checked ? 'bg-saffron' : 'bg-field'}`}
       >
         <span
           className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${props.checked ? 'translate-x-[18px]' : 'translate-x-0.5'}`}
@@ -128,21 +189,45 @@ export function TextField(props: {
   required?: boolean
   max?: string
 }) {
+  const isDate = props.type === 'date'
   return (
-    <label className="block">
-      <Label hint={props.hint}>{props.label}</Label>
-      <span className="mt-1.5 flex items-center gap-2 rounded-xl border border-line bg-paper px-3 focus-within:border-saffron">
-        <input
-          type={props.type ?? 'text'}
-          className="w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
-          value={props.value}
-          placeholder={props.placeholder}
-          required={props.required}
-          max={props.max}
-          onChange={(e) => props.onChange(e.target.value)}
-        />
-      </span>
-    </label>
+    <Field
+      label={props.label}
+      hint={props.hint}
+      required={props.required}
+      after={isDate ? () => <DateEcho iso={props.value} /> : undefined}
+    >
+      {(aria) => (
+        <span className={`mt-1.5 flex items-center gap-2 ${BOX}`}>
+          <input
+            {...aria}
+            type={props.type ?? 'text'}
+            className="w-full bg-transparent py-3 text-[15px] font-medium outline-none"
+            value={props.value}
+            placeholder={props.placeholder}
+            required={props.required}
+            max={props.max}
+            onChange={(e) => props.onChange(e.target.value)}
+          />
+        </span>
+      )}
+    </Field>
+  )
+}
+
+/**
+ * A native date input prints in the browser's locale, so on an en-US phone
+ * 01/12/2022 could be 12 January or 1 December. The date in words, in the page's
+ * language, removes the doubt. Hidden from screen readers, which already read the
+ * date from the input itself.
+ */
+function DateEcho({ iso }: { iso: string }) {
+  const { lang } = useLang()
+  if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(iso)) return null
+  return (
+    <span aria-hidden className="mt-1 block text-[13px] font-medium text-ink-soft">
+      {formatLongDate(iso, lang)}
+    </span>
   )
 }
 
@@ -156,17 +241,19 @@ export function TextArea(props: {
   onKeyDown?: (e: ReactKeyboardEvent<HTMLTextAreaElement>) => void
 }) {
   return (
-    <label className="block">
-      <Label hint={props.hint}>{props.label}</Label>
-      <textarea
-        className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
-        rows={props.rows ?? 3}
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-        onBlur={props.onBlur}
-        onKeyDown={props.onKeyDown}
-      />
-    </label>
+    <Field label={props.label} hint={props.hint}>
+      {(aria) => (
+        <textarea
+          {...aria}
+          className="mt-1.5 w-full rounded-xl border border-field bg-paper px-3 py-3 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
+          rows={props.rows ?? 3}
+          value={props.value}
+          onChange={(e) => props.onChange(e.target.value)}
+          onBlur={props.onBlur}
+          onKeyDown={props.onKeyDown}
+        />
+      )}
+    </Field>
   )
 }
 
@@ -178,27 +265,29 @@ export function Select<T extends string>(props: {
   onChange: (v: T) => void
 }) {
   return (
-    <label className="block">
-      <Label hint={props.hint}>{props.label}</Label>
-      <select
-        className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[15px] font-medium outline-none focus:border-saffron"
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value as T)}
-      >
-        {props.options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <Field label={props.label} hint={props.hint}>
+      {(aria) => (
+        <select
+          {...aria}
+          className="mt-1.5 w-full rounded-xl border border-field bg-paper px-3 py-3 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
+          value={props.value}
+          onChange={(e) => props.onChange(e.target.value as T)}
+        >
+          {props.options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      )}
+    </Field>
   )
 }
 
 export function Details({ summary, children }: { summary: string; children: ReactNode }) {
   return (
     <details className="group rounded-xl border border-line bg-paper">
-      <summary className="cursor-pointer select-none list-none px-3 py-2.5 text-[13px] font-semibold text-ink-soft group-open:border-b group-open:border-line">
+      <summary className="min-h-[44px] cursor-pointer select-none list-none px-3 py-3 text-[13px] font-semibold text-ink-soft group-open:border-b group-open:border-line">
         <span className="mr-1 inline-block transition-transform group-open:rotate-90">▸</span>
         {summary}
       </summary>
@@ -212,7 +301,7 @@ export function StatTile({ label, value, hint }: { label: string; value: string;
     <div className="rounded-xl border border-line bg-paper p-3">
       <p className="text-xs font-semibold text-ink-soft">{label}</p>
       <p className="tnum mt-1 text-2xl font-extrabold tracking-tight">{value}</p>
-      {hint && <p className="mt-0.5 text-xs text-ink-faint">{hint}</p>}
+      {hint && <p className="mt-0.5 text-xs text-ink-soft">{hint}</p>}
     </div>
   )
 }
@@ -229,32 +318,49 @@ export function VerdictBanner({
     alarm: 'border-alarm/30 bg-alarm-soft text-alarm',
     amber: 'border-amberflag/30 bg-amberflag-soft text-amberflag',
   }[tone]
-  return <p className={`rounded-xl border px-3 py-2.5 text-[15px] font-bold leading-snug ${cls}`}>{children}</p>
+  // A live region: the verdict recomputes as the user types, and without this a
+  // screen reader user changes a number and hears nothing come back.
+  return (
+    <p role="status" className={`rounded-xl border px-3 py-2.5 text-[15px] font-bold leading-snug ${cls}`}>
+      {children}
+    </p>
+  )
 }
 
 export function DeltaTable({
   aLabel,
   bLabel,
   rows,
+  rowHeader = '',
 }: {
   aLabel: string
   bLabel: string
   rows: { label: string; a: string; b: string }[]
+  /** Read to screen readers as the name of the row-label column. */
+  rowHeader?: string
 }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-[13px]">
         <thead>
           <tr className="text-left text-ink-soft">
-            <th className="pb-2 font-semibold" />
-            <th className="pb-2 font-semibold">{aLabel}</th>
-            <th className="pb-2 font-semibold">{bLabel}</th>
+            <th scope="col" className="pb-2 font-semibold">
+              {rowHeader && <span className="sr-only">{rowHeader}</span>}
+            </th>
+            <th scope="col" className="pb-2 font-semibold">
+              {aLabel}
+            </th>
+            <th scope="col" className="pb-2 font-semibold">
+              {bLabel}
+            </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.label} className="border-t border-line">
-              <td className="py-2 text-ink-soft">{r.label}</td>
+              <th scope="row" className="py-2 text-left font-normal text-ink-soft">
+                {r.label}
+              </th>
               <td className="tnum py-2 font-medium">{r.a}</td>
               <td className="tnum py-2 font-medium">{r.b}</td>
             </tr>
@@ -288,9 +394,9 @@ export function CopyButton({
     <button
       type="button"
       onClick={copy}
-      className="rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft transition-transform active:scale-[0.98]"
+      className="min-h-[44px] rounded-xl border border-line px-4 py-3 text-[13px] font-bold text-ink-soft transition-transform active:scale-[0.98]"
     >
-      {copied ? copiedLabel : label}
+      <span aria-live="polite">{copied ? copiedLabel : label}</span>
     </button>
   )
 }
@@ -300,7 +406,7 @@ export function PrintButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => window.print()}
-      className="no-print rounded-xl border border-line px-4 py-2.5 text-[13px] font-bold text-ink-soft transition-transform active:scale-[0.98]"
+      className="no-print min-h-[44px] rounded-xl border border-line px-4 py-3 text-[13px] font-bold text-ink-soft transition-transform active:scale-[0.98]"
     >
       {label}
     </button>
@@ -331,6 +437,8 @@ export function DateField(props: {
 export function MoneyField(props: {
   label: string
   hint?: string
+  /** Shown only while the field is empty: the accepted formats, e.g. "12L". */
+  placeholder?: string
   value: number
   onChange: (v: number) => void
 }) {
@@ -348,15 +456,36 @@ export function MoneyField(props: {
     props.onChange(parsed)
   }
 
+  // The amount as it will be read, in lakh/crore grouping, under the field. Phones
+  // open a digit pad here, so a missing zero is the common slip: this shows it.
+  const parsed = parseINRInput(text)
+  const echo = text.trim() !== '' && Number.isFinite(parsed) && parsed > 0 ? formatINR(parsed) : ''
+
   return (
-    <label className="block">
-      <Label hint={props.hint}>{props.label}</Label>
-      <span className="mt-1.5 flex items-center gap-2 rounded-xl border border-line bg-paper px-3 focus-within:border-saffron">
-        <span className="shrink-0 text-xs font-medium text-ink-faint">₹</span>
+    <Field
+      label={props.label}
+      hint={props.hint}
+      describedBy={(id) => (echo ? `${id}-echo` : undefined)}
+      after={(id) =>
+        echo ? (
+          <span id={`${id}-echo`} className="tnum mt-1 block text-[13px] font-semibold text-ink-soft">
+            {echo}
+          </span>
+        ) : null
+      }
+    >
+      {(aria) => (
+      <span className={`mt-1.5 flex items-center gap-2 ${BOX}`}>
+        <span aria-hidden className="shrink-0 text-[15px] font-medium text-ink-soft">
+          ₹
+        </span>
         <input
+          {...aria}
           type="text"
           inputMode="decimal"
-          className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none"
+          enterKeyHint="done"
+          className="tnum w-full bg-transparent py-3 text-[15px] font-medium outline-none placeholder:font-normal placeholder:text-ink-faint"
+          placeholder={props.placeholder}
           value={text}
           onFocus={() => setFocused(true)}
           onBlur={() => {
@@ -370,7 +499,8 @@ export function MoneyField(props: {
           }}
         />
       </span>
-    </label>
+      )}
+    </Field>
   )
 }
 
@@ -437,7 +567,7 @@ export function ExampleNote({
  */
 export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel: string; href: string }) {
   return (
-    <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-xs leading-relaxed text-ink-faint">
+    <p className="rounded-xl border border-line bg-paper px-3 py-2.5 text-xs leading-relaxed text-ink-soft">
       {text}{' '}
       <a href={href} className="font-semibold text-saffron underline">
         {linkLabel}

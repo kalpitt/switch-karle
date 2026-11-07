@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Scaffold a micro-tool: engine stub + failing golden, React island,
- * registry row, English i18n keys. Does not write Hindi. Patches the
- * catch-all `src/pages/[tool].astro` with one import + one island line
+ * registry row, English i18n keys. Does not write Hindi. Patches
+ * `src/components/ToolIslands.astro` with one import + one island line
  * because Astro requires a static import for `client:load`.
  *
  * Usage: node scripts/new-tool.mjs <kebab-slug>

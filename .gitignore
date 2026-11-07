@@ -26,3 +26,7 @@ dist-ssr
 
 # Agent scratch from multi-agent runs — never commit
 .agents/
+
+# Playwright output
+test-results/
+playwright-report/

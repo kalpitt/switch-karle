@@ -83,8 +83,12 @@ function Body() {
     `${t('leave-encashment.gross')}: ${formatINR(result.gross)}`,
     `${t('leave-encashment.exempt')}: ${formatINR(result.exempt)}`,
     `${t('leave-encashment.taxable')}: ${formatINR(result.taxable)}`,
+    result.isResignation ? t('leave-encashment.caseNote') : '',
+    t('leave-encashment.limbsNote'),
     t('ui.disclaimer'),
-  ].join('\n')
+  ]
+    .filter(Boolean)
+    .join('\n')
 
   return (
     <div data-tool="leave-encashment" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -93,7 +97,7 @@ function Body() {
         <NumberField label={t('leave-encashment.days')} suffix={t('unit.days')} value={draft.balanceDays} onChange={(v) => set({ balanceDays: v })} />
         <MoneyField
           label={t('leave-encashment.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })
@@ -128,11 +132,13 @@ function Body() {
             {t('leave-encashment.taxable')}: {formatINR(result.taxable)}
           </p>
         </Card>
+        {result.isResignation && <p className="text-[13px] text-ink-soft">{t('leave-encashment.caseNote')}</p>}
+        <p className="text-[13px] text-ink-soft">{t('leave-encashment.limbsNote')}</p>
         <p className="text-[13px] text-ink-soft">{t('leave-encashment.note')}</p>
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

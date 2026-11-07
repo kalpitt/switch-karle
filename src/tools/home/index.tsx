@@ -60,9 +60,9 @@ function BelowTheDoor() {
 
   return (
     <div className="space-y-4">
-      <p className="text-[13px] leading-relaxed text-ink-faint">
+      <p className="text-[13px] leading-relaxed text-ink-soft">
         {t('home.trackerLink')}{' '}
-        <a href={withLang(lang, 'tracker')} className="font-semibold text-saffron underline">
+        <a href={withLang(lang, 'tracker')} className="inline-flex min-h-[44px] items-center font-semibold text-saffron underline">
           {t('home.trackerLink.cta')}
         </a>
       </p>

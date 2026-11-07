@@ -11,16 +11,18 @@ Astro static site, React islands, Tailwind 4 tokens in `src/index.css`. One
 - `site`: `https://switchkarle.fyi`
 - `base`: `/`
 
-Cutover to `https://switchkarle.fyi` with `base: '/'` is a later commit. The
-domain is bought and its DNS points at Cloudflare; Kalpit is holding the final
-connection until the site is complete and users are still zero, so the base
-change costs nothing. No 301 from the old URL. See `ROADMAP.md` — the domain
-question is settled and must not be re-opened.
+The cutover to `https://switchkarle.fyi` with `base: '/'` shipped on
+2026-10-31 (commit cf32df7). Nothing in this repo redirects from the old
+`kalpit.me/switch-karle/`; GitHub Pages itself answers that URL with a 301 now
+that the repo has a custom domain (see `DEPLOY.md`). See `ROADMAP.md` — the
+domain question is settled and must not be re-opened.
 
 ```
 src/
   engine/          pure TS — never imports react (purity.test.ts)
-  tools/<slug>/    one island per tool (form + result)
+  tools/<slug>/    one island per tool (form + result); the six HR-script
+                   slugs share tools/scripts, and tools/home + tools/plan are
+                   the home page, not registry tools
   tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
@@ -43,8 +45,11 @@ variable component).
 ## Head contract
 
 Every prerendered HTML route has a unique `<title>`, meta description, canonical,
-OG title/description/url/image (1200×630 at `public/og/default.png`),
-`twitter:card=summary_large_image`, and `hreflang` en + hi + x-default. Hindi
+OG title/description/url/image, `og:site_name`, `og:locale` and `og:image:alt`
+(1200×630: `public/og/default.png` on English pages, `public/og/default-hi.png`
+on Hindi ones, each about 16 KB, rendered by `scripts/make-og-images.mjs` from
+`app.tagline`), `twitter:card=summary_large_image`, and `hreflang` en + hi +
+x-default. Hindi
 titles use `— स्विच कर ले` so they do not collide with English. Home adds JSON-LD
 `WebApplication`. `/hi/` twins live at `src/pages/hi/`.
 
@@ -57,7 +62,21 @@ Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
 `@vite-pwa/astro` Workbox `generateSW`, precache-all HTML, **`navigateFallback`
 explicitly unset**. The plugin's default fallback is `base` (home). Offline
 reload of `/decoder/` must be the decoder. `check-base` greps `dist/sw.js` for
-`createHandlerBoundToURL` and requires each shipped tool HTML in the precache.
+`createHandlerBoundToURL`, requires each shipped tool HTML in the precache, and
+fails if any precached URL has no file in `dist/` (the `404/` entry did exactly
+that and kept the service worker from installing until 2026-10-31; offline did
+not work in production before then). The share images, the 404 page and unused
+font subsets are left out of the precache.
+
+`registerType: 'autoUpdate'`, but `Base.astro` passes `onNeedReload`, so after a
+deploy the page shows "A new version is ready. Reload" instead of reloading
+itself mid-use. The same layout shows a one-time notice when a `writeJson` call
+fails (storage blocked or full) — `STORAGE_BLOCKED_EVENT` in `lib/storage.ts` —
+and a `<noscript>` line. Its strings are read from the dictionaries on the
+server and rendered into the HTML.
+
+Fonts: only Inter's latin file plus a 1 KB subset holding the rupee sign
+(`src/assets/fonts/inter-rupee-wght-normal.woff2`); see `src/index.css`.
 
 ## i18n
 
@@ -66,10 +85,19 @@ reload of `/decoder/` must be the decoder. `check-base` greps `dist/sw.js` for
 Hindi must be 1:1 with English. Language follows the URL: `/hi/<slug>/` vs
 `/<slug>/`. The EN/HI toggle navigates to the sibling path.
 
+In the browser only the page's language is downloaded: `src/i18n/index.ts`
+reads `<html lang>` and loads `en.ts` or `hi-dictionary.ts` (`hi` + `hiSuite`)
+with a top-level `await`, which finishes before any island hydrates. On the
+server and in tests both load. This saves about 30 KB gzipped on English pages
+and 23 KB on Hindi ones.
+
 ## Privacy
 
 See `PRIVACY.md`. Sanctioned data leaving the device: user pastes a prompt into
-their own AI tab; user exports JSON; user downloads a share image.
+their own AI tab; user exports JSON (the tracker's board export, or the
+footer's "Back up or restore", `src/lib/backup.ts`, which writes every
+`switchkarle.*` key to one file on the device and restores from it); user
+downloads a share image.
 
 Local-first is the **default**, not the boundary — that changed on 2026-08-30.
 User data may leave the device only to deliver a feature the user explicitly
@@ -99,7 +127,8 @@ said. No storage behaviour changed. An in-memory-only mode or a session-only
 toggle both remain open if a future decision wants them; `src/lib/storage.ts` is
 the choke point most surfaces already route through
 (`form16-shock`, `PromptStudio`, `tracker/store.ts` and `defaults.ts` bypass it
-directly), so that switch is smaller than it looks. `notice-buyout` was on that
+directly; so do `data/plan.ts` for its `removeItem`, `lib/erase.ts`,
+`lib/backup.ts` and the language key in `i18n/index.ts`), so that switch is smaller than it looks. `notice-buyout` was on that
 list until the current-job record removed its raw `localStorage` read.
 
 ### Nothing is written until the user types, and everything can be erased
@@ -109,9 +138,10 @@ Shipped 2026-09-05. Two halves of one promise.
 **The erase control.** `src/lib/erase.ts`, surfaced by
 `src/components/EraseData.tsx` in the footer (every page, via `Shell`) and in
 the tracker's button row. It sweeps every `switchkarle.*` key by prefix and
-never calls `localStorage.clear()`: the site has shipped from an origin it does
-not own alone (`kalpit.me/switch-karle/`), where `clear()` would take a
-neighbouring project's data with it. Scanning the prefix also means a tool added
+never calls `localStorage.clear()`: until 2026-10-31 the site shipped from an
+origin it did not own alone (`kalpit.me/switch-karle/`), where `clear()` would
+have taken a neighbouring project's data with it, and the prefix sweep stays the
+rule. Scanning the prefix also means a tool added
 later is erased without anyone updating a list — a list would drift, and a key a
 drifted list missed is a saved salary number the user was told had been erased.
 
@@ -154,8 +184,7 @@ call `releaseBootEcho` and say why. `src/data/defaults.test.ts` pins this.
 
 ### Current-job pay has one home
 
-Built 2026-09-06 on `feat/current-job-record` (PR #39); true on `main` once that
-merges. `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
+Built 2026-09-06 (PR #39, merged). `src/data/currentJob.ts`, key `switchkarle.current-job.v1`,
 seven optional fields: `monthlyBasic`, `monthlyBasicDA`, `monthlyGross`,
 `noticePeriodDays`, and — added by the door, 2026-09-07 — `joinDate`,
 `workWeekDays` (5 or 6) and `coveredByAct`. The last three are facts about the
@@ -283,8 +312,8 @@ Until that ships, the site makes no shoulder-surfing claim anywhere in copy.
 
 ## The board, and filling it from a mailbox
 
-The application tracker is the home page and the spine of the product. Three
-pieces, in dependency order.
+The application tracker lives at `/tracker/` (the home page is the plan door,
+described above). Three pieces, in dependency order.
 
 **`src/tracker/store.ts`** owns everything that persists. `save()` returns a
 boolean rather than throwing, because a board that shows unsaved work as saved

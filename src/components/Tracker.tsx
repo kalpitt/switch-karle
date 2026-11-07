@@ -58,6 +58,7 @@ function useStageLabel(): Record<Stage, string> {
 
 export function Tracker() {
   const t = useT()
+  const { lang } = useLang()
   // Empty until mount so SSR HTML matches the first client render. Do not
   // save until hydrated — a save of [] would wipe real tracker data.
   const [list, setList] = useState<Application[]>([])
@@ -172,8 +173,8 @@ export function Tracker() {
     if (coverage.status === 'never') {
       return t('coverage.never')
     }
-    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom) : ''
-    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt) : ''
+    const from = coverage.coveredFrom ? formatDate(coverage.coveredFrom, lang) : ''
+    const date = coverage.lastSweptAt ? formatDate(coverage.lastSweptAt, lang) : ''
     const limits = t('coverage.limits')
 
     if (coverage.gapDays === 0) {
@@ -183,7 +184,7 @@ export function Tracker() {
       return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gapOne')} ${limits}`
     }
     return `${t('coverage.lastSwept', { date, from })} ${t('coverage.gap', { n: coverage.gapDays })} ${limits}`
-  }, [coverage, t])
+  }, [coverage, t, lang])
 
   const applyBackup = (apply: (b: BackupBundle) => boolean, messageKey: string) => {
     if (!pendingBackup) return
@@ -247,7 +248,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => setFormMode('add')}
-              className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+              className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
             >
               {t('tracker.openAdd')}
             </button>
@@ -265,7 +266,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={handleExport}
-              className="rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
             >
               {t('tracker.export')}
             </button>
@@ -306,7 +307,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => setPendingBackup(null)}
-              className="rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
+              className="min-h-[44px] rounded-xl border border-line px-3 py-1.5 text-[13px] font-semibold text-ink-soft"
             >
               {t('tracker.restore.cancel')}
             </button>
@@ -329,7 +330,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={handleUndo}
-              className="rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
             >
               {t('tracker.restore.undo')}
             </button>
@@ -468,14 +469,14 @@ function ExportImportButtons({
       <button
         type="button"
         onClick={onExport}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.export')}
       </button>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.import')}
       </button>
@@ -483,7 +484,7 @@ function ExportImportButtons({
       <button
         type="button"
         onClick={onSweepToggle}
-        className="rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
+        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
       >
         {t('tracker.sweep')}
       </button>
@@ -565,7 +566,10 @@ function ApplicationFormPanel({
 
   return (
     <Card className="space-y-4">
-      <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
+      <div>
+        <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
+        <p className="mt-0.5 text-xs text-ink-soft">{t('tracker.form.requiredNote')}</p>
+      </div>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <TextField label={t('tracker.field.company.label')} value={form.company} onChange={(v) => set({ company: v })} required />
@@ -584,6 +588,7 @@ function ApplicationFormPanel({
             onChange={(v) => set({ ctcLPA: v })}
           />
           <NumberField
+            integer
             label={t('tracker.field.notice.label')}
             suffix={t('unit.days')}
             value={form.noticePeriodDays}
@@ -613,21 +618,23 @@ function ApplicationFormPanel({
         </div>
         <TextArea label={t('tracker.field.notes.label')} value={form.notes} onChange={(v) => set({ notes: v })} />
         <div className="flex gap-2">
+          {/* Never disabled: a disabled button leaves the tab order and explains nothing.
+              Pressing it with a blank Company or Role lets the browser point at the field. */}
           <button
             type="submit"
-            disabled={!canSave}
-            className="rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98] disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
           >
             {initial ? t('tracker.saveChanges') : t('tracker.submitAdd')}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-line px-4 py-2.5 text-[14px] font-semibold text-ink-soft"
+            className="min-h-[44px] rounded-xl border border-line px-4 py-2.5 text-[14px] font-semibold text-ink-soft"
           >
             {t('common.cancel')}
           </button>
         </div>
+        {!canSave && <p className="text-[13px] text-ink-soft">{t('tracker.saveBlocked')}</p>}
       </form>
     </Card>
   )
@@ -724,7 +731,7 @@ function ApplicationCard({
           {!!app.noticePeriodDays && <Chip>{t('tracker.noticeChip', { n: app.noticePeriodDays })}</Chip>}
           {app.source && <Chip>{app.source}</Chip>}
           {/* Last: money and terms are what the eye scans a card for; the date is context. */}
-          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn) })}</Chip>}
+          {!!app.appliedOn && <Chip>{t('tracker.chip.appliedOn', { date: formatDate(app.appliedOn, lang) })}</Chip>}
           {!!app.insights?.length && <Chip>💡 {app.insights.length}</Chip>}
         </div>
       )}
@@ -735,7 +742,7 @@ function ApplicationCard({
           {app.nextAction}
           {app.nextActionDate && (
             <span className={`tnum ml-1 ${isOverdue ? 'font-bold text-alarm' : 'text-ink-faint'}`}>
-              ({formatDate(app.nextActionDate)})
+              ({formatDate(app.nextActionDate, lang)})
             </span>
           )}
         </p>
@@ -764,7 +771,7 @@ function ApplicationCard({
                           })
                       : undefined
                   }
-                  className={`inline-flex min-h-[28px] items-center rounded-full border bg-paper px-2.5 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
+                  className={`inline-flex min-h-[44px] items-center rounded-full border bg-paper px-3 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
                     isPrefilledThis ? 'border-saffron/50 text-saffron' : 'border-line text-ink-soft'
                   }`}
                 >
@@ -865,6 +872,7 @@ function ArchivedApplicationCard({
   onDelete: () => void
 }) {
   const t = useT()
+  const { lang } = useLang()
   const reason = app.closed?.reason
   const closedOn = app.closed?.closedOn
 
@@ -883,7 +891,7 @@ function ArchivedApplicationCard({
           )}
           {closedOn && (
             <span className="tnum rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-medium text-ink-faint">
-              {t('tracker.archive.closedDate', { date: formatDate(closedOn) })}
+              {t('tracker.archive.closedDate', { date: formatDate(closedOn, lang) })}
             </span>
           )}
         </div>

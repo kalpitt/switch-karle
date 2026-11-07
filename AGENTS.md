@@ -88,10 +88,14 @@ npm run build      # astro build
 npm run check:base # asset URLs under the configured base
 npm run check:seo  # canonical + OG; no analytics in dist/
 npm run check:csp  # CSP meta + hashes; no off-origin subresources
+npm run test:e2e   # Playwright on the built dist/: every route EN+HI, key flows
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, and `check:csp`
-must pass before you open a pull request. Merging to `main` deploys — only
+`test:e2e` needs a build first and a Chromium (`npx playwright install
+chromium` once). CI runs it as its own job on every PR.
+
+`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, `check:csp`,
+and `test:e2e` must pass before you open a pull request. Merging to `main` deploys — only
 Kalpit does that.
 
 Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not

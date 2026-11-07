@@ -3,13 +3,14 @@
  * Guards the configured-base build.
  *
  * astro.config.mjs sets site + base once. Asset URLs in dist/ must resolve
- * under that base (today `/switch-karle/`) so the GitHub Pages subpath deploy
- * cannot silently 404. Also asserts the three shipped tools prerendered as
- * their own HTML — not the home shell reused as a navigation fallback.
+ * under that base (`/` since the switchkarle.fyi cutover on 2026-10-31) so a
+ * subpath deploy could never silently 404. Also asserts the three shipped
+ * tools prerendered as their own HTML — not the home shell reused as a
+ * navigation fallback — and that every URL the service worker precaches
+ * exists in dist/ (one missing URL aborts the whole install).
  *
- * Replace this file's BASE constant if astro.config.mjs `base` changes.
- * Cutover to switchkarle.fyi flips base to `/` and this check still holds
- * (root-absolute `/_astro/...` is then correct).
+ * BASE comes from site.config.mjs. At `/` the source scan below has no path
+ * segment to look for and says so; root-absolute `/_astro/...` is correct.
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
@@ -110,6 +111,19 @@ if (!existsSync(swPath)) {
       console.error(`check-base-build: FAIL — dist/sw.js does not precache ${page}.`)
       failed = true
     }
+  }
+  // Any precache URL without a file behind it fails the whole install the same way.
+  for (const [, url] of sw.matchAll(/url:\s*"([^"]+)"/g)) {
+    const file = join(dist, url.endsWith('/') || url === '' ? `${url}index.html` : url)
+    if (!existsSync(file)) {
+      console.error(`check-base-build: FAIL — dist/sw.js precaches "${url}", which is not in dist/.`)
+      failed = true
+    }
+  }
+  // Share images are for link-preview crawlers; the page never shows them.
+  if (/url:\s*"og\//.test(sw)) {
+    console.error('check-base-build: FAIL — dist/sw.js precaches og/ share images.')
+    failed = true
   }
 }
 

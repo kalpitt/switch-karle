@@ -1,0 +1,22 @@
+# Weekly dependency update pull requests. Dependabot only opens PRs; nothing
+# merges or deploys without Kalpit. Minor and patch bumps arrive grouped as one
+# PR per ecosystem so they are cheap to review. Major bumps (Astro, the PWA
+# plugin, TypeScript, vitest) arrive one PR each: each needs its own testing,
+# and the Astro major in particular must re-check the CSP hashes and the PWA config.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        update-types: [minor, patch]

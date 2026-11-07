@@ -1,0 +1,34 @@
+# Daily check that the live site still works, even on days nothing was
+# merged (a certificate, DNS or GitHub Pages problem shows up here). The same
+# script also runs after every deploy, from pages.yml.
+#
+# When a scheduled run fails, GitHub emails the person who last changed the
+# `cron` line below (see DEPLOY.md, "Knowing when production breaks").
+# GitHub pauses scheduled workflows after 60 days with no repository
+# activity; re-enable it under Actions if that happens.
+name: Production smoke test
+
+on:
+  schedule:
+    - cron: '30 3 * * *' # 09:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/smoke-prod.mjs https://switchkarle.fyi

@@ -46,9 +46,17 @@ export function checkAnalytics(text, rel = 'file') {
   return { ok: errors.length === 0, errors }
 }
 
+/** A page that asks not to be indexed (the 404) has no canonical URL and no twin. */
+export const NOINDEX = /<meta\s+name="robots"\s+content="noindex/
+
 export function checkHtmlHead(html, rel = 'page.html', titles = new Map()) {
   const errors = []
+  const noindex = NOINDEX.test(html)
+  if (noindex && /<link\s+rel="canonical"/.test(html)) {
+    errors.push(`check-seo: FAIL — ${rel} is noindex but declares a canonical URL`)
+  }
   for (const [name, re] of HEAD_REQUIREMENTS) {
+    if (noindex) break
     if (!re.test(html)) {
       errors.push(`check-seo: FAIL — ${rel} missing ${name}`)
     }

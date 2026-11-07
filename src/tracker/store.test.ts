@@ -384,6 +384,23 @@ describe('exportAll / parseBackup', () => {
     expect(parsed.decoder).toBeNull()
   })
 
+  it('reads the board and offer out of the footer’s full backup file', () => {
+    const tracker = addApplication([], { company: 'Acme', role: 'SDE II' })
+    const full = JSON.stringify({
+      app: 'switch-karle',
+      version: 2,
+      exportedAt: '2026-10-31T00:00:00.000Z',
+      keys: {
+        'switchkarle.tracker.v1': JSON.stringify(tracker),
+        [DECODER_STORAGE_KEY]: JSON.stringify({ ctcAnnual: 1 }),
+        'switchkarle.plan.v1': '{}',
+      },
+    })
+    const parsed = parseBackup(full)
+    expect(parsed.tracker).toEqual(tracker)
+    expect(parsed.decoder).toEqual({ ctcAnnual: 1 })
+  })
+
   it('parseBackup throws on malformed JSON', () => {
     expect(() => parseBackup('{not valid json')).toThrow('Invalid backup file: not valid JSON.')
   })

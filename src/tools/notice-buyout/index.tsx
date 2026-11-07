@@ -135,6 +135,7 @@ function Body() {
           ]}
         />
         <NumberField
+          integer
           label={t('notice-buyout.days')}
           suffix={t('unit.days')}
           value={draft.unservedDays}
@@ -150,7 +151,7 @@ function Body() {
         />
         <MoneyField
           label={t('notice-buyout.basic')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
             set({ monthlyBasic: v })
@@ -159,7 +160,7 @@ function Body() {
         />
         <MoneyField
           label={t('notice-buyout.gross')}
-          hint={t('ui.money.hint')}
+          placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyGross}
           onChange={(v) => {
             set({ monthlyGross: v })
@@ -212,7 +213,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

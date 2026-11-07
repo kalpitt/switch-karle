@@ -61,7 +61,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     titleKey: 'hr.counter-offer-reply.title',
     descKey: 'hr.counter-offer-reply.desc',
     seoTitle: 'Counter-offer reply',
-    seoDescription: 'Reply to a counter-offer from your current employer — accept or decline, in writing.',
+    seoDescription: 'Turn down a counter-offer from your current employer, in writing and on good terms.',
     body: '',
   },
   'recruiter-followup': {

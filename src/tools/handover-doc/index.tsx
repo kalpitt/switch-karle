@@ -55,8 +55,9 @@ function Body() {
       draft.risks || t('handover-doc.md.risksHint'),
     ].join('\n')
   }, [draft, t])
-  /** Blank sections produce placeholder scaffold — never let it reach a paste. */
-  const canCopy = !md.includes('[Role]') && !md.includes('[Name]') && !md.includes('_Add ')
+  /** Blank fields produce placeholder scaffold — never let it reach a paste.
+   *  Checked on the fields, not the text, so it holds in Hindi too. */
+  const canCopy = draft.role.trim() !== '' && draft.owner.trim() !== '' && draft.projects.trim() !== ''
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
@@ -76,7 +77,7 @@ function Body() {
           <pre className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed">{md}</pre>
           <div className="mt-4">
             {canCopy ? (
-              <CopyButton text={md} label={t('ui.copy')} copiedLabel={t('ui.copied')} />
+              <CopyButton text={md} label={t('ui.copyNote')} copiedLabel={t('ui.copied')} />
             ) : (
               <p className="text-[13px] font-semibold text-amberflag">{t('handover-doc.copyBlocked')}</p>
             )}

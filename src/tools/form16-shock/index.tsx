@@ -95,10 +95,10 @@ function Body() {
     <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('form16-shock.formTitle')}</h2>
-        <MoneyField label={t('form16-shock.e1gross')} hint={t('ui.money.hint')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
-        <MoneyField label={t('form16-shock.e1tds')} hint={t('ui.money.hint')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
-        <MoneyField label={t('form16-shock.e2gross')} hint={t('ui.money.hint')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
-        <MoneyField label={t('form16-shock.e2tds')} hint={t('ui.money.hint')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
+        <MoneyField label={t('form16-shock.e1gross')} placeholder={t('ui.money.placeholder')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
+        <MoneyField label={t('form16-shock.e1tds')} placeholder={t('ui.money.placeholder')} value={draft.employer1Tds} onChange={(v) => set({ employer1Tds: v })} />
+        <MoneyField label={t('form16-shock.e2gross')} placeholder={t('ui.money.placeholder')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
+        <MoneyField label={t('form16-shock.e2tds')} placeholder={t('ui.money.placeholder')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
         {isExample ? (
@@ -130,7 +130,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

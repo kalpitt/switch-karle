@@ -122,11 +122,17 @@ function Body() {
   const isExample = JSON.stringify(draft) === JSON.stringify(draftFrom(DEFAULT_OFFER))
   const tone = result.effectiveValueAtPlanned < 0 ? 'alarm' : result.repaymentIfLeaveAtPlanned > 0 ? 'amber' : 'leaf'
   const verdict = draft.netWording
-    ? t('bonus-clawback.verdict.net', {
-        net: formatINR(result.netReceived),
-        repay: formatINR(result.repaymentIfLeaveAtPlanned),
-        keep: formatINR(result.effectiveValueAtPlanned),
-      })
+    ? result.effectiveValueAtPlanned < 0
+      ? t('bonus-clawback.verdict.netLoss', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          loss: formatINR(-result.effectiveValueAtPlanned),
+        })
+      : t('bonus-clawback.verdict.net', {
+          net: formatINR(result.netReceived),
+          repay: formatINR(result.repaymentIfLeaveAtPlanned),
+          keep: formatINR(result.effectiveValueAtPlanned),
+        })
     : t('bonus-clawback.verdict.gross', {
         gross: formatINR(draft.amount),
         repay: formatINR(result.repaymentIfLeaveAtPlanned),
@@ -152,8 +158,9 @@ function Body() {
     <div data-tool="bonus-clawback" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
       <Card className="space-y-3 lg:sticky lg:top-6">
         <h2 className="text-base font-bold">{t('bonus-clawback.formTitle')}</h2>
-        <MoneyField label={t('bonus-clawback.amount')} hint={t('ui.money.hint')} value={draft.amount} onChange={(v) => set({ amount: v })} />
+        <MoneyField label={t('bonus-clawback.amount')} placeholder={t('ui.money.placeholder')} value={draft.amount} onChange={(v) => set({ amount: v })} />
         <NumberField
+          integer
           label={t('bonus-clawback.window')}
           suffix={t('unit.months')}
           value={draft.clawbackMonths}
@@ -172,6 +179,7 @@ function Body() {
           onChange={(v) => set({ plannedLwd: v })}
         />
         <NumberField
+          integer
           label={t('bonus-clawback.notice')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}
@@ -223,7 +231,7 @@ function Body() {
         {!isExample && (
           <ShareRow
             copyText={copyText}
-            copyLabel={t('ui.copy')}
+            copyLabel={t('ui.copyResult')}
             copiedLabel={t('ui.copied')}
             printLabel={t('ui.print')}
           />

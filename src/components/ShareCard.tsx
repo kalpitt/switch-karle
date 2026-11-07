@@ -44,7 +44,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
       {/* Off-screen render target */}
       <div className="pointer-events-none fixed -left-[9999px] top-0">
         <div ref={ref} className="w-[360px] bg-night p-7 font-sans text-white">
-          <p className="text-[11px] font-bold tracking-[0.2em] text-white/50">{t('shareCard.eyebrow')}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/50">{t('shareCard.eyebrow')}</p>
           <p className="tnum mt-4 text-[15px] font-semibold text-white/70">
             {t('shareCard.ctcSounds', { ctc: formatLPA(b.input.ctcAnnual), amount: formatINR(b.input.ctcAnnual / 12) })}
           </p>
