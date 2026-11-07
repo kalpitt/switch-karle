@@ -52,7 +52,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 px-4 sm:px-6">
           <a href={withLang(lang)} className="order-1 -ml-1 inline-flex h-14 items-center gap-2 px-1">
             <LogoMark size={24} />
-            <Brand lang="en" className="font-display text-[19px] font-bold leading-none tracking-[-0.01em] text-ink">
+            <Brand lang="en" className="font-display text-[19px] font-bold max-[359px]:sr-only leading-none tracking-[-0.01em] text-ink">
               Switch Karle
             </Brand>
           </a>

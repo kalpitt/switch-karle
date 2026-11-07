@@ -81,7 +81,7 @@ function Body({ situation, onPick }: { situation: ScriptSlug | null; onPick: (sl
   }
 
   return (
-    <div data-tool={WHAT_TO_SAY} data-situation={situation ?? undefined} className="mx-auto max-w-2xl space-y-5">
+    <div data-tool={WHAT_TO_SAY} data-situation={situation ?? undefined} className="max-w-2xl space-y-5">
       <SituationPicker current={situation} onPick={pick} />
       <p role="status" className="sr-only">
         {announce}
