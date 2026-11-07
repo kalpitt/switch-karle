@@ -40,7 +40,10 @@ interface Draft {
   joinDate: string
   exitDate: string
   coveredByAct: boolean
-  /** 5-day or 6-day establishment week; missing in old drafts → engine defaults to 6. */
+  /**
+   * 5-day or 6-day establishment week. Unset until the person picks; the
+   * engine then reads five days, and the screen says so (decided 2026-11-07).
+   */
   workWeekDays?: 5 | 6
 }
 
@@ -49,7 +52,6 @@ const DEFAULT_DRAFT: Draft = {
   joinDate: '2021-08-01',
   exitDate: '2026-08-31',
   coveredByAct: true,
-  workWeekDays: 6,
 }
 
 /** The plan's join date and last working day land here on a first visit (UX-16). */
@@ -123,9 +125,7 @@ function Body() {
     }
   }, [draft])
   /** Nothing typed in this tool yet = worked example, even where the record filled the basic. */
-  const isExample =
-    JSON.stringify({ ...draft, workWeekDays: draft.workWeekDays ?? 6 }) ===
-    JSON.stringify(example ?? DEFAULT_DRAFT)
+  const isExample = JSON.stringify(draft) === JSON.stringify(example ?? DEFAULT_DRAFT)
   const verdict = result
     ? result.eligible
       ? t('gratuity.verdict.yes', { amount: formatINR(result.amount), years: result.completedYears })
@@ -167,13 +167,19 @@ function Body() {
         <Toggle
           label={t('gratuity.week5.label')}
           hint={t('gratuity.week5.hint')}
-          checked={draft.workWeekDays === 5}
+          checked={(draft.workWeekDays ?? 5) === 5}
           onChange={(v) => {
             const workWeekDays = v ? 5 : 6
             set({ workWeekDays })
             rememberCurrentJob({ workWeekDays })
           }}
         />
+        {/* Decided 2026-11-07: five days until the person picks, said plainly. */}
+        {draft.workWeekDays === undefined && (
+          <p className="text-[13px] leading-snug text-ink-soft">
+            {t('gratuity.weekAssumed')}
+          </p>
+        )}
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">

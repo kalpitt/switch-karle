@@ -15,9 +15,20 @@ import { GRATUITY_CAP, gratuity, gratuityEligibilityDate } from './gratuity'
  */
 const BASE = { lastDrawnBasicDA: 50_000, joinDate: '2019-08-01', coveredByAct: true }
 
+describe('gratuity — the work week defaults to five days until the person picks (decided 2026-11-07)', () => {
+  it('an unset week reads exactly as the 5-day week, not the 6-day one', () => {
+    // 2024-04-22 is the 190th Mon–Fri working day but short of the 240th
+    // Mon–Sat one (2024-05-06): eligible on a five-day week, not on six.
+    const unset = gratuity({ ...BASE, exitDate: '2024-04-22' })
+    expect(unset).toEqual(gratuity({ ...BASE, exitDate: '2024-04-22', workWeekDays: 5 }))
+    expect(unset.eligible).toBe(true)
+    expect(gratuity({ ...BASE, exitDate: '2024-04-22', workWeekDays: 6 }).eligible).toBe(false)
+  })
+})
+
 describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))', () => {
   it('4y + 239 working days on a 6-day week → not eligible, ₹0', () => {
-    const r = gratuity({ ...BASE, exitDate: '2024-05-05' })
+    const r = gratuity({ ...BASE, exitDate: '2024-05-05', workWeekDays: 6 })
     expect(r.completedYears).toBe(4)
     expect(r.eligible).toBe(false)
     expect(r.payableYears).toBe(0)
@@ -26,7 +37,7 @@ describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))'
   })
 
   it('4y + 240 working days on a 6-day week → eligible, 5 payable years, ₹1,44,231', () => {
-    const r = gratuity({ ...BASE, exitDate: '2024-05-06' })
+    const r = gratuity({ ...BASE, exitDate: '2024-05-06', workWeekDays: 6 })
     expect(r.completedYears).toBe(4)
     expect(r.eligible).toBe(true)
     expect(r.payableYears).toBe(5)
@@ -53,8 +64,8 @@ describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))'
     // 2024-05-06 is the 240th working day. The Sunday right after it,
     // 2024-05-12, is one calendar week later but adds no working days: still
     // eligible (already was), and the fast path itself must not have moved.
-    const onLine = gratuity({ ...BASE, exitDate: '2024-05-06' })
-    const aWeekOfWeekendsLater = gratuity({ ...BASE, exitDate: '2024-05-12' })
+    const onLine = gratuity({ ...BASE, exitDate: '2024-05-06', workWeekDays: 6 })
+    const aWeekOfWeekendsLater = gratuity({ ...BASE, exitDate: '2024-05-12', workWeekDays: 6 })
     expect(onLine.eligible).toBe(true)
     expect(aWeekOfWeekendsLater.eligible).toBe(true)
     expect(aWeekOfWeekendsLater.completedYears).toBe(4)
@@ -124,7 +135,7 @@ describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))'
     // basic + DA or more. The engine only ever sees basic + DA.
     const paid = gratuity({ ...BASE, exitDate: '2025-02-17' })
     expect(paid.notes.map((n) => n.id)).toContain('code-wages')
-    const short = gratuity({ ...BASE, exitDate: '2024-05-05' })
+    const short = gratuity({ ...BASE, exitDate: '2024-05-05', workWeekDays: 6 })
     expect(short.notes.map((n) => n.id)).not.toContain('code-wages')
   })
 
@@ -138,7 +149,7 @@ describe('gratuity — eligibility vs payable years (Code s.54(B)(a) / s.53(2))'
 
 describe('gratuityEligibilityDate — the same s.54(B)(a) date, answerable in the past', () => {
   it('agrees with flipDate while the person is still short of the line', () => {
-    const short = gratuity({ ...BASE, exitDate: '2024-05-05' })
+    const short = gratuity({ ...BASE, exitDate: '2024-05-05', workWeekDays: 6 })
     expect(gratuityEligibilityDate(BASE.joinDate, 6)).toBe(short.flipDate)
     const shortFive = gratuity({ ...BASE, exitDate: '2024-04-21', workWeekDays: 5 })
     expect(gratuityEligibilityDate(BASE.joinDate, 5)).toBe(shortFive.flipDate)
@@ -155,8 +166,8 @@ describe('gratuityEligibilityDate — the same s.54(B)(a) date, answerable in th
     expect(gratuityEligibilityDate('2022-01-12', 6)).toBe('2026-10-17')
   })
 
-  it('defaults to the six-day week and returns nothing when the Act does not apply', () => {
-    expect(gratuityEligibilityDate('2022-01-12')).toBe('2026-10-17')
+  it('defaults to the five-day week and returns nothing when the Act does not apply', () => {
+    expect(gratuityEligibilityDate('2022-01-12')).toBe('2026-10-02')
     expect(gratuityEligibilityDate('2022-01-12', 5, false)).toBeNull()
   })
 })

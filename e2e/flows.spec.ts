@@ -244,3 +244,24 @@ test('backup dialog holds focus and gives it back on Escape', async ({ page }) =
   await expect(dialog).toHaveCount(0)
   await expect(opener).toBeFocused()
 })
+
+test('gratuity and F&F: five days a week until the person picks, and the screen says so', async ({ page }) => {
+  await open(page, '/gratuity/')
+  const week = page.getByRole('switch', { name: /^5-day work week/ })
+  await expect(week).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByText('We assume a five-day week. Switch this if you work six days.')).toBeVisible()
+  await week.click()
+  await expect(week).toHaveAttribute('aria-checked', 'false')
+  await expect(page.getByText('We assume a five-day week.', { exact: false })).toHaveCount(0)
+
+  // The pick is shared: the F&F checker now reads six days and stops assuming.
+  await open(page, '/fnf-checker/')
+  await expect(page.getByRole('switch', { name: /^5-day work week/ })).toHaveAttribute('aria-checked', 'false')
+  await expect(page.getByText('We assume a five-day week.', { exact: false })).toHaveCount(0)
+})
+
+test('F&F checker in Hindi says the five-day week is assumed', async ({ page }) => {
+  await open(page, '/hi/fnf-checker/')
+  await expect(page.getByRole('switch', { name: /^5-day work week/ })).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByText('हम 5-day week मानकर चल रहे हैं।', { exact: false })).toBeVisible()
+})
