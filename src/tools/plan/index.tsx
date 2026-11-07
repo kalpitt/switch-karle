@@ -1163,21 +1163,45 @@ function ReasonBox({ t, plan, onReason }: Pick<RecapProps, 't' | 'plan' | 'onRea
 }
 
 function LookingTap({ t, fmt, plan, onLooking }: Pick<RecapProps, 't' | 'fmt' | 'plan' | 'onLooking'>) {
-  if (plan.lookingSince != null) {
-    return <p className="text-[14px] font-semibold leading-snug">{t('plan.looking.since', { date: fmt(plan.lookingSince) })}</p>
-  }
-  // A door, not a task (Part 3): a text button, so it does not compete with
-  // the calendar button for "the one thing on this screen" (UX-09c).
+  // The button goes away when pressed, so focus would fall to <body> (A11Y N4).
+  // The "Looking since" line takes it instead, and sits in a status region
+  // that exists before the press so the new line is announced too.
+  const sinceRef = useRef<HTMLParagraphElement>(null)
+  const pressed = useRef(false)
+  useEffect(() => {
+    if (!pressed.current || plan.lookingSince == null) return
+    pressed.current = false
+    sinceRef.current?.focus()
+  }, [plan.lookingSince])
+  const since = plan.lookingSince
   return (
     <div className="space-y-0.5">
-      <button
-        type="button"
-        onClick={onLooking}
-        className="inline-flex min-h-[44px] items-center text-left text-[14px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
+      <p
+        ref={sinceRef}
+        role="status"
+        tabIndex={-1}
+        data-looking-since
+        className={since != null ? 'text-[14px] font-semibold leading-snug outline-none' : 'sr-only'}
       >
-        {t('plan.looking.cta')}
-      </button>
-      <p className="text-xs leading-relaxed text-ink-faint">{t('plan.looking.warning')}</p>
+        {since != null ? t('plan.looking.since', { date: fmt(since) }) : null}
+      </p>
+      {since == null && (
+        // A door, not a task (Part 3): a text button, so it does not compete with
+        // the calendar button for "the one thing on this screen" (UX-09c).
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              pressed.current = true
+              onLooking()
+            }}
+            className="inline-flex min-h-[44px] items-center text-left text-[14px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
+          >
+            {t('plan.looking.cta')}
+          </button>
+          <p className="text-xs leading-relaxed text-ink-faint">{t('plan.looking.warning')}</p>
+        </>
+      )}
     </div>
   )
 }
