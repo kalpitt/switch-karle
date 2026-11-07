@@ -105,7 +105,7 @@ export function BackupData({ className }: { className?: string }) {
               {count === 0 ? t('backup.empty') : count === 1 ? t('backup.savedOne') : t('backup.saved', { n: count })}
             </p>
             {count > 0 && (
-              <button type="button" onClick={download} className={`${btn} mt-3 bg-saffron-strong hover:bg-saffron-deep text-white`}>
+              <button type="button" onClick={download} className={`${btn} mt-3 bg-ink hover:bg-ink-hover text-white`}>
                 {t('backup.download')}
               </button>
             )}
@@ -144,7 +144,7 @@ export function BackupData({ className }: { className?: string }) {
                   <p className="text-[13px] leading-relaxed">{t('backup.found', { n, m: pending.overlap })}</p>
                   {pending.overlap === 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <button type="button" onClick={() => apply(true)} className={`${btn} bg-saffron-strong hover:bg-saffron-deep text-white`}>
+                      <button type="button" onClick={() => apply(true)} className={`${btn} bg-ink hover:bg-ink-hover text-white`}>
                         {t('backup.restore')}
                       </button>
                       <button type="button" onClick={() => setPending(null)} className={`${btn} border border-line text-ink-soft`}>
@@ -153,7 +153,7 @@ export function BackupData({ className }: { className?: string }) {
                     </div>
                   ) : (
                     <div className="mt-3 space-y-2">
-                      <button type="button" onClick={() => apply(true)} className={`${btn} w-full bg-saffron-strong hover:bg-saffron-deep text-white`}>
+                      <button type="button" onClick={() => apply(true)} className={`${btn} w-full bg-ink hover:bg-ink-hover text-white`}>
                         {t('backup.keepMine')}
                       </button>
                       <p className="text-[12px] leading-relaxed text-ink-soft">{t('backup.keepMineHint')}</p>

@@ -140,7 +140,7 @@ function RegimePill({
   const t = useT()
   return (
     <div
-      className={`rounded-xl border p-3 ${recommended ? 'border-leaf bg-leaf-soft' : 'border-line bg-card'}`}
+      className={`min-w-0 rounded-xl border p-3 ${recommended ? 'border-leaf bg-leaf-soft' : 'border-line bg-card'}`}
     >
       <p className="flex flex-wrap items-center gap-1.5 text-[13px] font-semibold">
         {name}
@@ -148,11 +148,12 @@ function RegimePill({
           <span className="rounded-full bg-leaf px-2 py-px text-[12px] font-semibold text-white">{t('results.cheaper')}</span>
         )}
       </p>
-      <p className="tnum mt-1 text-[16px] font-semibold">
+      <p className="tnum mt-1 break-words text-[16px] font-semibold">
         {formatINR(inHand)}
-        <span className="text-[13px] font-medium text-ink-soft">{t('unit.perMonth')}</span>
+        {/* Below 360px two cards are ~120px wide: the unit drops to its own line (R-02). */}
+        <span className="block text-[12px] font-medium text-ink-soft min-[360px]:inline min-[360px]:text-[13px]">{t('unit.perMonth')}</span>
       </p>
-      <p className="tnum text-[13px] text-ink-soft">{t('results.taxPerYear', { amount: formatCompact(tax) })}</p>
+      <p className="tnum break-words text-[13px] text-ink-soft">{t('results.taxPerYear', { amount: formatCompact(tax) })}</p>
     </div>
   )
 }

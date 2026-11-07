@@ -173,7 +173,7 @@ export function PromptStudio({ onGoToTracker }: { onGoToTracker?: () => void }) 
             type="button"
             aria-disabled={!insightContent.trim()}
             onClick={handleSaveInsight}
-            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-ink hover:bg-ink-hover px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('promptStudio.saveTo', { company: selectedApp.company })}
           </button>
@@ -240,7 +240,7 @@ function TemplateCard({
         <button
           type="button"
           onClick={() => onCopy(prompt)}
-          className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[13px] font-bold text-white transition-transform active:scale-[0.98]"
+          className="min-h-[44px] rounded-xl bg-ink hover:bg-ink-hover px-4 py-2.5 text-[13px] font-bold text-white transition-transform active:scale-[0.98]"
         >
           {copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt')}
         </button>
