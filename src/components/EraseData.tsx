@@ -81,7 +81,7 @@ export function EraseData({ className, label }: { className?: string; label?: st
 
             {result == null ? (
               <>
-                <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
                   {count === 0
                     ? t('erase.empty')
                     : count === 1
@@ -126,7 +126,7 @@ export function EraseData({ className, label }: { className?: string; label?: st
               </>
             ) : (
               <>
-                <p role="status" className="mt-2 text-[13px] leading-relaxed text-ink-soft">
+                <p role="status" className="mt-2 text-[14px] leading-relaxed text-ink-soft">
                   {result.removed.length === 1
                     ? t('erase.doneOne')
                     : t('erase.done', { n: result.removed.length })}

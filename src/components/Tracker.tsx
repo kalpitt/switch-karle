@@ -38,6 +38,8 @@ import { formatDate } from '../lib/formatDate'
 import { Card, NumberField, Select, TextArea, TextField } from './ui'
 import { EraseData } from './EraseData'
 import { SweepPanel } from './SweepPanel'
+import { buttonClass } from './buttonClass'
+import { MoreIcon } from './icons'
 
 const L = 100_000
 
@@ -217,8 +219,8 @@ export function Tracker() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold">{t('tracker.title')}</h2>
-          <p className="text-[13px] text-ink-soft">
+          <h2 className="text-[18px] font-semibold">{t('tracker.title')}</h2>
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('tracker.trackedCount', { n: activeCount })}
             {archived.length > 0 && ` · ${t('tracker.archive.count', { count: archived.length })}`}
           </p>
@@ -230,7 +232,7 @@ export function Tracker() {
                 <button
                   type="button"
                   onClick={handleSweepToggle}
-                  className="font-semibold text-saffron underline hover:text-saffron"
+                  className="font-semibold text-saffron-strong underline hover:text-saffron-strong"
                 >
                   {t('coverage.sweepAgain')}
                 </button>
@@ -248,7 +250,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => setFormMode('add')}
-              className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+              className={buttonClass('primary', 'sm')}
             >
               {t('tracker.openAdd')}
             </button>
@@ -261,12 +263,12 @@ export function Tracker() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-[14px] font-bold text-alarm">{t('tracker.saveFailed.title')}</p>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{t('tracker.saveFailed.body')}</p>
+              <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{t('tracker.saveFailed.body')}</p>
             </div>
             <button
               type="button"
               onClick={handleExport}
-              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-2 text-[13px] font-bold text-ink-soft shadow-sm transition-colors hover:border-saffron hover:text-saffron"
+              className={buttonClass('secondary', 'sm')}
             >
               {t('tracker.export')}
             </button>
@@ -289,9 +291,9 @@ export function Tracker() {
             <button
               type="button"
               onClick={() => applyBackup(mergeBackup, 'tracker.restore.merged')}
-              className="flex flex-col items-start rounded-xl border-2 border-saffron bg-saffron-soft/30 p-3.5 text-left transition-colors hover:bg-saffron-soft"
+              className="flex flex-col items-start rounded-xl border-2 border-ink bg-card p-3.5 text-left transition-colors hover:bg-paper"
             >
-              <span className="text-[14px] font-bold text-saffron">{t('tracker.restore.merge')}</span>
+              <span className="text-[14px] font-semibold text-ink">{t('tracker.restore.merge')}</span>
               <span className="mt-1 text-[12px] leading-relaxed text-ink-soft">{t('tracker.restore.mergeHint')}</span>
             </button>
             <button
@@ -330,7 +332,7 @@ export function Tracker() {
             <button
               type="button"
               onClick={handleUndo}
-              className="min-h-[44px] rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-lg border border-line bg-paper px-3 py-1 text-xs font-bold text-ink-soft transition-colors hover:border-field hover:text-saffron-strong"
             >
               {t('tracker.restore.undo')}
             </button>
@@ -435,10 +437,10 @@ function EmptyState() {
   }, [examples])
 
   return (
-    <div className="rounded-2xl border border-dashed border-line p-3">
+    <div className="rounded-2xl border border-dashed border-line-strong p-4">
       <p className="text-[15px] font-semibold">{t('tracker.empty.title')}</p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-saffron-soft px-2 py-0.5 text-[11px] font-bold text-saffron">
+        <span className="rounded-md bg-sample-soft px-2 py-0.5 text-[12px] font-semibold text-sample">
           {t('ui.exampleChip')}
         </span>
         <p className="text-[13px] font-semibold">{t('tracker.example.title')}</p>
@@ -453,6 +455,11 @@ function EmptyState() {
   )
 }
 
+/**
+ * The routine action stays in view ("Fill from email"); the rare ones (Export,
+ * Import) and the destructive one (Erase, last, after a divider) go behind "More",
+ * so a frightening button no longer sits between two everyday ones (VIS-18).
+ */
 function ExportImportButtons({
   onExport,
   onImportFile,
@@ -464,30 +471,72 @@ function ExportImportButtons({
 }) {
   const t = useT()
   const inputRef = useRef<HTMLInputElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !document.querySelector('[role="dialog"]')) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  const item =
+    'flex min-h-[44px] w-full items-center rounded-lg px-3 text-left text-[14px] font-medium text-ink hover:bg-paper'
   return (
     <>
-      <button
-        type="button"
-        onClick={onExport}
-        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
-      >
-        {t('tracker.export')}
-      </button>
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
-      >
-        {t('tracker.import')}
-      </button>
-      <EraseData className="rounded-xl border border-alarm/40 px-3 py-2.5 text-[13px] font-semibold text-alarm" />
-      <button
-        type="button"
-        onClick={onSweepToggle}
-        className="min-h-[44px] rounded-xl border border-line px-3 py-2.5 text-[13px] font-semibold text-ink-soft"
-      >
+      <button type="button" onClick={onSweepToggle} className={buttonClass('secondary', 'sm')}>
         {t('tracker.sweep')}
       </button>
+      <div ref={menuRef} className="relative">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-haspopup="true"
+          onClick={() => setOpen((v) => !v)}
+          className={buttonClass('ghost', 'sm')}
+        >
+          <MoreIcon size={18} />
+          {t('tracker.more')}
+        </button>
+        {/* Kept mounted while open, so the erase dialog that opens from inside it stays on screen. */}
+        <div
+          hidden={!open}
+          className="absolute right-0 z-40 mt-1 w-56 rounded-xl border border-line bg-card p-1 shadow-float"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              onExport()
+            }}
+            className={item}
+          >
+            {t('tracker.export')}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              inputRef.current?.click()
+            }}
+            className={item}
+          >
+            {t('tracker.import')}
+          </button>
+          <div className="my-1 border-t border-line" />
+          <EraseData className={`${item} text-alarm hover:bg-alarm-soft`} />
+        </div>
+      </div>
       <input
         ref={inputRef}
         type="file"
@@ -567,7 +616,7 @@ function ApplicationFormPanel({
   return (
     <Card className="space-y-4">
       <div>
-        <h2 className="text-base font-bold">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
+        <h2 className="text-[18px] font-semibold leading-snug">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
         <p className="mt-0.5 text-xs text-ink-soft">{t('tracker.form.requiredNote')}</p>
       </div>
       <form onSubmit={submit} className="space-y-4">
@@ -622,7 +671,7 @@ function ApplicationFormPanel({
               Pressing it with a blank Company or Role lets the browser point at the field. */}
           <button
             type="submit"
-            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2.5 text-[14px] font-bold text-white shadow-lg shadow-saffron/25 transition-transform active:scale-[0.98]"
+            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98]"
           >
             {initial ? t('tracker.saveChanges') : t('tracker.submitAdd')}
           </button>
@@ -634,7 +683,7 @@ function ApplicationFormPanel({
             {t('common.cancel')}
           </button>
         </div>
-        {!canSave && <p className="text-[13px] text-ink-soft">{t('tracker.saveBlocked')}</p>}
+        {!canSave && <p className="text-[14px] leading-relaxed text-ink-soft">{t('tracker.saveBlocked')}</p>}
       </form>
     </Card>
   )
@@ -663,7 +712,7 @@ function StageColumn({
   return (
     <div className={`space-y-3 ${apps.length === 0 ? 'hidden lg:block' : ''}`}>
       <div className="flex items-center gap-2">
-        <h3 className="text-sm font-bold">{STAGE_LABEL[stage]}</h3>
+        <h3 className="text-[15px] font-semibold">{STAGE_LABEL[stage]}</h3>
         <span className="tnum rounded-full bg-line px-2 py-0.5 text-xs font-bold text-ink-soft">{apps.length}</span>
       </div>
       <div className="space-y-3">
@@ -718,9 +767,9 @@ function ApplicationCard({
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-[14px] font-bold leading-tight">{app.company}</p>
-          <p className="text-[13px] text-ink-soft">{app.role}</p>
+          <p className="text-[14px] leading-relaxed text-ink-soft">{app.role}</p>
         </div>
-        <span className="shrink-0 rounded-full bg-saffron-soft px-2 py-0.5 text-[10px] font-bold text-saffron lg:hidden">
+        <span className="shrink-0 rounded-full bg-paper px-2 py-0.5 text-[12px] font-semibold text-ink-soft lg:hidden">
           {STAGE_LABEL[app.stage]}
         </span>
       </div>
@@ -749,7 +798,7 @@ function ApplicationCard({
       )}
 
       {actions.length > 0 && (
-        <div className="space-y-1.5 pt-1 text-[11px]">
+        <div className="space-y-1.5 pt-1 text-[12px]">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-ink-faint">{t('tracker.doorway.label')}</span>
             {actions.map((slug) => {
@@ -771,8 +820,8 @@ function ApplicationCard({
                           })
                       : undefined
                   }
-                  className={`inline-flex min-h-[44px] items-center rounded-full border bg-paper px-3 text-[12px] font-bold transition-colors hover:border-saffron hover:text-saffron ${
-                    isPrefilledThis ? 'border-saffron/50 text-saffron' : 'border-line text-ink-soft'
+                  className={`inline-flex min-h-[44px] items-center rounded-xl border bg-card px-3 text-[13px] font-semibold transition-colors hover:border-field hover:text-ink ${
+                    isPrefilledThis ? 'border-ink text-ink' : 'border-line text-ink-soft'
                   }`}
                 >
                   {t(tool.titleKey)}
@@ -781,7 +830,7 @@ function ApplicationCard({
             })}
           </div>
           {isPrefilledDecoder && (
-            <p className="text-[11px] leading-relaxed text-ink-faint">{t('tracker.doorway.prefilled')}</p>
+            <p className="text-[12px] leading-relaxed text-ink-faint">{t('tracker.doorway.prefilled')}</p>
           )}
         </div>
       )}
@@ -848,7 +897,7 @@ function ApplicationCard({
                       onArchive(reason)
                       setArchiving(false)
                     }}
-                    className="min-h-[24px] rounded-lg border border-line bg-card px-2 py-1 text-xs font-semibold text-ink hover:border-saffron hover:text-saffron transition-colors"
+                    className="min-h-[24px] rounded-lg border border-line bg-card px-2 py-1 text-xs font-semibold text-ink hover:border-field hover:text-saffron-strong transition-colors"
                   >
                     {t(`tracker.archive.${reason}`)}
                   </button>
@@ -885,12 +934,12 @@ function ArchivedApplicationCard({
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {reason && (
-            <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-semibold text-ink-soft">
+            <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[12px] font-semibold text-ink-soft">
               {t(`tracker.archive.${reason}`)}
             </span>
           )}
           {closedOn && (
-            <span className="tnum rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-medium text-ink-faint">
+            <span className="tnum rounded-full border border-line bg-paper px-2 py-0.5 text-[12px] font-medium text-ink-faint">
               {t('tracker.archive.closedDate', { date: formatDate(closedOn, lang) })}
             </span>
           )}
@@ -901,7 +950,7 @@ function ArchivedApplicationCard({
         <button
           type="button"
           onClick={onRestore}
-          className="min-h-[24px] rounded-lg border border-line bg-paper px-2.5 py-1 text-xs font-semibold text-ink-soft hover:border-saffron hover:text-saffron transition-colors"
+          className="min-h-[24px] rounded-lg border border-line bg-paper px-2.5 py-1 text-xs font-semibold text-ink-soft hover:border-field hover:text-saffron-strong transition-colors"
         >
           {t('tracker.archive.restore')}
         </button>
@@ -919,7 +968,7 @@ function ArchivedApplicationCard({
 
 function Chip({ children }: { children: ReactNode }) {
   return (
-    <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[11px] font-medium text-ink-soft">
+    <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[12px] font-medium text-ink-soft">
       {children}
     </span>
   )

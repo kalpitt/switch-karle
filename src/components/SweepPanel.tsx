@@ -96,7 +96,7 @@ export function SweepPanel({
             <button
               type="button"
               onClick={handleCopy}
-              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-saffron hover:text-saffron"
+              className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-field hover:text-saffron-strong"
             >
               {copied ? t('sweep.copied') : t('sweep.copy')}
             </button>
@@ -117,12 +117,12 @@ export function SweepPanel({
             type="button"
             onClick={handleRead}
             aria-disabled={text.trim() === ''}
-            className="min-h-[44px] rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
+            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2 text-[13px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
           >
             {t('sweep.read')}
           </button>
         </div>
-        {text.trim() === '' && <p className="text-[13px] text-ink-soft">{t('sweep.readBlocked')}</p>}
+        {text.trim() === '' && <p className="text-[14px] leading-relaxed text-ink-soft">{t('sweep.readBlocked')}</p>}
       </div>
 
       {error && (
@@ -162,7 +162,7 @@ export function SweepPanel({
                             }
                             setSelected(next)
                           }}
-                          className="h-4 w-4 rounded border-line text-saffron focus:ring-saffron"
+                          className="h-4 w-4 rounded border-line text-saffron-strong focus:ring-saffron"
                         />
                         <div className="min-w-0 text-[13px]">
                           <span className="font-semibold text-ink">{candidate.company}</span>
@@ -177,7 +177,7 @@ export function SweepPanel({
                         </div>
                       </div>
                       {isClosed && (
-                        <span className="shrink-0 rounded-full border border-alarm/20 bg-alarm-soft px-2 py-0.5 text-[11px] font-medium text-alarm">
+                        <span className="shrink-0 rounded-full border border-alarm/20 bg-alarm-soft px-2 py-0.5 text-[12px] font-medium text-alarm">
                           {t('sweep.looksClosed')}
                         </span>
                       )}
@@ -211,7 +211,7 @@ export function SweepPanel({
                 type="button"
                 aria-disabled={selected.size === 0}
                 onClick={handleAdd}
-                className="min-h-[44px] rounded-xl bg-saffron px-4 py-2 text-[13px] font-bold text-white shadow-md shadow-saffron/20 transition-transform active:scale-[0.98] aria-disabled:opacity-50"
+                className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2 text-[13px] font-bold text-white transition-transform active:scale-[0.98] aria-disabled:opacity-50"
               >
                 {t('sweep.add')}
               </button>

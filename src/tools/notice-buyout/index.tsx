@@ -2,17 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { buyoutQuote } from '../../engine/noticeBuyout'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
-import {
-  Card,
-  Disclaimer,
-  ExampleNote,
-  MoneyField,
-  NumberField,
-  Receipt,
-  Select,
-  ShareRow,
-  VerdictBanner,
-} from '../../components/ui'
+import { Card, Disclaimer, MoneyField, NumberField, Receipt, ResultHero, Select, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
 import { fillFromCurrentJob, loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -117,8 +107,8 @@ function Body() {
 
   return (
     <div data-tool="notice-buyout" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('notice-buyout.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('notice-buyout.formTitle')}</h2>
         <PrivacyLine />
         <Select
           label={t('notice-buyout.basis')}
@@ -174,14 +164,17 @@ function Body() {
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
       <div className="-order-1 space-y-4 lg:order-none">
-        {isExample ? (
-          <ExampleNote chip={t('ui.exampleChip')} note={t('ui.exampleNote')} />
-        ) : (
-          <VerdictBanner>{verdict}</VerdictBanner>
-        )}
-        <Receipt ids={TOOL_SOURCES['notice-buyout']} />
+        <ResultHero
+          sample={isExample}
+          label={t(draft.mode === 'pay' ? 'hero.notice-buyout.pay' : 'hero.notice-buyout.recover')}
+          value={formatINR(result.amount)}
+          verdict={verdict}
+          tone={draft.mode === 'pay' ? 'neutral' : 'amber'}
+        >
+          <Receipt ids={TOOL_SOURCES['notice-buyout']} />
+        </ResultHero>
         <Card>
-          <h3 className="mb-2 text-sm font-bold">{t('notice-buyout.bothBases')}</h3>
+          <h3 className="mb-2 text-[15px] font-semibold">{t('notice-buyout.bothBases')}</h3>
           <p className="tnum flex justify-between gap-3 text-[13px]">
             <span>{t('notice-buyout.row.basic')}</span>
             <span>
@@ -212,9 +205,9 @@ function Body() {
             })}
           </p>
         )}
-        <p className="text-[13px] text-ink-soft">{t('notice-buyout.leaveCandidate')}</p>
-        <p className="text-[13px] text-ink-soft">{t('notice-buyout.divisor')}</p>
-        <p className="text-[13px] text-amberflag">{t('notice-buyout.gstNote')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.leaveCandidate')}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('notice-buyout.divisor')}</p>
+        <p className="text-[14px] leading-relaxed text-amberflag">{t('notice-buyout.gstNote')}</p>
         {!isExample && (
           <ShareRow
             copyText={copyText}

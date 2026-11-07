@@ -6,13 +6,15 @@ import { noticeTracker } from '../engine/noticeTracker'
 
 const toolsDir = dirname(fileURLToPath(import.meta.url))
 const trackerSrc = readFileSync(join(toolsDir, 'notice-tracker', 'index.tsx'), 'utf8')
+const uiSrc = readFileSync(join(toolsDir, '..', 'components', 'ui.tsx'), 'utf8')
 
 describe('Lead 4: notice-tracker resign-date default', () => {
   it('untouched initial state should be labeled as an example (e.g. via ExampleNote / isExample)', () => {
     // Like insurance-gap, bonus-clawback, and 14 other tools, unedited defaults
     // must be marked as an example so a user who has not resigned is not shown a live countdown presented as fact.
-    expect(trackerSrc).toMatch(/ExampleNote/)
-    expect(trackerSrc).toMatch(/isExample/)
+    // The answer is drawn by ResultHero, which tags it with ExampleNote while `sample` is set.
+    expect(trackerSrc).toMatch(/<ResultHero[\s\S]*?sample=\{isExample\}/)
+    expect(uiSrc).toMatch(/\{sample && \([\s\S]*?<ExampleNote/)
   })
 
   /**
@@ -36,7 +38,9 @@ describe('Lead 4: notice-tracker resign-date default', () => {
     expect(trackerSrc).toMatch(/const isExample = !touched/)
     expect(trackerSrc).toMatch(/if \(saved\) setTouched\(true\)/)
     expect(trackerSrc).not.toMatch(/job\.noticePeriodDays[^\n]*setTouched/)
-    // And the render swaps ExampleNote in for VerdictBanner while isExample is true.
-    expect(trackerSrc).toMatch(/isExample \? \(\s*<ExampleNote/)
+    // And the render labels the answer as the worked example while isExample is true:
+    // ResultHero carries the Example tag above the countdown (sample answer on first
+    // visit, approved 2026-10-31), so the figure is never shown as fact.
+    expect(trackerSrc).toMatch(/<ResultHero\s+sample=\{isExample\}/)
   })
 })

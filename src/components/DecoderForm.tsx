@@ -24,7 +24,7 @@ export function DecoderForm({
 
   return (
     <Card className="space-y-4">
-      <h2 className="text-base font-bold">{t('decoder.title')}</h2>
+      <h2 className="text-[18px] font-semibold leading-snug">{t('decoder.title')}</h2>
       <PrivacyLine />
 
       <div className="grid grid-cols-2 gap-3">
@@ -62,7 +62,7 @@ export function DecoderForm({
       <label className="block">
         <Label>{t('decoder.field.state.label')}</Label>
         <select
-          className="mt-1.5 w-full rounded-xl border border-field bg-paper px-3 py-3 text-[15px] font-medium outline-none focus:border-saffron focus:ring-2 focus:ring-saffron/40"
+          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
           value={value.state}
           onChange={(e) => {
             const state = e.target.value as StateCode
@@ -88,7 +88,7 @@ export function DecoderForm({
         }))}
       />
       {ptVariesByTown(value.state, city) && (
-        <p className="text-[13px] text-ink-soft">{t('city.ptTown', { state: t(`state.${value.state}`) })}</p>
+        <p className="text-[14px] leading-relaxed text-ink-soft">{t('city.ptTown', { state: t(`state.${value.state}`) })}</p>
       )}
 
       <div className="space-y-2">
@@ -215,7 +215,7 @@ export function DecoderForm({
           max={60}
           value={value.hraPercentOfBasic}
           onChange={(e) => set({ hraPercentOfBasic: Number(e.target.value) })}
-          className="mt-2 w-full accent-saffron"
+          className="mt-2 w-full accent-ink"
         />
         <span className="tnum text-xs font-medium text-ink-soft">
           {t('decoder.field.hra.value', { percent: value.hraPercentOfBasic })}

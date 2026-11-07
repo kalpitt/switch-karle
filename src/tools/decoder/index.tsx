@@ -14,7 +14,7 @@ import { useT, type Lang } from '../../i18n'
 function SeededNote() {
   const t = useT()
   return (
-    <p className="rounded-xl border border-saffron/30 bg-saffron-soft px-3 py-2 text-[12px] leading-relaxed text-ink-soft">
+    <p className="rounded-xl bg-saffron-soft px-3 py-2.5 text-[14px] leading-relaxed text-ink-soft">
       {t('decoder.seeded')}
     </p>
   )
@@ -65,7 +65,7 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
   return (
     <IslandRoot lang={lang} current="decoder">
       <div data-tool="decoder" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-        <div className="space-y-4 lg:sticky lg:top-6">
+        <div className="space-y-4 lg:sticky lg:top-20">
           {seeded && <SeededNote />}
           <AutoFill offer={offer} onChange={edit} />
           <DecoderForm value={offer} onChange={edit} />

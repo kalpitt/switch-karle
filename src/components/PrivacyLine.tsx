@@ -1,6 +1,7 @@
 import { useLang, useT } from '../i18n'
 import { withLang } from '../lib/langPath'
 import { EraseData } from './EraseData'
+import { ShieldCheck } from './icons'
 
 /**
  * Both halves of the privacy promise, at the first money keystroke rather than
@@ -12,14 +13,16 @@ export function PrivacyLine() {
   const t = useT()
   const { lang } = useLang()
   return (
-    <div data-privacy-line className="text-xs leading-relaxed text-leaf">
-      <span aria-hidden>● </span>
-      {t('ui.privacyLine')}{' '}
-      <EraseData label={t('ui.privacyErase')} className="font-semibold underline" />
-      <span aria-hidden> · </span>
-      <a href={`${withLang(lang, 'privacy')}#check`} className="font-semibold underline">
-        {t('ui.privacyCheck')}
-      </a>
+    <div data-privacy-line className="flex gap-2 text-[14px] leading-relaxed text-ink-soft">
+      <ShieldCheck size={16} className="mt-[3px] text-leaf" />
+      <p>
+        {t('ui.privacyLine')}{' '}
+        <EraseData label={t('ui.privacyErase')} className="font-semibold text-ink underline underline-offset-2" />
+        <span aria-hidden> · </span>
+        <a href={`${withLang(lang, 'privacy')}#check`} className="font-semibold text-ink underline underline-offset-2">
+          {t('ui.privacyCheck')}
+        </a>
+      </p>
     </div>
   )
 }

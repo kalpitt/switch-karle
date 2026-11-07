@@ -133,8 +133,8 @@ function Body() {
 
   return (
     <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
-      <Card className="space-y-3 lg:sticky lg:top-6">
-        <h2 className="text-base font-bold">{t('resignation-letter.formTitle')}</h2>
+      <Card className="space-y-3 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{t('resignation-letter.formTitle')}</h2>
         <p className="text-xs leading-snug text-ink-faint">{t('resignation-letter.formHint')}</p>
         <TextField label={t('resignation-letter.company')} value={draft.company} onChange={(v) => set({ company: v })} />
         <TextField label={t('resignation-letter.manager')} value={draft.manager} onChange={(v) => set({ manager: v })} />
@@ -190,12 +190,12 @@ function Body() {
       <div className="-order-1 space-y-4 lg:order-none">
         <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
         {earliestSafeJoin !== '' && (
-          <p className="text-[13px] text-ink-soft">
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
           </p>
         )}
         <Receipt ids={TOOL_SOURCES['resignation-letter']} />
-        {overlap && <p className="text-[13px] text-amberflag">{t('resignation-letter.epfo')}</p>}
+        {overlap && <p className="text-[14px] leading-relaxed text-amberflag">{t('resignation-letter.epfo')}</p>}
         {earliestSafeJoin !== '' && (
           <p className="tnum text-[13px] text-ink-soft">
             {t('resignation-letter.earliestJoin', { date: formatLongDate(earliestSafeJoin, lang) })}
