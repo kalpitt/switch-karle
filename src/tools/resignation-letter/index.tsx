@@ -14,7 +14,9 @@ import {
   VerdictBanner,
 } from '../../components/ui'
 import { NextStep } from '../../components/NextStep'
+import { PlanDatesNote } from '../../components/PlanDatesNote'
 import { TOOL_SOURCES } from '../../data/sources'
+import { loadPlanDates, seedFromPlan, stillFromPlan, type PlanDateMap, type PlanDates } from '../../data/planDates'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
 import { formatLongDate } from '../../lib/formatDate'
 import { readJson, writeJson } from '../../lib/storage'
@@ -35,6 +37,9 @@ interface Draft {
   newJoinDate: string
   tone: Tone
 }
+
+/** The resign date picked on the home plan lands here on a first visit (UX-15). */
+const PLAN_MAP = { resignDate: 'resignDate' } as const satisfies PlanDateMap<Draft>
 
 /** Local calendar date, not UTC — a 1 AM IST resignation must not say yesterday. */
 function todayISO() {
@@ -65,27 +70,38 @@ function Body() {
     tone: 'professional',
   })
   const [hydrated, setHydrated] = useState(false)
+  /** The plan dates placed on boot; empty when the tool had its own saved draft. */
+  const [seeded, setSeeded] = useState<PlanDates>({})
 
   useEffect(() => {
     // The letter goes to the current employer, so the notice period is the
     // current job's — from the shared record, never the new offer's.
     const job = loadCurrentJob()
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
-    setDraft(
-      saved
-        ? { ...saved, noticeDays: job.noticePeriodDays ?? saved.noticeDays }
-        : {
-            company: '',
-            manager: '',
-            role: '',
-            yourName: '',
-            empId: '',
-            resignDate: todayISO(),
-            noticeDays: job.noticePeriodDays ?? 90,
-            newJoinDate: '',
-            tone: 'professional',
-          },
-    )
+    if (saved) {
+      setDraft({ ...saved, noticeDays: job.noticePeriodDays ?? saved.noticeDays })
+    } else {
+      // A first visit dates the letter on the plan's resign date when there is
+      // one, and on today otherwise.
+      const planned = seedFromPlan(
+        {
+          company: '',
+          manager: '',
+          role: '',
+          yourName: '',
+          empId: '',
+          resignDate: todayISO(),
+          noticeDays: job.noticePeriodDays ?? 90,
+          newJoinDate: '',
+          tone: 'professional',
+        } satisfies Draft,
+        loadPlanDates(),
+        PLAN_MAP,
+        false,
+      )
+      setDraft(planned.draft)
+      setSeeded(planned.seeded)
+    }
     setHydrated(true)
   }, [])
 
@@ -131,6 +147,7 @@ function Body() {
     draft.role.trim() !== '' &&
     !letter.includes('[')
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
+  const fromPlan = stillFromPlan(draft, seeded, PLAN_MAP)
 
   return (
     <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
@@ -195,6 +212,7 @@ function Body() {
             {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(earliestSafeJoin, lang) })}
           </p>
         )}
+        <PlanDatesNote dates={fromPlan} />
         <Receipt ids={TOOL_SOURCES['resignation-letter']} />
         {overlap && <p className="text-[14px] leading-relaxed text-amberflag">{t('resignation-letter.epfo')}</p>}
         {earliestSafeJoin !== '' && (

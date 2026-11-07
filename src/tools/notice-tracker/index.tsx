@@ -11,7 +11,9 @@ import {
   ResultHero,
 } from '../../components/ui'
 import { NextStep } from '../../components/NextStep'
+import { PlanDatesNote } from '../../components/PlanDatesNote'
 import { TOOL_SOURCES } from '../../data/sources'
+import { loadPlanDates, seedFromPlan, stillFromPlan, type PlanDateMap, type PlanDates } from '../../data/planDates'
 import { noticeTracker, type NoticeItemId } from '../../engine/noticeTracker'
 import { todayIso } from '../../lib/today'
 import { loadCurrentJob, rememberCurrentJob } from '../../data/currentJob'
@@ -33,6 +35,9 @@ interface Draft {
 function emptyDraft(): Draft {
   return { resignDate: todayIso(), noticePeriodDays: 90, done: [] }
 }
+
+/** The resign date picked on the home plan lands here on a first visit (UX-15). */
+const PLAN_MAP = { resignDate: 'resignDate' } as const satisfies PlanDateMap<Draft>
 
 /** A milestone row is a doorway: the tool that does the thing sits beside it. */
 function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done: boolean }) {
@@ -70,6 +75,8 @@ function Body() {
   // still be invented, and the countdown would be to a resignation that did
   // not happen.
   const [touched, setTouched] = useState(false)
+  /** The plan dates placed on boot; empty when the tool had its own saved draft. */
+  const [seeded, setSeeded] = useState<PlanDates>({})
 
   useEffect(() => {
     // Notice is served at the current employer, so the period is the current
@@ -78,11 +85,18 @@ function Body() {
     const saved = readJson<Draft | null>(STORAGE_KEY, null)
     setAsOf(todayIso())
     if (saved) setTouched(true)
-    setDraft(
-      saved
-        ? { ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays }
-        : { resignDate: todayIso(), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
-    )
+    if (saved) {
+      setDraft({ ...saved, noticePeriodDays: job.noticePeriodDays ?? saved.noticePeriodDays })
+    } else {
+      const planned = seedFromPlan(
+        { resignDate: todayIso(), noticePeriodDays: job.noticePeriodDays ?? 90, done: [] },
+        loadPlanDates(),
+        PLAN_MAP,
+        false,
+      )
+      setDraft(planned.draft)
+      setSeeded(planned.seeded)
+    }
     setHydrated(true)
   }, [])
   useEffect(() => {
@@ -98,7 +112,10 @@ function Body() {
     }
   }, [draft.resignDate, draft.noticePeriodDays, asOf])
 
-  const isExample = !touched
+  const fromPlan = stillFromPlan(draft, seeded, PLAN_MAP)
+  // A resign date the person picked on the plan is not invented, so the
+  // countdown to it is theirs and not the worked example.
+  const isExample = !touched && fromPlan.resignDate === undefined
   const set = (patch: Partial<Draft>) => {
     setTouched(true)
     setDraft((d) => ({ ...d, ...patch }))
@@ -154,6 +171,7 @@ function Body() {
               end={formatLongDate(result.lastWorkingDay, lang)}
             />
           )}
+          <PlanDatesNote dates={fromPlan} />
           <Receipt ids={TOOL_SOURCES['notice-tracker']} />
         </ResultHero>
         <Card className="space-y-2">
