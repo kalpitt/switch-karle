@@ -29,6 +29,8 @@ const fullTitle = slug ? withBrand(title, lang) : title
 const htmlLang = lang === 'hi' ? 'hi' : 'en'
 // Server-side only: these strings are rendered into the HTML, never bundled.
 const t = (key: string) => (lang === 'hi' ? hi[key] : undefined) ?? en[key] ?? key
+// The hashed dictionary file for this language, recorded by the build (astro.config.mjs).
+const dictionaryChunk = (globalThis as { __skDictionaryChunks?: Record<string, string> }).__skDictionaryChunks?.[htmlLang]
 const ogImage = new URL(`${import.meta.env.BASE_URL}og/${lang === 'hi' ? 'default-hi' : 'default'}.png`, Astro.site).href
 ---
 
@@ -40,6 +42,7 @@ const ogImage = new URL(`${import.meta.env.BASE_URL}og/${lang === 'hi' ? 'defaul
     <title>{fullTitle}</title>
     <link rel="preload" as="font" type="font/woff2" href={interLatinUrl} crossorigin />
     {lang === 'hi' && <link rel="preload" as="font" type="font/woff2" href={notoDevanagariUrl} crossorigin />}
+    {dictionaryChunk && <link rel="modulepreload" href={`${base}${dictionaryChunk}`} />}
     <meta name="description" content={description} />
     {
       noindex ? (

@@ -5,6 +5,34 @@ import tailwindcss from '@tailwindcss/vite'
 import AstroPWA from '@vite-pwa/astro'
 import { SITE, BASE } from './site.config.mjs'
 
+/**
+ * The page's dictionary is a dynamic import that starts only once the island
+ * code has loaded and run (src/i18n/index.ts), and hydration waits for it. This
+ * records the hashed file of each language's dictionary as the client bundle is
+ * written, so Base.astro can put a <link rel="modulepreload"> for it in the
+ * HTML and the browser fetches it alongside everything else (N-04). Astro
+ * renders the pages after the client build, in the same process. In dev there
+ * is no hashed file and no link.
+ */
+function dictionaryPreload() {
+  const entries = { en: '/src/i18n/en.ts', hi: '/src/i18n/hi-dictionary.ts' }
+  return {
+    name: 'switch-karle:dictionary-preload',
+    /** @param {unknown} _ @param {Record<string, { type: string, fileName: string, facadeModuleId?: string | null }>} bundle */
+    generateBundle(_, bundle) {
+      const found = /** @type {Record<string, string>} */ ({})
+      for (const chunk of Object.values(bundle)) {
+        // Client chunks only: the server build writes its own copies elsewhere.
+        if (chunk.type !== 'chunk' || !chunk.fileName.startsWith('_astro/')) continue
+        for (const [lang, path] of Object.entries(entries)) {
+          if (chunk.facadeModuleId?.replaceAll('\\', '/').endsWith(path)) found[lang] = chunk.fileName
+        }
+      }
+      if (Object.keys(found).length > 0) /** @type {any} */ (globalThis).__skDictionaryChunks = found
+    },
+  }
+}
+
 export default defineConfig({
   site: SITE,
   base: BASE,
@@ -70,6 +98,6 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), dictionaryPreload()],
   },
 })
