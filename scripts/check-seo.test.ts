@@ -200,3 +200,13 @@ describe('pageSlugs', () => {
     expect(pageSlugs(src)).toEqual(['gratuity', 'what-to-say', 'decoder'])
   })
 })
+
+describe('check-seo: titles are unique within a language', () => {
+  it('lets a Hindi twin share its English page title, but not two pages in one language', () => {
+    const titles = new Map()
+    expect(checkHtmlHead(VALID_HEAD, 'gratuity/index.html', titles).ok).toBe(true)
+    expect(checkHtmlHead(VALID_HEAD, 'hi/gratuity/index.html', titles).ok).toBe(true)
+    expect(checkHtmlHead(VALID_HEAD, 'decoder/index.html', titles).errors.some((e: string) => e.includes('duplicate title'))).toBe(true)
+    expect(checkHtmlHead(VALID_HEAD, 'hi/decoder/index.html', titles).errors.some((e: string) => e.includes('duplicate title'))).toBe(true)
+  })
+})

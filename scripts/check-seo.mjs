@@ -65,10 +65,16 @@ export function checkHtmlHead(html, rel = 'page.html', titles = new Map()) {
   const normalizedTitle = rawTitle ? rawTitle.trim().replace(/\s+/g, ' ').toLowerCase() : ''
   if (!rawTitle || !normalizedTitle) {
     errors.push(`check-seo: FAIL — ${rel} missing <title>`)
-  } else if (titles.has(normalizedTitle)) {
-    errors.push(`check-seo: FAIL — duplicate title "${rawTitle}" on ${rel} and ${titles.get(normalizedTitle)}`)
   } else {
-    titles.set(normalizedTitle, rel)
+    // Unique within a language. A Hindi twin may share its English page's title
+    // (hreflang ties the two): since 2026-11-07 the brand is "Switch Karle" in
+    // both, and some Hindi tool names are the English words.
+    const key = `${/^hi(?:[\\/]|$)/.test(rel) ? 'hi' : 'en'}:${normalizedTitle}`
+    if (titles.has(key)) {
+      errors.push(`check-seo: FAIL — duplicate title "${rawTitle}" on ${rel} and ${titles.get(key)}`)
+    } else {
+      titles.set(key, rel)
+    }
   }
   return { ok: errors.length === 0, errors }
 }
