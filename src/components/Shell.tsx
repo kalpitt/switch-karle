@@ -2,7 +2,7 @@ import type { MouseEvent, ReactNode } from 'react'
 import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
-import { TOOLS } from '../data/tools'
+import { TOOLS, TOOLS_PAGE, toolBySlug } from '../data/tools'
 import { verifiedRange } from '../data/sources'
 import { INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
 import { formatLongDate } from '../lib/formatDate'
@@ -24,10 +24,13 @@ export function Shell({ current, children }: { current: string; children: ReactN
   // Before this, every page's only <h1> was "Switch Karle" and a visitor landing on
   // /gratuity/ was never told what the page was called.
   const tool = current === 'home' ? undefined : TOOLS.find((x) => x.slug === current)
+  // A What to say situation is headed by the one What to say page it lives on.
+  const heading = tool?.partOf ? toolBySlug(tool.partOf) : tool
   // The pages about the site name themselves with their own <h1>, like tools do.
   const infoPage = (INFO_PAGES as readonly string[]).includes(current)
   // The home page names itself too: the plan's headline is its <h1> (COPY-03).
-  const Brand = tool || infoPage || current === '404' || current === 'home' ? 'p' : 'h1'
+  // The all-tools page names itself too.
+  const Brand = tool || infoPage || current === '404' || current === 'home' || current === TOOLS_PAGE ? 'p' : 'h1'
   // The page this one is a twin of. The 404 has no twin, so its toggle goes home.
   const slug = tool ? tool.slug : current === 'home' || current === '404' ? '' : current
   const pick = current === '404' ? undefined : setLang
@@ -41,9 +44,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
       >
         {t('app.skipToContent')}
       </a>
-      {/* One compact bar (VIS-04): mark and name, then the tabs, then search and language.
-          On a phone the tabs take a second 44px row; from md up it is one 56px row that
-          stays at the top while the page scrolls. */}
+      {/* One compact bar (VIS-04): mark and name, then the two places (your plan, all
+          tools), then search and language. On a phone the two links take a second 44px
+          row; from md up it is one 56px row that stays at the top while the page scrolls.
+          Every tool is one tap from "All tools" and from search. */}
       <header className="no-print relative z-30 border-b border-line bg-card md:sticky md:top-0">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 px-4 sm:px-6">
           <a href={withLang(lang)} className="order-1 -ml-1 inline-flex h-14 items-center gap-2 px-1">
@@ -70,24 +74,22 @@ export function Shell({ current, children }: { current: string; children: ReactN
             className="order-3 -mx-4 flex w-[calc(100%+2rem)] flex-nowrap overflow-x-auto border-t border-line px-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-4 md:order-2 md:mx-0 md:w-auto md:border-t-0 md:px-0 [&::-webkit-scrollbar]:hidden"
           >
             <NavLink href={withLang(lang)} active={current === 'home'}>
-              {t('nav.home')}
+              {t('nav.plan')}
             </NavLink>
-            {TOOLS.filter((tool) => ['decoder', 'tracker', 'prompts'].includes(tool.slug)).map((tool) => (
-              <NavLink key={tool.slug} href={withLang(lang, tool.slug)} active={current === tool.slug}>
-                {t(tool.titleKey)}
-              </NavLink>
-            ))}
+            <NavLink href={withLang(lang, TOOLS_PAGE)} active={current === TOOLS_PAGE}>
+              {t('nav.allTools')}
+            </NavLink>
           </nav>
         </div>
       </header>
 
       <main id="main" tabIndex={-1} className="mx-auto max-w-6xl px-4 pb-16 pt-6 outline-none sm:px-6 sm:pt-10">
-        {tool && (
+        {heading && (
           <div className="mb-6 sm:mb-8">
             <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">
-              {t(tool.titleKey)}
+              {t(heading.titleKey)}
             </h1>
-            <p className="mt-2 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">{t(tool.descKey)}</p>
+            <p className="mt-2 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">{t(heading.descKey)}</p>
           </div>
         )}
         {children}

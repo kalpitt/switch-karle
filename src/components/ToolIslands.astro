@@ -15,7 +15,7 @@ import LeaveEncashmentTool from '../tools/leave-encashment/index'
 import FnfCheckerTool from '../tools/fnf-checker/index'
 import Form16ShockTool from '../tools/form16-shock/index'
 import ResignationLetterTool from '../tools/resignation-letter/index'
-import ScriptsTool from '../tools/scripts/index'
+import WhatToSayTool from '../tools/what-to-say/index'
 import CounterOfferTool from '../tools/counter-offer/index'
 import HandoverDocTool from '../tools/handover-doc/index'
 import RelievingChaserTool from '../tools/relieving-chaser/index'
@@ -29,6 +29,7 @@ import RedactorTool from '../tools/redactor/index'
 import ClauseLibraryTool from '../tools/clause-library/index'
 import OfferGoesColdTool from '../tools/offer-goes-cold/index'
 import { isScriptSlug } from '../data/hrScripts'
+import { WHAT_TO_SAY } from '../data/tools'
 import type { Lang } from '../i18n'
 
 interface Props {
@@ -55,7 +56,7 @@ const { slug, lang } = Astro.props
 {slug === 'fnf-checker' && <FnfCheckerTool client:load lang={lang} />}
 {slug === 'form16-shock' && <Form16ShockTool client:load lang={lang} />}
 {slug === 'resignation-letter' && <ResignationLetterTool client:load lang={lang} />}
-{isScriptSlug(slug) && <ScriptsTool client:load slug={slug} lang={lang} />}
+{(slug === WHAT_TO_SAY || isScriptSlug(slug)) && <WhatToSayTool client:load slug={slug} lang={lang} />}
 {slug === 'counter-offer' && <CounterOfferTool client:load lang={lang} />}
 {slug === 'handover-doc' && <HandoverDocTool client:load lang={lang} />}
 {slug === 'relieving-chaser' && <RelievingChaserTool client:load lang={lang} />}

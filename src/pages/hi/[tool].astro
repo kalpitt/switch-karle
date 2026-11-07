@@ -4,6 +4,7 @@ import { islandTools, toolBySlug } from '../../data/tools'
 import ToolIslands from '../../components/ToolIslands.astro'
 import { epfFaqJsonLd } from '../../data/epfFaq'
 import { dictionaries } from '../../i18n'
+import { toolTitle } from '../../lib/pageTitle'
 
 export function getStaticPaths() {
   return islandTools().map((tool) => ({ params: { tool: tool.slug } }))
@@ -17,7 +18,7 @@ if (!def) throw new Error(`unknown tool: ${slug}`)
 const epfFaq = slug === 'epf-transfer' ? epfFaqJsonLd() : undefined
 // The browser tab, bookmarks and a shared link's preview speak the page's language:
 // the Hindi tool name and one-line description the page itself shows.
-const title = dictionaries.hi[def.titleKey] ?? def.seoTitle
+const title = toolTitle(def, 'hi', dictionaries.hi)
 const description = dictionaries.hi[def.descKey] ?? def.seoDescription
 ---
 

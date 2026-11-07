@@ -2,7 +2,7 @@
  * The seven journey stages from PRODUCT.md, and which tools sit in each.
  * Every tool has exactly one `journey` (tools.test.ts holds that).
  */
-import { TOOLS, type ToolDef } from './tools'
+import { TOOLS, WHAT_TO_SAY, type ToolDef } from './tools'
 
 export type JourneyId = ToolDef['journey']
 
@@ -22,6 +22,61 @@ export function journeySections(tools: readonly ToolDef[] = TOOLS): JourneySecti
     whatKey: `journey.${id}.what`,
     tools: tools.filter((tool) => tool.journey === id),
   })).filter((section) => section.tools.length > 0)
+}
+
+/** One row in a list of tools: a tool, or a group shown once in this stage. */
+export type ListEntry =
+  | { kind: 'tool'; tool: ToolDef }
+  | {
+      kind: 'group'
+      /** The group's own page (What to say), for its name and one-liner. */
+      group: ToolDef
+      /** The group's situations in this stage, in registry order. The row links to the first. */
+      situations: ToolDef[]
+    }
+
+export interface ListSection {
+  id: JourneyId
+  nameKey: string
+  whatKey: string
+  entries: ListEntry[]
+}
+
+/**
+ * The seven stages as the lists show them (/tools/, the home link count).
+ * A situation of What to say is folded into one "What to say" row per stage it
+ * appears in, sitting where its first situation sits and linking straight to
+ * it. The What to say page itself is not listed again: its rows stand for it.
+ */
+export function listSections(tools: readonly ToolDef[] = TOOLS): ListSection[] {
+  const group = tools.find((tool) => tool.slug === WHAT_TO_SAY)
+  return journeySections(tools.filter((tool) => tool.slug !== WHAT_TO_SAY))
+    .map(({ id, nameKey, whatKey, tools: inStage }) => {
+      const entries: ListEntry[] = []
+      for (const tool of inStage) {
+        if (!tool.partOf) {
+          entries.push({ kind: 'tool', tool })
+          continue
+        }
+        const row = entries.find((entry) => entry.kind === 'group')
+        if (row && row.kind === 'group') row.situations.push(tool)
+        else if (group) entries.push({ kind: 'group', group, situations: [tool] })
+      }
+      return { id, nameKey, whatKey, entries }
+    })
+    .filter((section) => section.entries.length > 0)
+}
+
+/** What to say's situations, stage by stage: the picker on that page. */
+export function whatToSayGroups(tools: readonly ToolDef[] = TOOLS): { id: JourneyId; nameKey: string; situations: ToolDef[] }[] {
+  return listSections(tools).flatMap(({ id, nameKey, entries }) =>
+    entries.flatMap((entry) => (entry.kind === 'group' ? [{ id, nameKey, situations: entry.situations }] : [])),
+  )
+}
+
+/** How many things the lists show: every tool, with What to say counted once. */
+export function distinctToolCount(tools: readonly ToolDef[] = TOOLS): number {
+  return tools.filter((tool) => !tool.partOf).length
 }
 
 /** Where a "Next" link goes: another tool, or back to the plan on the home page. */
@@ -54,6 +109,9 @@ export const NEXT_STEP: Readonly<Record<string, string>> = {
   prompts: 'redactor',
   redactor: 'expected-ctc',
   // 2 Talking to them
+  // The What to say page with no situation picked shows no Next link (the
+  // picker is the next thing); this entry keeps the chain whole for tests.
+  [WHAT_TO_SAY]: 'expected-ctc',
   'expected-ctc': 'recruiter-followup',
   'recruiter-followup': 'real-hike',
   'real-hike': 'decoder',

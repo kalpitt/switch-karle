@@ -1,75 +1,208 @@
-import { useEffect, useMemo, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
+import { ChevronRight } from '../../components/icons'
 import { Card, CopyButton, Disclaimer, MoneyField, Select, TextField, VerdictBanner } from '../../components/ui'
-import { SCRIPT_SLUGS, type ScriptSlug } from '../../data/hrScripts'
-import { TOOLS } from '../../data/tools'
+import { isScriptSlug, type ScriptSlug } from '../../data/hrScripts'
+import { WHAT_TO_SAY, toolBySlug, type ToolDef } from '../../data/tools'
+import { whatToSayGroups } from '../../data/journey'
 import { formatLongDate } from '../../lib/formatDate'
-import { withLang } from '../../lib/langPath'
+import { slugFromPath, withLang } from '../../lib/langPath'
+import { toolTitle, withBrand } from '../../lib/pageTitle'
 import { readJson } from '../../lib/storage'
-import { useLang, useT, type Lang } from '../../i18n'
+import { dictionaries, useLang, useT, type Lang } from '../../i18n'
 
 /** Read-only pull from the resignation island's own key (allowed per D10). */
 const RESIGNATION_KEY = 'switchkarle.resignation.v1' as const
 
 type Preset = 'supportive' | 'counter-risk' | 'hostile'
 
-export default function ScriptsTool({ slug, lang = 'en' }: { slug: ScriptSlug; lang?: Lang }) {
+/**
+ * What to say (decision 4, 2026-10-31): the seven scripts on one page with a
+ * situation picker. /what-to-say/ opens on the picker; each situation's own
+ * address (/expected-ctc/, /hi/manager-script/, …) is a real page that renders
+ * this same island with that situation picked, so old links, bookmarks and the
+ * offline copy keep working. Picking another situation swaps it in place and
+ * moves the address to that situation's page, so reload, share and Back agree.
+ */
+export default function WhatToSayTool({ slug, lang = 'en' }: { slug: string; lang?: Lang }) {
+  const [situation, setSituation] = useState<ScriptSlug | null>(isScriptSlug(slug) ? slug : null)
+  const first = useRef(true)
+
+  // Back and Forward walk through the situations picked here.
+  useEffect(() => {
+    const onPop = () => {
+      const at = slugFromPath(window.location.pathname, import.meta.env.BASE_URL || '/')
+      setSituation(isScriptSlug(at) ? at : null)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
+  // The tab names the situation on screen, as the page's own <title> does.
+  useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return
+    }
+    const def = toolBySlug(situation ?? WHAT_TO_SAY)
+    if (def) document.title = withBrand(toolTitle(def, lang, dictionaries.hi), lang)
+  }, [situation, lang])
+
+  const pick = (next: ScriptSlug) => {
+    if (next === situation) return
+    window.history.pushState(null, '', withLang(lang, next))
+    setSituation(next)
+  }
+
   return (
-    <IslandRoot lang={lang} current={slug}>
-      <Body slug={slug} />
+    <IslandRoot lang={lang} current={situation ?? WHAT_TO_SAY}>
+      <Body situation={situation} onPick={pick} />
     </IslandRoot>
   )
 }
 
-/** Hop between the seven scripts without going back to the home grid. */
-function ScriptSwitcher({ current }: { current: ScriptSlug }) {
+function Body({ situation, onPick }: { situation: ScriptSlug | null; onPick: (slug: ScriptSlug) => void }) {
+  const t = useT()
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const headingId = useId()
+  const def = situation ? toolBySlug(situation) : undefined
+  const [announce, setAnnounce] = useState('')
+
+  const pick = (slug: ScriptSlug) => {
+    // From the full list the picker turns into a row of chips, so the link that
+    // had focus is gone: send focus to the situation's heading instead.
+    const fromList = situation === null
+    onPick(slug)
+    setAnnounce(t('what-to-say.showing', { name: t(toolBySlug(slug)?.titleKey ?? slug) }))
+    if (fromList) requestAnimationFrame(() => headingRef.current?.focus())
+  }
+
+  return (
+    <div data-tool={WHAT_TO_SAY} data-situation={situation ?? undefined} className="mx-auto max-w-2xl space-y-5">
+      <SituationPicker current={situation} onPick={pick} />
+      <p role="status" className="sr-only">
+        {announce}
+      </p>
+      {situation && def && (
+        <section aria-labelledby={headingId} className="space-y-4 border-t border-line pt-5">
+          <div>
+            <h2
+              id={headingId}
+              ref={headingRef}
+              tabIndex={-1}
+              className="font-display text-[22px] font-bold leading-snug tracking-[-0.01em] text-ink outline-none"
+            >
+              {t(def.titleKey)}
+            </h2>
+            <p className="mt-1 text-[15px] leading-relaxed text-ink-soft">{t(def.descKey)}</p>
+          </div>
+          <p className="text-[14px] text-ink-soft">{t(situation === 'manager-script' ? 'manager-script.lead' : 'hr.lead')}</p>
+          {situation === 'manager-script' ? (
+            <SpokenScript />
+          ) : situation === 'expected-ctc' ? (
+            <ExpectedCtcScript />
+          ) : (
+            <StaticScript slug={situation} />
+          )}
+          <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
+        </section>
+      )}
+      {/* With nothing picked the picker is the next thing; the Next link waits for a situation. */}
+      <NextStep from={situation ?? WHAT_TO_SAY} hidden={!situation} />
+    </div>
+  )
+}
+
+/**
+ * The situations, stage by stage. With nothing picked it is a list with each
+ * situation's one-liner; once one is picked it folds into chips above the script.
+ * Each entry is a real link to the situation's page: it works before the page
+ * is interactive and opens in a new tab; a plain click swaps in place.
+ */
+function SituationPicker({ current, onPick }: { current: ScriptSlug | null; onPick: (slug: ScriptSlug) => void }) {
   const t = useT()
   const { lang } = useLang()
-  const titleKey = (slug: ScriptSlug) => TOOLS.find((tool) => tool.slug === slug)?.titleKey ?? slug
+  const groups = whatToSayGroups()
+  const id = useId()
+
+  const click = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || !isScriptSlug(slug)) return
+    e.preventDefault()
+    onPick(slug)
+  }
+
   return (
-    <nav aria-label={t('hr.switcher')} className="no-print flex flex-wrap gap-2">
-      {SCRIPT_SLUGS.map((slug) =>
-        slug === current ? (
-          <span
-            key={slug}
-            aria-current="page"
-            className="inline-flex min-h-[44px] items-center rounded-xl border border-ink bg-ink px-3.5 text-[14px] font-semibold text-white"
-          >
-            {t(titleKey(slug))}
-          </span>
-        ) : (
-          <a
-            key={slug}
-            href={withLang(lang, slug)}
-            className="inline-flex min-h-[44px] items-center rounded-xl border border-line-strong px-3.5 text-[14px] font-medium text-ink-soft transition-colors hover:border-field hover:text-ink"
-          >
-            {t(titleKey(slug))}
-          </a>
-        ),
-      )}
+    <nav aria-label={t('what-to-say.picker')} className="no-print space-y-4">
+      {!current && <p className="text-[15px] font-semibold text-ink">{t('what-to-say.pick')}</p>}
+      {groups.map((group) => (
+        <div key={group.id}>
+          <p id={`${id}-${group.id}`} className="mb-1.5 text-[13px] font-medium text-ink-soft">
+            {t(group.nameKey)}
+          </p>
+          <ul aria-labelledby={`${id}-${group.id}`} className={current ? 'flex flex-wrap gap-2' : 'border-t border-line'}>
+            {group.situations.map((s) => (
+              <li key={s.slug}>
+                {current ? (
+                  <Chip tool={s} href={withLang(lang, s.slug)} active={s.slug === current} onClick={click(s.slug)} />
+                ) : (
+                  <Row tool={s} href={withLang(lang, s.slug)} onClick={click(s.slug)} />
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </nav>
   )
 }
 
-function Body({ slug }: { slug: ScriptSlug }) {
+function Chip({
+  tool,
+  href,
+  active,
+  onClick,
+}: {
+  tool: ToolDef
+  href: string
+  active: boolean
+  onClick: (e: MouseEvent<HTMLAnchorElement>) => void
+}) {
   const t = useT()
-
   return (
-    <div data-tool={slug} className="mx-auto max-w-2xl space-y-4">
-      <p className="text-[15px] text-ink-soft">{t(slug === 'manager-script' ? 'manager-script.lead' : 'hr.lead')}</p>
-      <ScriptSwitcher current={slug} />
-      {slug === 'manager-script' ? (
-        <SpokenScript />
-      ) : slug === 'expected-ctc' ? (
-        <ExpectedCtcScript />
-      ) : (
-        <StaticScript slug={slug} />
-      )}
-      <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
-      <NextStep from={slug} />
-    </div>
+    <a
+      href={href}
+      onClick={onClick}
+      aria-current={active ? 'page' : undefined}
+      className={`inline-flex min-h-[44px] items-center rounded-xl border px-3.5 text-[14px] transition-colors ${
+        active
+          ? 'border-ink bg-ink font-semibold text-white'
+          : 'border-line-strong font-medium text-ink-soft hover:border-field hover:text-ink'
+      }`}
+    >
+      {t(tool.titleKey)}
+    </a>
+  )
+}
+
+function Row({ tool, href, onClick }: { tool: ToolDef; href: string; onClick: (e: MouseEvent<HTMLAnchorElement>) => void }) {
+  const t = useT()
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
+    >
+      <span className="min-w-0 flex-1">
+        <span className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2">
+          {t(tool.titleKey)}
+        </span>
+        <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">{t(tool.descKey)}</span>
+      </span>
+      <ChevronRight className="mt-1 text-ink-faint" />
+    </a>
   )
 }
 

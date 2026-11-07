@@ -1,6 +1,6 @@
 import { useT, useLang, type Lang } from '../../i18n'
-import { journeySections } from '../../data/journey'
-import type { ToolDef } from '../../data/tools'
+import { distinctToolCount } from '../../data/journey'
+import { TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
 import { Plan } from '../plan'
@@ -24,42 +24,17 @@ export default function HomeTool({ lang = 'en' }: { lang?: Lang }) {
   )
 }
 
-/** A tool as a list row, not a card (VIS-27): name, one line of what it does, a chevron. */
-function ToolRow({ tool, lang }: { tool: ToolDef; lang: Lang }) {
-  const t = useT()
-  return (
-    <li>
-      <a
-        href={withLang(lang, tool.slug)}
-        className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
-      >
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2">
-            {t(tool.titleKey)}
-          </span>
-          <span className="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-ink-soft">{t(tool.descKey)}</span>
-        </span>
-        <ChevronRight className="mt-1 text-ink-faint" />
-      </a>
-    </li>
-  )
-}
-
 /**
- * Everything the door pushed down: the board, and the tools behind one tap.
+ * Everything the door pushed down: the board, and the way to every tool.
  *
- * The tracker is no longer rendered here — it is the `tracker` page, which is
- * one tap from the nav on every screen and from the link below. Its own erase
- * control travels with it, so the second copy did not vanish in the move.
- * Removing the tool grid is Phase 2, not this one, so it stays where it was:
- * collapsed, under the door — now grouped by journey stage (PRODUCT.md), with
- * every tool under exactly one.
+ * The tracker is its own page, one tap from the link below and from search.
+ * The full list of tools lives on /tools/ (grouped by journey stage,
+ * PRODUCT.md), the same page the header's "All tools" opens, so there is one
+ * list to keep, not two.
  */
 function BelowTheDoor() {
   const t = useT()
   const { lang } = useLang()
-  const sections = journeySections()
-  const toolCount = sections.reduce((n, section) => n + section.tools.length, 0)
 
   return (
     <div className="space-y-4">
@@ -70,42 +45,14 @@ function BelowTheDoor() {
         </a>
       </p>
 
-      <details className="group rounded-2xl border border-line bg-card">
-        <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-[15px] font-semibold [&::-webkit-details-marker]:hidden">
-          <span>{t('home.allTools', { n: toolCount })}</span>
-          {/* list-none kills the native marker, so carry an explicit affordance —
-              on touch there is no cursor or hover to hint that this opens. */}
-          <ChevronRight size={18} className="text-ink-soft transition-transform group-open:rotate-90" />
-        </summary>
-        <div className="space-y-8 border-t border-line px-5 py-5">
-          {sections.map((section) => (
-            <ToolGroup
-              key={section.id}
-              title={t(section.nameKey)}
-              what={t(section.whatKey)}
-              tools={section.tools}
-              lang={lang}
-            />
-          ))}
-        </div>
-      </details>
+      <a
+        href={withLang(lang, TOOLS_PAGE)}
+        data-all-tools
+        className="group flex min-h-[56px] items-center justify-between gap-3 rounded-2xl border border-line bg-card px-5 py-4 text-[15px] font-semibold transition-colors hover:border-field"
+      >
+        <span className="group-hover:underline group-hover:underline-offset-2">{t('home.allTools', { n: distinctToolCount() })}</span>
+        <ChevronRight size={18} className="shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5" />
+      </a>
     </div>
   )
 }
-
-function ToolGroup({ title, what, tools, lang }: { title: string; what: string; tools: ToolDef[]; lang: Lang }) {
-  return (
-    <div>
-      <h2 className="text-[14px] font-semibold text-ink">
-        {title} <span className="tnum font-normal text-ink-faint">· {tools.length}</span>
-      </h2>
-      <p className="mb-1 text-[13px] leading-snug text-ink-soft">{what}</p>
-      <ul className="grid gap-x-8 sm:grid-cols-2">
-        {tools.map((tool) => (
-          <ToolRow key={tool.slug} tool={tool} lang={lang} />
-        ))}
-      </ul>
-    </div>
-  )
-}
-
