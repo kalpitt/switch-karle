@@ -891,6 +891,7 @@ function TradeOption(props: {
   return (
     <div
       data-trade={trade.id}
+      data-chosen={props.chosen || undefined}
       role="group"
       aria-labelledby={props.losesNothing ? `${titleId} ${cleanId}` : titleId}
       className={`space-y-2 rounded-xl border px-4 py-3 ${props.chosen ? 'border-saffron bg-saffron-soft' : 'border-line bg-card'}`}

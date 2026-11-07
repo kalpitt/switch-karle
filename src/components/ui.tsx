@@ -191,9 +191,11 @@ export function Toggle(props: {
     >
       <Label hint={props.hint}>{props.label}</Label>
       <span
+        data-switch-track
         className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${props.checked ? 'bg-ink' : 'bg-field'}`}
       >
         <span
+          data-switch-knob
           className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${props.checked ? 'translate-x-[18px]' : 'translate-x-0.5'}`}
         />
       </span>

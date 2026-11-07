@@ -150,6 +150,40 @@ textarea {
   }
 }
 
+/* Windows contrast themes (forced colours) drop every background and repaint
+   borders in one colour (A11Y N7). Switches are drawn with backgrounds only, and
+   the current page, language and choice are told apart by a fill, so each gets a
+   mark that survives: the switch is drawn in system colours, and a current or
+   chosen item gets an underline or a Highlight outline. */
+@media (forced-colors: active) {
+  [data-switch-track] {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+  }
+  [data-switch-knob] {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+  [role='switch'][aria-checked='true'] [data-switch-track] {
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+  [role='switch'][aria-checked='true'] [data-switch-knob] {
+    background-color: HighlightText;
+  }
+  a[aria-current] {
+    text-decoration-line: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+  [aria-pressed='true'],
+  [data-chosen] {
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
+  }
+}
+
 html {
   color-scheme: light;
   /* Anchors and scrollIntoView land below the sticky header (56px from md up). */
