@@ -61,6 +61,7 @@ function useStageLabel(): Record<Stage, string> {
 export function Tracker() {
   const t = useT()
   const { lang } = useLang()
+  const STAGE_LABEL = useStageLabel()
   // Empty until mount so SSR HTML matches the first client render. Do not
   // save until hydrated — a save of [] would wipe real tracker data.
   const [list, setList] = useState<Application[]>([])
@@ -73,6 +74,12 @@ export function Tracker() {
   const [restoreFeedback, setRestoreFeedback] = useState<string | null>(null)
   const [restoreError, setRestoreError] = useState<string | null>(null)
   const [undoAvailable, setUndoAvailable] = useState(false)
+  // Where keyboard focus goes after the next render, and what a screen reader
+  // hears. The control that had focus unmounts or moves column on every main
+  // action, which used to drop focus to <body> with nothing said (A11Y N2).
+  const pendingFocus = useRef<{ to: 'opener' } | { to: 'move'; id: string; dir: -1 | 1 } | null>(null)
+  const [status, setStatus] = useState('')
+  const openerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     setList(load())
@@ -96,10 +103,18 @@ export function Tracker() {
   const handleSave = (data: Omit<Application, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (editingApp) {
       setList((l) => updateApplication(l, editingApp.id, data))
+      setStatus(t('tracker.status.saved', { company: data.company }))
     } else {
       setList((l) => addApplication(l, data))
+      setStatus(t('tracker.status.added', { company: data.company, stage: STAGE_LABEL[data.stage] }))
     }
     setFormMode('closed')
+    pendingFocus.current = { to: 'opener' }
+  }
+
+  const handleCancel = () => {
+    setFormMode('closed')
+    pendingFocus.current = { to: 'opener' }
   }
 
   const handleDelete = (id: string) => {
@@ -118,7 +133,30 @@ export function Tracker() {
     setList((l) => restoreApplication(l, id))
   }
 
-  const handleMove = (id: string, dir: -1 | 1) => setList((l) => moveStage(l, id, dir))
+  const handleMove = (id: string, dir: -1 | 1) => {
+    const app = list.find((a) => a.id === id)
+    const next = app ? STAGE_ORDER[STAGE_ORDER.indexOf(app.stage) + dir] : undefined
+    setList((l) => moveStage(l, id, dir))
+    if (app && next) setStatus(t('tracker.status.moved', { company: app.company, stage: STAGE_LABEL[next] }))
+    pendingFocus.current = { to: 'move', id, dir }
+  }
+
+  // Runs after the render that closed the form or moved the card.
+  useEffect(() => {
+    const target = pendingFocus.current
+    if (!target) return
+    pendingFocus.current = null
+    if (target.to === 'opener') {
+      openerRef.current?.focus()
+      return
+    }
+    // The same arrow on the card in its new column; the other arrow when that
+    // one is now disabled (the card reached the first or last stage).
+    const arrows = document.querySelector(`[data-app="${CSS.escape(target.id)}"]`)
+    const same = arrows?.querySelector<HTMLButtonElement>(`[data-move="${target.dir}"]`)
+    const other = arrows?.querySelector<HTMLButtonElement>(`[data-move="${-target.dir}"]`)
+    ;(same && !same.disabled ? same : other)?.focus()
+  }, [list, formMode])
 
   const handleExport = () => {
     const blob = new Blob([exportAll()], { type: 'application/json' })
@@ -248,6 +286,7 @@ export function Tracker() {
           />
           {formMode === 'closed' && (
             <button
+              ref={openerRef}
               type="button"
               onClick={() => setFormMode('add')}
               className={buttonClass('primary', 'sm')}
@@ -364,9 +403,13 @@ export function Tracker() {
           key={editingApp?.id ?? 'add'}
           initial={editingApp}
           onSave={handleSave}
-          onCancel={() => setFormMode('closed')}
+          onCancel={handleCancel}
         />
       )}
+
+      <p role="status" className="sr-only">
+        {status}
+      </p>
 
       {list.length === 0 && formMode === 'closed' ? (
         <EmptyState />
@@ -593,6 +636,11 @@ function ApplicationFormPanel({
   const t = useT()
   const STAGE_LABEL = useStageLabel()
   const [form, setForm] = useState<FormState>(() => toFormState(initial))
+  const formRef = useRef<HTMLFormElement>(null)
+  // The button that opened this panel unmounts, so focus starts on the first field.
+  useEffect(() => {
+    formRef.current?.querySelector<HTMLInputElement>('input')?.focus()
+  }, [])
   const set = (patch: Partial<FormState>) => setForm((f) => ({ ...f, ...patch }))
   const canSave = form.company.trim() !== '' && form.role.trim() !== ''
 
@@ -619,7 +667,7 @@ function ApplicationFormPanel({
         <h2 className="text-[18px] font-semibold leading-snug">{initial ? t('tracker.form.editTitle') : t('tracker.form.addTitle')}</h2>
         <p className="mt-0.5 text-xs text-ink-soft">{t('tracker.form.requiredNote')}</p>
       </div>
-      <form onSubmit={submit} className="space-y-4">
+      <form ref={formRef} onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <TextField label={t('tracker.field.company.label')} value={form.company} onChange={(v) => set({ company: v })} required />
           <TextField label={t('tracker.field.role.label')} value={form.role} onChange={(v) => set({ role: v })} required />
@@ -838,9 +886,10 @@ function ApplicationCard({
       {onMove && onEdit && onDelete && (
         <div className="space-y-2 pt-1">
           <div className="flex flex-wrap items-center justify-between gap-1">
-            <div className="flex gap-1">
+            <div className="flex gap-1" data-app={app.id}>
               <button
                 type="button"
+                data-move="-1"
                 aria-label={t('tracker.movePrev')}
                 disabled={idx === 0}
                 onClick={() => onMove(-1)}
@@ -850,6 +899,7 @@ function ApplicationCard({
               </button>
               <button
                 type="button"
+                data-move="1"
                 aria-label={t('tracker.moveNext')}
                 disabled={idx === STAGE_ORDER.length - 1}
                 onClick={() => onMove(1)}
