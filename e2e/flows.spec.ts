@@ -140,7 +140,7 @@ test('home: each resign-date option is a named group, and its date field says wh
   )
 })
 
-test('home: "I want to start looking now" hands focus to the line that replaces it, and announces it', async ({ page }) => {
+test('home in Hindi: the same door, headline first', async ({ page }) => {
   await open(page, '/hi/')
   await expect(page.getByRole('heading', { level: 1, name: 'Resign करने का सबसे safe दिन ढूँढें।' })).toBeVisible()
   await page.getByRole('button', { name: 'मेरी resign date चुनें' }).click()
