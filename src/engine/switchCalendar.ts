@@ -298,8 +298,14 @@ export function earliestCleanDate(
 
 /**
  * Per-cliff `forfeited`: true when the chosen resign date gives the cliff up.
- * Gratuity, when the notice is known, is judged at the last working day;
- * everything else at the resign date.
+ * Gratuity, when the notice is known, is judged at the last working day, and
+ * a last working day ON the gratuity date keeps it.
+ *
+ * Everything else is judged at the resign date, and resigning ON the cliff
+ * date gives it up: the hike cliff is the last day of the credit month, so
+ * resigning that day puts you on notice the day it lands. This is the same
+ * rule `earliestCleanDate` uses (the day after), so the date the plan calls
+ * clean is never one this flags.
  */
 export function markForfeited(
   list: readonly Cliff[],
@@ -311,7 +317,8 @@ export function markForfeited(
       noticePeriodDays !== undefined && isGratuity(cliff)
         ? lastWorkingDay(resignDate, noticePeriodDays)
         : resignDate
-    return { ...cliff, forfeited: judgedOn < cliff.date }
+    const lost = isGratuity(cliff) ? judgedOn < cliff.date : judgedOn <= cliff.date
+    return { ...cliff, forfeited: lost }
   })
 }
 
