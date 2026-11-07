@@ -70,8 +70,13 @@ if (pages.length < 20) fail(`sitemap lists only ${pages.length} pages`)
     await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'))
     await page.locator('main input[type="date"]').fill('2023-04-10')
     await page.locator('main input[type="number"]').fill('60')
-    await page.locator('main button', { hasText: 'See my dates' }).click()
-    await page.locator('main button').first().waitFor({ timeout: 5_000 })
+    // Since batch 8 (PR #88) the dates show live and the work week is asked
+    // only when it changes a date (it does for this join date).
+    const week = page.getByRole('button', { name: /^I work five days a week/ })
+    if (await week.count()) await week.click()
+    await page.locator('main button', { hasText: 'Pick my resign date' }).click()
+    await page.getByRole('heading', { name: 'When do you want to resign?' }).waitFor({ timeout: 5_000 })
+    await page.locator('main button', { hasText: /^Resign on / }).first().waitFor({ timeout: 5_000 })
   } catch (e) {
     fail(`home flow: ${String(e.message).split('\n')[0]}`)
   }
