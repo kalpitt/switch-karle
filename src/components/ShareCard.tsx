@@ -36,7 +36,7 @@ export function ShareButton({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[]
         type="button"
         onClick={download}
         disabled={busy}
-        className="w-full rounded-2xl bg-saffron-strong hover:bg-saffron-deep px-5 py-3.5 text-[15px] font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+        className="w-full rounded-2xl bg-ink hover:bg-ink-hover px-5 py-3.5 text-[15px] font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         {busy ? t('shareCard.cta.rendering') : t('shareCard.cta.download')}
       </button>

@@ -59,7 +59,8 @@
      unless noted. Token names are kept so every call site moves with them. */
   --color-paper: #f6f5f3; /* sunken: bands, table heads, inactive segments. The page itself is white. */
   --color-card: #ffffff;
-  --color-ink: #14110f; /* 18.8:1 */
+  --color-ink: #14110f; /* 18.8:1. Also the primary button fill (VIS-14). */
+  --color-ink-hover: #2a2521; /* primary button hover, white on it 15.4:1 */
   --color-ink-soft: #4a4541; /* 9.5:1, 8.7:1 on paper */
   --color-ink-faint: #6f6862; /* 5.5:1, 5.0:1 on paper (WCAG AA) */
   --color-line: #e6e3df; /* card and divider hairlines */
