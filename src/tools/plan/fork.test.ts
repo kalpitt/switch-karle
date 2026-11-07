@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { cliffs } from '../../engine/switchCalendar'
+import { addDays } from '../../engine/dates'
+import { cliffs, switchCalendar } from '../../engine/switchCalendar'
 import { chosenGratuityCliff, dateStepReachable, doorEngineInput, isGratuityCliff } from './fork'
+import { answerProblems, firstCleanTrade, gratuityToSpeakOf, soonerDefault, weekChangesADate } from './fork'
 import { questionsSubmittable, resignDatesMovedFrom } from './fork'
 
 describe('a moved resign date is named so it can be deleted from a calendar', () => {
@@ -75,6 +77,105 @@ describe('dateStepReachable', () => {
 
   it('is reachable straight away when there is only one reading', () => {
     expect(dateStepReachable(true, false, undefined)).toBe(true)
+  })
+
+  it('is reachable straight away when the week would change no date', () => {
+    expect(dateStepReachable(true, true, undefined, false)).toBe(true)
+  })
+})
+
+/** Both gratuity readings for a join date, as the door computes them. */
+const fork = (joinDate: string, asOf: string) =>
+  cliffs({ joinDate, noticePeriodDays: 90, asOf }).filter(isGratuityCliff)
+
+describe('the week is asked only when it changes a date', () => {
+  it('is not asked when both readings are behind them (Ravi, October 2026)', () => {
+    expect(weekChangesADate(fork('2022-01-12', '2026-10-31'), '2026-10-31', 90)).toBe(false)
+  })
+
+  it('is asked when both readings are still ahead', () => {
+    expect(weekChangesADate(fork('2023-04-10', '2026-10-31'), '2026-10-31', 60)).toBe(true)
+  })
+
+  it('is asked when only the five-day reading is behind them', () => {
+    const [five, six] = fork('2022-01-12', '2026-01-01')
+    expect(five!.date < six!.date).toBe(true)
+    const today = addDays(five!.date, 1)
+    expect(weekChangesADate(fork('2022-01-12', today), today, 1)).toBe(true)
+  })
+
+  it('is not asked when their notice already carries them past both', () => {
+    const [, six] = fork('2022-01-12', '2026-01-01')
+    const today = addDays(six!.date, -30)
+    expect(weekChangesADate(fork('2022-01-12', today), today, 90)).toBe(false)
+  })
+
+  it('is not asked when there is no reading at all (Act does not cover them)', () => {
+    expect(weekChangesADate([], '2026-10-31', 90)).toBe(false)
+  })
+})
+
+describe('the gratuity reading the screen may name', () => {
+  const both = fork('2022-01-12', '2026-10-31')
+
+  it('is none while the fork is live and unanswered', () => {
+    expect(gratuityToSpeakOf(both, undefined, true)).toBeNull()
+  })
+
+  it('is their own once they answer', () => {
+    expect(gratuityToSpeakOf(both, 5, true)?.id).toBe('gratuity-5-day')
+    expect(gratuityToSpeakOf(both, 5, false)?.id).toBe('gratuity-5-day')
+  })
+
+  it('is the later reading when the week changes nothing, which is true for either week', () => {
+    expect(gratuityToSpeakOf(both, undefined, false)?.id).toBe('gratuity-6-day')
+  })
+})
+
+describe('where "Leave sooner" opens', () => {
+  // 14 days' buffer + 8 weeks' lead = 70 days before the resign date.
+  it('opens on the soonest date whose start-applying day is not behind today', () => {
+    expect(soonerDefault('2026-10-31', '2027-06-01')).toBe('2027-01-09')
+    expect(soonerDefault('2026-10-31', null)).toBe('2027-01-09')
+  })
+
+  it('opens at today when that date would not be sooner than the date that gives up nothing', () => {
+    expect(soonerDefault('2026-10-31', '2027-01-09')).toBe('2026-10-31')
+  })
+})
+
+describe('the "Loses nothing" tag', () => {
+  const today = '2026-10-31'
+  const run = (joinDate: string, noticePeriodDays: number, hikeCreditMonth?: number) => {
+    const input = { joinDate, noticePeriodDays, hikeCreditMonth, asOf: today }
+    const result = switchCalendar(input)
+    return firstCleanTrade(result.trades, result.cliffs, today, noticePeriodDays)
+  }
+
+  it('goes on "Wait for the hike" when the hike is the last thing ahead (Ravi)', () => {
+    expect(run('2022-01-12', 90, 5)).toBe('keep-the-hike')
+  })
+
+  it('goes nowhere when waiting for the hike still gives up the gratuity', () => {
+    expect(run('2023-04-10', 60, 5)).toBeNull()
+  })
+
+  it('goes nowhere when nothing is ahead, so no runway option reads as the pick', () => {
+    expect(run('2018-01-12', 90)).toBeNull()
+  })
+})
+
+describe('answerProblems names each missing answer', () => {
+  it('names nothing for good answers', () => {
+    expect(answerProblems('2022-01-12', 90, '2026-10-31')).toEqual([])
+  })
+  it('names a blank or future join date and a notice under one', () => {
+    expect(answerProblems('', 90, '2026-10-31')).toEqual(['join'])
+    expect(answerProblems('2027-01-01', 0, '2026-10-31')).toEqual(['join', 'notice'])
+    expect(answerProblems('2022-01-12', NaN, '2026-10-31')).toEqual(['notice'])
+  })
+  it('does not judge the date against a clock it does not have yet', () => {
+    expect(answerProblems('2027-01-01', 90, '')).toEqual([])
   })
 })
 
