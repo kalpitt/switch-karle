@@ -24,8 +24,10 @@
   unicode-range: U+20B9;
 }
 /* Devanagari, self-hosted (CSP font-src 'self'). Only the Devanagari subset is declared:
-   Inter already covers Latin and ₹, so English pages never download this file, and the
-   service worker precaches one font file rather than three. */
+   Inter already covers Latin and ₹, and the service worker precaches one font file rather
+   than three (so Hindi still works offline). English pages leave it out of their stacks
+   (the html[lang='en'] rule below), so the one Devanagari word they show, the language
+   switch label, draws in the phone's own face instead of costing 121 KB (N-02). */
 @font-face {
   font-family: 'Noto Sans Devanagari Variable';
   font-style: normal;
@@ -59,7 +61,8 @@
      unless noted. Token names are kept so every call site moves with them. */
   --color-paper: #f6f5f3; /* sunken: bands, table heads, inactive segments. The page itself is white. */
   --color-card: #ffffff;
-  --color-ink: #14110f; /* 18.8:1 */
+  --color-ink: #14110f; /* 18.8:1. Also the primary button fill (VIS-14). */
+  --color-ink-hover: #2a2521; /* primary button hover, white on it 15.4:1 */
   --color-ink-soft: #4a4541; /* 9.5:1, 8.7:1 on paper */
   --color-ink-faint: #6f6862; /* 5.5:1, 5.0:1 on paper (WCAG AA) */
   --color-line: #e6e3df; /* card and divider hairlines */
@@ -111,6 +114,12 @@
   /* Shadows only for things that float over the page: menus, the palette. In-flow cards use a border. */
   --shadow-float: 0 16px 40px -8px rgba(12, 10, 9, 0.18);
   --shadow-raise: 0 1px 2px rgba(12, 10, 9, 0.06);
+}
+
+/* English pages: the same stacks without Noto, so the browser never fetches it (N-02). */
+html[lang='en'] {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Display', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* iOS Safari zooms the page when a field under 16px is focused, and does not zoom back.

@@ -719,7 +719,7 @@ function ApplicationFormPanel({
               Pressing it with a blank Company or Role lets the browser point at the field. */}
           <button
             type="submit"
-            className="min-h-[44px] rounded-xl bg-saffron-strong hover:bg-saffron-deep px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98]"
+            className="min-h-[44px] rounded-xl bg-ink hover:bg-ink-hover px-4 py-2.5 text-[14px] font-bold text-white transition-transform active:scale-[0.98]"
           >
             {initial ? t('tracker.saveChanges') : t('tracker.submitAdd')}
           </button>

@@ -59,7 +59,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
           <div className="order-2 ml-auto flex items-center gap-2 md:order-3">
             <CommandPalette />
-            <div role="group" aria-label={t('app.langToggle.label')} className="inline-flex rounded-xl bg-paper p-0">
+            <div role="group" aria-label={t('app.langToggle.label')} className="inline-flex min-h-[44px] items-center rounded-xl bg-paper p-1">
               <LangLink to="en" label="English" current={lang} slug={slug} onPick={pick}>
                 EN
               </LangLink>
@@ -215,8 +215,8 @@ function LangLink({
       aria-label={label}
       aria-current={active ? 'true' : undefined}
       onClick={onClick}
-      className={`inline-flex min-h-[44px] shrink-0 items-center rounded-xl px-3 text-[13px] font-semibold transition-colors ${
-        active ? 'bg-ink text-white' : 'text-ink-soft hover:text-ink'
+      className={`inline-flex min-h-[36px] shrink-0 items-center rounded-xl px-3 text-[13px] font-semibold transition-colors ${
+        active ? 'bg-card text-ink shadow-raise' : 'text-ink-soft hover:text-ink'
       }`}
     >
       {children}
