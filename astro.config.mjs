@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
-import AstroPWA from '@vite-pwa/astro'
+import { AstroPWAIntegration as AstroPWA } from '@vite-pwa/astro'
 import { SITE, BASE } from './site.config.mjs'
 
 /**
@@ -42,19 +42,13 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      // The share images (og/*) are deliberately absent: only link-preview
-      // crawlers fetch them, never the page, so precaching them would spend a
-      // visitor's data on files they never see.
-      includeAssets: [
-        'icon.svg',
-        'icon-180.png',
-        'icon-192.png',
-        'icon-512.png',
-        'icon-maskable-512.png',
-        'favicon.ico',
-      ],
+      // The icons, favicon and manifest in public/ are precached by
+      // globPatterns below. No includeAssets: v2 of this plugin reads it only
+      // when `manifest` is an object, so with `manifest: false` it did
+      // nothing (under v1 it listed each icon a second time). check:base
+      // fails if any of them, a font or a page is missing from sw.js.
       manifest: false,
-      workbox: {
+      generateSW: {
         // MUST be present as a key. @vite-pwa/astro otherwise defaults this to
         // `base` (the home page), so an offline reload of /decoder would render
         // the home shell. Precache-all HTML + no SPA fallback = each URL is itself.
@@ -81,7 +75,11 @@ export default defineConfig({
       // already lists each page once, as "decoder/" (N-06).
     }),
   ],
-  experimental: {
+  // The site has no Markdown or code blocks. Turning the highlighter off
+  // changes no page; it only stops Astro warning on every build that Shiki's
+  // inline styles would not fit the CSP below.
+  markdown: { syntaxHighlight: false },
+  security: {
     csp: {
       directives: [
         "default-src 'self'",

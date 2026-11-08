@@ -31,7 +31,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npx astro preview --host 127.0.0.1 --port ${PORT}`,
+    // --ignore-lock keeps the server in the foreground. Since Astro 7,
+    // `astro preview` run by a coding agent detaches into the background, and
+    // Playwright then reports the server as having exited.
+    command: `npx astro preview --host 127.0.0.1 --port ${PORT} --ignore-lock`,
     url: `http://127.0.0.1:${PORT}/`,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
