@@ -80,8 +80,9 @@ next visit the page says "A new version is ready. Reload".
 - The service worker is Workbox `generateSW` (precache-all HTML, **no** SPA
   navigateFallback). Offline reload of `/decoder/` must render the decoder,
   never the home page. `@vite-pwa/astro` defaults the fallback to `base` if
-  `navigateFallback: undefined` is ever dropped; `check:base` greps `sw.js`
-  for `createHandlerBoundToURL` so that cannot land silently. It also fails if
+  `navigateFallback: undefined` is ever dropped; `check:base` fails if `sw.js`
+  or its Workbox runtime carries a navigation fallback, so that cannot land
+  silently. It also fails if a page, an icon or a font is not precached, or if
   any precached URL has no file in `dist/`: one such URL (`404/`) stopped the
   service worker installing at all until 2026-10-31.
 - After a deploy, a returning visitor's service worker updates in the

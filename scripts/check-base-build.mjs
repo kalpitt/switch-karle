@@ -94,7 +94,19 @@ if (!existsSync(swPath)) {
   failed = true
 } else {
   const sw = readFileSync(swPath, 'utf8')
-  if (sw.includes('createHandlerBoundToURL')) {
+  // Every precache entry's address. @vite-pwa/astro 1 wrote them as url:"…",
+  // version 2 as url:`…`; read both, or every check below passes on nothing.
+  const swUrls = [...sw.matchAll(/url:\s*["'`]([^"'`]+)["'`]/g)].map((m) => m[1])
+  if (swUrls.length === 0) {
+    console.error('check-base-build: FAIL — found no precache entries in dist/sw.js; this check cannot read it.')
+    failed = true
+  }
+  // A navigation fallback shows up as `createHandlerBoundToURL` in a v1 sw.js.
+  // Version 2 minifies that call away, so also look in the Workbox runtime it
+  // loads for NavigationRoute, which is only bundled when a fallback is set.
+  const runtimes = readdirSync(dist).filter((f) => /^workbox-.*\.js$/.test(f))
+  const navigationRoute = runtimes.some((f) => /_denylist|_allowlist/.test(readFileSync(join(dist, f), 'utf8')))
+  if (sw.includes('createHandlerBoundToURL') || navigationRoute) {
     console.error(
       'check-base-build: FAIL — service worker has a navigateFallback; offline /decoder would render the home shell.',
     )
@@ -102,15 +114,18 @@ if (!existsSync(swPath)) {
   }
   // The host answers /404/ with HTTP 404; one non-200 precache entry aborts the whole
   // service-worker install, and the site silently never works offline.
-  if (/url:\s*"(?:[^"]*\/)?404(?:\/|\.html)?"/.test(sw)) {
+  if (swUrls.some((u) => /(?:^|\/)404(?:\/|\.html)?$/.test(u))) {
     console.error('check-base-build: FAIL — dist/sw.js precaches the 404 page; the SW install will fail.')
     failed = true
   }
   // Each page is precached once, under the address a visitor opens ("decoder/");
   // Workbox maps it to the file. A second "decoder/index.html" entry for the
   // same page only made a first visit download every page twice (N-06).
-  const swUrls = [...sw.matchAll(/url:\s*"([^"]+)"/g)].map((m) => m[1])
-  for (const page of ['decoder/', 'tracker/', 'prompts/']) {
+  // Every page except 404.html must be there, or it does not open offline.
+  for (const file of htmlFiles) {
+    const rel = relative(dist, file).replaceAll('\\', '/')
+    if (rel === '404.html') continue
+    const page = rel === 'index.html' ? basePrefix : rel.replace(/index\.html$/, '')
     if (!swUrls.includes(page)) {
       console.error(`check-base-build: FAIL — dist/sw.js does not precache ${page}.`)
       failed = true
@@ -121,16 +136,40 @@ if (!existsSync(swPath)) {
     console.error(`check-base-build: FAIL — dist/sw.js precaches pages by file name too (${twice.slice(0, 3).join(', ')}…).`)
     failed = true
   }
+  // The icons, favicon and manifest (every file at the top of public/) and the
+  // fonts the CSS loads must be precached too, or the offline app shows
+  // without them. @vite-pwa/astro 2 ignores includeAssets while `manifest`
+  // is false, so only globPatterns brings these in.
+  const publicDir = join(root, 'public')
+  const publicFiles = readdirSync(publicDir, { withFileTypes: true })
+    .filter((e) => e.isFile())
+    .map((e) => e.name)
+  // Inter subsets for scripts the site never uses are left out on purpose
+  // (globIgnores in astro.config.mjs).
+  const fonts = readdirSync(join(dist, '_astro'))
+    .filter((f) => f.endsWith('.woff2') && !/inter-(?:cyrillic|greek|vietnamese)/.test(f))
+    .map((f) => `_astro/${f}`)
+  if (fonts.length === 0) {
+    console.error('check-base-build: FAIL — no .woff2 fonts in dist/_astro/.')
+    failed = true
+  }
+  for (const asset of [...publicFiles, ...fonts]) {
+    if (!swUrls.includes(asset)) {
+      console.error(`check-base-build: FAIL — dist/sw.js does not precache ${asset}.`)
+      failed = true
+    }
+  }
   // Any precache URL without a file behind it fails the whole install the same way.
-  for (const [, url] of sw.matchAll(/url:\s*"([^"]+)"/g)) {
-    const file = join(dist, url.endsWith('/') || url === '' ? `${url}index.html` : url)
+  for (const url of swUrls) {
+    const path = url === basePrefix ? '' : url
+    const file = join(dist, path.endsWith('/') || path === '' ? `${path}index.html` : path)
     if (!existsSync(file)) {
       console.error(`check-base-build: FAIL — dist/sw.js precaches "${url}", which is not in dist/.`)
       failed = true
     }
   }
   // Share images are for link-preview crawlers; the page never shows them.
-  if (/url:\s*"og\//.test(sw)) {
+  if (swUrls.some((u) => u.startsWith('og/'))) {
     console.error('check-base-build: FAIL — dist/sw.js precaches og/ share images.')
     failed = true
   }

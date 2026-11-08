@@ -119,8 +119,10 @@ Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
 
 `@vite-pwa/astro` Workbox `generateSW`, precache-all HTML, **`navigateFallback`
 explicitly unset**. The plugin's default fallback is `base` (home). Offline
-reload of `/decoder/` must be the decoder. `check-base` greps `dist/sw.js` for
-`createHandlerBoundToURL`, requires each shipped tool HTML in the precache, and
+reload of `/decoder/` must be the decoder. `check-base` fails if `dist/sw.js`
+or the Workbox runtime beside it carries a navigation fallback, requires every
+page (except 404), every file at the top of `public/` (icons, favicon, manifest)
+and every shipped font in the precache, and
 fails if any precached URL has no file in `dist/` (the `404/` entry did exactly
 that and kept the service worker from installing until 2026-10-31; offline did
 not work in production before then). The share images, the 404 page and unused
