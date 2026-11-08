@@ -103,7 +103,7 @@ function Body() {
   ].join('\n')
 
   return (
-    <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="form16-shock" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -141,9 +141,8 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="form16-shock" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('form16-shock.formTitle')}</h2>
         <PrivacyLine />
         <MoneyField label={t('form16-shock.e1gross')} placeholder={t('ui.money.placeholder')} value={draft.employer1Gross} onChange={(v) => set({ employer1Gross: v })} />
@@ -151,6 +150,7 @@ function Body() {
         <MoneyField label={t('form16-shock.e2gross')} placeholder={t('ui.money.placeholder')} value={draft.employer2Gross} onChange={(v) => set({ employer2Gross: v })} />
         <MoneyField label={t('form16-shock.e2tds')} placeholder={t('ui.money.placeholder')} value={draft.employer2Tds} onChange={(v) => set({ employer2Tds: v })} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="form16-shock" />
     </div>
   )
 }

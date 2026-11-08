@@ -1,4 +1,5 @@
 import { toolBySlug } from '../data/tools'
+import { latinLang } from '../lib/latinLang'
 import { nextFor } from '../data/journey'
 import { withLang } from '../lib/langPath'
 import { useLang, useT } from '../i18n'
@@ -11,10 +12,15 @@ import { toolHref } from '../lib/toolHref'
  * this one, in journey order. A Hindi page links to the Hindi twin. When the
  * link crosses into a later stage, the label names that stage.
  *
+ * A two-column tool renders it after the form card, so on a phone it comes
+ * after the form in reading order, and places it under the result on desktop
+ * with `className="lg:order-last lg:col-start-2"` (the form card spans both
+ * rows: `lg:row-span-2`). R-07, N11.
+ *
  * `hidden` lets a tool withhold the link when moving on would be the wrong
  * advice, e.g. an offer letter that shows scam signs.
  */
-export function NextStep({ from, hidden = false }: { from: string; hidden?: boolean }) {
+export function NextStep({ from, hidden = false, className = '' }: { from: string; hidden?: boolean; className?: string }) {
   const t = useT()
   const { lang } = useLang()
   const next = nextFor(from)
@@ -35,11 +41,14 @@ export function NextStep({ from, hidden = false }: { from: string; hidden?: bool
     <a
       href={href}
       data-next-step={tool?.slug ?? 'plan'}
-      className="no-print group flex min-h-[44px] items-center gap-3 rounded-2xl border border-line bg-card p-4 transition-colors hover:border-field"
+      className={`no-print group flex min-h-[44px] items-center gap-3 rounded-2xl border border-line bg-card p-4 transition-colors hover:border-field ${className}`}
     >
       <span className="min-w-0 flex-1">
         <span className="block text-[13px] font-medium leading-snug text-ink-soft">{label}</span>
-        <span className="mt-0.5 block text-[15px] font-bold leading-snug text-ink group-hover:underline group-hover:underline-offset-2">
+        <span
+          lang={latinLang(title, lang)}
+          className="mt-0.5 block text-[15px] font-bold leading-snug text-ink group-hover:underline group-hover:underline-offset-2"
+        >
           {title}
         </span>
         <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">{desc}</span>

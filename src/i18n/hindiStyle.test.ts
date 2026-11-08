@@ -13,12 +13,16 @@ import { dictionaries } from './index'
  * 2. Gender-neutral first person in anything the user sends or says (mails,
  *    letters, scripts): "मैंने … कर लिया है", "फ़ैसला हो चुका है", "भेज दिया
  *    जाएगा" — never "कर रहा हूं", "भेज दूंगा", which assume a man is writing.
- * 3. Nukta, always: सिर्फ़, ज़्यादा, ज़रूर, बाक़ी, आख़िरी, ग़लत, फ़ैसला, वक़्त, ख़त्म.
- * 4. Chandrabindu for these nasal vowels: यहाँ, वहाँ, कहाँ, पाँच, माँग, ढूँढ.
- *    Plural verb endings keep the anusvara: करें, हैं, दिखाएं.
+ * 3. Nukta, always: सिर्फ़, ज़्यादा, ज़रूर, बाक़ी, आख़िरी, ग़लत, फ़ैसला, वक़्त, ख़त्म,
+ *    क़दम, ख़ुद, हफ़्ता.
+ * 4. Chandrabindu for these nasal vowels: यहाँ, वहाँ, कहाँ, पाँच, माँग, ढूँढ, पहुँच.
+ *    Plural verb endings keep the anusvara: करें, हैं, दिखाएं, बताएं.
  * 5. A Hindi sentence ends with a danda "।", not an ASCII full stop.
- * 6. Money per month is "/month" and per year "/year", as a payslip prints it.
+ * 6. Money per month is "/month" and per year "/year", as a payslip prints it
+ *    (never "/साल").
  * 7. "Last working day" in Latin, never "आख़िरी working day". "उदाहरण" for Example.
+ * 8. These work words stay Latin: number (not नंबर), copy (not कॉपी), date (not
+ *    तारीख). जाँच takes the chandrabindu, not जांच.
  *
  * The rules cover only the Hindi dictionaries; English is untouched.
  */
@@ -44,12 +48,16 @@ describe('Hindi house style', () => {
   })
 
   it('3. writes the nukta', () => {
-    const bare = /सिर्फ(?!़)|ज्यादा|(^|[^ऀ-ॿ])जरूर|बाकी|आखिर|(^|[^ऀ-ॿ])गलत|फैसल|वक्त|खत्म/
+    const bare = /सिर्फ(?!़)|ज्यादा|(^|[^ऀ-ॿ])जरूर|बाकी|आखिर|(^|[^ऀ-ॿ])गलत|फैसल|वक्त|खत्म|कदम|खुद|हफ्त/
     expect(offenders(bare)).toEqual([])
   })
 
-  it('4. writes the chandrabindu in यहाँ, वहाँ, कहाँ, पाँच, माँग, ढूँढ', () => {
-    expect(offenders(/यहां|वहां|कहां|पांच|मांग|ढूंढ/)).toEqual([])
+  it('4. writes the chandrabindu in यहाँ, वहाँ, कहाँ, पाँच, माँग, ढूँढ, पहुँच', () => {
+    expect(offenders(/यहां|वहां|कहां|पांच|मांग|ढूंढ|पहुंच/)).toEqual([])
+  })
+
+  it('4. keeps the anusvara on plural verb endings: बताएं, not बताएँ', () => {
+    expect(offenders(new RegExp(`ाएँ${NOT_LETTER}`))).toEqual([])
   })
 
   it('5. ends Hindi sentences with a danda', () => {
@@ -57,7 +65,7 @@ describe('Hindi house style', () => {
   })
 
   it('6. has one per-month unit', () => {
-    expect(offenders(/\/(माह|महीना)|\/(mo|yr)\b/)).toEqual([])
+    expect(offenders(/\/(माह|महीना|साल)|\/(mo|yr)\b/)).toEqual([])
     expect(hi['unit.perMonth']).toBe('/month')
   })
 
@@ -65,6 +73,10 @@ describe('Hindi house style', () => {
     expect(offenders(/आख़िरी working day/)).toEqual([])
     const chips = ['ui.exampleChip', 'results.exampleChip', 'plan.example.chip', 'offer-comparison.exampleChip']
     for (const key of chips) expect(hi[key], key).toBe('उदाहरण')
+  })
+
+  it('8. keeps number, copy and date in Latin, and writes जाँच', () => {
+    expect(offenders(/नंबर|कॉपी|तारीख|जांच/)).toEqual([])
   })
 
   it('applies only to Hindi: English strings are not checked here', () => {

@@ -89,7 +89,7 @@ function Body() {
   const canCopy = lwdReady && !mail.includes('[')
 
   return (
-    <div data-tool="relieving-chaser" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="relieving-chaser" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <VerdictBanner>{t(`relieving-chaser.verdict.${draft.day}`)}</VerdictBanner>
@@ -106,9 +106,8 @@ function Body() {
           </div>
         </Card>
         <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
-        <NextStep from="relieving-chaser" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('relieving-chaser.formTitle')}</h2>
         <TextField label={t('relieving-chaser.company')} value={draft.company} onChange={(v) => set({ company: v })} />
         <TextField label={t('relieving-chaser.hr')} value={draft.hr} onChange={(v) => set({ hr: v })} />
@@ -125,6 +124,7 @@ function Body() {
           ]}
         />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="relieving-chaser" />
     </div>
   )
 }

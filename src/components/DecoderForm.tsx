@@ -62,7 +62,7 @@ export function DecoderForm({
       <label className="block">
         <Label>{t('decoder.field.state.label')}</Label>
         <select
-          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
+          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-2 focus:ring-saffron"
           value={value.state}
           onChange={(e) => {
             const state = e.target.value as StateCode

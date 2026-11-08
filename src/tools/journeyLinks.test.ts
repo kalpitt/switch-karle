@@ -8,10 +8,9 @@ import { SCRIPT_SLUGS } from '../data/hrScripts'
 const toolsDir = dirname(fileURLToPath(import.meta.url))
 const read = (path: string) => readFileSync(join(toolsDir, path), 'utf8')
 
-/** The file that draws a tool's result column. */
+/** The file that renders a tool's NextStep (the Decoder's is its page, not Results). */
 function sourceFor(slug: string): string {
   if (slug === WHAT_TO_SAY || (SCRIPT_SLUGS as readonly string[]).includes(slug)) return read('what-to-say/index.tsx')
-  if (slug === 'decoder') return read('../components/Results.tsx')
   return read(`${slug}/index.tsx`)
 }
 
@@ -22,7 +21,7 @@ describe('one next thing under every result (UX-14, IA-02)', () => {
       const named =
         slug === WHAT_TO_SAY || (SCRIPT_SLUGS as readonly string[]).includes(slug)
           ? /<NextStep from=\{situation \?\? WHAT_TO_SAY\}/
-          : new RegExp(`<NextStep from="${slug}"`)
+          : new RegExp(`<NextStep [^>]*\\bfrom="${slug}"`)
       expect(src, slug).toMatch(named)
     }
   })

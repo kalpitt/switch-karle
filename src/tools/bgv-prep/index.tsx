@@ -43,7 +43,7 @@ function Body() {
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
 
   return (
-    <div data-tool="bgv-prep" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="bgv-prep" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <VerdictBanner tone={result.highRisk ? 'alarm' : 'leaf'}>
@@ -60,9 +60,8 @@ function Body() {
           ))}
         </Card>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
-        <NextStep from="bgv-prep" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('bgv-prep.formTitle')}</h2>
         <NumberField integer label={t('bgv-prep.gap')} hint={t('bgv-prep.gapHint')} suffix={t('unit.months')} value={draft.gapMonths} onChange={(v) => set({ gapMonths: v })} />
         <Toggle label={t('bgv-prep.dualPf')} checked={draft.dualPf} onChange={(v) => set({ dualPf: v })} />
@@ -79,6 +78,7 @@ function Body() {
           ]}
         />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="bgv-prep" />
     </div>
   )
 }

@@ -1,11 +1,11 @@
 import type { RedFlag, SalaryBreakdown } from '../engine/types'
+import { quietGlyphs } from './quietGlyphs'
 import { formatCompact, formatINR, formatLPA } from '../engine/format'
 import { translateOrFallback, useLang, useT } from '../i18n'
 import { DEFAULT_OFFER } from '../data/defaults'
 import { useId } from 'react'
 import { Card, ResultHeading, Details, Disclaimer, Receipt, ResultHero, ShareRow } from './ui'
 import { offerSources, ptSourceId, TOOL_SOURCES } from '../data/sources'
-import { NextStep } from './NextStep'
 
 export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) {
   const t = useT()
@@ -43,8 +43,12 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
             inHand={b.inHandMonthlyOld}
           />
         </div>
-        <Receipt ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
+      </ResultHero>
 
+      {/* Sources, copy and notes sit under the answer card, not in it, so the
+          card ends at the answer and the form comes up sooner (R-08). */}
+      <div className="space-y-3">
+        <Receipt ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
         <ShareRow
           copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
           copyLabel={t('ui.copyResult')}
@@ -53,7 +57,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
         />
         <p className="max-w-[65ch] text-[13px] leading-relaxed text-ink-faint">{t('decoder.fixedPayNote')}</p>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-      </ResultHero>
+      </div>
 
       <Card>
         <h3 className="text-[15px] font-semibold">{t('results.whereGoes')}</h3>
@@ -97,7 +101,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
               </span>
             ) : (
               <span className="ml-1 rounded-full bg-leaf-soft px-2 py-0.5 text-[12px] font-semibold text-leaf">
-                {t('results.noAlarming')}
+                {quietGlyphs(t('results.noAlarming'))}
               </span>
             )}
           </h3>
@@ -118,7 +122,6 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
           <li>{t('results.howComputed.bullet5')}</li>
         </ul>
       </Details>
-      <NextStep from="decoder" />
     </div>
   )
 }

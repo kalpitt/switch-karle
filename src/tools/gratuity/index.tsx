@@ -152,7 +152,7 @@ function Body() {
     : ''
 
   return (
-    <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="gratuity" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -192,9 +192,8 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="gratuity" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('gratuity.formTitle')}</h2>
         <PrivacyLine />
         <MoneyField
@@ -232,6 +231,7 @@ function Body() {
         )}
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="gratuity" />
     </div>
   )
 }

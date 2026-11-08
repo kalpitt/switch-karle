@@ -80,7 +80,7 @@ function Body() {
   const copyText = [verdict, t('counter-offer.honest'), t('ui.disclaimer')].join('\n')
 
   return (
-    <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="counter-offer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -104,9 +104,8 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="counter-offer" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('counter-offer.formTitle')}</h2>
         <PrivacyLine />
         <MoneyField label={t('counter-offer.current')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
@@ -116,6 +115,7 @@ function Body() {
         <Toggle label={t('counter-offer.team')} checked={draft.teamStay} onChange={(v) => set({ teamStay: v })} />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="counter-offer" />
     </div>
   )
 }
