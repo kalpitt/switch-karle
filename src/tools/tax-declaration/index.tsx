@@ -79,7 +79,7 @@ function Body() {
   ].join('\n')
 
   return (
-    <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="tax-declaration" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -110,9 +110,8 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="tax-declaration" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('tax-declaration.formTitle')}</h2>
         <PrivacyLine />
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('tax-declaration.profileHint')}</p>
@@ -152,6 +151,7 @@ function Body() {
         />
         <Toggle label={t('tax-declaration.80c')} checked={draft.extra80C} onChange={(v) => set({ extra80C: v })} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="tax-declaration" />
     </div>
   )
 }

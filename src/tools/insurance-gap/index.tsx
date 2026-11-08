@@ -72,7 +72,7 @@ function Body() {
             })
 
   return (
-    <div data-tool="insurance-gap" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="insurance-gap" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -102,14 +102,14 @@ function Body() {
           ))}
         </Card>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
-        <NextStep from="insurance-gap" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('insurance-gap.formTitle')}</h2>
         <DateField label={t('insurance-gap.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <DateField label={t('insurance-gap.join')} value={draft.newJoinDate} onChange={(v) => set({ newJoinDate: v })} />
         <Toggle label={t('insurance-gap.personal')} checked={draft.hasPersonalCover} onChange={(v) => set({ hasPersonalCover: v })} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="insurance-gap" />
     </div>
   )
 }

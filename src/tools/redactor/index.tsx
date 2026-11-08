@@ -51,7 +51,7 @@ function Body() {
   }
 
   return (
-    <div data-tool="redactor" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="redactor" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <VerdictBanner tone={hitCount === 0 ? 'amber' : 'leaf'}>
@@ -81,12 +81,12 @@ function Body() {
         </div>
         {/* No tax figure here, so not the tax-rules disclaimer (TR2-16). */}
         <Disclaimer>{t('redactor.disclaimer')}</Disclaimer>
-        <NextStep from="redactor" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20 no-print">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20 no-print">
         <h2 className="text-[18px] font-semibold leading-snug">{t('redactor.formTitle')}</h2>
         <TextArea label={t('redactor.text')} hint={t('redactor.textHint')} value={text} onChange={setText} rows={14} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="redactor" />
     </div>
   )
 }

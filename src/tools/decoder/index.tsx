@@ -5,6 +5,7 @@ import { DecoderForm } from '../../components/DecoderForm'
 import { Results } from '../../components/Results'
 import { ShareButton } from '../../components/ShareCard'
 import { AutoFill } from '../../components/AutoFill'
+import { NextStep } from '../../components/NextStep'
 import { IslandRoot } from '../../components/IslandRoot'
 import { DECODER_STORAGE_KEY, DEFAULT_OFFER, consumeHandoff, loadOffer, saveOffer } from '../../data/defaults'
 import { releaseBootEcho } from '../../lib/storage'
@@ -95,16 +96,17 @@ export default function DecoderTool({ lang = 'en' }: { lang?: Lang }) {
 
   return (
     <IslandRoot lang={lang} current="decoder">
-      <div ref={grid} data-tool="decoder" className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+      <div ref={grid} data-tool="decoder" className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
         {/* The answer comes first in the page, as phones show it; on wide screens
             it is moved to the right-hand column with CSS order (A11Y N5). */}
         <Results b={breakdown} flags={flags} />
-        <div className="space-y-4 lg:sticky lg:top-20">
+        <div className="space-y-4 lg:row-span-2 lg:sticky lg:top-20">
           {seeded && <SeededNote />}
           <AutoFill offer={offer} onChange={edit} />
           <DecoderForm value={offer} onChange={edit} />
           <ShareButton b={breakdown} flags={flags} />
         </div>
+        <NextStep className="lg:order-last lg:col-start-2" from="decoder" />
       </div>
       <StickyInHand within={grid} amount={formatINR(breakdown.inHandMonthly)} />
     </IslandRoot>

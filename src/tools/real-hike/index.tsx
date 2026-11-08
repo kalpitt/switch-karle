@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { quietGlyphs } from '../../components/quietGlyphs'
 import type { OfferInput, StateCode } from '../../engine/types'
 import { STATE_NAMES } from '../../engine/professionalTax'
 import { realHike } from '../../engine/hike'
@@ -154,7 +155,7 @@ function Body() {
   ].join('\n')
 
   return (
-    <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="real-hike" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -203,11 +204,10 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="real-hike" />
       </div>
 
-      <Card className="space-y-3 lg:sticky lg:top-20">
-        <h2 className="text-[18px] font-semibold leading-snug">{t('real-hike.formTitle')}</h2>
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
+        <h2 className="text-[18px] font-semibold leading-snug">{quietGlyphs(t('real-hike.formTitle'))}</h2>
         <PrivacyLine />
         <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField
@@ -241,6 +241,7 @@ function Body() {
         />
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="real-hike" />
     </div>
   )
 }

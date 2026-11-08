@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { buttonClass } from './buttonClass'
 import { eraseAll, savedKeys, type EraseResult } from '../lib/erase'
 import { withLang } from '../lib/langPath'
 import { STORAGE_KEY as TRACKER_KEY } from '../tracker/store'
@@ -69,13 +70,13 @@ export function EraseData({ className, label }: { className?: string; label?: st
         >
           <div
             ref={panelRef}
-            className="w-full max-w-md rounded-2xl border border-line bg-paper p-5 text-left shadow-lg"
+            className="w-full max-w-md rounded-2xl border border-line bg-card p-5 text-left text-ink shadow-float"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="erase-title"
           >
-            <h2 id="erase-title" className="text-base font-bold">
+            <h2 id="erase-title" className="text-[18px] font-semibold leading-snug text-ink">
               {t('erase.title')}
             </h2>
 
@@ -109,7 +110,7 @@ export function EraseData({ className, label }: { className?: string; label?: st
                   <button
                     type="button"
                     onClick={close}
-                    className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
+                    className={buttonClass('secondary', 'sm')}
                   >
                     {count === 0 ? t('erase.close') : t('erase.cancel')}
                   </button>
@@ -117,7 +118,7 @@ export function EraseData({ className, label }: { className?: string; label?: st
                     <button
                       type="button"
                       onClick={confirm}
-                      className="min-h-[44px] rounded-xl bg-alarm px-4 py-2 text-[13px] font-bold text-white"
+                      className={buttonClass('dangerFill', 'sm')}
                     >
                       {t('erase.confirm')}
                     </button>
@@ -142,7 +143,7 @@ export function EraseData({ className, label }: { className?: string; label?: st
                     onClick={close}
                     // The buttons that had focus are gone; keep it inside the dialog.
                     autoFocus
-                    className="min-h-[44px] rounded-xl border border-line px-4 py-2 text-[13px] font-semibold text-ink-soft"
+                    className={buttonClass('secondary', 'sm')}
                   >
                     {t('erase.close')}
                   </button>

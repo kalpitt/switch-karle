@@ -59,8 +59,11 @@ test('home: a press with something missing says what, and the week is asked only
   await open(page, '/')
   await page.locator('main input[type="number"]').fill('')
   await page.getByRole('button', { name: 'Pick my resign date' }).click()
-  await expect(page.getByRole('alert').filter({ hasText: 'Enter your notice in days, at least 1.' })).toBeVisible()
+  // Focus moves to the field, which reads its error once through its description (N12).
+  await expect(page.getByText('Enter your notice in days, at least 1.')).toBeVisible()
   await expect(page.locator('main input[type="number"]')).toBeFocused()
+  await expect(page.locator('main input[type="number"]')).toHaveAccessibleDescription(/Enter your notice in days, at least 1\./)
+  await expect(page.getByRole('alert').filter({ hasText: 'Enter your notice in days, at least 1.' })).toHaveCount(0)
 
   await page.locator('main input[type="number"]').fill('60')
   await page.locator('main input[type="date"]').fill('2023-04-10')
@@ -85,9 +88,10 @@ test('home: "what this is worth" answers in rupees inside the recap', async ({ p
   await page.getByRole('button', { name: 'See what your gratuity is worth' }).click()
   await page.getByLabel('Monthly basic + DA').fill('72000')
   // 15/26 × ₹72,000 × 6 payable years (5 years 7 months to 29 August 2027).
-  await expect(
-    page.getByText('With a last working day of 29 August 2027, your gratuity comes to at least ₹2,49,231.'),
-  ).toBeVisible()
+  const worth = page.locator('[data-worth] [role="status"]')
+  await expect(worth).toContainText('Your gratuity with a last working day of 29 August 2027')
+  await expect(worth).toContainText('₹2,49,231')
+  await expect(worth).toContainText('At least this much.')
   await expect(page.getByRole('link', { name: 'Open the full gratuity calculator' })).toHaveAttribute('href', '/gratuity/')
 })
 
@@ -177,8 +181,12 @@ test('decoder on a phone: a thin bar keeps the in-hand figure once the result ca
   await page.mouse.wheel(0, 3000)
   await expect(bar).toBeVisible()
   await expect(bar).toHaveText(/^In your bank ₹[\d,]+\/month$/)
-  await page.evaluate(() => window.scrollTo(0, 0))
-  await expect(bar).toHaveCount(0)
+  // The wheel scroll may still be running once the (now shorter) card has gone,
+  // and would carry the page back down: scroll up until it stays up.
+  await expect(async () => {
+    await page.evaluate(() => window.scrollTo(0, 0))
+    await expect(bar).toHaveCount(0, { timeout: 500 })
+  }).toPass()
 
   // Desktop never shows it: the result column stays in view there.
   await page.setViewportSize({ width: 1280, height: 800 })
@@ -324,4 +332,19 @@ test('F&F checker in Hindi says the five-day week is assumed', async ({ page }) 
   await open(page, '/hi/fnf-checker/')
   await expect(page.getByRole('switch', { name: /^5-day work week/ })).toHaveAttribute('aria-checked', 'true')
   await expect(page.getByText('हम 5-day week मानकर चल रहे हैं।', { exact: false })).toBeVisible()
+})
+
+test('tool pages on a phone: Next comes after the form, on screen and in reading order (R-07)', async ({ page }) => {
+  for (const path of ['/gratuity/', '/decoder/', '/offer-comparison/']) {
+    await open(page, path)
+    const order = await page.evaluate(() => {
+      const next = document.querySelector('a[data-next-step]')!
+      const field = document.querySelector('[data-tool] input:not([type="hidden"]), [data-tool] select')!
+      return {
+        domAfter: Boolean(field.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING),
+        below: next.getBoundingClientRect().top > field.getBoundingClientRect().top,
+      }
+    })
+    expect(order, path).toEqual({ domAfter: true, below: true })
+  }
 })

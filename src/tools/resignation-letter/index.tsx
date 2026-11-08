@@ -166,7 +166,7 @@ function Body() {
   const fromPlan = stillFromPlan(draft, seeded, PLAN_MAP)
 
   return (
-    <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="resignation-letter" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
@@ -194,9 +194,8 @@ function Body() {
           </div>
         </Card>
         <Disclaimer>{t('hr.disclaimer')}</Disclaimer>
-        <NextStep from="resignation-letter" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('resignation-letter.formTitle')}</h2>
         <p className="text-xs leading-snug text-ink-faint">{t('resignation-letter.formHint')}</p>
         <TextField label={t('resignation-letter.company')} value={draft.company} onChange={(v) => set({ company: v })} />
@@ -250,6 +249,7 @@ function Body() {
           ]}
         />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="resignation-letter" />
     </div>
   )
 }

@@ -880,9 +880,12 @@ function TradeOption(props: {
           })
 
   const date = needsPicker ? value : (trade.resignDate ?? '')
+  const card = useRef<HTMLDivElement>(null)
   const pick = () => {
     if (!isIsoDate(date)) {
       setMissing(true)
+      // Take the visitor to the empty field; it reads its error out (N12).
+      card.current?.querySelector<HTMLInputElement>('input[type="date"]')?.focus()
       return
     }
     props.onPick(date)
@@ -890,6 +893,7 @@ function TradeOption(props: {
 
   return (
     <div
+      ref={card}
       data-trade={trade.id}
       data-chosen={props.chosen || undefined}
       role="group"
@@ -994,13 +998,20 @@ function WorthPanel(props: WorthProps) {
           {result != null && (
             <div role="status" aria-live="polite" className="space-y-2">
               {result.eligible ? (
-                <p className="text-[15px] font-semibold leading-snug">
-                  {/* A capped amount is a ceiling, not a floor (TR2-15). */}
-                  {t(result.amount >= GRATUITY_CAP ? 'plan.worth.amountCapped' : 'plan.worth.amount', {
-                    date: fmt(props.lastWorkingDay),
-                    amount: formatINR(result.amount),
-                  })}
-                </p>
+                // The payoff of the home flow is a money answer, so it is drawn as a
+                // figure like every other tool's (R-06).
+                <div>
+                  <p className="text-[14px] leading-snug text-ink-soft">
+                    {t('plan.worth.figureLabel', { date: fmt(props.lastWorkingDay) })}
+                  </p>
+                  <p className="tnum mt-1 font-display text-[36px] font-bold leading-none tracking-[-0.02em] text-ink">
+                    {formatINR(result.amount)}
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-semibold leading-snug">
+                    {/* A capped amount is a ceiling, not a floor (TR2-15). */}
+                    {t(result.amount >= GRATUITY_CAP ? 'plan.worth.figureCapped' : 'plan.worth.figureAtLeast')}
+                  </p>
+                </div>
               ) : (
                 <p className="text-[15px] font-semibold leading-snug">
                   {t('plan.worth.notYet', { date: fmt(props.lastWorkingDay) })}

@@ -1,4 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react'
+import { latinLang } from '../lib/latinLang'
 import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
@@ -60,7 +61,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
           <div className="order-2 ml-auto flex items-center gap-2 md:order-3">
             <CommandPalette />
             <div role="group" aria-label={t('app.langToggle.label')} className="inline-flex min-h-[44px] items-center rounded-xl bg-paper p-1">
-              <LangLink to="en" label="English" current={lang} slug={slug} onPick={pick}>
+              <LangLink to="en" label="EN, English" current={lang} slug={slug} onPick={pick}>
                 EN
               </LangLink>
               <LangLink to="hi" label="हिन्दी (Hindi)" current={lang} slug={slug} onPick={pick}>
@@ -86,7 +87,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
       <main id="main" tabIndex={-1} className="mx-auto max-w-6xl px-4 pb-16 pt-6 outline-none sm:px-6 sm:pt-10">
         {heading && (
           <div className="mb-6 sm:mb-8">
-            <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">
+            <h1
+              lang={latinLang(t(heading.titleKey), lang)}
+              className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]"
+            >
               {t(heading.titleKey)}
             </h1>
             <p className="mt-2 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">{t(heading.descKey)}</p>
@@ -160,7 +164,9 @@ export function Shell({ current, children }: { current: string; children: ReactN
   )
 }
 
-const FOOT_INLINE = 'inline-block py-2.5 font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink'
+// Inline, not inline-block: the padding widens the tap area without making each line of
+// the sentence 44px tall (R-10).
+const FOOT_INLINE = 'py-2.5 font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink'
 const FOOT_LINK =
   'inline-flex min-h-[44px] items-center font-medium text-ink-soft underline-offset-4 hover:text-ink hover:underline aria-[current=page]:text-ink'
 

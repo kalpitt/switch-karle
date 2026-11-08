@@ -103,7 +103,7 @@ function Body() {
   const copyText = [verdict, t('esop-reality.provisional'), t('ui.disclaimer')].join('\n')
 
   return (
-    <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="esop-reality" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -145,10 +145,9 @@ function Body() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="esop-reality" />
       </div>
 
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('esop-reality.formTitle')}</h2>
         <PrivacyLine />
         <NumberField integer label={t('esop-reality.shares')} value={draft.shares} onChange={(v) => set({ shares: v })} />
@@ -167,6 +166,7 @@ function Body() {
         />
         <Toggle label={t('esop-reality.liquid')} hint={t('esop-reality.liquidHint')} checked={draft.liquid} onChange={(v) => set({ liquid: v })} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="esop-reality" />
     </div>
   )
 }

@@ -111,8 +111,9 @@ export const hiSuite: Record<string, string> = {
   'plan.looking.since': '{date} से देख रहे हैं। आपकी resign date वहीं है, हिली नहीं।',
   'plan.worth': 'आपकी gratuity कितने की है, देखें',
   'plan.worth.hint': 'Last drawn basic और dearness allowance, CTC नहीं। इसी device पर save होता है, और gratuity tool भी यही figure लेता है।',
-  'plan.worth.amount': 'Last working day {date} हो तो आपकी gratuity कम से कम {amount} बनती है।',
-  'plan.worth.amountCapped': 'Last working day {date} हो तो आपकी gratuity {amount} बनती है, यानी cap जितनी।',
+  'plan.worth.figureLabel': 'Last working day {date} हो तो आपकी gratuity',
+  'plan.worth.figureAtLeast': 'कम से कम इतनी।',
+  'plan.worth.figureCapped': 'यह cap जितनी है।',
   'plan.worth.notYet': 'Last working day {date} हो तो आप अभी eligible नहीं होंगे, इसलिए कोई gratuity नहीं बनती।',
   'plan.worth.full': 'पूरा gratuity calculator खोलें',
   'plan.change': 'मेरी date बदलें',
@@ -170,6 +171,7 @@ export const hiSuite: Record<string, string> = {
   'home.trackerLink.cta': 'अपना application tracker खोलें →',
 
   // ---- Home: the journey ----
+  'journey.stage': 'पड़ाव {n}',
   'journey.0.name': 'बस, अब यहाँ नहीं',
   'journey.0.what': 'आपने जाने का मन बना लिया है, अभी कहीं apply नहीं किया। जानें कि छोड़ने की कीमत क्या है।',
   'journey.1.name': 'चुपचाप देख रहे हैं',

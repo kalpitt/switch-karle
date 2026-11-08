@@ -69,7 +69,7 @@ function Body() {
     : 'epf-transfer.verdict.transfer'
 
   return (
-    <div data-tool="epf-transfer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="epf-transfer" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -103,9 +103,8 @@ function Body() {
         )}
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('epf-transfer.provisional')}</p>
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="epf-transfer" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('epf-transfer.formTitle')}</h2>
         <Select
           label={t('epf-transfer.intent')}
@@ -127,6 +126,7 @@ function Body() {
         <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
         <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="epf-transfer" />
     </div>
   )
 }

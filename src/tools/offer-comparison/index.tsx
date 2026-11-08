@@ -139,7 +139,7 @@ function CompareBody() {
   ]
 
   return (
-    <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="offer-comparison" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <ResultHero
@@ -206,10 +206,9 @@ function CompareBody() {
           />
         )}
         <Disclaimer>{t('ui.disclaimer')}</Disclaimer>
-        <NextStep from="offer-comparison" />
       </div>
 
-      <div className="space-y-4 lg:sticky lg:top-20">
+      <div className="space-y-4 lg:row-span-2 lg:sticky lg:top-20">
         <PrivacyLine />
         {slots.map((s, i) => (
           <MiniOffer
@@ -243,6 +242,7 @@ function CompareBody() {
         )}
         <InheritNote text={t('ui.inherit')} linkLabel={t('ui.inheritLink')} href={withLang(lang, 'decoder')} />
       </div>
+      <NextStep className="lg:order-last lg:col-start-2" from="offer-comparison" />
     </div>
   )
 }

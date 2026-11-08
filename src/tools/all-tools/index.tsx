@@ -1,4 +1,6 @@
 import { useLang, useT, type Lang } from '../../i18n'
+import { latinLang } from '../../lib/latinLang'
+import { quietGlyphs } from '../../components/quietGlyphs'
 import { listSections, type ListEntry } from '../../data/journey'
 import { TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
@@ -34,21 +36,22 @@ function AllTools() {
       <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
         {t('toolsPage.plan')}{' '}
         <a href={withLang(lang)} className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline">
-          {t('toolsPage.planCta')}
+          {quietGlyphs(t('toolsPage.planCta'))}
         </a>
       </p>
 
       <div className="mt-6 space-y-10 sm:mt-8">
         {sections.map((section, index) => (
           <section key={section.id} aria-labelledby={`stage-${section.id}`}>
-            <h2 id={`stage-${section.id}`} className="flex items-baseline gap-2 text-[18px] font-bold leading-snug text-ink">
-              <span aria-hidden className="tnum text-[14px] font-semibold text-ink-faint">
-                {index + 1}
-              </span>
+            {/* Stage headings outrank the 15px tool names under them (R-11). */}
+            <p aria-hidden="true" className="tnum text-[12px] font-semibold uppercase tracking-[0.04em] text-ink-faint">
+              {t('journey.stage', { n: index + 1 })}
+            </p>
+            <h2 id={`stage-${section.id}`} className="mt-0.5 font-display text-[22px] font-bold leading-snug tracking-[-0.01em] text-ink">
               {t(section.nameKey)}
             </h2>
             <p className="mt-0.5 text-[14px] leading-snug text-ink-soft">{t(section.whatKey)}</p>
-            <ul className="mt-2 grid gap-x-8 border-t border-line sm:grid-cols-2 sm:border-t-0">
+            <ul className="mt-3 grid gap-x-8 border-t border-line sm:auto-rows-fr sm:grid-cols-2 sm:border-t-0">
               {section.entries.map((entry) => (
                 <EntryRow key={entry.kind === 'tool' ? entry.tool.slug : `group-${entry.situations[0]!.slug}`} entry={entry} />
               ))}
@@ -77,7 +80,10 @@ function EntryRow({ entry }: { entry: ListEntry }) {
         className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
       >
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2">
+          <span
+            lang={latinLang(title, lang)}
+            className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2"
+          >
             {title}
           </span>
           <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">{desc}</span>

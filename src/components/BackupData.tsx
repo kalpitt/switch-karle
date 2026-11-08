@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { buttonClass } from './buttonClass'
 import { useDialog } from './useDialog'
 import { useT } from '../i18n'
 import {
@@ -79,7 +80,6 @@ export function BackupData({ className }: { className?: string }) {
   // returns to the footer link that opened it (the same as EraseData).
   useDialog(open, panelRef, close)
 
-  const btn = 'min-h-11 rounded-xl px-4 py-2 text-[13px] font-bold'
   const n = pending ? Object.keys(pending.keys).length : 0
 
   return (
@@ -91,13 +91,13 @@ export function BackupData({ className }: { className?: string }) {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/40 p-4 pt-[10vh]" onClick={close}>
           <div
             ref={panelRef}
-            className="w-full max-w-md rounded-2xl border border-line bg-paper p-5 text-left text-ink shadow-lg"
+            className="w-full max-w-md rounded-2xl border border-line bg-card p-5 text-left text-ink shadow-float"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="backup-title"
           >
-            <h2 id="backup-title" className="text-base font-bold">
+            <h2 id="backup-title" className="text-[18px] font-semibold leading-snug text-ink">
               {t('backup.title')}
             </h2>
             <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{t('backup.intro')}</p>
@@ -105,13 +105,13 @@ export function BackupData({ className }: { className?: string }) {
               {count === 0 ? t('backup.empty') : count === 1 ? t('backup.savedOne') : t('backup.saved', { n: count })}
             </p>
             {count > 0 && (
-              <button type="button" onClick={download} className={`${btn} mt-3 bg-ink hover:bg-ink-hover text-white`}>
+              <button type="button" onClick={download} className={`${buttonClass('primary', 'sm')} mt-3`}>
                 {t('backup.download')}
               </button>
             )}
 
             <div className="mt-5 border-t border-line pt-4">
-              <h3 className="text-[14px] font-bold">{t('backup.restoreHead')}</h3>
+              <h3 className="text-[15px] font-semibold">{t('backup.restoreHead')}</h3>
               <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{t('backup.restoreHint')}</p>
               <input
                 ref={fileRef}
@@ -129,7 +129,7 @@ export function BackupData({ className }: { className?: string }) {
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  className={`${btn} mt-3 border border-line bg-card text-ink`}
+                  className={`${buttonClass('secondary', 'sm')} mt-3`}
                 >
                   {t('backup.choose')}
                 </button>
@@ -144,26 +144,26 @@ export function BackupData({ className }: { className?: string }) {
                   <p className="text-[13px] leading-relaxed">{t('backup.found', { n, m: pending.overlap })}</p>
                   {pending.overlap === 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <button type="button" onClick={() => apply(true)} className={`${btn} bg-ink hover:bg-ink-hover text-white`}>
+                      <button type="button" onClick={() => apply(true)} className={buttonClass('primary', 'sm')}>
                         {t('backup.restore')}
                       </button>
-                      <button type="button" onClick={() => setPending(null)} className={`${btn} border border-line text-ink-soft`}>
+                      <button type="button" onClick={() => setPending(null)} className={buttonClass('secondary', 'sm')}>
                         {t('backup.cancel')}
                       </button>
                     </div>
                   ) : (
                     <div className="mt-3 space-y-2">
-                      <button type="button" onClick={() => apply(true)} className={`${btn} w-full bg-ink hover:bg-ink-hover text-white`}>
+                      <button type="button" onClick={() => apply(true)} className={`${buttonClass('primary', 'sm')} w-full`}>
                         {t('backup.keepMine')}
                       </button>
                       <p className="text-[12px] leading-relaxed text-ink-soft">{t('backup.keepMineHint')}</p>
-                      <button type="button" onClick={() => apply(false)} className={`${btn} w-full border border-line bg-card text-ink`}>
+                      <button type="button" onClick={() => apply(false)} className={`${buttonClass('secondary', 'sm')} w-full`}>
                         {t('backup.useFile')}
                       </button>
                       <p className="text-[12px] leading-relaxed text-ink-soft">
                         {t('backup.useFileHint', { m: pending.overlap })}
                       </p>
-                      <button type="button" onClick={() => setPending(null)} className={`${btn} border border-line text-ink-soft`}>
+                      <button type="button" onClick={() => setPending(null)} className={buttonClass('secondary', 'sm')}>
                         {t('backup.cancel')}
                       </button>
                     </div>
@@ -189,7 +189,7 @@ export function BackupData({ className }: { className?: string }) {
             </div>
 
             <div className="mt-4 flex justify-end">
-              <button type="button" onClick={close} className={`${btn} border border-line text-ink-soft`}>
+              <button type="button" onClick={close} className={buttonClass('secondary', 'sm')}>
                 {t('backup.close')}
               </button>
             </div>

@@ -36,7 +36,7 @@ function Body() {
   const isBlank = text.trim() === ''
 
   return (
-    <div data-tool="bond-scanner" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:items-start">
+    <div data-tool="bond-scanner" className="grid gap-4 lg:grid-cols-[minmax(320px,2fr)_3fr] lg:grid-rows-[auto_1fr] lg:items-start">
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         {isBlank ? (
@@ -63,12 +63,12 @@ function Body() {
         )}
         <p className="text-[14px] leading-relaxed text-ink-soft">{t('bond-scanner.disclaimer')}</p>
         <Disclaimer>{t('ui.disclaimer.guide')}</Disclaimer>
-        <NextStep from="bond-scanner" />
       </div>
-      <Card className="space-y-3 lg:sticky lg:top-20">
+      <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('bond-scanner.formTitle')}</h2>
         <TextArea label={t('bond-scanner.text')} hint={t('bond-scanner.textHint')} value={text} onChange={setText} rows={12} />
       </Card>
+      <NextStep className="lg:order-last lg:col-start-2" from="bond-scanner" />
     </div>
   )
 }
