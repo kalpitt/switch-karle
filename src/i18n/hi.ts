@@ -24,7 +24,7 @@ export const hi: Record<string, string> = {
   'error.resetConfirm': 'इस device पर सिर्फ़ इस tool का saved data हटाएं? बाक़ी tools का data रहेगा।',
   'error.report': 'बताएं क्या टूटा',
   'app.skipToContent': 'सीधे content पर जाएं',
-  'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई नौकरी के day 90 तक।',
+  'app.tagline': 'पूरा job switch — “बस, अब यहाँ नहीं” से लेकर notice और नई job के पहले 90 दिन तक।',
   'app.privacyBadge': '100% private — यह पूरी तरह आपके browser में चलता है, कुछ भी upload नहीं होता',
   'app.footer.badge': 'आपके browser में चलता है। आप जो type करते हैं, वह कहीं नहीं भेजा जाता।',
   'app.footer.rules': 'FY 2026-27 के नियम · अनुमान हैं, tax या कानूनी सलाह नहीं · free और open source',
@@ -99,8 +99,8 @@ export const hi: Record<string, string> = {
   'common.delete': 'हटाएं',
   'common.cancel': 'रद्द करें',
 
-  'ui.copy': 'कॉपी करें',
-  'ui.copied': 'कॉपी हो गई ✓',
+  'ui.copy': 'Copy करें',
+  'ui.copied': 'Copy हो गई ✓',
   'ui.exampleChip': 'उदाहरण',
   'ui.exampleNote': 'ये sample numbers हैं — अभी आपके बारे में कुछ जाँचा नहीं गया है।',
   'ui.useMine': 'मेरे numbers डालें',
@@ -177,15 +177,15 @@ export const hi: Record<string, string> = {
   'city.ahmedabad': 'अहमदाबाद',
   'city.bengaluru': 'बेंगलुरु',
   'city.other': '{state} में कहीं और',
-  'city.ptTown': '{state} में professional tax हर शहर या नगर पालिका खुद तय करती है, इसलिए दिखाया गया आंकड़ा आपके शहर से अलग हो सकता है।',
+  'city.ptTown': '{state} में professional tax हर शहर या नगर पालिका ख़ुद तय करती है, इसलिए दिखाया गया आंकड़ा आपके शहर से अलग हो सकता है।',
 
   // ---- Results ----
   'results.headline': 'आपका {ctc} CTC असल में देता है',
   'results.exampleChip': 'उदाहरण',
   'results.exampleNote': 'ये sample numbers हैं — अभी आपके बारे में कुछ जाँचा नहीं गया है।',
   'decoder.fixedPayNote': 'In-hand सिर्फ़ fixed pay पर count होता है। Tax सिर्फ़ fixed pay पर, variable पर नहीं। Old-regime तुलना age 60 से कम मानकर है।',
-  'results.headlineSub': 'उतना नहीं जितना CTC नंबर से {amount}/month लगता है।',
-  'results.reaches': 'आपके bank तक पहुंचता है · सालाना {amount} in-hand',
+  'results.headlineSub': 'CTC से {amount}/month लगता है, पर उतना नहीं।',
+  'results.reaches': 'CTC आपके bank तक पहुँचता है · सालाना {amount} in-hand',
   'regime.new': 'New regime',
   'regime.old': 'Old regime',
   'results.cheaper': 'कम tax',
@@ -202,7 +202,7 @@ export const hi: Record<string, string> = {
   'results.row.professionalTax': 'Professional tax',
   'results.row.professionalTax.pb': 'State Development Tax (पंजाब)',
   'results.row.inHand': 'सालाना आपके bank में',
-  'results.offerCheck': 'Offer जांच',
+  'results.offerCheck': 'Offer जाँच',
   'results.flagsBadge': '{n} flag',
   'results.noAlarming': '✓ चिंता की कोई बात नहीं',
   'results.sayThis': 'यह कहें:',
@@ -219,7 +219,7 @@ export const hi: Record<string, string> = {
   'results.howComputed.bullet4':
     'Professional tax आपके state के published slab पर आधारित है (approximate — municipal notification से थोड़ा बदल सकता है)।',
   'results.howComputed.bullet5':
-    'सब कुछ आपके browser में चलता है। आपका offer कभी किसी server तक नहीं पहुंचता। यह एक estimate है, tax advice नहीं — आपके payroll की असल structure थोड़ी अलग हो सकती है।',
+    'सब कुछ आपके browser में चलता है। आपका offer कभी किसी server तक नहीं पहुँचता। यह एक estimate है, tax advice नहीं — आपके payroll की असल structure थोड़ी अलग हो सकती है।',
 
   // ---- Share card ----
   'autofill.summary': 'Offer letter है? अपने AI से यह form भरवाएं',
@@ -237,14 +237,14 @@ export const hi: Record<string, string> = {
   'autofill.error':
     'इसमें valid JSON block नहीं मिला। AI का पूरा जवाब paste करें, ```json``` वाला हिस्सा भी।',
   'autofill.privacyNote':
-    'ध्यान दें: offer letter किसी AI chatbot में paste करने से वह उस AI provider के पास जाता है — आपकी मर्ज़ी, आपका account। यह app खुद कुछ भी upload नहीं करता।',
+    'ध्यान दें: offer letter किसी AI chatbot में paste करने से वह उस AI provider के पास जाता है — आपकी मर्ज़ी, आपका account। यह app ख़ुद कुछ भी upload नहीं करता।',
 
   'shareCard.cta.rendering': 'बन रहा है…',
   'shareCard.cta.download': 'Image के रूप में download करें',
   'shareCard.eyebrow': 'CTC की सच्चाई',
   'shareCard.ctcSounds': 'CTC {ctc} सुनने में {amount}/month लगता है',
-  'shareCard.butBank': 'लेकिन bank में पहुंचता है',
-  'shareCard.reaches': 'CTC का {pct}% bank तक पहुंचता है',
+  'shareCard.butBank': 'लेकिन bank में पहुँचता है',
+  'shareCard.reaches': 'CTC का {pct}% bank तक पहुँचता है',
   'shareCard.redFlags': '⚑ इस offer में {n} red flag',
   'shareCard.footer': 'switchkarle.fyi',
 
@@ -266,7 +266,7 @@ export const hi: Record<string, string> = {
   'tracker.example.action.chase': '30 दिन से कोई reply नहीं — chase करें या close करें',
   'tracker.example.action.round2': 'Hiring manager के साथ round 2',
   'tracker.example.action.decode': 'Reply करने से पहले यह offer decode करें',
-  'tracker.doorway.label': 'अगला कदम:',
+  'tracker.doorway.label': 'इसके लिए tools:',
   'tracker.doorway.prefilled': 'In-hand salary calculator इसी CTC के साथ खुलेगा।',
   'tracker.confirmDelete': 'यह application delete करें? यह वापस नहीं हो सकता।',
   'tracker.saveFailed.title': 'यह board save नहीं हुआ।',
@@ -299,8 +299,8 @@ export const hi: Record<string, string> = {
   'tracker.field.notice.label': 'Notice period',
   'tracker.field.source.label': 'Source',
   'tracker.field.source.hint': 'Referral, LinkedIn, Naukri…',
-  'tracker.field.nextAction.label': 'अगला कदम',
-  'tracker.field.nextActionDate.label': 'अगले कदम की तारीख',
+  'tracker.field.nextAction.label': 'अगला क़दम',
+  'tracker.field.nextActionDate.label': 'अगले क़दम की date',
   'tracker.field.appliedOn.label': 'कब apply किया',
   'tracker.field.notes.label': 'Notes',
   'tracker.saveChanges': 'बदलाव save करें',
@@ -322,10 +322,10 @@ export const hi: Record<string, string> = {
   'tracker.archive.closedDate': '{date} को बंद',
   'tracker.archive.restore': 'वापस लाएं',
   'sweep.title': 'अपना board mailbox से भरें',
-  'sweep.step1': 'इसे copy करें और अपने उसी AI में चलाएँ जो आपके Gmail से जुड़ा है।',
+  'sweep.step1': 'इसे copy करें और अपने उसी AI में चलाएं जो आपके Gmail से जुड़ा है।',
   'sweep.copy': 'Prompt copy करें',
   'sweep.copied': 'Copy हो गया',
-  'sweep.privacy': 'यहाँ से कुछ भी नहीं भेजा जाता। Search आप अपने ही account में चलाते हैं और जवाब खुद वापस paste करते हैं।',
+  'sweep.privacy': 'यहाँ से कुछ भी नहीं भेजा जाता। Search आप अपने ही account में चलाते हैं और जवाब ख़ुद वापस paste करते हैं।',
   'sweep.step2': 'जो जवाब मिले उसे यहाँ paste करें',
   'sweep.read': 'पढ़ें',
   'sweep.readBlocked': 'पढ़ने के लिए ऊपर जवाब paste करें।',
@@ -342,13 +342,13 @@ export const hi: Record<string, string> = {
   'sweep.addBlocked': 'जोड़ने के लिए कम से कम एक पर tick करें।',
   'sweep.added': '{n} आपके mailbox से जोड़ी गईं।',
   'sweep.nothing': 'यहाँ जोड़ने को कुछ नहीं है।',
-  'coverage.never': 'इस board पर वही है जो आपने खुद जोड़ा है।',
+  'coverage.never': 'इस board पर वही है जो आपने ख़ुद जोड़ा है।',
   'coverage.sweptToday': 'आज email से भरा गया, {from} तक पीछे जाकर।',
   'coverage.lastSwept': '{date} को email से भरा गया, {from} तक पीछे जाकर।',
   'coverage.gapOne':
-    'यह कल की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने खुद न जोड़ा हो।',
+    'यह कल की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने ख़ुद न जोड़ा हो।',
   'coverage.gap':
-    'यह {n} दिन पहले की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने खुद न जोड़ा हो।',
+    'यह {n} दिन पहले की बात है। उसके बाद आपने जो apply किया, वह यहाँ नहीं है जब तक आपने ख़ुद न जोड़ा हो।',
   'coverage.limits':
     'उस दायरे में भी कुछ छूटा होगा। Job boards confirmation email में शुरू के कुछ roles ही डालते हैं, और पुराने mail खोजना मुश्किल है।',
   'coverage.sweepAgain': 'फिर से email से भरें',
@@ -418,12 +418,12 @@ export const hi: Record<string, string> = {
 
   'flag.gratuity-in-ctc.title': 'Gratuity CTC के अंदर गिना गया है',
   'flag.gratuity-in-ctc.detail':
-    'आपके CTC का ₹{amount}/साल gratuity accrual है — यह पैसा तभी मिलता है जब आप 5 साल टिकें (Code on Social Security, 2020 के अनुसार)। 3rd साल में छोड़ने पर CTC का यह हिस्सा कभी आपका था ही नहीं।',
+    'आपके CTC का ₹{amount}/year gratuity accrual है — यह पैसा तभी मिलता है जब आप 5 साल टिकें (Code on Social Security, 2020 के अनुसार)। 3rd साल में छोड़ने पर CTC का यह हिस्सा कभी आपका था ही नहीं।',
   'flag.gratuity-in-ctc.tip': 'Negotiate करने को कुछ नहीं — offers compare करते समय इसे mentally discount करें। CTC नहीं, fixed cash compare करें।',
 
   'flag.employer-pf-in-ctc.title': 'Employer PF भी CTC के figure में शामिल है',
   'flag.employer-pf-in-ctc.detail':
-    'CTC का ₹{amount}/साल employer का PF contribution है — यह आपका ही पैसा है, पर EPF में retirement/withdrawal तक locked रहता है, आपके bank account में नहीं आता। यह standard practice है, पर headline number को बड़ा दिखाता है।',
+    'CTC का ₹{amount}/year employer का PF contribution है — यह आपका ही पैसा है, पर EPF में retirement/withdrawal तक locked रहता है, आपके bank account में नहीं आता। यह standard practice है, पर headline number को बड़ा दिखाता है।',
   'flag.employer-pf-in-ctc.tip':
     'जब किसी ऐसे offer से compare करें जो employer PF को CTC में नहीं गिनता, तो एक तरफ इसे वापस जोड़ें ताकि apples-to-apples comparison हो।',
 
@@ -435,7 +435,7 @@ export const hi: Record<string, string> = {
 
   'flag.esop-illiquid.title': 'CTC का {percent}% unlisted ESOPs है',
   'flag.esop-illiquid.detail':
-    'इस offer का ₹{amount}/साल एक ऐसी company की equity है जहां कोई liquidity event नहीं हुआ — आप इसे बेच नहीं सकते, और ज़्यादातर startup ESOPs या तो worthless expire हो जाते हैं या dilute हो जाते हैं। एक tax trap भी है: options exercise करने पर उन paper gains पर tax लगता है जो आपने cash में realize नहीं किए।',
+    'इस offer का ₹{amount}/year एक ऐसी company की equity है जहां कोई liquidity event नहीं हुआ — आप इसे बेच नहीं सकते, और ज़्यादातर startup ESOPs या तो worthless expire हो जाते हैं या dilute हो जाते हैं। एक tax trap भी है: options exercise करने पर उन paper gains पर tax लगता है जो आपने cash में realize नहीं किए।',
   'flag.esop-illiquid.tip':
     'Decision लेते समय unlisted ESOPs की value zero मानें। पूछें: आख़िरी 409A/valuation क्या थी, buyback history क्या रही, और exit के बाद exercise window कितनी है (90 दिन hostile है; 5+ साल founder-friendly है)।',
 
@@ -455,7 +455,7 @@ export const hi: Record<string, string> = {
   'hero.notice-buyout.recover': 'F&F से इतनी recovery हो सकती है',
   'hero.leave-encashment': 'बची हुई छुट्टियों का पैसा',
   'hero.bonus-clawback': 'तय last working day पर छोड़ें तो इतना लौटाना होगा',
-  'hero.fnf-checker.pay': 'दोबारा हिसाब से आपको मिलना चाहिए',
+  'hero.fnf-checker.pay': 'दोबारा हिसाब से आपका बनता है',
   'hero.fnf-checker.owe': 'दोबारा हिसाब से आप पर बाक़ी',
   'hero.form16-shock.owe': 'जोड़ने के बाद अभी देना पड़ सकता है',
   'hero.form16-shock.ok': 'आपके TDS में बची गुंजाइश',

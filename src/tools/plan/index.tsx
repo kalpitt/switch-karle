@@ -854,7 +854,7 @@ function TradeOption(props: {
   const [value, setValue] = useState(() => pickerStart(trade.id, trade.resignDate, trade.earliestDate, props.today))
   const [missing, setMissing] = useState(false)
   // The option's title names the card and the date field inside it, so the two
-  // "Resign date" fields on this screen are told apart (A11Y N6).
+  // "Resignation date" fields on this screen are told apart (A11Y N6).
   const titleId = useId()
   const cleanId = useId()
 

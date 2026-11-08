@@ -133,10 +133,10 @@ test('home: each resign-date option is a named group, and its date field says wh
   await expect(page.getByRole('group', { name: /^Leave sooner/ })).toBeVisible()
   await expect(page.getByRole('group', { name: 'I already have a date' })).toBeVisible()
   await expect(page.locator('[data-trade="keep-what-is-earned"] input[type="date"]')).toHaveAccessibleName(
-    'Leave sooner Resign date',
+    'Leave sooner Resignation date',
   )
   await expect(page.locator('[data-trade="own-date"] input[type="date"]')).toHaveAccessibleName(
-    'I already have a date Resign date',
+    'I already have a date Resignation date',
   )
 })
 
