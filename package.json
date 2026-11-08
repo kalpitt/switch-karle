@@ -33,7 +33,7 @@
     "@emnapi/runtime": "^1.11.3",
     "@playwright/test": "1.64.1",
     "@tailwindcss/vite": "^4.3.4",
-    "@types/node": "^24.13.2",
+    "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vite-pwa/astro": "^2.0.1",
