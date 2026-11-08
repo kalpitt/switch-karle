@@ -4,7 +4,7 @@ import { dictionaries } from '../i18n'
 import { STATE_NAMES } from '../engine/professionalTax'
 import type { StateCode } from '../engine/types'
 import { INFO_PAGES } from './infoPages'
-import { CORRECTIONS, offerSources, ptSourceId, SOURCES, sourceById, TOOL_SOURCES, verifiedRange } from './sources'
+import { CORRECTIONS, offerSources, ptSourceId, RENDER_TIME_SOURCES, SOURCES, sourceById, TOOL_SOURCES, verifiedRange } from './sources'
 import { TOOLS } from './tools'
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
@@ -109,6 +109,31 @@ describe('receipts on screen', () => {
   it.each(usesPt)('%s names the professional-tax source on its receipt', (slug) => {
     const src = readFileSync(new URL(screenOf(slug), import.meta.url), 'utf8')
     expect(src).toMatch(/ptSourceId\(/)
+  })
+
+  // The Sources page says where each rule is used. Rules added at render time
+  // are listed in RENDER_TIME_SOURCES; the files must agree with it (TR2-11).
+  const allScreens = [...TOOLS.map((x) => x.slug), 'home']
+  const fileOf = (slug: string) => (slug === 'home' ? '../tools/plan/index.tsx' : screenOf(slug))
+  const exists = (slug: string) => {
+    try {
+      return readFileSync(new URL(fileOf(slug), import.meta.url), 'utf8')
+    } catch {
+      return ''
+    }
+  }
+
+  it('lists every tool that adds professional tax at render time, and only those', () => {
+    const found = allScreens.filter((slug) => /ptSourceId\(/.test(exists(slug)))
+    expect([...found].sort()).toEqual([...RENDER_TIME_SOURCES.pt].sort())
+  })
+
+  it('lists every screen that adds the last-working-day convention at render time, and only those', () => {
+    const fixed = toolSources
+    const found = allScreens.filter(
+      (slug) => /'last-working-day'/.test(exists(slug)) && !(fixed[slug] ?? []).includes('last-working-day'),
+    )
+    expect([...found].sort()).toEqual([...RENDER_TIME_SOURCES['last-working-day']].sort())
   })
 })
 

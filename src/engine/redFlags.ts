@@ -74,7 +74,7 @@ const RULES: Rule[] = [
       severity: 'info',
       title: 'Gratuity counted inside CTC',
       detail:
-        `₹${b.gratuityAnnual.toLocaleString('en-IN')}/year of your CTC is gratuity accrual — money you only receive if you stay 5 years (per the Code on Social Security, 2020). Leave in year 3 and this part of your "CTC" was never yours.`,
+        `₹${b.gratuityAnnual.toLocaleString('en-IN')}/year of your CTC is gratuity accrual — money you only receive if you stay about 5 years (the Gratuity calculator gives the exact date). Leave in year 3 and this part of your "CTC" was never yours.`,
       negotiationTip:
         'Nothing to negotiate — just discount it mentally when comparing offers. Compare fixed cash, not CTC.',
     }),

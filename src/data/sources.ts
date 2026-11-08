@@ -472,6 +472,29 @@ export const TOOL_SOURCES = {
 } as const satisfies Record<string, readonly string[]>
 
 /**
+ * Rules a tool adds to its receipt at render time, so they are not in its
+ * `TOOL_SOURCES` row. The Sources page lists these under "Used in" too, and a
+ * test reads each tool's file to keep the lists true (TR2-11). `home` is the
+ * plan on the home page.
+ */
+export const RENDER_TIME_SOURCES = {
+  /** Every tool that appends `ptSourceId(state)`. */
+  pt: [
+    'decoder',
+    'offer-comparison',
+    'real-hike',
+    'variable-reality',
+    'bonus-clawback',
+    'esop-reality',
+    'relocation',
+    'form16-shock',
+    'tax-declaration',
+  ],
+  /** Where the last-working-day convention is added because the date came from the plan. */
+  'last-working-day': ['home', 'gratuity', 'fnf-checker'],
+} as const satisfies Record<string, readonly string[]>
+
+/**
  * An offer-engine receipt as the answer used it: `gratuity-accrual` names the
  * 4.81% gratuity-inside-CTC convention, which no figure uses when no offer
  * counts gratuity inside its CTC (TR2-12).

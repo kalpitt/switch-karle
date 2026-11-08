@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { CONTACT_EMAIL, INFO_PAGE_UPDATED, INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
-import { CORRECTIONS, SOURCES, TOOL_SOURCES, type SourceEntry, type SourceStatus } from '../data/sources'
+import { CORRECTIONS, RENDER_TIME_SOURCES, SOURCES, TOOL_SOURCES, type SourceEntry, type SourceStatus } from '../data/sources'
 import { TOOLS } from '../data/tools'
 import { formatLongDate } from '../lib/formatDate'
 import { withLang } from '../lib/langPath'
@@ -128,21 +128,24 @@ function About() {
   )
 }
 
-/** Professional tax is added to these tools per state at render time (`ptSourceId`). */
-const PT_TOOLS = ['decoder', 'offer-comparison', 'relocation']
-
+/** Every place a rule is used: its `TOOL_SOURCES` rows plus the ones added at render time. */
 function usedBy(id: string): string[] {
   const slugs = Object.entries(TOOL_SOURCES)
     .filter(([, ids]) => (ids as readonly string[]).includes(id))
     .map(([slug]) => slug)
-  return id.startsWith('pt-') ? [...new Set([...PT_TOOLS, ...slugs])] : slugs
+  const added: readonly string[] = id.startsWith('pt-')
+    ? RENDER_TIME_SOURCES.pt
+    : id === 'last-working-day'
+      ? RENDER_TIME_SOURCES['last-working-day']
+      : []
+  return [...new Set([...added, ...slugs])]
 }
 
 function SourceCard({ entry }: { entry: SourceEntry }) {
   const t = useT()
   const { lang } = useLang()
   const tools = usedBy(entry.id)
-    .map((slug) => TOOLS.find((x) => x.slug === slug))
+    .map((slug) => (slug === 'home' ? { titleKey: 'nav.plan' } : TOOLS.find((x) => x.slug === slug)))
     .filter((x) => x !== undefined)
   const dateKey =
     entry.status === 'verified' ? 'sources.checkedOn' : entry.status === 'convention' ? 'sources.labelledOn' : 'sources.lookedOn'
