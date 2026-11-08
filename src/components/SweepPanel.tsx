@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { quietGlyphs } from './quietGlyphs'
 import type { Application } from '../tracker/types'
 import {
   ingest,
@@ -98,7 +99,7 @@ export function SweepPanel({
               onClick={handleCopy}
               className="min-h-[44px] rounded-xl border border-line bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-soft transition-colors hover:border-field hover:text-saffron-strong"
             >
-              {copied ? t('sweep.copied') : t('sweep.copy')}
+              {quietGlyphs(copied ? t('sweep.copied') : t('sweep.copy'))}
             </button>
           </div>
         </div>

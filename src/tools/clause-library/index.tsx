@@ -25,7 +25,7 @@ function Body() {
               <p className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
                 {t(`clause-library.cat.${c.category}`)}
               </p>
-              <h3 className="text-[15px] font-semibold">{t(`clause-library.${c.id}.title`)}</h3>
+              <h2 className="text-[15px] font-semibold">{t(`clause-library.${c.id}.title`)}</h2>
               <p className="text-[14px] leading-relaxed text-ink-soft">{body}</p>
               <CopyButton text={body} label={t('ui.copyText')} copiedLabel={t('ui.copied')} />
             </Card>

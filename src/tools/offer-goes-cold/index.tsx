@@ -23,7 +23,7 @@ function Body() {
         <VerdictBanner>{t('offer-goes-cold.verdict')}</VerdictBanner>
         
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s1.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s1.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('offer-goes-cold.s1.body.1')}
             <a href={withLang(lang, 'bgv-prep')} className="font-semibold underline">
@@ -38,17 +38,17 @@ function Body() {
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s2.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s2.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">{t('offer-goes-cold.s2.body')}</p>
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s3.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s3.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">{t('offer-goes-cold.s3.body')}</p>
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s4.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s4.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('offer-goes-cold.s4.body.1')}
             <a href={withLang(lang, 'tracker')} className="font-semibold underline">
@@ -59,7 +59,7 @@ function Body() {
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s5.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s5.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('offer-goes-cold.s5.body.1')}
             <a href={withLang(lang, 'clause-library')} className="font-semibold underline">
@@ -70,7 +70,7 @@ function Body() {
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.s6.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.s6.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft">
             {t('offer-goes-cold.s6.body.1')}
             <a href={withLang(lang, 'fnf-checker')} className="font-semibold underline">
@@ -89,7 +89,7 @@ function Body() {
         </Card>
 
         <Card className="space-y-2">
-          <h3 className="text-[15px] font-semibold">{t('offer-goes-cold.prompt.title')}</h3>
+          <h2 className="text-[15px] font-semibold">{t('offer-goes-cold.prompt.title')}</h2>
           <p className="text-[14px] leading-relaxed text-ink-soft mb-2">{t('offer-goes-cold.prompt.desc')}</p>
           <div className="bg-sheet-dim p-3 rounded text-[13px] whitespace-pre-wrap font-mono text-ink-soft border border-sheet-edge">
             {promptText}

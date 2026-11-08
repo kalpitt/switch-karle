@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { latinLang } from '../lib/latinLang'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { CONTACT_EMAIL, INFO_PAGE_UPDATED, INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
@@ -31,7 +32,12 @@ function Page({ page, children }: { page: InfoPage; children: ReactNode }) {
   const { lang } = useLang()
   return (
     <article data-info={page} className="max-w-[65ch] space-y-8 text-[15px] leading-relaxed">
-      <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">{t(`${page}.title`)}</h1>
+      <h1
+        lang={latinLang(t(`${page}.title`), lang)}
+        className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]"
+      >
+        {t(`${page}.title`)}
+      </h1>
       {children}
       <footer className="space-y-2 border-t border-line pt-4 text-[13px] text-ink-soft">
         <p>

@@ -890,7 +890,7 @@ function ApplicationCard({
               <button
                 type="button"
                 data-move="-1"
-                aria-label={t('tracker.movePrev')}
+                aria-label={`${t('tracker.movePrev')}, ${app.company}`}
                 disabled={idx === 0}
                 onClick={() => onMove(-1)}
                 className="min-h-[24px] min-w-[24px] rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
@@ -900,7 +900,7 @@ function ApplicationCard({
               <button
                 type="button"
                 data-move="1"
-                aria-label={t('tracker.moveNext')}
+                aria-label={`${t('tracker.moveNext')}, ${app.company}`}
                 disabled={idx === STAGE_ORDER.length - 1}
                 onClick={() => onMove(1)}
                 className="min-h-[24px] min-w-[24px] rounded-lg border border-line px-2 py-1 text-xs font-bold disabled:opacity-30"
@@ -913,6 +913,7 @@ function ApplicationCard({
                 <button
                   type="button"
                   onClick={() => setArchiving((v) => !v)}
+                  aria-label={`${t('tracker.archive')}, ${app.company}`}
                   className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft hover:text-ink"
                 >
                   {t('tracker.archive')}
@@ -921,6 +922,7 @@ function ApplicationCard({
               <button
                 type="button"
                 onClick={onEdit}
+                aria-label={`${t('tracker.edit')}, ${app.company}`}
                 className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-ink-soft hover:text-ink"
               >
                 {t('tracker.edit')}
@@ -928,6 +930,7 @@ function ApplicationCard({
               <button
                 type="button"
                 onClick={onDelete}
+                aria-label={`${t('common.delete')}, ${app.company}`}
                 className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-alarm hover:underline"
               >
                 {t('common.delete')}
@@ -1000,6 +1003,7 @@ function ArchivedApplicationCard({
         <button
           type="button"
           onClick={onRestore}
+          aria-label={`${t('tracker.archive.restore')}, ${app.company}`}
           className="min-h-[24px] rounded-lg border border-line bg-paper px-2.5 py-1 text-xs font-semibold text-ink-soft hover:border-field hover:text-saffron-strong transition-colors"
         >
           {t('tracker.archive.restore')}
@@ -1007,6 +1011,7 @@ function ArchivedApplicationCard({
         <button
           type="button"
           onClick={onDelete}
+          aria-label={`${t('common.delete')}, ${app.company}`}
           className="min-h-[24px] rounded-lg px-2 py-1 text-xs font-semibold text-alarm hover:underline"
         >
           {t('common.delete')}

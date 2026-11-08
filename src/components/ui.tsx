@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
+import { quietGlyphs } from './quietGlyphs'
 import { useEffect, useId, useRef, useState } from 'react'
 import { formatINR } from '../engine/format'
 import { useLang, useT } from '../i18n'
@@ -32,7 +33,7 @@ export function Label({ children, hint }: { children: ReactNode; hint?: string }
 /** The bordered box every text-like control sits in. `field` is a 3:1 border; the
  *  ring is the focus indicator, since the inputs inside draw no outline of their own. */
 const BOX =
-  'rounded-xl border border-field bg-card px-3 transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus-within:border-saffron focus-within:ring-[3px] focus-within:ring-saffron/25'
+  'rounded-xl border border-field bg-card px-3 transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus-within:border-saffron focus-within:ring-2 focus-within:ring-saffron'
 
 type FieldAria = { 'aria-labelledby'?: string; 'aria-describedby'?: string; 'aria-invalid'?: true }
 
@@ -56,7 +57,7 @@ function Field({
   /** Another element id read before the label, e.g. the title of the option a field sits in. */
   labelledBy?: string
   required?: boolean
-  /** Why the value cannot be used. Read out at once, marks the control invalid and describes it. */
+  /** Why the value cannot be used. Marks the control invalid and describes it; the form moves focus here. */
   error?: string
   /** Another element id that describes the control, e.g. an echo line. */
   describedBy?: (id: string) => string | undefined
@@ -92,7 +93,9 @@ function Field({
       })}
       {after?.(id)}
       {error && (
-        <span id={`${id}-err`} role="alert" className="mt-1 block text-[13px] font-semibold leading-snug text-alarm">
+        // No role="alert": every form that shows these moves focus to the field, which
+        // reads the error through aria-describedby. An alert as well said it twice (N12).
+        <span id={`${id}-err`} className="mt-1 block text-[13px] font-semibold leading-snug text-alarm">
           {error}
         </span>
       )}
@@ -274,7 +277,7 @@ export function TextArea(props: {
       {(aria) => (
         <textarea
           {...aria}
-          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
+          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-2 focus:ring-saffron"
           rows={props.rows ?? 3}
           value={props.value}
           onChange={(e) => props.onChange(e.target.value)}
@@ -298,7 +301,7 @@ export function Select<T extends string>(props: {
       {(aria) => (
         <select
           {...aria}
-          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
+          className="mt-1.5 w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none transition-[border-color,box-shadow] duration-150 hover:border-ink-soft focus:border-saffron focus:ring-2 focus:ring-saffron"
           value={props.value}
           onChange={(e) => props.onChange(e.target.value as T)}
         >
@@ -414,7 +417,7 @@ export function CopyButton({
       onClick={copy}
       className={buttonClass('secondary', 'sm')}
     >
-      <span aria-live="polite">{copied ? copiedLabel : label}</span>
+      <span aria-live="polite">{quietGlyphs(copied ? copiedLabel : label)}</span>
     </button>
   )
 }

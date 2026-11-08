@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { quietGlyphs } from './quietGlyphs'
 import type { Application } from '../tracker/types'
 import { addInsight, load, removeInsight, save } from '../tracker/store'
 import { TEMPLATES } from '../prompts/templates'
@@ -232,7 +233,7 @@ function TemplateCard({
           >
             {categoryLabel[template.category]}
           </span>
-          <h3 className="mt-1.5 text-[15px] font-bold leading-tight">{t(`template.${template.id}.title`)}</h3>
+          <h3 className="mt-1.5 text-[15px] font-bold leading-tight">{quietGlyphs(t(`template.${template.id}.title`))}</h3>
         </div>
       </div>
       <p className="text-[13px] leading-snug text-ink-soft">{t(`template.${template.id}.description`)}</p>
@@ -242,7 +243,7 @@ function TemplateCard({
           onClick={() => onCopy(prompt)}
           className="min-h-[44px] rounded-xl bg-ink hover:bg-ink-hover px-4 py-2.5 text-[13px] font-bold text-white transition-transform active:scale-[0.98]"
         >
-          {copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt')}
+          {quietGlyphs(copied ? t('promptStudio.copied') : t('promptStudio.copyPrompt'))}
         </button>
       </div>
       <Details summary={t('promptStudio.previewPrompt')}>

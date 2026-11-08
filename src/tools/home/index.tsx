@@ -1,4 +1,5 @@
 import { useT, useLang, type Lang } from '../../i18n'
+import { quietGlyphs } from '../../components/quietGlyphs'
 import { distinctToolCount } from '../../data/journey'
 import { TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
@@ -41,7 +42,7 @@ function BelowTheDoor() {
       <p className="text-[14px] leading-relaxed text-ink-soft">
         {t('home.trackerLink')}{' '}
         <a href={withLang(lang, 'tracker')} className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline">
-          {t('home.trackerLink.cta')}
+          {quietGlyphs(t('home.trackerLink.cta'))}
         </a>
       </p>
 

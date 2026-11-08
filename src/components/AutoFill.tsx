@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { quietGlyphs } from './quietGlyphs'
 import type { OfferInput } from '../engine/types'
 import { TEMPLATES } from '../prompts/templates'
 import { parseAiOffer } from '../prompts/offerImport'
@@ -68,7 +69,7 @@ export function AutoFill({
             onClick={copyPrompt}
             className={buttonClass('secondary', 'sm')}
           >
-            <span aria-live="polite">{copied ? t('autofill.copied') : t('autofill.copyPrompt')}</span>
+            <span aria-live="polite">{quietGlyphs(copied ? t('autofill.copied') : t('autofill.copyPrompt'))}</span>
           </button>
         </div>
         <textarea
@@ -78,7 +79,7 @@ export function AutoFill({
           placeholder={t('autofill.pastePlaceholder')}
           aria-label={t('autofill.pasteLabel')}
           rows={4}
-          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none hover:border-ink-soft focus:border-saffron focus:ring-[3px] focus:ring-saffron/25"
+          className="w-full rounded-xl border border-field bg-card px-3 py-2.5 text-[15px] font-medium outline-none hover:border-ink-soft focus:border-saffron focus:ring-2 focus:ring-saffron"
         />
         <button
           type="button"
