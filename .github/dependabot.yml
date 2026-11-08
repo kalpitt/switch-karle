@@ -11,6 +11,12 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # The site builds and runs on Node 22 (.nvmrc, engines, every workflow).
+      # Node's type definitions should not move to a newer Node major than
+      # that, or the types describe APIs the runtime does not have.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       # Astro 7 needed @astrojs/react 7 and @vite-pwa/astro 2 in the same
       # change. Dependabot opened one PR each, and each failed CI on its own.
