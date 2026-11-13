@@ -8,8 +8,9 @@ Architecture adopted from VivoType's guard (the most battle-tested one, 2026-07)
   CLAUDE.md + review remain the real backstop.
 - Stdlib only. Runs under system python3.
 
-Wired in .claude/settings.json for Edit|Write|MultiEdit (content scan) and
-Bash (command scan).
+Wired in .claude/settings.json for Edit|Write|MultiEdit (content scan). It is
+not wired for Bash in this repo: handle_bash has no rules here (the GitHub
+ruleset protects main), so running it on every command did nothing.
 
 PER-REPO CUSTOMIZATION: fill CONTENT_DENY with this repo's banned imports /
 permissions / tokens, and extend the checks in handle_bash if needed.

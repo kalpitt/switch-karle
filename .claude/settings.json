@@ -7,14 +7,13 @@
       "Bash(npm run build:*)",
       "Bash(npm run check:base:*)",
       "Bash(npm run check:seo:*)",
+      "Bash(npm run check:csp:*)",
+      "Bash(npm run test:e2e:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git branch:*)"
-    ],
-    "ask": [
-     
     ],
     "deny": [
       "Bash(sudo:*)"
@@ -34,7 +33,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit|Bash",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",

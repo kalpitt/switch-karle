@@ -1,7 +1,8 @@
 # AGENTS.md — Switch Karle
 
-A free, open-source toolkit for the Indian job switch. React 19 + TypeScript, a
-pure-TypeScript tax engine, PWA. Local-first: as of 2026-08-30 there is still no
+A free, open-source toolkit for the Indian job switch. Astro 7 static site with
+React 19 islands, TypeScript, a pure-TypeScript tax engine, PWA. Live at
+`switchkarle.fyi`. Local-first: as of 2026-08-30 there is still no
 backend and no analytics, but that is now a default rather than a boundary — see
 `PRIVACY.md`. Owner: **Kalpit** — he owns product decisions, you own technical
 execution. He is a non-developer, so lead with one plain-English line before any
@@ -69,13 +70,34 @@ do not silently pick one.
    analytics, no SEO submission. Building *so distribution is easy later* is
    required; *doing* it is not authorised.
 
-**Statutory citations (synced 2026-08-23).** The old s.157/"Act 2026" rebate
-defect is fixed against the official Income-tax Act,
-2025 PDF — see the `VERIFIED:` markers in `src/engine/tax.ts`. Standing rule
-unchanged: never touch a statutory number, citation, or legal claim without a
-primary source (Act / notification / circular), never a blog or another AI.
-Unresolved constants stay marked `CANDIDATE` and wait for a human chartered
-accountant. Living status table: `docs/ARCHITECTURE.md`.
+**Statutory numbers.** A constant's status sits beside its code as a
+`VERIFIED:` or `CANDIDATE` marker; the living table is in
+`docs/ARCHITECTURE.md` ("Statutory constants"), and what the user sees comes
+from `src/data/sources.ts`. Change a marker only with the primary source (Act,
+notification, circular) in hand, then update its `sources.ts` entry and the
+table in the same pull request. Unresolved constants stay `CANDIDATE`.
+
+## How to work here
+
+- **Check before you believe.** Docs, old audit reports and notes from earlier
+  sessions describe a past state. Verify against `main` and the open pull
+  requests before acting on any of them.
+- **One pull request, one purpose.** A change to `PRODUCT.md` or `ROADMAP.md`
+  goes in its own pull request, never mixed with code.
+- **Record owner decisions the day they are made.** When Kalpit decides
+  something, add a dated entry to `docs/DECISIONS.md` in the pull request that
+  acts on it. A decision that lives only in a chat or an agent's notes is lost
+  to the next session; the 2026-10-31 and 2026-11-07 decisions were, until
+  2026-11-13.
+- **Update the doc with the code.** A change to routes, storage keys, shared
+  records, the service worker or a statutory marker updates
+  `docs/ARCHITECTURE.md` in the same pull request. A change to how deploys or
+  the smoke test work updates `DEPLOY.md`.
+- **Do not add files to the repo root or `docs/`** beyond the ones in the
+  table above plus `README.md` and `DEPLOY.md`. Audit reports, plans and
+  hand-off notes do not belong in this repo.
+- **Questions for Kalpit:** ask once, in plain words, with a recommendation.
+  Keep working on whatever does not depend on the answer.
 
 ## Commands
 
@@ -96,8 +118,12 @@ npm run test:e2e   # Playwright on the built dist/: every route EN+HI, key flows
 chromium` once). CI runs it as its own job on every PR.
 
 `test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, `check:csp`,
-and `test:e2e` must pass before you open a pull request. Merging to `main` deploys — only
-Kalpit does that.
+and `test:e2e` must pass before you open a pull request. This list is the one
+home for the gates; `.github/workflows/ci.yml` runs the same ones. How a deploy,
+the production smoke test and a rollback work: `DEPLOY.md`.
+
+`npm run new-tool <slug>` scaffolds a tool; the loop it follows is in
+`docs/ARCHITECTURE.md`.
 
 Every `en.ts` key needs a non-blank Hindi pair (`hi.ts` + `hi-suite.ts`). Do not
 delete or blank keys in `hi.ts`. `/hi/<slug>/` twins are first-class; do not
@@ -107,4 +133,5 @@ occupy the `hi` slug.
 
 `src/engine/**` is **pure TypeScript, React-free, and golden-case tested.** UI
 imports the engine; the engine never imports UI. Every calculation lives there
-as a pure function with hand-derived tests written before any component exists.
+as a pure function with hand-derived tests written before any component exists. Engines
+return ids, never English; the UI maps them through `t()`.
