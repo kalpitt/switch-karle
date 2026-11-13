@@ -1,7 +1,7 @@
 # Deploying Switch Karle
 
 > **Canonical URL: https://switchkarle.fyi/** (GitHub Pages, custom domain,
-> since 2026-10-31).
+> since 2026-10-31; behind Cloudflare since 2026-11-13).
 
 ## How a deploy happens
 
@@ -19,10 +19,23 @@ Settings that make this work (already done):
 1. The repo is public (required for free-plan Pages).
 2. Settings → Pages → Source: **GitHub Actions**; Custom domain:
    `switchkarle.fyi`, Enforce HTTPS on.
-3. DNS for `switchkarle.fyi` is on Cloudflare in "DNS only" mode (grey cloud):
-   the apex A records point at GitHub Pages, `www` is a CNAME to
-   `kalpitt.github.io`. Cloudflare answers DNS only; page requests go straight
-   to GitHub.
+3. DNS for `switchkarle.fyi` is on Cloudflare, proxied (orange cloud) since
+   2026-11-13: the apex A records point at GitHub Pages, `www` is a CNAME to
+   `kalpitt.github.io`, and every page request passes through Cloudflare on
+   its way to GitHub. Cloudflare settings that must stay as they are:
+   - SSL mode **Full** (not Flexible: that loops on redirects).
+   - **Always Use HTTPS** on.
+   - Browser Cache TTL **Respect Existing Headers**, so a deploy is not hidden
+     behind a four-hour cache.
+   - A cache rule for paths starting `/_astro/`: edge and browser TTL one
+     year. Those file names change whenever their content does.
+   - **Off, and they stay off:** Web Analytics (it adds a script to every
+     page; `AGENTS.md` rule 5 and `PRIVACY.md` rule out analytics), Rocket
+     Loader, Zaraz, Email Address Obfuscation. Each one injects a script the
+     site's Content Security Policy blocks, and a blocked script is a console
+     error, which fails the smoke test on every page.
+   To take Cloudflare out of the path, switch the five DNS records back to
+   "DNS only"; that takes effect within minutes.
 
 `site.config.mjs` holds `SITE = 'https://switchkarle.fyi'` and `BASE = '/'`.
 `astro.config.mjs` and `scripts/check-base-build.mjs` both read it.
@@ -90,6 +103,8 @@ next visit the page says "A new version is ready. Reload".
   reloading itself.
 - Analytics: none, by design (`PRIVACY.md`). GitHub repo Insights → Traffic
   counts visits to the repository on github.com, not visits to the site.
+  Cloudflare's dashboard shows request counts for the zone from its own edge
+  logs; that needs no script on the page and is not Web Analytics.
 - The old address `kalpit.me/switch-karle/` now answers with a 301 to
   `https://switchkarle.fyi/`. GitHub does this by itself once a repo has a
   custom domain; nothing in this repo sets it up. Saved data does not move
