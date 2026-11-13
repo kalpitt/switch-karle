@@ -56,8 +56,15 @@ do not silently pick one.
 
 ## Never do these five things
 
-1. **Never merge to `main`.** Branch → PR → Kalpit merges. Merging deploys to
-   production. No force-push, no branch deletion without his say-so.
+1. **Never merge to `main` unless every check is green, and never merge
+   certain changes at all.** Merging deploys to production. Since 2026-11-13
+   an agent may merge its own pull request when `check` and `e2e` have passed
+   on its latest commit and it has no conflict, then must watch the deploy and
+   its smoke test and revert if either fails. Only Kalpit merges a pull
+   request that touches `PRODUCT.md`, `ROADMAP.md` or `PRIVACY.md`, changes
+   what data is stored or sent, or changes a statutory number, citation or
+   legal claim. No direct push to `main`, no force-push, no branch deletion
+   without his say-so.
 2. **Never move user data without the user having turned on a named feature
    that needs it, and never sell or share it with anyone.** See `PRIVACY.md`
    for the full test. The absolutist version of this rule — nothing leaves the

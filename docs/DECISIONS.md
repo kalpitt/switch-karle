@@ -20,6 +20,18 @@ includes recording an owner decision here the day it is made. The three entries
 that follow (2026-11-08, 2026-11-07, 2026-10-31) were written on this date from
 the pull requests and the session notes of the time.
 
+## 2026-11-13 — Agents may merge their own green pull requests
+
+**Decided by Kalpit (project thread, 2026-11-13).** Asked whether the 7 Nov
+merge approval should become the standing rule or end with the polish work, he
+chose the standing rule. `AGENTS.md` rule 1 now says: an agent may merge its
+own pull request when `check` and `e2e` are green on the latest commit, and
+must watch the deploy and the smoke test afterwards. Still his alone to merge:
+anything touching `PRODUCT.md`, `ROADMAP.md` or `PRIVACY.md`, anything that
+changes what data is stored or sent, and any statutory number, citation or
+legal claim. *Why:* the written rule said "never" while the practice since
+7 Nov was the opposite, and he had been the bottleneck on green pull requests.
+
 ## 2026-11-08 — Astro 7, and how Dependabot is handled
 
 The site moved to Astro 7 with `@astrojs/react` 7 and `@vite-pwa/astro` 2 in
@@ -39,8 +51,8 @@ not describe a newer Node than that.
 - **Merging during the polish programme.** Kalpit approved Claude merging its
   own pull requests, checks green, until the production-polish goal was met,
   because he had become the bottleneck on a long queue of green pull requests.
-  The approval was given for that programme. Whether it becomes the standing
-  rule is his call; `AGENTS.md` rule 1 is unchanged until he says so.
+  The approval was given for that programme. It became the standing rule on
+  2026-11-13; see that entry.
 - **No old addresses or saved data to preserve before launch.** "No one has
   used it till now. Think of it as a brand new project." The seven script
   pages lost their own URLs (PR #100) and became `/what-to-say/#<slug>`. This
