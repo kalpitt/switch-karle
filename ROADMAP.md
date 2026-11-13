@@ -31,8 +31,8 @@ These have been decided. Re-opening them wastes time:
 
 ## Now
 
-- **The dated-plan front door. A trial, not a settled direction.** Phase 0 of
-  `docs/DIRECTION.md` and nothing beyond it. Three screens: the three questions,
+- **The dated-plan front door. A trial, not a settled direction.** Built and
+  live since 2026-11-07; what is left is the test below. Three screens: the three questions,
   then the dates they produce and a resign date to pick, then the dates recap
   with one button that adds them to a calendar. English and Hindi.
   *Why:* three colleagues out of three could not get from "I want to leave" to a
@@ -50,7 +50,8 @@ These have been decided. Re-opening them wastes time:
   *Miss twice and the door goes to Not doing*, and the premise in `PRODUCT.md`
   is reversed. That is a real outcome, not a formality.
 - **The ten-person test, round two.** Run it the week the door ships, not after
-  "the site is complete".
+  "the site is complete". *Status 2026-11-13:* the door shipped on 2026-11-07
+  and the test has not started. It is the one thing holding everything below.
 
 `docs/DIRECTION.md` is deleted when the trial result is recorded here, whichever
 way it goes. Anything in it still worth keeping moves into these lists or into
@@ -58,23 +59,9 @@ the pull request that builds it, before it goes.
 
 ## Next
 
-- **The ten actions, and the screen you come back to.** *After the trial passes.*
-  Phase 1 of `docs/DIRECTION.md`: ten actions with tick boxes, split into private
-  ones that show straight away and outbound ones that wait for the applying date
-  or a tap of "I want to start looking now". The returning-visitor screen. The
-  three tools that keep their own join date move onto the shared record. The
-  tracker accepts a company with no job title.
-  *Why:* the plan is worth little if nothing follows picking a date.
-  *Status 2026-11-07:* the ten actions and the return screen shipped (PR #69);
-  plan dates now fill gratuity, F&F, the letter and the notice tracker (PR #89).
-- **The tools move behind their stages.** *After the trial passes.* Phase 2 of
-  `docs/DIRECTION.md`: every tool gets exactly one journey stage, the plan shows
-  the current stage's tools, and "All tools" keeps the rest and the search. The
-  registry's four buckets and the seven stages in `PRODUCT.md` disagree on real
-  rows, and reconciling them is Kalpit's call, not an agent's.
-  *Why:* the home page stops being a grid.
-  *Status 2026-11-07:* every tool has one stage (PR #87, mapping approved by
-  Kalpit 2026-10-31) and ends with a Next link in stage order (PR #89).
+- **The tracker accepts a company with no job title.** The one piece of the
+  old Phase 1 that did not ship: a card still needs a role, and someone who has
+  applied nowhere has none.
 - **An archive for closed applications.** Let users mark jobs as rejected,
   ghosted, or withdrawn without deleting the card.
   *Why:* Deleting cards wipes their memory, causing email sweeps to keep
@@ -94,6 +81,12 @@ the pull request that builds it, before it goes.
 
 Shipped, kept here so they are not proposed again:
 
+- **The ten actions, and the screen you come back to.** Shipped 2026-11-07
+  (PR #69). Plan dates fill gratuity, F&F, the letter and the notice tracker
+  (PR #89). Built before the trial result, so it stands or falls with it.
+- **The tools sit behind their stages.** Every tool has one journey stage
+  (PR #87, mapping approved 2026-10-31), ends with a Next link in stage order
+  (PR #89), and `/tools/` lists them by stage (PR #97).
 - **Say what the site is, on the home page.** The full-switch line is on the
   home page; since 2026-11-07 it sits above "Find the safest day to resign."
 - **Link paths fixed before the domain cutover.** `check:base` guards them.
@@ -105,9 +98,13 @@ Shipped, kept here so they are not proposed again:
 
 ## Waiting on Kalpit
 
+- **Run the ten-person test.** See Now.
 - **CA Review R1.** A chartered accountant answering tax questions in writing.
   *Why:* Statutory tax numbers must come from official sources, never AI
-  guesses.
+  guesses. No CA has been found yet; the open questions stay marked
+  `CANDIDATE` and are listed in `docs/DECISIONS.md` ("Parked").
+- **Required checks on `main`, and Cloudflare in front of the site.** Both
+  approved 2026-10-31; both are settings only he can switch on.
 
 ## Not doing
 
