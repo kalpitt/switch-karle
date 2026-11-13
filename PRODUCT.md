@@ -2,8 +2,8 @@
 
 What this is, who it is for, and where their journey starts and ends.
 
-**Kalpit owns this file.** Agents never edit it: propose changes in a handoff and
-he applies them. It is the first thing to read before building anything, and it
+**Kalpit owns this file.** Agents never merge a change to it: since 2026-11-07
+an agent may propose an edit as its own pull request, and only he merges it. It is the first thing to read before building anything, and it
 outranks any inference you could draw from the code. If the code and this file
 disagree, the code is wrong or this file is stale — say so, do not pick one
 silently.
@@ -91,10 +91,9 @@ In the user's words, not product jargon. Every tool belongs to exactly one.
 | 6 | **"The first 90 days"** | Landed | PF transfer, BGV, what to tell the new employer about tax, the two-Form-16 bill |
 
 Stage 3 is the product's strongest work today. Stage 0 is the newest and the
-thinnest. Stage 5 is the longest and loneliest stretch of a real switch and the
-one we currently under-serve most — including the worst fear in the whole arc,
-an offer going quiet while you are forty days into notice with no job to go back
-to.
+thinnest. Stage 5 is the longest and loneliest stretch of a real switch. Its
+worst fear, an offer going quiet while you are forty days into notice with no
+job to go back to, has its own tool (`offer-goes-cold`).
 
 **The board is the middle of the journey, not the whole of it.** Stages 1, 2 and
 3 are about companies, and a Kanban card fits them. Stages 0, 4, 5 and 6 are
@@ -159,7 +158,8 @@ role, and someone at stage 0 has an employer to escape and no role to apply for.
 
 **3. Every number carries its receipt.** A statutory figure shows its section and
 the date it was checked. A conventional figure says it is a convention. We
-already do this in code — and the user never sees it. That is backwards.
+did this only in code until 2026-11-07; since then every statutory answer
+shows its receipt under the verdict, and `/sources/` lists them all.
 
 **4. Bad news first, plainly.** The verdict leads with the number that hurts.
 Never a "42% hike!" headline above a 6% in-hand delta.
@@ -180,8 +180,8 @@ saved file is evidence. Saving is a decision, not a default — and there must
 always be a way to erase everything.
 
 **7. One arc, one thread.** A value the user has already typed is never asked for
-twice. Today someone types their resignation date into two different tools on
-consecutive days of the most stressful week of the switch.
+twice. Since 2026-11-07 the plan's join date, resign date and last working day
+fill gratuity, F&F, the resignation letter and the notice tracker.
 
 **8. Hindi is the same product, not a translated shell.** Full parity is
 test-enforced. The register is code-mixed — *"Courts ने specialised training cost
@@ -298,8 +298,8 @@ date.
 
 ## How this file is owned
 
-Kalpit writes it. Agents propose changes in a handoff and never edit it directly,
-the same as `ROADMAP.md`.
+Kalpit writes it. An agent may propose a change as its own pull request, which
+only he merges, the same as `ROADMAP.md`.
 
 **If you are about to write a document explaining what this product should be,
 stop.** That document is this one. Three earlier strategy documents were deleted
