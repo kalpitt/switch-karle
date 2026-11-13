@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { formatINR } from '../engine/format'
 import { useLang, useT } from '../i18n'
 import { sourceById, type SourceEntry } from '../data/sources'
-import { formatLongDate } from '../lib/formatDate'
+import { formatDateRange, formatLongDate } from '../lib/formatDate'
 import { withLang } from '../lib/langPath'
 import { parseINRInput } from '../lib/money'
 import { noticeLooksLikeMonths, noticeMonthsToDays } from '../lib/noticeMonths'
@@ -848,7 +848,16 @@ export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel
  * open item said plainly. Built only from `src/data/sources.ts`, so the line
  * under the answer and the "How we check numbers" page can never disagree.
  */
-export function Receipt({ ids, className = '' }: { ids: readonly string[]; className?: string }) {
+export function Receipt({
+  ids,
+  compact = false,
+  className = '',
+}: {
+  ids: readonly string[]
+  /** One line (how many documents, checked when) with the full list behind a tap. Decoder, decided 2026-11-13. */
+  compact?: boolean
+  className?: string
+}) {
   const t = useT()
   const { lang } = useLang()
   const entries = [...new Set(ids)].map(sourceById).filter((e): e is SourceEntry => e !== undefined)
@@ -876,6 +885,37 @@ export function Receipt({ ids, className = '' }: { ids: readonly string[]; class
   const open = (['awaiting-lawyer', 'awaiting-ca'] as const).flatMap((status) =>
     entries.filter((e) => e.status === status).map((e) => t(`receipt.${status}`, { text: t(`source.${e.id}`) })),
   )
+
+
+  const verified = entries.filter((e) => e.status === 'verified')
+  if (compact && verified.length > 0) {
+    const docCount = new Set(verified.map((e) => e.doc)).size
+    const dates = verified.map((e) => e.checked).sort()
+    const when = formatDateRange(dates[0]!, dates[dates.length - 1]!, lang)
+    return (
+      <div data-receipt className={`text-[12px] leading-relaxed text-ink-soft ${className}`}>
+        <p>
+          <span className="font-semibold">{t('receipt.label')}</span>{' '}
+          {t(docCount === 1 ? 'receipt.summaryOne' : 'receipt.summary', { n: docCount, when })}
+          {' · '}
+          <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
+            {t('receipt.link')}
+          </a>
+        </p>
+        <details className="mt-1">
+          <summary className="inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 font-semibold text-ink [&::-webkit-details-marker]:hidden">
+            <ChevronRight size={14} className="transition-transform [details[open]_&]:rotate-90" />
+            {t('receipt.showAll')}
+          </summary>
+          <ul className="list-disc space-y-1 pl-4">
+            {[...parts, ...open].map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
+        </details>
+      </div>
+    )
+  }
 
   return (
     <div data-receipt className={`text-[12px] leading-relaxed text-ink-soft ${className}`}>

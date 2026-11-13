@@ -474,7 +474,8 @@ Ship with goldens. A constant's status lives beside its code:
 
 What the user sees of this table comes from `src/data/sources.ts`: one entry per rule, copied from the
 markers above, rendered as the receipt under each statutory verdict (`Receipt` in `src/components/ui.tsx`),
-the footer chip (oldest and newest verified date) and `/sources/`. Change a marker, then its entry;
+the footer chip (oldest and newest verified date) and `/sources/`. On the Decoder the receipt is `compact`: one line
+(how many documents, checked between which dates) with the same list behind a tap. Change a marker, then its entry;
 `src/data/sources.test.ts` fails if a statutory tool has none. Stale engine should look stale.
 
 A `VERIFIED` marker records that a number matches a document. It does not
