@@ -1,5 +1,5 @@
-# Weekly dependency update pull requests. Dependabot only opens PRs; nothing
-# merges or deploys without Kalpit. Minor and patch bumps arrive grouped as one
+# Weekly dependency update pull requests. Dependabot only opens PRs; who may
+# merge one is AGENTS.md rule 1. Minor and patch bumps arrive grouped as one
 # PR per ecosystem so they are cheap to review. Major bumps (TypeScript, vitest)
 # arrive one PR each: each needs its own testing. Astro, its React integration
 # and the PWA plugin need each other's matching majors, so their major bumps

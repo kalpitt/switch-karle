@@ -10,6 +10,80 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-13 — Governance tidy: one list of gates, decisions written down
+
+A review of the governance files found the rules stated in several places and
+the newest owner decisions written nowhere in the repo. Changed: the gate list
+lives only in `AGENTS.md`; the standing requirements below point at `AGENTS.md`
+instead of repeating its rules; `AGENTS.md` gained "How to work here", which
+includes recording an owner decision here the day it is made. The three entries
+that follow (2026-11-08, 2026-11-07, 2026-10-31) were written on this date from
+the pull requests and the session notes of the time.
+
+## 2026-11-13 — Agents may merge their own green pull requests
+
+**Decided by Kalpit (project thread, 2026-11-13).** Asked whether the 7 Nov
+merge approval should become the standing rule or end with the polish work, he
+chose the standing rule. `AGENTS.md` rule 1 now says: an agent may merge its
+own pull request when `check` and `e2e` are green on the latest commit, and
+must watch the deploy and the smoke test afterwards. Still his alone to merge:
+anything touching `PRODUCT.md`, `ROADMAP.md` or `PRIVACY.md`, anything that
+changes what data is stored or sent, and any statutory number, citation or
+legal claim. *Why:* the written rule said "never" while the practice since
+7 Nov was the opposite, and he had been the bottleneck on green pull requests.
+
+## 2026-11-08 — Astro 7, and how Dependabot is handled
+
+The site moved to Astro 7 with `@astrojs/react` 7 and `@vite-pwa/astro` 2 in
+one change (PR #107), which cleared the open Astro security advisories. Each of
+the three failed CI when bumped alone, so `.github/dependabot.yml` now groups
+their major versions into one pull request. `@types/node` major bumps are
+ignored (PR #108): the site builds and runs on Node 22, and the types should
+not describe a newer Node than that.
+
+## 2026-11-07 — Owner decisions after the re-audit
+
+**Decided by Kalpit (project thread, 2026-11-07).**
+
+- **Direction files by pull request.** An agent may propose an edit to
+  `PRODUCT.md` or `ROADMAP.md` as its own pull request; only Kalpit merges it.
+  Before this, agents could only describe the edit in a hand-off.
+- **Merging during the polish programme.** Kalpit approved Claude merging its
+  own pull requests, checks green, until the production-polish goal was met,
+  because he had become the bottleneck on a long queue of green pull requests.
+  The approval was given for that programme. It became the standing rule on
+  2026-11-13; see that entry.
+- **No old addresses or saved data to preserve before launch.** "No one has
+  used it till now. Think of it as a brand new project." The seven script
+  pages lost their own URLs (PR #100) and became `/what-to-say/#<slug>`. This
+  reverses "Every URL stays" below.
+- **Gratuity work week defaults to five days** in the gratuity calculator and
+  the F&F checker, and the screen says five days is assumed (PR #100). He
+  overrode the six-day recommendation: most of this audience works five.
+- **Footer privacy line:** "Runs in your browser. Nothing you type is sent
+  anywhere." One line, no "never".
+- **Hindi:** the brand is written "Switch Karle" in Latin letters in Hindi page
+  titles; code-mixed tool names are fine.
+- **Red-flag scanner:** unsourced claims about named companies were removed.
+- **Kept as is:** no dark mode for now; the logo's "Karle" stays ink; the
+  sticky in-hand bar on Decoder phones; sample figures drawn in ink; his
+  personal email in the footer.
+
+## 2026-10-31 — The site moves to switchkarle.fyi, and the polish programme
+
+**Decided by Kalpit (project thread, 2026-10-31).**
+
+- The site moved to `https://switchkarle.fyi` with `base: '/'` (PR #71).
+- He approved the polish plan's decisions: the new look; sample answers on
+  every tool; the live-dates front door; navigation by journey stage (the
+  seven stages in `PRODUCT.md`, one per tool); plain tool names, with the old
+  names kept as search keywords; one "What to say" page for the seven scripts;
+  trust pages (About, Sources, Privacy, Terms) that name him; a label on dates
+  whose count is contested; Cloudflare in front of the site and required
+  checks on `main` (both still his to switch on); one branch per batch.
+- The same day he said `ROADMAP.md`, `PRODUCT.md` and the docs are not
+  absolute: agents may propose changes to them.
+
 ## 2026-10-24 — Tools ask for the work city, not only the state
 
 **Decided by Kalpit (project chat, 2026-10-24).** The 50% HRA limb belongs to
@@ -432,18 +506,11 @@ executable spec for correct money math.
 
 ## Standing requirements — always binding
 
-1. Never merge to `main`. Branch → PR → Kalpit merges.
-2. User data moves only to deliver a named feature the user turned on, and is
-   never sold or shared. See `PRIVACY.md`.
-3. No statutory number or legal claim without a primary source named in a repo
-   doc. `VERIFIED:` markers come only from Acts, notifications or official PDFs —
-   never a tax blog, never another AI.
-4. English and Hindi, or it does not ship. Domain words stay Latin: CTC, PF, HRA,
-   ESOP, F&F, LWD.
-5. No distribution activity: no Search Console, analytics, SEO submission or
-   promotion.
-6. `src/engine/**` is pure TypeScript. UI imports engine, never the reverse.
-   Engines return ids; the UI maps them through `t()`.
+Rules 1 to 5 are the "Never do these five things" list in `AGENTS.md`, and
+rule 6 is its "one architectural rule" (`src/engine/**` is pure TypeScript;
+engines return ids and the UI maps them through `t()`). They are stated there
+and not repeated here. Two more are recorded only here:
+
 7. No shared cross-tool profile blob. Read-only pulls from another island's
    storage key are allowed.
    **Amended 2026-09-06 (PR #39), needs Kalpit's confirmation.** He decided on
@@ -451,8 +518,9 @@ executable spec for correct money math.
    it — a read-only pull, which is what this rule permitted, could not have
    worked, because no single tool owns the current job. The rule as written
    forbids what he asked for, so it is amended rather than quietly broken. What
-   still holds: one narrow record, four numbers about the current job
-   (`src/data/currentJob.ts`), written only from a keystroke, never merged with
+   still holds: one narrow record of facts about the current job
+   (`src/data/currentJob.ts`; four numbers then, seven fields since
+   2026-09-07), written only from a keystroke, never merged with
    the offer, carrying no name, employer or identifier, and erasable with
    everything else. A general profile blob spanning offer, identity and history
    stays forbidden.
@@ -488,7 +556,8 @@ executable spec for correct money math.
   tools on the current-job record compare against their boot state instead, so a
   record-filled field still shows the Example chip until the user types in that
   tool. The decoder no longer seeds any of them.
-- Every URL stays.
+- Every URL stays. **Reversed 2026-11-07:** nothing has launched, so no old
+  address needs keeping; see the 2026-11-07 entry above.
 - HR-script bracket templates remain fill-after-copy, by owner decision.
 
 **Retired 2026-09-05:** the 2026-08-23 cycle locks "no new tool" and "no
@@ -502,9 +571,14 @@ Every constant below stays `CANDIDATE` until a human CA answers in writing with 
 primary source. An AI reading tax blogs does not count and never will. When the
 answer arrives: one new PR, `VERIFIED` from that source.
 
+**Note 2026-10-24:** Kalpit has no CA available. That day's pass checked the
+open items against primary sources only (Acts, rules, notifications, official
+rate charts) and moved the ones a document settled to `VERIFIED`; see that
+entry above. What a document alone cannot settle stays here.
+
 | ID | Item | Why parked |
 |---|---|---|
-| C4 | Professional tax for BR/JH/AS/CG/SK/ML/TR/PY | No primary state-Act figure |
+| C4 | Professional tax for BR/JH/CG/SK/ML/TR (AS and PY verified 2026-10-24) | No primary state-Act figure |
 | C12 | Notice-period GST / tax / gross-up | Shown as disputed, not computed |
 | C13 | s.234B/C interest | Deliberately not modelled |
 | C14 | ESOP Rule-15 FMV | Awaiting review |

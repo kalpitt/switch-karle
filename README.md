@@ -17,7 +17,12 @@ for what that decision is and why.
 
 [![CI](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml/badge.svg)](https://github.com/kalpitt/switch-karle/actions/workflows/ci.yml)
 
-## Tools
+## Pages
+
+The home page (`/`) is the dated plan: three questions, the dates they produce,
+a resign date to pick, and a calendar file to keep. `/tools/` lists every tool
+by stage of the switch. `/sources/` lists every law and notification a number
+rests on; `/about/`, `/privacy/` and `/terms/` are what they say.
 
 | URL | What it answers |
 | --- | --- |
@@ -84,17 +89,11 @@ How the repo is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 ```bash
 npm install
 npm run dev          # Astro dev server
-npm test             # vitest — engine goldens, i18n freeze, purity
-npm run typecheck    # tsc -b --noEmit
-npm run lint         # oxlint
-npm run build        # astro build
-npm run check:base   # asset URLs resolve under the configured base
-npm run check:seo    # canonical + OG on every route; no analytics in dist/
-npm run check:csp    # CSP meta + hashes; no off-origin subresources
-npm run test:e2e     # browser tests on the built site (run build first)
+npm test             # unit tests
 npm run new-tool     # node scripts/new-tool.mjs <slug>
 ```
 
-`test`, `typecheck`, `lint`, `build`, `check:base`, `check:seo`, `check:csp` and `test:e2e` must all pass before you open a pull request.
+The full list of checks that must pass before a pull request is in
+[AGENTS.md](AGENTS.md#commands). How deploys work: [DEPLOY.md](DEPLOY.md).
 
 MIT licensed. Built by a job-switcher, for job-switchers.

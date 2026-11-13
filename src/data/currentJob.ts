@@ -32,16 +32,18 @@ export interface CurrentJob {
   /** Contractual notice period at the current employer, in days. */
   noticePeriodDays?: number
   /**
-   * The day the user joined the current employer, ISO `YYYY-MM-DD`. Gratuity,
-   * the F&F checker and the EPF transfer tool each still keep their own copy;
-   * moving them onto this one is Phase 1. Until then the record's standing rule
-   * holds the line: the latest value typed anywhere wins.
+   * The day the user joined the current employer, ISO `YYYY-MM-DD`. Written by
+   * the plan. Gratuity and the F&F checker keep their own draft copy and seed
+   * it from this one on a first visit (`src/data/planDates.ts`); a saved tool
+   * draft wins after that.
    */
   joinDate?: string
   /**
    * 5 or 6. The gratuity fast path is four years and 190 days on a five-day
    * week, 240 on a six-day week — seven weeks apart for a January 2022 joiner.
-   * Asked on screen two as a fork, never defaulted into a cliff of its own.
+   * The plan asks it on screen one, and only when the answer changes a date
+   * (`weekChangesADate`). The gratuity and F&F tools assume five until the
+   * person picks, and say so.
    */
   workWeekDays?: 5 | 6
   /**

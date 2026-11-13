@@ -257,7 +257,7 @@ DA as a floor of the Code's "wages" (source: the VERIFIED marker in `src/engine/
 would hand a DA-drawing employee's wrong number to whichever tool read it.
 
 Reads and writes: `notice-buyout` (monthlyBasic, monthlyGross), `gratuity`
-(monthlyBasicDA → `lastDrawnBasicDA`), `leave-encashment` and `fnf-checker`
+(monthlyBasicDA → `lastDrawnBasicDA`, and `workWeekDays`), `leave-encashment` and `fnf-checker`
 (monthlyBasic), `resignation-letter` and `notice-tracker` (noticePeriodDays).
 Seed-only: `notice-buyout`'s `unservedDays` (a starting point the user then
 negotiates down) and `fnf-checker`'s `monthlyGross` (what the F&F sheet
@@ -290,7 +290,7 @@ be silently dropped, the trap described above.
 
 ### The plan record, and the door on the home page
 
-Built 2026-09-07 on `feat/plan-phase-0`. The home page is `src/tools/home/`,
+Built 2026-09-07. The home page is `src/tools/home/`,
 which keeps `data-tool="home"` on its wrapper (`check:base` asserts
 `dist/index.html` is the home island) and renders `src/tools/plan/` inside it.
 The tracker link and the tool list render under the questions screen only —
@@ -483,5 +483,7 @@ being. `src/engine/repealedLaw.test.ts` guards that one repeal.
 
 ## Gates
 
-Local and CI: `test` · `typecheck` · `lint` · `build` · `check:base` · `check:seo` · `check:csp`.
-Never merge to `main` without Kalpit — `main` is production.
+The commands that must pass before a pull request are listed once, in
+`AGENTS.md` ("Commands"). `.github/workflows/ci.yml` runs them on every pull
+request (jobs `check` and `e2e`); `pages.yml` repeats `check` before a deploy
+and then runs the production smoke test. See `DEPLOY.md`.
