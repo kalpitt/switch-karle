@@ -197,7 +197,7 @@ I will give you the details of each option (current job and any competing offers
 
 Once you have the inputs, build:
 
-1. **Total-comp truth table.** Not headline CTC — a table comparing fixed cash, realistic variable payout (assume 70-90% of target unless told otherwise), and equity value, side by side across all options, in ₹ LPA.
+1. **Total-comp truth table.** Not headline CTC — a table comparing fixed cash, variable pay shown at 50%, 75% and 100% of target (ask me what was actually paid out last year at each company, and use that figure where I have it), and equity value, side by side across all options, in ₹ LPA.
 2. **Risk-adjusted equity/variable.** Discount illiquid/unlisted ESOPs heavily (explain your discount logic — e.g. near-zero unless there's a recent liquidity event) and haircut variable pay to a realistic expected value rather than the target figure.
 3. **Notice-period and bond friction.** Translate notice periods and any bonds/clawbacks into a concrete "cost of leaving" in both time and money for each option, since this affects how much optionality I'm giving up.
 4. **Growth factors, scored explicitly.** For each option, rate (with brief justification): scope/title trajectory, skill development relevance to my longer-term goals, and brand/network value — on a simple scale you define, not vague prose.

@@ -20,6 +20,33 @@ includes recording an owner decision here the day it is made. The three entries
 that follow (2026-11-08, 2026-11-07, 2026-10-31) were written on this date from
 the pull requests and the session notes of the time.
 
+## 2026-11-13 — The Decoder's sources shorten to one line
+
+**Decided by Kalpit (project thread, 2026-11-13).** Under the Decoder's answer
+the receipt now reads "Sources: N documents, checked <first> – <last> · How we
+check numbers", and the full list of documents, sections and open points sits
+behind "Show the full list" (`Receipt compact` in `src/components/ui.tsx`). He
+chose this over keeping the whole list visible. The other tools keep the full
+receipt: theirs are short. `PRODUCT.md` rule 3 still holds, since the section
+and the date checked are one tap from the number.
+
+## 2026-11-13 — No "70–90% of target" for variable pay
+
+**Decided by Kalpit (project thread, 2026-11-13).** The offer-comparison
+prompt told the AI to assume variable pay lands at 70–90% of target. No source
+for that range was ever found. The prompt now asks for 50%, 75% and 100% side
+by side and for what was actually paid last year
+(`src/prompts/templates.ts`). The same range sat in the Decoder's
+variable-pay red flag, in English and Hindi, as a statement of fact; it now
+says the payout can fall below target, with no figure.
+
+## 2026-11-13 — Kalpit tests the door himself before the ten-person test
+
+**Decided by Kalpit (project thread, 2026-11-13).** Asked whether to start the
+ten-person test now or after a CA review, he chose neither: he goes through
+the site himself first, a one-person review. The ten-person test and its pass
+mark in `ROADMAP.md` are unchanged and follow his own pass.
+
 ## 2026-11-13 — Agents may merge their own green pull requests
 
 **Decided by Kalpit (project thread, 2026-11-13).** Asked whether the 7 Nov

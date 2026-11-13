@@ -45,3 +45,21 @@ export function formatMonthName(month: number, lang = 'en'): string {
 export function formatMonthYear(month: number, year: number, lang = 'en'): string {
   return `${formatMonthName(month, lang)} ${year}`
 }
+
+/**
+ * A span of two dates on one line: "20 Jul – 28 Sep 2026". The year is printed
+ * once when both dates share it, and a span of one day prints as one date.
+ */
+export function formatDateRange(fromIso: string, toIso: string, lang = 'en'): string {
+  const from = new Date(`${fromIso}T00:00:00`)
+  const to = new Date(`${toIso}T00:00:00`)
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return `${fromIso} – ${toIso}`
+  const withYear = { day: 'numeric', month: 'short', year: 'numeric' } as const
+  const end = to.toLocaleDateString(localeFor(lang), withYear)
+  if (fromIso === toIso) return end
+  const start =
+    from.getFullYear() === to.getFullYear()
+      ? from.toLocaleDateString(localeFor(lang), { day: 'numeric', month: 'short' })
+      : from.toLocaleDateString(localeFor(lang), withYear)
+  return `${start} – ${end}`
+}
