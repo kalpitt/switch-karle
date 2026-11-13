@@ -105,6 +105,13 @@ table in the same pull request. Unresolved constants stay `CANDIDATE`.
   hand-off notes do not belong in this repo.
 - **Questions for Kalpit:** ask once, in plain words, with a recommendation.
   Keep working on whatever does not depend on the answer.
+- **Pull requests follow `.github/pull_request_template.md`.** Its checklist
+  is the short form of this file.
+- **After a merge, look at the live site.** The deploy's `smoke` job is the
+  check; if it fails, run `node scripts/smoke-prod.mjs` again before
+  reverting, because GitHub Pages sometimes answers 503 for a minute after a
+  deploy. A failure that names a script from another origin is a Cloudflare
+  setting, not the code: see `DEPLOY.md`.
 
 ## Commands
 
