@@ -49,9 +49,13 @@ These have been decided. Re-opening them wastes time:
   than evidence the plan was wrong.
   *Miss twice and the door goes to Not doing*, and the premise in `PRODUCT.md`
   is reversed. That is a real outcome, not a formality.
-- **The ten-person test, round two.** Run it the week the door ships, not after
-  "the site is complete". *Status 2026-11-13:* the door shipped on 2026-11-07
-  and the test has not started. It is the one thing holding everything below.
+- **Kalpit's own review, first.** Decided 2026-11-13. He goes through the
+  site himself, start to finish, when he is free. What he finds gets built on
+  before anyone else is asked.
+- **The ten-person test, round two. Only once Kalpit is happy.** Decided
+  2026-11-13; before that this line said to run it the week the door ships.
+  The pass mark above is unchanged. *Status 2026-11-13:* the door shipped on
+  2026-11-07 and the test has not started.
 
 `docs/DIRECTION.md` is deleted when the trial result is recorded here, whichever
 way it goes. Anything in it still worth keeping moves into these lists or into
@@ -98,13 +102,15 @@ Shipped, kept here so they are not proposed again:
 
 ## Waiting on Kalpit
 
-- **Run the ten-person test.** See Now.
+- **His own review of the site**, then the ten-person test once he is happy.
+  See Now.
 - **CA Review R1.** A chartered accountant answering tax questions in writing.
   *Why:* Statutory tax numbers must come from official sources, never AI
   guesses. No CA has been found yet; the open questions stay marked
   `CANDIDATE` and are listed in `docs/DECISIONS.md` ("Parked").
-- **Required checks on `main`, and Cloudflare in front of the site.** Both
-  approved 2026-10-31; both are settings only he can switch on.
+- **Two Cloudflare settings.** Required checks on `main` and Cloudflare in
+  front of the site are on since 2026-11-13. Still to fix: Web Analytics must
+  be off, and the `/_astro/` cache rule needs a one-year browser TTL.
 
 ## Not doing
 
