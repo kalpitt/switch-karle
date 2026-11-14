@@ -412,7 +412,7 @@ export const hi: Record<string, string> = {
 
   'flag.variable-heavy.title': 'CTC का {percent}% variable pay है',
   'flag.variable-heavy.detail':
-    'इस offer का ₹{amount} पक्का पैसा नहीं है — यह company और आपकी individual performance ratings पर depend करता है, जिन पर आपका कोई control नहीं। एक average साल में असली payout target का 70–90% होता है, और पहले साल का payout अक्सर pro-rate होता है। CTC में से variable घटाकर जो बचे, उसी को असली offer मानें।',
+    'इस offer का ₹{amount} पक्का पैसा नहीं है — यह company और आपकी individual performance ratings पर depend करता है, जिन पर आपका कोई control नहीं। असली payout target से कम हो सकता है, और पहले साल का payout अक्सर pro-rate होता है। CTC में से variable घटाकर जो बचे, उसी को असली offer मानें।',
   'flag.variable-heavy.tip':
     'पूछें: "पिछले 2 सालों में इस band के लिए actual average variable payout % क्या रहा?" और "क्या मेरा पहला साल pro-rate होगा?" फिर CTC नहीं, fixed पर negotiate करें।',
 

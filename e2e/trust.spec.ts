@@ -59,3 +59,22 @@ test('a statutory verdict carries its receipt, and the form says what happens to
   await page.locator('[data-privacy-line] button').click()
   await expect(page.getByRole('dialog')).toBeVisible()
 })
+
+// Decided 2026-11-13: the Decoder says how many documents and when they were
+// checked on one line, and keeps the full list one tap away.
+for (const [path, summary, show] of [
+  ['/decoder/', /documents, checked \d+ \S+ – \d+ \S+ 2026/, 'Show the full list'],
+  ['/hi/decoder/', /documents, check किए: \d+ \S+ – \d+ \S+ 2026/, 'पूरी list देखें'],
+] as const) {
+  test(`the Decoder receipt is one line with the full list behind a tap: ${path}`, async ({ page }) => {
+    await page.goto(path)
+    const receipt = page.locator('[data-receipt]')
+    await expect(receipt.locator('p').first()).toContainText(summary)
+    await expect(receipt.locator('p a')).toHaveAttribute('href', path.replace('decoder', 'sources'))
+    const first = receipt.locator('li').first()
+    await expect(first).toBeHidden()
+    await receipt.getByText(show).click()
+    await expect(first).toBeVisible()
+    await expect(receipt).toContainText('Income-tax Act, 2025')
+  })
+}

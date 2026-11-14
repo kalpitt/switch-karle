@@ -48,7 +48,7 @@ export function Results({ b, flags }: { b: SalaryBreakdown; flags: RedFlag[] }) 
       {/* Sources, copy and notes sit under the answer card, not in it, so the
           card ends at the answer and the form comes up sooner (R-08). */}
       <div className="space-y-3">
-        <Receipt ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
+        <Receipt compact ids={[...offerSources(TOOL_SOURCES.decoder, b.input.gratuityInCtc), ptSourceId(b.input.state)]} />
         <ShareRow
           copyText={`${isExample ? `(${t('results.exampleChip')}) ` : ''}${t('results.headline', { ctc: formatLPA(b.input.ctcAnnual) })} ${formatINR(b.inHandMonthly)}${t('unit.perMonth')}`}
           copyLabel={t('ui.copyResult')}

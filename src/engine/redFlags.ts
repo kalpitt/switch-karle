@@ -61,7 +61,7 @@ const RULES: Rule[] = [
         severity: p > 25 ? 'red' : 'amber',
         title: `${p}% of CTC is variable pay`,
         detail:
-          `₹${b.input.variableAnnual.toLocaleString('en-IN')} of this offer is not committed money — it depends on company and individual performance ratings you don't control. Typical payout in an average year is 70–90% of target, and first-year payouts are often pro-rated. Treat CTC minus variable as the real offer.`,
+          `₹${b.input.variableAnnual.toLocaleString('en-IN')} of this offer is not committed money — it depends on company and individual performance ratings you don't control. It can pay out below target, and first-year payouts are often pro-rated. Treat CTC minus variable as the real offer.`,
         negotiationTip:
           'Ask: "What was the actual average variable payout % for this band in the last 2 years?" and "Is my first year pro-rated?" Then negotiate fixed, not CTC.',
       }
