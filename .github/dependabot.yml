@@ -17,6 +17,11 @@ updates:
       # that, or the types describe APIs the runtime does not have.
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
+      # 2.0.2 installs without the `rolldown` package its PWA core imports, so
+      # `astro build` fails (found 2026-11-14 on the grouped PR #112). Skip only
+      # this version; the next release is offered again.
+      - dependency-name: '@vite-pwa/astro'
+        versions: ['2.0.2']
     groups:
       # Astro 7 needed @astrojs/react 7 and @vite-pwa/astro 2 in the same
       # change. Dependabot opened one PR each, and each failed CI on its own.
