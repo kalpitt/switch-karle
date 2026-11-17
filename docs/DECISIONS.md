@@ -10,6 +10,34 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-16 — The front door is rebuilt: say what the site is, ask which step you are at
+
+**Decided by Kalpit.** He showed the site to someone who had never seen it. She
+could not tell what it was about, found too much text, and did not know why she
+was being asked questions; she understood the site only on the all-tools page.
+Four reviewers given only the site's name and screenshots reproduced each
+point. He chose a rebuild of everything a visitor meets before a tool: the home
+page, five step pages, the plan on its own page, all tools regrouped, plain
+names. The calculations, the tools, the look and the privacy promise stay.
+
+**The plan-as-front-door trial of 2026-09-07 ends here**, before its ten-person
+test. It is moved, not removed: the plan is the first tool for someone thinking
+of leaving. "The journey starts at 'I'm done here'" stays settled; that person
+is the first of the five steps, and visitors now read it as "Thinking of
+leaving".
+
+**The plan for the rebuild was itself checked before any building**, on the
+same day: three mock-ups of the home page shown to eighteen reviewers with no
+context, and five expert reviews. The mock-up that is being built passed with 8
+of 8. Kalpit approved merging this direction change in his own words that day.
+
+**A new standing rule, `PRODUCT.md` rule 15:** a cold read by reviewers who
+know only the site's name, with a pass mark written down first, before any
+change to the front door merges; and people before launch.
+
+**`docs/DIRECTION.md` is deleted** with this entry, as the roadmap said to do
+once the trial's outcome was recorded.
+
 ## 2026-11-13 — Governance tidy: one list of gates, decisions written down
 
 A review of the governance files found the rules stated in several places and
@@ -281,6 +309,9 @@ repealed Act again. It guards this one repeal, not the next one.
 ---
 
 ## 2026-09-07 — The front door becomes a dated plan, as a trial
+
+**Ended 2026-11-16**, before its ten-person test: the plan moved off the home
+page to its own page. See the entry of that date.
 
 **Decided by Kalpit.** The first visit stops being a board and a grid of
 calculators. It becomes three questions, the dates they produce, a resign date to

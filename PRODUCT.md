@@ -58,27 +58,41 @@ Form-16s seen coming before March.
 
 ## What the first visit is
 
-**The first visit is the plan, not the calculators.** Three questions they can
-answer without opening anything: when did you join, what is your notice period,
-which month does the hike actually reach your account. Out of those come the
-dates that matter: the gratuity cliff, the hike month, the notice they owe.
-Then they pick a resign date. Then they keep the dates: a calendar file, a
-screenshot, a message to someone. That is the whole first session, and it is
-worth the visit even if they never come back.
+**The first visit says what this is and asks which step you are at.** One
+sentence on what Switch Karle is, a line naming what is inside (calculators and
+letters), the promise that nothing typed is sent anywhere, and one question.
+Five answers in plain words: thinking of leaving, applying or interviewing, I
+have an offer, resigning or on notice, joining a new job. Each answer opens one
+short page with the single best tool for that moment and a few others. Someone
+who was laid off, or who only wants one tool, has a line of their own under the
+five.
 
-The calculators are what later visits and links are for. Money attaches to a
-date, never the other way round: the rupee figure sits behind a link that says
-what a date is worth, and that link only exists once a date does. **The plan is
-the door. One number they can hold on to is still the job.**
+**The dated plan is where "thinking of leaving" leads.** It is unchanged in
+what it does: three questions they can answer without opening anything, the
+dates that matter, a resign date to pick, the dates kept. Money still attaches
+to a date, never the other way round.
 
-**Trial since 2026-09-07.** Confirmed or reversed when the ten-person result in
-`ROADMAP.md` is in. Result: (pending)
+**Why this replaced "the first visit is the plan".** The plan was decided as
+the front door on 2026-09-07, as a trial, and was live from 2026-11-07. On
+2026-11-16 the first person shown the site cold could not tell what it was or
+why she was being asked questions. Four reviewers who knew only the site's name
+read the home page as a resign-date calculator and understood the site only on
+the all-tools page. The plan answers a question the visitor has not yet been
+given a reason to ask. The trial ended before its ten-person test; it was not
+passed or failed on its pass mark.
+
+This is the third front door: a grid of tools, then the tracker board, then the
+plan. Each put one thing at the door and none said what the site was. The door
+now introduces the site, and rule 15 below exists so that a stranger sees the
+next change before it ships.
 
 ---
 
 ## The seven stages
 
-In the user's words, not product jargon. Every tool belongs to exactly one.
+These seven are the product's own model. Every tool belongs to exactly one.
+On the site, visitors choose between five steps in plain words (see "What the
+first visit is"); the stage names in this table are not shown to them.
 
 | # | Stage | What is happening | What we do |
 |---|---|---|---|
@@ -143,13 +157,15 @@ frightening, in secret, about money. Good here is **relief with a number
 attached** — a competent friend who has done this before, does not need anything
 from you, and does not flinch from the bad news.
 
-Fourteen rules, one of them retired in place. Each one is checkable against the
+Fifteen rules, one of them retired in place. Each one is checkable against the
 code.
 
 **1. Answer before you ask.** Every screen shows a real result before it requires
 a single field. Sixteen tools already boot on example numbers behind an `Example`
 chip. That is the house pattern and it is right. The board breaks it: its first
 live interaction is an empty form with two required fields.
+Since 2026-11-16: an example is never worded as the visitor's own result, and
+the front door asks which step they are at before any tool shows one.
 
 **2. Ask only what they know by heart.** Never gate an answer on a field that
 needs a document opened. Join date, monthly basic, notice days — all memorised or
@@ -188,12 +204,15 @@ test-enforced. The register is code-mixed — *"Courts ने specialised traini
 मांगा है"* — because that is how this audience actually talks about work. A
 native-writer pass should keep that, not sanitise it into pure Hindi.
 
-**Rules 9 to 14 are part of the same trial, since 2026-09-07.** They are
-confirmed or reversed with its result, same as the first-visit premise above.
+**Rules 9 to 14 came with the plan trial of 2026-09-07.** That trial ended on
+2026-11-16 without a ten-person result. They still hold for the plan and the
+tools, and are confirmed or reversed by the ten-person test in `ROADMAP.md`.
 
 **9. One next thing, never a list.** Show the single next action, not a queue.
 Finishing it reveals what comes after. A list of ten is a reason to close the
-tab.
+tab. The one exception, since 2026-11-16, is the way in: the five steps on
+the home page, and the few tools listed on each step's page. A short list of
+places to start, shown once.
 
 **10. Fifteen minutes, or split it.** Any action that does not fit in fifteen
 minutes is really two actions. Break it before you ship it.
@@ -212,6 +231,15 @@ every visit. Changing the date is allowed and recorded, never nagged about.
 **14. Send them out of the site.** The real actions happen on Naukri, in a
 WhatsApp message, in their own AI. The plan points and lets go. Automating any
 of it stays off the table, permanently.
+
+**15. A stranger looks before it ships.** Since 2026-11-16. Any change to the
+home page, a step page, the plan's first two screens, the all-tools page or a
+tool's name is shown as screenshots to reviewers who know only the site's
+name, before it merges. The pass mark is written down first. Before launch,
+people Kalpit has told nothing look too. Every earlier check was about
+correctness, and every earlier reviewer already knew the product; that is how
+three front doors shipped without anyone noticing the site never said what it
+was.
 
 ---
 

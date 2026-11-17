@@ -31,35 +31,35 @@ These have been decided. Re-opening them wastes time:
 
 ## Now
 
-- **The dated-plan front door. A trial, not a settled direction.** Built and
-  live since 2026-11-07; what is left is the test below. Three screens: the three questions,
-  then the dates they produce and a resign date to pick, then the dates recap
-  with one button that adds them to a calendar. English and Hindi.
-  *Why:* three colleagues out of three could not get from "I want to leave" to a
-  first action. The home page is a board of example applications at companies
-  that do not exist, and someone who has applied nowhere has nothing to put on it.
-  *The pass mark, written down before anyone sees it.* Ten people who have said
-  in the last six months that they want to leave. No warning about a follow-up.
-  A week later, four questions about what already happened. Did the first
-  action: 5 of 10. Picked a date: 4 of 10. Kept the dates somewhere, calendar or
-  screenshot or sent to someone: 4 of 10. Opened it again: 3 of 10.
-  *Miss the first two and stop building.* That is the door failing. Missing
-  "opened it again" is a different failure and must not be read as the same one:
-  a site with no server cannot reach anyone, and that is a known limit rather
-  than evidence the plan was wrong.
-  *Miss twice and the door goes to Not doing*, and the premise in `PRODUCT.md`
-  is reversed. That is a real outcome, not a formality.
+- **A front door that says what the site is and asks which step you are at.**
+  Decided 2026-11-16, after the first cold viewing of the site. A new home
+  page, five step pages, the plan on its own page, all tools regrouped under
+  the five steps, plain names. The plan is moved, not removed: it is the first
+  tool for someone thinking of leaving.
+  *Why:* the first person shown the site cold could not tell what it was, and
+  four reviewers who knew only its name read the home page as a resign-date
+  calculator.
+  *The pass mark, written down before anyone sees it.* Reviewers who know only
+  the site's name see the first phone screen. 7 of 8 can say what the site is,
+  and every reviewer who is at a step taps the card for that step. Then people
+  Kalpit has told nothing: they can say what it is and which they would tap.
+  *Status 2026-11-16:* a mock-up of the home page passed with 8 of 8
+  reviewers. Nothing is built yet.
 - **Kalpit's own review, first.** Decided 2026-11-13. He goes through the
   site himself, start to finish, when he is free. What he finds gets built on
   before anyone else is asked.
-- **The ten-person test, round two. Only once Kalpit is happy.** Decided
-  2026-11-13; before that this line said to run it the week the door ships.
-  The pass mark above is unchanged. *Status 2026-11-13:* the door shipped on
-  2026-11-07 and the test has not started.
-
-`docs/DIRECTION.md` is deleted when the trial result is recorded here, whichever
-way it goes. Anything in it still worth keeping moves into these lists or into
-the pull request that builds it, before it goes.
+- **The ten-person test. Only once Kalpit is happy, and run on the new front
+  door.** Decided 2026-11-13; rewritten 2026-11-16 when the plan stopped being
+  the home page. Ten people who have said in the last six months that they
+  want to leave. No warning about a follow-up. A week later, four questions
+  about what already happened. Did the first action: 5 of 10. Picked a date:
+  4 of 10. Kept the dates somewhere, calendar or screenshot or sent to
+  someone: 4 of 10. Opened it again: 3 of 10.
+  *Miss the first two and stop building.* Missing "opened it again" is a
+  different failure and must not be read as the same one: a site with no
+  server cannot reach anyone, and that is a known limit.
+  *Status 2026-11-16:* not started. The plan was live as the home page from
+  2026-11-07 to the rebuild and was never put to the ten.
 
 ## Next
 
@@ -91,8 +91,10 @@ Shipped, kept here so they are not proposed again:
 - **The tools sit behind their stages.** Every tool has one journey stage
   (PR #87, mapping approved 2026-10-31), ends with a Next link in stage order
   (PR #89), and `/tools/` lists them by stage (PR #97).
-- **Say what the site is, on the home page.** The full-switch line is on the
-  home page; since 2026-11-07 it sits above "Find the safest day to resign."
+- **Say what the site is, on the home page.** Reopened 2026-11-16, see Now.
+  The line shipped on 2026-11-07 sat above "Find the safest day to resign",
+  and no reviewer who came to the site cold understood from it what the site
+  was.
 - **Link paths fixed before the domain cutover.** `check:base` guards them.
 - **Intent words in tool search.** "quit", "in hand", "hike" and Hindi words
   find tools (`src/lib/palette.test.ts`).
