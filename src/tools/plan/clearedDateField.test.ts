@@ -215,9 +215,12 @@ describe('DateField on door screen one (Plan)', () => {
     const reactPropsKey = Object.keys(dateInput!).find((k) => k.startsWith('__reactProps'))
     expect(reactPropsKey).toBeDefined()
     const props = (dateInput as any)[reactPropsKey!]
-    expect(props.value).toBe('2022-01-12') // Default EXAMPLE joinDate
+    // The fields start empty since the rebuild (2026-11-16): the example never fills them.
+    expect(props.value).toBe('')
 
-    // User clears the date field: browser produces an empty string ''
+    // User types a date, then clears it: the browser produces an empty string ''
+    props.onChange({ target: { value: '2022-01-12' } })
+    await new Promise((resolve) => setTimeout(resolve, 50))
     props.onChange({ target: { value: '' } })
 
     // Wait for state update and re-render
@@ -227,7 +230,7 @@ describe('DateField on door screen one (Plan)', () => {
     expect(uncaughtError).toBeNull()
   })
 
-  it('clearing the join date keeps "Pick my resign date" pressable, and a press says what is missing instead of moving on', async () => {
+  it('clearing the join date keeps "See my options" pressable, and a press says what is missing instead of moving on', async () => {
     const root = ReactDOMClient.createRoot(container as any, {
       onUncaughtError(err: any) {
         uncaughtError = err
@@ -239,27 +242,30 @@ describe('DateField on door screen one (Plan)', () => {
 
     const dateInput = findInputByLabelOrType(container, 'date')
     const inputProps = (dateInput as any)[Object.keys(dateInput!).find((k) => k.startsWith('__reactProps'))!]
-    expect(inputProps.value).toBe('2022-01-12')
+    expect(inputProps.value).toBe('')
 
-    // The example dates are on screen before anything is typed (rule 1).
-    expect(hasText(container, /^Your gratuity was already safe on /)).toBe(true)
+    // Before anything is typed the only dates on screen are the boxed example line,
+    // never worded as the visitor's own (rebuild, 2026-11-16).
+    expect(hasText(container, /^Your gratuity/)).toBe(false)
+    expect(hasText(container, /^Joined 12 January 2022/)).toBe(true)
 
+    inputProps.onChange({ target: { value: '2022-01-12' } })
+    await new Promise((resolve) => setTimeout(resolve, 50))
     inputProps.onChange({ target: { value: '' } })
     await new Promise((resolve) => setTimeout(resolve, 50))
 
     // Not greyed out with no reason (A11Y-08): still pressable…
-    const button = findButtonByText(container, 'Pick my resign date')
+    const button = findButtonByText(container, 'See my options')
     expect(button).not.toBeNull()
     const buttonProps = (button as any)[Object.keys(button!).find((k) => k.startsWith('__reactProps'))!]
     expect(buttonProps.disabled).toBeFalsy()
-    expect(hasText(container, /^Your dates show here once/)).toBe(true)
     expect(hasText(container, 'Pick the day you joined, and not a date after today.')).toBe(false)
 
     // …and a press names the problem under the field and stays on screen one.
     buttonProps.onClick()
     await new Promise((resolve) => setTimeout(resolve, 50))
     expect(hasText(container, 'Pick the day you joined, and not a date after today.')).toBe(true)
-    expect(findButtonByText(container, 'Pick my resign date')).not.toBeNull()
+    expect(findButtonByText(container, 'See my options')).not.toBeNull()
 
     // A valid date clears the message.
     inputProps.onChange({ target: { value: '2023-05-15' } })
@@ -281,13 +287,15 @@ describe('DateField on door screen one (Plan)', () => {
     const noticeInput = findInputByLabelOrType(container, 'number')
     expect(noticeInput).not.toBeNull()
     const props = (noticeInput as any)[Object.keys(noticeInput!).find((k) => k.startsWith('__reactProps'))!]
-    expect(props.value).toBe(90)
+    expect(props.value).toBe('')
 
+    props.onChange({ target: { value: '90' } })
+    await new Promise((resolve) => setTimeout(resolve, 50))
     props.onChange({ target: { value: '' } })
     await new Promise((resolve) => setTimeout(resolve, 50))
     expect(uncaughtError).toBeNull()
 
-    const button = findButtonByText(container, 'Pick my resign date')
+    const button = findButtonByText(container, 'See my options')
     const buttonProps = (button as any)[Object.keys(button!).find((k) => k.startsWith('__reactProps'))!]
     expect(buttonProps.disabled).toBeFalsy()
     buttonProps.onClick()

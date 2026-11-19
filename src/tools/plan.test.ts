@@ -59,13 +59,15 @@ describe('the door writes each fact to its own record', () => {
     expect(choose).not.toMatch(/savePlan/)
   })
 
-  it('reads a skipped hike month back as skipped, not as the example month', () => {
+  it('reads a skipped hike month back as skipped, never as the example month', () => {
     // Rule 7. Someone who tapped "skip this" and closed the tab has answered
     // the question; the plan simply holds no month for them. Falling back to
-    // EXAMPLE on the next visit shows May with no Example chip beside it and
-    // invents a cliff that moves their earliest clean date.
+    // EXAMPLE shows May and invents a cliff that moves their earliest clean
+    // date. Since the rebuild (2026-11-16) the example never fills a field.
     const mount = door.match(/setAnswers\(\{[\s\S]*?\}\)/)?.[0] ?? ''
-    expect(mount).toMatch(/hikeCreditMonth:\s*\n?\s*savedPlan\.hikeCreditMonth \?\? \(answeredBefore \? 0 : EXAMPLE\.hikeCreditMonth\)/)
+    expect(mount).toMatch(/hikeCreditMonth:\s*\n?\s*savedPlan\.hikeCreditMonth \?\? 0/)
+    expect(mount).not.toMatch(/EXAMPLE/)
+    expect(door).toMatch(/useState<Answers>\(BLANK\)/)
   })
 })
 
@@ -108,8 +110,11 @@ describe('an untouched example is marked as an example on every screen, and neve
     expect(saveReason).toMatch(/if\s*\(touched\)\s*\{?[\s\S]*?savePlan\(/)
   })
 
-  it('renders ExampleNote on the questions, and plan.example.laterNote on the dates, recap and return screen when untouched', () => {
-    expect(door).toMatch(/step === 'questions'[\s\S]*?!touched && <ExampleNote[\s\S]*?plan\.example\.note/)
+  it('shows the example as one boxed line on the questions, and plan.example.laterNote on the dates, recap and return screen when untouched', () => {
+    // Rebuild 2026-11-16: the fields start empty; the example is a line, not answers.
+    const exampleLine = door.match(/function ExampleLine\([\s\S]*?\n\}\n/)?.[0] ?? ''
+    expect(exampleLine).toMatch(/<ExampleNote[\s\S]*?plan\.example\.line/)
+    expect(door).toMatch(/step === 'questions'[\s\S]*?<ExampleLine/)
 
     expect(door).toMatch(/step === 'dates'[\s\S]*?ExampleNote[\s\S]*?plan\.example\.laterNote/)
 

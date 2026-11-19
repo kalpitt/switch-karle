@@ -17,20 +17,37 @@ async function open(page: Page, path: string) {
   await expect(page.locator('astro-island[ssr]')).toHaveCount(0)
 }
 
+/** Opens the plan and waits until it has read the clock and any saved answers
+ * (its button stops saying "Loading…"), so typing is not overwritten by the
+ * mount effect. Hydration can finish a moment after Astro marks the island live. */
+async function openPlan(page: Page, path = '/') {
+  await open(page, path)
+  await expect(page.locator('[data-tool="plan"] button[aria-busy="false"]').first()).toBeVisible()
+}
+
 const savedKeys = (page: Page) =>
   page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith('switchkarle.')))
 
 async function answerThreeQuestions(page: Page) {
-  await open(page, '/')
+  await openPlan(page)
   await page.locator('main input[type="date"]').fill('2023-04-10')
   await page.locator('main input[type="number"]').fill('60')
   // The dates follow the answers live; the work week is asked because, for
   // this join date, it changes the gratuity date.
   await page.getByRole('button', { name: /^I work five days a week/ }).click()
   await expect(page.getByText(/^Your gratuity is safe from /)).toBeVisible()
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
-  await page.getByRole('button', { name: /^Resign on / }).first().click()
+  await page.getByRole('button', { name: 'See my options' }).click()
+  await page.getByRole('button', { name: /^Choose / }).first().click()
   await expect(page.getByRole('heading', { name: 'Your plan' })).toBeVisible()
+}
+
+/** Ravi's answers (the example's own): joined 12 January 2022, 90 days' notice, hike in May.
+ * The fields start empty since the rebuild (2026-11-16), so a test types them. */
+async function answerAsRavi(page: Page, path = '/') {
+  await openPlan(page, path)
+  await page.locator('main input[type="date"]').fill('2022-01-12')
+  await page.locator('main input[type="number"]').fill('90')
+  await page.locator('main select').first().selectOption('5')
 }
 
 test('home: three questions lead to dated steps that are still there after a reload', async ({ page }) => {
@@ -41,9 +58,23 @@ test('home: three questions lead to dated steps that are still there after a rel
   await expect(page.locator('main input[type="date"]')).toHaveCount(0)
 })
 
-test('home: the example dates are on screen before anything is typed, and change as you answer', async ({ page }) => {
+test('home: before anything is typed the only dates are one boxed example line; yours follow your answers', async ({ page }) => {
   await open(page, '/')
   await expect(page.getByRole('heading', { level: 1, name: 'Find the safest day to resign.' })).toBeVisible()
+  // The fields start empty, and the example is one line worked out from today, never worded as yours.
+  await expect(page.locator('main input[type="date"]')).toHaveValue('')
+  await expect(page.locator('main input[type="number"]')).toHaveValue('')
+  await expect(page.locator('[data-example-line]')).toHaveText(
+    'ExampleJoined 12 January 2022, 90 days’ notice, hike in May. Earliest safe day to resign: 1 June 2027.',
+  )
+  await expect(page.getByText(/^Your gratuity/)).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'Your dates' })).toHaveCount(0)
+  // The privacy line sits above the first field (R7).
+  await expect(page.locator('main [data-privacy-line]')).toBeVisible()
+
+  await answerAsRavi(page)
+  await expect(page.locator('[data-example-line]')).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'Your dates' })).toBeVisible()
   // Six-day reading: fourth anniversary Monday 12 January 2026, plus 240
   // Monday-to-Saturday working days = 40 weeks, ending Saturday 17 October.
   await expect(page.getByText(/^Your gratuity was already safe on 17 October 2026/)).toBeVisible()
@@ -56,9 +87,9 @@ test('home: the example dates are on screen before anything is typed, and change
 })
 
 test('home: a press with something missing says what, and the week is asked only when it matters', async ({ page }) => {
-  await open(page, '/')
-  await page.locator('main input[type="number"]').fill('')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await openPlan(page)
+  await page.locator('main input[type="date"]').fill('2022-01-12')
+  await page.getByRole('button', { name: 'See my options' }).click()
   // Focus moves to the field, which reads its error once through its description (N12).
   await expect(page.getByText('Enter your notice in days, at least 1.')).toBeVisible()
   await expect(page.locator('main input[type="number"]')).toBeFocused()
@@ -67,20 +98,46 @@ test('home: a press with something missing says what, and the week is asked only
 
   await page.locator('main input[type="number"]').fill('60')
   await page.locator('main input[type="date"]').fill('2023-04-10')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByRole('alert').filter({ hasText: 'Tap your work week to go on.' })).toBeVisible()
   await expect(page.getByRole('button', { name: /^I work five days a week/ })).toBeFocused()
 
   await page.getByRole('button', { name: /^I work six days a week/ }).click()
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
-  await expect(page.getByRole('heading', { name: 'When do you want to resign?' })).toBeFocused()
+  await page.getByRole('button', { name: 'See my options' }).click()
+  // The answer is the heading: the earliest safe day, and what waiting for it keeps (R3).
+  await expect(page.getByRole('heading', { name: /^Earliest safe day to resign: / })).toBeFocused()
+  await expect(page.getByText('Resign on or after this day and you keep your gratuity.')).toBeVisible()
+})
+
+test('home: the dates screen states the answer, and only the option that loses nothing is dark', async ({ page }) => {
+  await answerAsRavi(page)
+  await page.getByRole('button', { name: 'See my options' }).click()
+  await expect(page.getByRole('heading', { name: 'Earliest safe day to resign: 1 June 2027' })).toBeFocused()
+  await expect(page.getByText('Resign on or after this day and you keep your hike.')).toBeVisible()
+  await expect(page.locator('[data-trade="keep-what-is-earned"]')).toContainText(
+    'If you resign before 1 June 2027, you lose your hike. From 1 June 2027 you lose nothing.',
+  )
+  // One dark button (R8): the option tagged "Loses nothing".
+  const dark = page.locator('[data-trade] button.bg-ink')
+  await expect(dark).toHaveCount(1)
+  await expect(dark).toHaveText('Choose 1 June 2027')
+})
+
+test('home: a skipped hike is never named in the answer', async ({ page }) => {
+  await openPlan(page)
+  await page.locator('main input[type="date"]').fill('2023-04-10')
+  await page.locator('main input[type="number"]').fill('60')
+  await page.getByRole('button', { name: /^I work five days a week/ }).click()
+  await page.getByRole('button', { name: 'See my options' }).click()
+  await expect(page.getByText('Resign on or after this day and you keep your gratuity.')).toBeVisible()
+  await expect(page.getByText(/your hike/)).toHaveCount(0)
 })
 
 test('home: "what this is worth" answers in rupees inside the recap', async ({ page }) => {
-  await open(page, '/')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await answerAsRavi(page)
+  await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByText('Loses nothing')).toBeVisible()
-  await page.getByRole('button', { name: 'Resign on 1 June 2027' }).click()
+  await page.getByRole('button', { name: 'Choose 1 June 2027' }).click()
   await expect(page.getByRole('heading', { name: 'Your plan' })).toBeFocused()
   // No tool list under the recap (IA-17).
   await expect(page.getByText(/^All \d+ tools/)).toHaveCount(0)
@@ -96,11 +153,11 @@ test('home: "what this is worth" answers in rupees inside the recap', async ({ p
 })
 
 test('home: the recap shows the first actions, and a start-applying date already gone says so', async ({ page }) => {
-  await open(page, '/')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await answerAsRavi(page)
+  await page.getByRole('button', { name: 'See my options' }).click()
   const own = page.locator('[data-trade="own-date"]')
   await own.locator('input[type="date"]').fill('2026-11-20')
-  await own.getByRole('button', { name: 'Resign on 20 November 2026' }).click()
+  await own.getByRole('button', { name: 'Choose 20 November 2026' }).click()
   await expect(page.getByRole('heading', { name: 'Your plan' })).toBeFocused()
   // N5: the action list is on the first visit, not only after a reload.
   await expect(page.getByRole('heading', { name: 'Your first ten actions' })).toBeVisible()
@@ -110,9 +167,9 @@ test('home: the recap shows the first actions, and a start-applying date already
 })
 
 test('home: "I want to start looking now" hands focus to the line that replaces it, and announces it', async ({ page }) => {
-  await open(page, '/')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
-  await page.getByRole('button', { name: 'Resign on 1 June 2027' }).click()
+  await answerAsRavi(page)
+  await page.getByRole('button', { name: 'See my options' }).click()
+  await page.getByRole('button', { name: 'Choose 1 June 2027' }).click()
   const looking = page.getByRole('button', { name: 'I want to start looking now' })
   await looking.focus()
   await page.keyboard.press('Enter')
@@ -122,9 +179,11 @@ test('home: "I want to start looking now" hands focus to the line that replaces 
   await expect(since).toBeFocused()
 })
 
+// Hindi is hidden during the rebuild (2026-11-19): these check that the Hindi page still
+// works, by structure. Its words are rewritten in the Hindi pass.
 test('home in Hindi: the start-looking line is announced and focused too', async ({ page }) => {
-  await open(page, '/hi/')
-  await page.getByRole('button', { name: 'मेरी resign date चुनें' }).click()
+  await answerAsRavi(page, '/hi/')
+  await page.locator('[data-tool="plan"] button.w-full').first().click()
   await page.locator('[data-trade]').getByRole('button').first().click()
   await page.getByRole('button', { name: 'मुझे अभी से देखना शुरू करना है' }).click()
   const since = page.getByRole('status').filter({ hasText: /से देख रहे हैं।/ })
@@ -132,8 +191,8 @@ test('home in Hindi: the start-looking line is announced and focused too', async
 })
 
 test('home: each resign-date option is a named group, and its date field says which option it belongs to', async ({ page }) => {
-  await open(page, '/')
-  await page.getByRole('button', { name: 'Pick my resign date' }).click()
+  await answerAsRavi(page)
+  await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByRole('group', { name: /^Leave sooner/ })).toBeVisible()
   await expect(page.getByRole('group', { name: 'I already have a date' })).toBeVisible()
   await expect(page.locator('[data-trade="keep-what-is-earned"] input[type="date"]')).toHaveAccessibleName(
@@ -145,10 +204,11 @@ test('home: each resign-date option is a named group, and its date field says wh
 })
 
 test('home in Hindi: the same door, headline first', async ({ page }) => {
-  await open(page, '/hi/')
-  await expect(page.getByRole('heading', { level: 1, name: 'Resign करने का सबसे safe दिन ढूँढें।' })).toBeVisible()
-  await page.getByRole('button', { name: 'मेरी resign date चुनें' }).click()
-  await expect(page.getByRole('heading', { name: 'आप कब resign करना चाहते हैं?' })).toBeVisible()
+  await answerAsRavi(page, '/hi/')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
+  await expect(page.locator('h1')).toHaveCount(1)
+  await page.locator('[data-tool="plan"] button.w-full').first().click()
+  await expect(page.locator('[data-trade]').first()).toBeVisible()
 })
 
 test('decoder: changing the CTC changes the in-hand figure, and the bar matches its percent', async ({ page }) => {
@@ -282,7 +342,7 @@ test('a browser that cannot save is told so once', async ({ page }) => {
       throw new DOMException('blocked', 'QuotaExceededError')
     }
   })
-  await open(page, '/')
+  await openPlan(page)
   const notice = page.getByText(/isn’t keeping your answers/)
   await expect(notice).toBeHidden()
   await page.locator('main input[type="number"]').fill('45')

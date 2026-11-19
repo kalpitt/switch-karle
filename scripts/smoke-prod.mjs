@@ -74,9 +74,14 @@ if (pages.length < 20) fail(`sitemap lists only ${pages.length} pages`)
     // only when it changes a date (it does for this join date).
     const week = page.getByRole('button', { name: /^I work five days a week/ })
     if (await week.count()) await week.click()
-    await page.locator('main button', { hasText: 'Pick my resign date' }).click()
-    await page.getByRole('heading', { name: 'When do you want to resign?' }).waitFor({ timeout: 5_000 })
-    await page.locator('main button', { hasText: /^Resign on / }).first().waitFor({ timeout: 5_000 })
+    // Since the rebuild (2026-11-16) the button is "See my options", the dates
+    // screen's heading states the earliest safe day, and each option's button
+    // reads "Choose <date>".
+    await page.locator('main button', { hasText: 'See my options' }).click()
+    await page
+      .getByRole('heading', { name: /^(Earliest safe day to resign: |When do you want to resign\?)/ })
+      .waitFor({ timeout: 5_000 })
+    await page.locator('main button', { hasText: /^Choose / }).first().waitFor({ timeout: 5_000 })
   } catch (e) {
     fail(`home flow: ${String(e.message).split('\n')[0]}`)
   }

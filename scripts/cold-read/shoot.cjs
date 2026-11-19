@@ -76,9 +76,17 @@ for (const [path, dir] of [['/', 'home'], ['/hi/', 'home-hi']]) {
   await p.screenshot({ path: `${out}/plan/02-before-scrolled.png` })
   // Fill the three answers if the fields are empty, then press the one dark button.
   const date = p.locator('input[type=date]').first()
-  if ((await date.count()) && !(await date.inputValue())) await date.fill('2022-01-12')
+  // Answers that differ from the page's own example (12 January 2022, 90 days, May), so a
+  // reviewer never sees the example's date come back as "their" result, and with a hike
+  // month, so the answer screen has a date to wait for.
+  if ((await date.count()) && !(await date.inputValue())) await date.fill('2023-03-15')
   const num = p.locator('input[type=number], input[inputmode=numeric]').first()
-  if ((await num.count()) && !(await num.inputValue())) await num.fill('90')
+  if ((await num.count()) && !(await num.inputValue())) await num.fill('60')
+  const hike = p.locator('main select').first()
+  if ((await hike.count()) && (await hike.inputValue()) === '0') await hike.selectOption('4')
+  // The work week is asked only when it changes a date; answer it if it is.
+  const week = p.getByRole('button', { name: /^I work five days a week/ })
+  if (await week.count()) await week.click()
   const btn = p.getByRole('button', { name: /see my options|see my dates|pick my resign date/i })
   if (await btn.count()) {
     await btn.first().click(); await p.waitForTimeout(1000)

@@ -3,7 +3,7 @@ import { addDays } from '../../engine/dates'
 import { cliffs, switchCalendar } from '../../engine/switchCalendar'
 import { chosenGratuityCliff, dateStepReachable, doorEngineInput, isGratuityCliff } from './fork'
 import { answerProblems, firstCleanTrade, gratuityToSpeakOf, soonerDefault, weekChangesADate } from './fork'
-import { questionsSubmittable, resignDatesMovedFrom } from './fork'
+import { questionsSubmittable, resignDatesMovedFrom, whatIsAhead } from './fork'
 
 describe('a moved resign date is named so it can be deleted from a calendar', () => {
   it('names nothing on the first pick', () => {
@@ -218,5 +218,23 @@ describe('doorEngineInput', () => {
       today,
     )
     expect(input.noticePeriodDays).toBe(60)
+  })
+})
+
+describe('whatIsAhead (the answer sentence names only what is at stake)', () => {
+  const at = (joinDate: string, hikeCreditMonth: number | undefined) =>
+    switchCalendar({ joinDate, noticePeriodDays: 90, hikeCreditMonth, workWeekDays: 5, coveredByAct: true, asOf: '2026-11-19' })
+      .cliffs
+  it('names both when gratuity and the hike are still ahead', () => {
+    expect(whatIsAhead(at('2023-01-01', 5), '2026-11-19', 90)).toBe('both')
+  })
+  it('never names the hike when the hike question was skipped', () => {
+    expect(whatIsAhead(at('2023-01-01', undefined), '2026-11-19', 90)).toBe('gratuity')
+  })
+  it('never names gratuity once it is safe', () => {
+    expect(whatIsAhead(at('2020-01-01', 5), '2026-11-19', 90)).toBe('hike')
+  })
+  it('is null when nothing is ahead', () => {
+    expect(whatIsAhead(at('2020-01-01', undefined), '2026-11-19', 90)).toBeNull()
   })
 })
