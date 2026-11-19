@@ -1,7 +1,6 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { TOOLS } from '../data/tools'
-import { withLang } from '../lib/langPath'
 import { filterPalette, paletteItems } from '../lib/palette'
 import { useLang, useT } from '../i18n'
 import { useDialog } from './useDialog'
@@ -36,7 +35,7 @@ export function CommandPalette() {
 
   useDialog(open, panelRef, () => setOpen(false), inputRef)
 
-  const items = useMemo(() => paletteItems(TOOLS, withLang(lang), (slug) => toolHref(lang, slug)), [lang])
+  const items = useMemo(() => paletteItems(TOOLS, (slug) => toolHref(lang, slug)), [lang])
   const shown = useMemo(() => filterPalette(items, query, t), [items, query, t])
 
   // A new query starts from the top hit.

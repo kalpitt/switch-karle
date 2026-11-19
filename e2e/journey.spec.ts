@@ -118,5 +118,5 @@ test('a Next link into a later stage names that stage', async ({ page }) => {
 test('the last tool of the journey leads back to the plan', async ({ page }) => {
   await open(page, '/hi/form16-shock/')
   await page.locator('a[data-next-step="plan"]').click()
-  await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/$/)
+  await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/resign-date\/$/)
 })

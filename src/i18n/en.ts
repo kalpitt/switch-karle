@@ -250,6 +250,7 @@ export const en: Record<string, string> = {
   'toolsPage.intro': 'Every tool, in the order a job switch happens: from deciding to leave to your first 90 days in the new job.',
   'toolsPage.plan': 'Not sure which step you are at?',
   'toolsPage.planCta': 'Start with your plan →',
+  'toolsPage.pick': 'Not sure where to start? Pick your step',
   'toolsPage.startHere': 'Start here',
   'toolsPage.jumpLabel': 'Jump to a step',
   'toolsPage.jump.leaving': 'Leaving',

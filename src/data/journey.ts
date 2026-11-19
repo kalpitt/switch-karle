@@ -79,7 +79,12 @@ export function distinctToolCount(tools: readonly ToolDef[] = TOOLS): number {
   return tools.filter((tool) => !tool.partOf).length
 }
 
-/** Where a "Next" link goes: another tool, or back to the plan on the home page. */
+/** The count visitors see ("See all {n} tools"): the tools, plus the resign-date plan. */
+export function visibleToolCount(tools: readonly ToolDef[] = TOOLS): number {
+  return distinctToolCount(tools) + 1
+}
+
+/** Where a "Next" link goes: another tool, or back to the plan on its own page. */
 export type NextTarget = { kind: 'tool'; slug: string } | { kind: 'plan' }
 
 /** The sentinel in `NEXT_STEP` for "back to the plan". No tool may take this slug. */

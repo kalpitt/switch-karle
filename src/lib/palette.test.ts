@@ -19,9 +19,9 @@ const labels: Record<string, string> = {
 
 describe('palette', () => {
   it('puts your plan first, then all tools, then every registry tool, then the five steps', () => {
-    const items = paletteItems(tools, '/switch-karle/', (s) => `/switch-karle/${s}/`)
+    const items = paletteItems(tools, (s) => `/switch-karle/${s}/`)
     expect(items.map((i) => i.slug)).toEqual([
-      'home',
+      'plan',
       'tools',
       'epf-transfer',
       'decoder',
@@ -33,13 +33,13 @@ describe('palette', () => {
     ])
     expect(items[6]!.href).toBe('/switch-karle/start/offer/')
     expect(items[6]!.titleKey).toBe('door.offer.name')
-    expect(items[0]!.href).toBe('/switch-karle/')
+    expect(items[0]!.href).toBe('/switch-karle/resign-date/')
     expect(items[0]!.titleKey).toBe('nav.plan')
     expect(items[1]!.href).toBe('/switch-karle/tools/')
   })
 
   it('filters on slug, title, or description', () => {
-    const items = paletteItems(tools, '/', (s) => `/${s}/`)
+    const items = paletteItems(tools, (s) => `/${s}/`)
     const label = (k: string) => labels[k] ?? k
     expect(filterPalette(items, 'form 13', label).map((i) => i.slug)).toEqual(['epf-transfer'])
     expect(filterPalette(items, 'DECODER', label).map((i) => i.slug)).toEqual(['decoder'])
@@ -47,7 +47,7 @@ describe('palette', () => {
   })
 
   it('treats hyphens, spaces, and punctuation as equivalent so in-hand, in hand, and inhand match identically', () => {
-    const items = paletteItems(tools, '/', (s) => `/${s}/`)
+    const items = paletteItems(tools, (s) => `/${s}/`)
     const label = (k: string) => labels[k] ?? k
     const r1 = filterPalette(items, 'in-hand', label).map((i) => i.slug)
     const r2 = filterPalette(items, 'in hand', label).map((i) => i.slug)
@@ -89,7 +89,7 @@ describe('palette', () => {
       'ts.title': 'Resignation Letter',
       'ts.desc': 'Three tones for drafting',
     }
-    const items = paletteItems(testItems, '/', (s) => `/${s}/`)
+    const items = paletteItems(testItems, (s) => `/${s}/`)
     const label = (k: string) => customLabels[k] ?? k
     const results = filterPalette(items, 'resignation', label).map((i) => i.slug)
     expect(results).toEqual(['title-second', 'keyword-first'])
@@ -128,20 +128,20 @@ describe('palette', () => {
       'tr.title': 'Job Tracker',
       'tr.desc': 'Track jobs',
     }
-    const items = paletteItems(testTools, '/', (s) => `/${s}/`)
+    const items = paletteItems(testTools, (s) => `/${s}/`)
     const label = (k: string) => customLabels[k] ?? k
     expect(filterPalette(items, 'इस्तीफ़ा', label).map((i) => i.slug)).toEqual(['letter'])
     expect(filterPalette(items, 'नौकरी', label).map((i) => i.slug)).toEqual(['tracker'])
   })
 
   it('matches ROADMAP examples across the full tool registry', () => {
-    const items = paletteItems(TOOLS, '/', (s) => `/${s}/`)
+    const items = paletteItems(TOOLS, (s) => `/${s}/`)
     const label = (k: string) => dictionaries.en[k] ?? k
 
     // 'quit' reaches the plan first (when to quit is its whole question), then the
     // resignation letter, notice buyout, notice tracker and gratuity
     const quitSlugs = filterPalette(items, 'quit', label).map((i) => i.slug)
-    expect(quitSlugs[0]).toBe('home')
+    expect(quitSlugs[0]).toBe('plan')
     expect(quitSlugs).toContain('resignation-letter')
     expect(quitSlugs).toContain('notice-buyout')
     expect(quitSlugs).toContain('notice-tracker')
@@ -176,7 +176,7 @@ describe('palette', () => {
 
     // the plan is findable by what people call it
     for (const q of ['plan', 'my dates', 'when to resign', 'join date', 'calendar']) {
-      expect(filterPalette(items, q, label)[0]!.slug, q).toBe('home')
+      expect(filterPalette(items, q, label)[0]!.slug, q).toBe('plan')
     }
 
     // the old names still find the renamed tools (COPY-05)
@@ -232,7 +232,7 @@ describe('palette', () => {
   })
 
   it('finds renamed tools by their old Hindi names on a Hindi page', () => {
-    const items = paletteItems(TOOLS, '/hi/', (s) => `/hi/${s}/`)
+    const items = paletteItems(TOOLS, (s) => `/hi/${s}/`)
     const label = (k: string) => dictionaries.hi[k] ?? k
     expect(filterPalette(items, 'डिकोडर', label)[0]!.slug).toBe('decoder')
     expect(filterPalette(items, 'ट्रैकर', label)[0]!.slug).toBe('tracker')

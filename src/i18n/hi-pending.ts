@@ -99,4 +99,5 @@ export const HINDI_PENDING: string[] = [
   'plan.action.research-two-companies.body',
   'plan.action.research-two-companies.open',
   'door.applying.when.expected-ctc',
+  'toolsPage.pick',
 ]

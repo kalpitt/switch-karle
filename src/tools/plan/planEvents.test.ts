@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { cliffs, switchCalendar } from '../../engine/switchCalendar'
 import { buildDatesIcs } from '../../lib/ics'
-import { planIcsEvents, CHECK_IN_DAYS } from './planEvents'
+import { planIcsEvents, planSiteUrl, CHECK_IN_DAYS } from './planEvents'
 
 /**
  * Ravi from docs/DIRECTION.md Part 3: joined 12 January 2022, 90 days' notice,
@@ -89,5 +89,11 @@ describe('the file those events build', () => {
   it('carries the site link in every event and no rupee figure anywhere', () => {
     expect(text.match(/URL:https:\/\/kalpit\.me\/switch-karle\//g)).toHaveLength(4)
     expect(text).not.toContain('₹')
+  })
+})
+
+describe('the link in every event', () => {
+  it('opens the plan on its own page, not the home page (2026-11-19)', () => {
+    expect(planSiteUrl()).toMatch(/\/resign-date\/$/)
   })
 })

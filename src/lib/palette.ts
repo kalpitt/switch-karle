@@ -1,4 +1,4 @@
-import { TOOLS_PAGE, type ToolDef } from '../data/tools'
+import { PLAN_PAGE, TOOLS_PAGE, type ToolDef } from '../data/tools'
 import { DOORS, doorPath, type DoorId } from '../data/doors'
 
 export interface PaletteItem {
@@ -58,14 +58,12 @@ export function filterPalette(items: PaletteItem[], query: string, label: (key: 
     .map((r) => r.item)
 }
 
-/** Words people type when what they want is the home plan (their dates). */
+/** Words people type when what they want is the resign-date plan (their dates). */
 const PLAN_KEYWORDS = [
   'plan',
-  'home',
-  'होम',
+  'resign date',
   'my dates',
   'when to resign',
-  'resign date',
   'join date',
   'appraisal',
   'hike month',
@@ -78,9 +76,11 @@ const PLAN_KEYWORDS = [
   'कब छोड़ूँ',
 ]
 
-export function paletteItems(tools: ToolDef[], homeHref: string, toolHref: (slug: string) => string): PaletteItem[] {
+export function paletteItems(tools: ToolDef[], toolHref: (slug: string) => string): PaletteItem[] {
   return [
-    { slug: 'home', href: homeHref, titleKey: 'nav.plan', descKey: 'palette.plan.desc', keywords: PLAN_KEYWORDS },
+    // The resign-date plan, on its own page since the home page became the front door (2026-11-19).
+    // Its slug is `plan`, not the address, so "resign" still finds the resignation letter first.
+    { slug: 'plan', href: toolHref(PLAN_PAGE), titleKey: 'nav.plan', descKey: 'palette.plan.desc', keywords: PLAN_KEYWORDS },
     {
       slug: TOOLS_PAGE,
       href: toolHref(TOOLS_PAGE),

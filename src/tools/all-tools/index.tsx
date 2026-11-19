@@ -1,5 +1,4 @@
 import { useLang, useT, type Lang } from '../../i18n'
-import { quietGlyphs } from '../../components/quietGlyphs'
 import { doorListSections, DOORS } from '../../data/doors'
 import { PLAN_PAGE, TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
@@ -31,10 +30,9 @@ function AllTools() {
         {t('toolsPage.title')}
       </h1>
       <p className="mt-2 max-w-[60ch] text-[16px] leading-relaxed text-ink-soft">{t('toolsPage.intro')}</p>
-      <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
-        {t('toolsPage.plan')}{' '}
-        <a href={withLang(lang)} className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline">
-          {quietGlyphs(t('toolsPage.planCta'))}
+      <p className="mt-1 text-[14px] leading-relaxed">
+        <a href={withLang(lang)} data-pick-step className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline">
+          {t('toolsPage.pick')}
         </a>
       </p>
 

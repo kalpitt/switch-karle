@@ -20,7 +20,7 @@ async function open(page: Page, path: string) {
 /** Opens the plan and waits until it has read the clock and any saved answers
  * (its button stops saying "Loading…"), so typing is not overwritten by the
  * mount effect. Hydration can finish a moment after Astro marks the island live. */
-async function openPlan(page: Page, path = '/') {
+async function openPlan(page: Page, path = '/resign-date/') {
   await open(page, path)
   await expect(page.locator('[data-tool="plan"] button[aria-busy="false"]').first()).toBeVisible()
 }
@@ -43,14 +43,14 @@ async function answerThreeQuestions(page: Page) {
 
 /** Ravi's answers (the example's own): joined 12 January 2022, 90 days' notice, hike in May.
  * The fields start empty since the rebuild (2026-11-16), so a test types them. */
-async function answerAsRavi(page: Page, path = '/') {
+async function answerAsRavi(page: Page, path = '/resign-date/') {
   await openPlan(page, path)
   await page.locator('main input[type="date"]').fill('2022-01-12')
   await page.locator('main input[type="number"]').fill('90')
   await page.locator('main select').first().selectOption('5')
 }
 
-test('home: three questions lead to dated steps that are still there after a reload', async ({ page }) => {
+test('plan: three questions lead to dated steps that are still there after a reload', async ({ page }) => {
   await answerThreeQuestions(page)
   await expect(page.getByText(/^Resign on /)).toBeVisible()
   await page.reload()
@@ -58,8 +58,8 @@ test('home: three questions lead to dated steps that are still there after a rel
   await expect(page.locator('main input[type="date"]')).toHaveCount(0)
 })
 
-test('home: before anything is typed the only dates are one boxed example line; yours follow your answers', async ({ page }) => {
-  await open(page, '/')
+test('plan: before anything is typed the only dates are one boxed example line; yours follow your answers', async ({ page }) => {
+  await open(page, '/resign-date/')
   await expect(page.getByRole('heading', { level: 1, name: 'Find the safest day to resign.' })).toBeVisible()
   // The fields start empty, and the example is one line worked out from today, never worded as yours.
   await expect(page.locator('main input[type="date"]')).toHaveValue('')
@@ -86,7 +86,7 @@ test('home: before anything is typed the only dates are one boxed example line; 
   await expect(page.getByText(/^Your hike lands/)).toHaveCount(0)
 })
 
-test('home: a press with something missing says what, and the week is asked only when it matters', async ({ page }) => {
+test('plan: a press with something missing says what, and the week is asked only when it matters', async ({ page }) => {
   await openPlan(page)
   await page.locator('main input[type="date"]').fill('2022-01-12')
   await page.getByRole('button', { name: 'See my options' }).click()
@@ -109,7 +109,7 @@ test('home: a press with something missing says what, and the week is asked only
   await expect(page.getByText('Resign on or after this day and you keep your gratuity.')).toBeVisible()
 })
 
-test('home: the dates screen states the answer, and only the option that loses nothing is dark', async ({ page }) => {
+test('plan: the dates screen states the answer, and only the option that loses nothing is dark', async ({ page }) => {
   await answerAsRavi(page)
   await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByRole('heading', { name: 'Earliest safe day to resign: 1 June 2027' })).toBeFocused()
@@ -123,7 +123,7 @@ test('home: the dates screen states the answer, and only the option that loses n
   await expect(dark).toHaveText('Choose 1 June 2027')
 })
 
-test('home: a skipped hike is never named in the answer', async ({ page }) => {
+test('plan: a skipped hike is never named in the answer', async ({ page }) => {
   await openPlan(page)
   await page.locator('main input[type="date"]').fill('2023-04-10')
   await page.locator('main input[type="number"]').fill('60')
@@ -133,7 +133,7 @@ test('home: a skipped hike is never named in the answer', async ({ page }) => {
   await expect(page.getByText(/your hike/)).toHaveCount(0)
 })
 
-test('home: "what this is worth" answers in rupees inside the recap', async ({ page }) => {
+test('plan: "what this is worth" answers in rupees inside the recap', async ({ page }) => {
   await answerAsRavi(page)
   await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByText('Loses nothing')).toBeVisible()
@@ -152,7 +152,7 @@ test('home: "what this is worth" answers in rupees inside the recap', async ({ p
   await expect(page.getByRole('link', { name: 'Open the full gratuity calculator' })).toHaveAttribute('href', '/gratuity/')
 })
 
-test('home: the recap shows the first actions, and a start-applying date already gone says so', async ({ page }) => {
+test('plan: the recap shows the first actions, and a start-applying date already gone says so', async ({ page }) => {
   await answerAsRavi(page)
   await page.getByRole('button', { name: 'See my options' }).click()
   const own = page.locator('[data-trade="own-date"]')
@@ -166,7 +166,7 @@ test('home: the recap shows the first actions, and a start-applying date already
   await expect(page.getByText(/^Start applying by /)).toHaveCount(0)
 })
 
-test('home: "I want to start looking now" hands focus to the line that replaces it, and announces it', async ({ page }) => {
+test('plan: "I want to start looking now" hands focus to the line that replaces it, and announces it', async ({ page }) => {
   await answerAsRavi(page)
   await page.getByRole('button', { name: 'See my options' }).click()
   await page.getByRole('button', { name: 'Choose 1 June 2027' }).click()
@@ -181,8 +181,8 @@ test('home: "I want to start looking now" hands focus to the line that replaces 
 
 // Hindi is hidden during the rebuild (2026-11-19): these check that the Hindi page still
 // works, by structure. Its words are rewritten in the Hindi pass.
-test('home in Hindi: the start-looking line is announced and focused too', async ({ page }) => {
-  await answerAsRavi(page, '/hi/')
+test('plan in Hindi: the start-looking line is announced and focused too', async ({ page }) => {
+  await answerAsRavi(page, '/hi/resign-date/')
   await page.locator('[data-tool="plan"] button.w-full').first().click()
   await page.locator('[data-trade]').getByRole('button').first().click()
   await page.getByRole('button', { name: 'मुझे अभी से देखना शुरू करना है' }).click()
@@ -190,7 +190,7 @@ test('home in Hindi: the start-looking line is announced and focused too', async
   await expect(since).toBeFocused()
 })
 
-test('home: each resign-date option is a named group, and its date field says which option it belongs to', async ({ page }) => {
+test('plan: each resign-date option is a named group, and its date field says which option it belongs to', async ({ page }) => {
   await answerAsRavi(page)
   await page.getByRole('button', { name: 'See my options' }).click()
   await expect(page.getByRole('group', { name: /^Leave sooner/ })).toBeVisible()
@@ -203,12 +203,56 @@ test('home: each resign-date option is a named group, and its date field says wh
   )
 })
 
-test('home in Hindi: the same door, headline first', async ({ page }) => {
-  await answerAsRavi(page, '/hi/')
+test('plan in Hindi: the same door, headline first', async ({ page }) => {
+  await answerAsRavi(page, '/hi/resign-date/')
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
   await expect(page.locator('h1')).toHaveCount(1)
   await page.locator('[data-tool="plan"] button.w-full').first().click()
   await expect(page.locator('[data-trade]').first()).toBeVisible()
+})
+
+// The home page (rebuild, 2026-11-19): what the site is, then which step you are at.
+test('home: says what the site is and offers five steps', async ({ page }) => {
+  await open(page, '/')
+  await expect(page.locator('h1')).toHaveText('Changing jobs? Free tools for every step.')
+  await expect(page.locator('[data-privacy-line]')).toContainText('Nothing you type is sent anywhere.')
+  await expect(page.getByRole('heading', { level: 2, name: 'Which step are you at?' })).toBeVisible()
+  const cards = page.locator('a[data-door-card]')
+  await expect(cards).toHaveCount(5)
+  await expect(cards.first()).toHaveAttribute('href', '/start/leaving/')
+  await expect(cards.first()).toContainText('Thinking of leaving')
+  for (const card of await cards.all()) expect((await card.boundingBox())!.height).toBeGreaterThanOrEqual(64)
+  await expect(page.getByRole('link', { name: 'Check what you are owed' })).toHaveAttribute('href', '/fnf-checker/')
+  await expect(page.locator('a[data-all-tools]')).toHaveAttribute('href', '/tools/')
+  await expect(page.locator('a[data-all-tools]')).toHaveText(/^See all \d+ tools$/)
+  await expect(page.getByRole('link', { name: 'Why I built this' })).toHaveAttribute('href', '/about/')
+  await cards.nth(2).click()
+  await expect(page).toHaveURL(/\/start\/offer\/$/)
+})
+
+test('home in Hindi: the same five steps, linking to Hindi pages', async ({ page }) => {
+  await open(page, '/hi/')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
+  await expect(page.locator('h1')).toHaveCount(1)
+  await expect(page.locator('a[data-door-card]')).toHaveCount(5)
+  await expect(page.locator('a[data-door-card]').first()).toHaveAttribute('href', '/hi/start/leaving/')
+})
+
+test('home: no form field on the page, and nothing is saved by opening it', async ({ page }) => {
+  await open(page, '/')
+  await expect(page.locator('main input, main select, main textarea')).toHaveCount(0)
+  await expect(page.locator('[data-saved-plan]')).toHaveCount(0)
+  expect(await savedKeys(page)).toEqual([])
+})
+
+test('home: a saved resign date shows the strip below the cards and links to the plan', async ({ page }) => {
+  await answerThreeQuestions(page)
+  await open(page, '/')
+  const strip = page.locator('[data-saved-plan]')
+  await expect(strip).toContainText(/^Your saved plan: resign on \d{1,2} \w+ \d{4}\./)
+  await expect(strip.getByRole('link', { name: 'Open your plan' })).toHaveAttribute('href', '/resign-date/')
+  const lastCard = (await page.locator('a[data-door-card]').last().boundingBox())!
+  expect((await strip.boundingBox())!.y).toBeGreaterThan(lastCard.y)
 })
 
 test('decoder: changing the CTC changes the in-hand figure, and the bar matches its percent', async ({ page }) => {
