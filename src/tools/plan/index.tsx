@@ -544,16 +544,33 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           {!touched && (
             <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={goToQuestions} />
           )}
-          <DatesSummary
-            t={t}
-            fmt={fmt}
-            speak={speak}
-            coveredByAct={coveredByAct}
-            cliffs={result.cliffs}
-            hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
-            noticePeriodDays={input.noticePeriodDays}
-            today={today}
-          />
+          {(() => {
+            const summary = (
+              <DatesSummary
+                t={t}
+                fmt={fmt}
+                speak={speak}
+                coveredByAct={coveredByAct}
+                cliffs={result.cliffs}
+                hikeLabel={hikeMonthLabel(answers.hikeCreditMonth, result.cliffs, lang)}
+                noticePeriodDays={input.noticePeriodDays}
+                today={today}
+              />
+            )
+            // With an answer on screen, the supporting dates fold away so only
+            // one date competes for attention; without one they stay open.
+            return cleanAnswer == null ? (
+              summary
+            ) : (
+              <details className="group rounded-xl border border-line">
+                <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-2 px-3 text-[13px] font-semibold text-ink-soft [&::-webkit-details-marker]:hidden">
+                  <ChevronRight size={14} className="transition-transform group-open:rotate-90" />
+                  {t('plan.dates.why')}
+                </summary>
+                <div className="px-3 pb-3">{summary}</div>
+              </details>
+            )
+          })()}
           <TradeList
             t={t}
             fmt={fmt}

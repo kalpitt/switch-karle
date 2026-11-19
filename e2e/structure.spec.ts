@@ -43,7 +43,7 @@ test('the nav fits a 320px phone without sideways scroll', async ({ page }) => {
 test('/tools/ lists the five steps, each lead first, and What to say once per step it has a situation in', async ({ page }) => {
   await open(page, '/tools/')
   await expect(page.locator('h1')).toHaveText('All tools, by step')
-  await expect(page.locator('main h2')).toHaveText(['Thinking of leaving', 'Applying or interviewing', 'I have an offer', 'Resigning or on notice', 'Joining a new job'])
+  await expect(page.locator('main h2')).toHaveText(['Thinking of leaving', 'Applying or interviewing', 'I have an offer', 'Notice period and exit', 'Joining a new job'])
   await expect(page.locator('main')).not.toContainText('Stage 1')
   for (const id of ['leaving', 'applying', 'offer', 'notice', 'joining']) {
     await expect(page.locator(`section:has(h2#${id}) li`).first().locator('a')).toContainText('Start here')
@@ -209,7 +209,7 @@ test('a step page links a What to say script straight to that script', async ({ 
   await open(page, '/start/leaving/')
   await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/resign-date/')
   await open(page, '/start/notice/')
-  await expect(page.getByRole('link', { name: 'Already resigned? Go to the notice period checklist.' })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'Already resigned or on notice? Go to the notice period checklist.' })).toHaveAttribute(
     'href',
     '/notice-tracker/',
   )
