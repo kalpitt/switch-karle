@@ -58,7 +58,8 @@ language switch and `slugFromPath` see the two-part path. `/resign-date/`
 last "Next" link, search, the step page, the calendar file's event link via
 `planSiteUrl()`) goes there. Neither `PLAN_PAGE` nor `start` is a registry tool;
 `tools.test.ts` and `scripts/new-tool.mjs` reserve both. Search lists the five
-steps after the tools.
+steps after the tools. Above every tool's `<h1>` (and on `/resign-date/`) the Shell
+prints "More for:" with a link to each door in `doorsFor(slug)`.
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
 wired to `VerdictBanner` + `Disclaimer` + `NextStep` → registry row with its

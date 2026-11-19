@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { DOORS_DIR, PLAN_PAGE, TOOLS, TOOLS_PAGE, toolBySlug } from '../data/tools'
+import { doorPath, doorsFor } from '../data/doors'
 import { HINDI_ON } from '../data/site'
 import { verifiedRange } from '../data/sources'
 import { INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
@@ -42,6 +43,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
   const slug = tool ? tool.slug : current === 'home' || current === '404' ? '' : current
   const pick = current === '404' ? undefined : setLang
   const checked = verifiedRange()
+  const moreFor = tool ? doorsFor(tool.slug) : current === PLAN_PAGE ? doorsFor(PLAN_PAGE) : []
 
   return (
     <div>
@@ -95,6 +97,24 @@ export function Shell({ current, children }: { current: string; children: ReactN
       </header>
 
       <main id="main" tabIndex={-1} className="mx-auto max-w-6xl px-4 pb-16 pt-6 outline-none sm:px-6 sm:pt-10">
+        {/* Where this tool sits (rebuild 4.7): someone who lands on a tool from a shared
+            link is one tap from the rest of their step. */}
+        {moreFor.length > 0 && (
+          <p data-more-for className="-mt-2 mb-2 flex flex-wrap items-center gap-x-2 text-[14px] text-ink-soft sm:-mt-4">
+            <span>{t('tool.moreFor')}</span>
+            {moreFor.map((door, i) => (
+              <span key={door.id} className="inline-flex items-center gap-x-2">
+                {i > 0 && <span aria-hidden>·</span>}
+                <a
+                  href={withLang(lang, doorPath(door.id))}
+                  className="inline-flex min-h-[44px] items-center font-semibold text-ink underline underline-offset-2"
+                >
+                  {t(`door.${door.id}.name`)}
+                </a>
+              </span>
+            ))}
+          </p>
+        )}
         {heading && (
           <div className="mb-6 sm:mb-8">
             <h1

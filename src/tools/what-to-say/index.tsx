@@ -3,6 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { lastWorkingDay } from '../../engine/dates'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
+import { SeeAlso } from '../../components/SeeAlso'
 import { ChevronRight } from '../../components/icons'
 import { Card, CopyButton, Disclaimer, MoneyField, Select, TextField, VerdictBanner } from '../../components/ui'
 import { isScriptSlug, type ScriptSlug } from '../../data/hrScripts'
@@ -140,6 +141,7 @@ function Body({
         </section>
       )}
       {/* With nothing picked the picker is the next thing; the Next link waits for a situation. */}
+      {situation === 'buyout-ask' && <SeeAlso from="buyout-ask" to="notice-buyout" />}
       <NextStep from={situation ?? WHAT_TO_SAY} hidden={!situation} />
     </div>
   )

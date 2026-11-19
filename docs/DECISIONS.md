@@ -10,6 +10,22 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-19 — The new home page went live although the step pages missed their cold-read bar
+
+**Decided by Kalpit.** The rebuild plan required flow C (each reviewer at a step
+sees the first screen of that step's page) to pass before the home page switch:
+at least 5 of 6 say what the main button gives them and that the page is for
+them. It missed three times. On the last run (after the notice page gained
+"Already resigned?" and "Laid off or asked to leave?" above its card), 6 of 6
+knew what the main button gives them and each found their own tool in one tap,
+but only 3 of 6 said the page is for them. The other three said "partly"
+because of how the step is named: someone laid off is not "resigning",
+someone already on notice does not need the resignation letter the step leads
+with, and someone only thinking of leaving felt the step assumed more. The plan
+says to stop after two failed rounds and show Kalpit; he chose to go live
+(#124) rather than rename the notice step or hold. Renaming the steps or
+changing the notice step's lead stays open for the people test.
+
 ## 2026-11-19 — Hindi waits until the English rebuild is finished
 
 **Decided by Kalpit.** During the front-door rebuild the English site and its

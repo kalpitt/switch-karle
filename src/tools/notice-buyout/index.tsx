@@ -3,6 +3,7 @@ import { buyoutQuote } from '../../engine/noticeBuyout'
 import { formatINR } from '../../engine/format'
 import { IslandRoot } from '../../components/IslandRoot'
 import { NextStep } from '../../components/NextStep'
+import { SeeAlso } from '../../components/SeeAlso'
 import { Card, ResultHeading, Disclaimer, MoneyField, NumberField, Receipt, ResultHero, Select, ShareRow } from '../../components/ui'
 import { PrivacyLine } from '../../components/PrivacyLine'
 import { TOOL_SOURCES } from '../../data/sources'
@@ -220,6 +221,7 @@ function Body() {
         />
         <p className="text-xs leading-snug text-ink-faint">{t('ui.currentJob')}</p>
       </Card>
+      <SeeAlso from="notice-buyout" to="buyout-ask" className="lg:order-last lg:col-start-2" />
       <NextStep className="lg:order-last lg:col-start-2" from="notice-buyout" />
     </div>
   )

@@ -573,7 +573,7 @@ export function ExampleNote({
   onChipClick?: () => void
 }) {
   return (
-    <p className={`text-[13px] leading-snug text-ink-soft ${className}`}>
+    <p className={`text-[14px] leading-snug text-ink ${className}`}>
       {onChipClick ? (
         <button
           type="button"
@@ -686,7 +686,12 @@ export function ResultHero({
   return (
     <section data-result-hero className="rise rounded-2xl border border-line bg-card p-5 sm:p-6">
       {sample && (
-        <div className="mb-4 flex flex-col items-start gap-1 border-b border-line pb-3 sm:flex-row sm:justify-between sm:gap-4">
+        // The one "this is an example" marker for every tool (rebuild 4.7): a full-width
+        // bar across the top of the answer, not a small grey line under it.
+        <div
+          data-example-bar
+          className="-mx-5 -mt-5 mb-4 flex flex-col items-start gap-1 rounded-t-2xl border-b border-line bg-paper px-5 py-3 sm:-mx-6 sm:-mt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
+        >
           <ExampleNote chip={sampleChip ?? t('ui.exampleChip')} note={sampleNote ?? t('ui.exampleNote')} />
           <UseMine />
         </div>
