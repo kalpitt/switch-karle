@@ -5,6 +5,7 @@ import {
   NEXT_STEP,
   PLAN_TARGET,
   distinctToolCount,
+  visibleToolCount,
   journeySections,
   listSections,
   nextFor,
@@ -73,6 +74,7 @@ describe('lists (/tools/, home count)', () => {
 
   it('counts What to say as one tool', () => {
     expect(distinctToolCount()).toBe(TOOLS.length - SCRIPT_SLUGS.length)
+    expect(visibleToolCount()).toBe(distinctToolCount() + 1)
   })
 })
 

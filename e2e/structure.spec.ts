@@ -11,10 +11,10 @@ async function open(page: Page, path: string) {
 
 const nav = (page: Page) => page.getByRole('navigation', { name: 'Main' })
 
-test('the nav has your plan and all tools, and marks the page you are on', async ({ page }) => {
+test('the nav has home and all tools, and marks the page you are on', async ({ page }) => {
   await open(page, '/')
-  await expect(nav(page).getByRole('link')).toHaveText(['Your plan', 'All tools'])
-  await expect(nav(page).getByRole('link', { name: 'Your plan' })).toHaveAttribute('aria-current', 'page')
+  await expect(nav(page).getByRole('link')).toHaveText(['Home', 'All tools'])
+  await expect(nav(page).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page')
   await nav(page).getByRole('link', { name: 'All tools' }).click()
   await expect(page).toHaveURL(/^http:\/\/[^/]+\/tools\/$/)
   await expect(nav(page).getByRole('link', { name: 'All tools' })).toHaveAttribute('aria-current', 'page')
@@ -23,7 +23,7 @@ test('the nav has your plan and all tools, and marks the page you are on', async
 
 test('the nav speaks Hindi on Hindi pages', async ({ page }) => {
   await open(page, '/hi/gratuity/')
-  await expect(page.getByRole('navigation', { name: 'मुख्य' }).getByRole('link')).toHaveText(['आपका plan', 'सारे tools'])
+  await expect(page.getByRole('navigation', { name: 'मुख्य' }).getByRole('link')).toHaveText(['होम', 'सारे tools'])
   await page.getByRole('navigation', { name: 'मुख्य' }).getByRole('link', { name: 'सारे tools' }).click()
   await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/tools\/$/)
 })
@@ -90,9 +90,12 @@ test('/hi/tools/ is the Hindi list, linking to Hindi pages', async ({ page }) =>
   await expect(page.locator('a[data-entry="what-to-say"]').first()).toHaveAttribute('href', '/hi/what-to-say/#expected-ctc')
 })
 
-test('the home page links to the full list instead of keeping its own', async ({ page }) => {
+test('the home page links to the full list instead of keeping its own, and the list links back', async ({ page }) => {
   await open(page, '/')
   await expect(page.locator('a[data-all-tools]')).toHaveAttribute('href', '/tools/')
+  await open(page, '/tools/')
+  await expect(page.locator('a[data-pick-step]')).toHaveText('Not sure where to start? Pick your step')
+  await expect(page.locator('a[data-pick-step]')).toHaveAttribute('href', '/')
 })
 
 test('search still finds a tool by its old name', async ({ page }) => {
@@ -164,7 +167,7 @@ test('in Hindi, क्या कहें opens on the situation the address nam
   await expect(page.locator('main h2')).toHaveText('हाँ के बाद मना करने का email')
   await expect(page).toHaveTitle('हाँ के बाद मना करने का email — Switch Karle')
   // Backed out of an accepted offer: Next goes back to the plan.
-  await expect(page.locator('a[data-next-step="plan"]')).toHaveAttribute('href', '/hi/')
+  await expect(page.locator('a[data-next-step="plan"]')).toHaveAttribute('href', '/hi/resign-date/')
 })
 
 test('the situations have no pages of their own any more', async ({ page }) => {

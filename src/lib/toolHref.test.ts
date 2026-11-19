@@ -33,7 +33,7 @@ describe('What to say is the one page for every situation', () => {
   })
 
   it('search sends a situation to What to say with it picked', () => {
-    const items = paletteItems(TOOLS, '/', (slug) => toolHref('en', slug))
+    const items = paletteItems(TOOLS, (slug) => toolHref('en', slug))
     for (const slug of SCRIPT_SLUGS) {
       expect(items.find((item) => item.slug === slug)?.href).toBe(`/what-to-say/#${slug}`)
     }

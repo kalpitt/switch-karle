@@ -30,7 +30,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
   const heading = tool?.partOf ? toolBySlug(tool.partOf) : tool
   // The pages about the site name themselves with their own <h1>, like tools do.
   const infoPage = (INFO_PAGES as readonly string[]).includes(current)
-  // The home page names itself too: the plan's headline is its <h1> (COPY-03).
+  // The home page names itself too: its headline is its <h1>.
   // The all-tools page names itself too.
   // So do the step pages (their step's name) and the plan's page (the plan's headline).
   const isDoorPage = current.startsWith(`${DOORS_DIR}/`)
@@ -51,7 +51,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
       >
         {t('app.skipToContent')}
       </a>
-      {/* One compact bar (VIS-04): mark and name, then the two places (your plan, all
+      {/* One compact bar (VIS-04): mark and name, then the two places (home, all
           tools), then search and language. On a phone the two links take a second 44px
           row; from md up it is one 56px row that stays at the top while the page scrolls.
           Every tool is one tap from "All tools" and from search. */}
@@ -85,7 +85,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
             className="order-3 -mx-4 flex w-[calc(100%+2rem)] flex-nowrap overflow-x-auto border-t border-line px-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-4 md:order-2 md:mx-0 md:w-auto md:border-t-0 md:px-0 [&::-webkit-scrollbar]:hidden"
           >
             <NavLink href={withLang(lang)} active={current === 'home'}>
-              {t('nav.plan')}
+              {t('nav.home')}
             </NavLink>
             <NavLink href={withLang(lang, TOOLS_PAGE)} active={current === TOOLS_PAGE}>
               {t('nav.allTools')}

@@ -4,10 +4,12 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { ACTION_IDS } from '../data/plan'
 import { en } from '../i18n/en'
+import { doorById } from '../data/doors'
 
 const toolsDir = dirname(fileURLToPath(import.meta.url))
 const door = readFileSync(join(toolsDir, 'plan', 'index.tsx'), 'utf8')
 const home = readFileSync(join(toolsDir, 'home', 'index.tsx'), 'utf8')
+const planPage = readFileSync(join(toolsDir, 'plan', 'page.tsx'), 'utf8')
 
 /**
  * Source-text guards, in the style of `currentJob.test.ts`. They pin the two
@@ -275,10 +277,12 @@ describe('the reason line saves itself on blur and Enter', () => {
   })
 })
 
-describe('the home island is the door', () => {
-  it('imports the plan and renders it', () => {
-    expect(home).toMatch(/import \{ Plan \} from ['"]\.\.\/plan['"]/)
-    expect(home).toMatch(/<Plan\b/)
+describe('the home island is the front door (2026-11-19)', () => {
+  it('asks which step you are at and holds no form: the plan lives on its own page', () => {
+    expect(home).not.toMatch(/<Plan\b/)
+    expect(home).not.toMatch(/<input\b|<select\b|<form\b/)
+    expect(home).toMatch(/DOORS\.map/)
+    expect(planPage).toMatch(/<Plan\b/)
   })
 
   it('no longer puts the board in front of a stranger', () => {
@@ -286,7 +290,7 @@ describe('the home island is the door', () => {
     expect(home).not.toMatch(/from ['"]\.\.\/\.\.\/components\/Tracker['"]/)
   })
 
-  it('keeps the tracker one tap away rather than deleting it', () => {
-    expect(home).toMatch(/withLang\(lang, 'tracker'\)/)
+  it('keeps the tracker one tap from the step it belongs to', () => {
+    expect(doorById('applying').also).toContain('tracker')
   })
 })

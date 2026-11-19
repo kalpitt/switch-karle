@@ -65,9 +65,18 @@ if (pages.length < 20) fail(`sitemap lists only ${pages.length} pages`)
   const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 844 } })
   const page = await ctx.newPage()
   try {
-    // Home: the three questions produce dates.
+    // Home: five step cards, and the first one leads to the plan (rebuild, 2026-11-19).
     await page.goto(`${origin}/`)
     await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'))
+    const cards = await page.locator('a[data-door-card]').count()
+    if (cards !== 5) throw new Error(`home shows ${cards} step cards, not 5`)
+    await page.locator('a[data-door-card]').first().click()
+    await page.waitForURL(/\/start\/leaving\/$/, { timeout: 10_000 })
+    await page.locator('a[data-door-lead]').click()
+    await page.waitForURL(/\/resign-date\/$/, { timeout: 10_000 })
+    // Plan: the three questions produce dates.
+    await page.waitForFunction(() => !document.querySelector('astro-island[ssr]'))
+    await page.locator('[data-tool="plan"] button[aria-busy="false"]').first().waitFor({ timeout: 10_000 })
     await page.locator('main input[type="date"]').fill('2023-04-10')
     await page.locator('main input[type="number"]').fill('60')
     // Since batch 8 (PR #88) the dates show live and the work week is asked
@@ -83,7 +92,7 @@ if (pages.length < 20) fail(`sitemap lists only ${pages.length} pages`)
       .waitFor({ timeout: 5_000 })
     await page.locator('main button', { hasText: /^Choose / }).first().waitFor({ timeout: 5_000 })
   } catch (e) {
-    fail(`home flow: ${String(e.message).split('\n')[0]}`)
+    fail(`home and plan flow: ${String(e.message).split('\n')[0]}`)
   }
   try {
     // Decoder: a rupee figure, and an in-hand bar that is not drawn 100% full.

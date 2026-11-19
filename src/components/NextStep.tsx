@@ -1,4 +1,4 @@
-import { toolBySlug } from '../data/tools'
+import { PLAN_PAGE, toolBySlug } from '../data/tools'
 import { latinLang } from '../lib/latinLang'
 import { nextFor } from '../data/journey'
 import { withLang } from '../lib/langPath'
@@ -33,7 +33,7 @@ export function NextStep({ from, hidden = false, className = '' }: { from: strin
     tool && here && tool.journey > here.journey
       ? t('next.label.stage', { stage: t(`journey.${tool.journey}.name`) })
       : t('next.label')
-  const href = tool ? toolHref(lang, tool.slug) : withLang(lang)
+  const href = tool ? toolHref(lang, tool.slug) : withLang(lang, PLAN_PAGE)
   const title = tool ? t(tool.titleKey) : t('next.plan.title')
   const desc = tool ? t(tool.descKey) : t('next.plan.desc')
 

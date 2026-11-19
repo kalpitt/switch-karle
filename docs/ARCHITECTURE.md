@@ -22,9 +22,10 @@ src/
   engine/          pure TS — never imports react (purity.test.ts)
   tools/<slug>/    one island per tool (form + result); the seven script
                    situations live inside tools/what-to-say (no own page),
-                   tools/home + tools/plan are the home page and
-                   tools/all-tools is /tools/ — none of those three are
-                   registry tools
+                   tools/home is the home page (five step cards),
+                   tools/plan is /resign-date/, tools/door is
+                   /start/<id>/ and tools/all-tools is /tools/ — none of
+                   these are registry tools
   tracker/         the application board: types, store, undo snapshot
   components/ui.tsx  shared primitives only — do not restyle per tool
   data/tools.ts    registry: grid, routes, sitemap, cmdk palette
@@ -52,8 +53,10 @@ as the page's only dark button, up to four more as rows (`components/ToolRow.tsx
 shared with `/tools/`), and a link to that door's section of `/tools/`. A step
 page passes `current='start/<id>'` to `IslandRoot`, never the bare id, so the
 language switch and `slugFromPath` see the two-part path. `/resign-date/`
-(`tools/plan/page.tsx`) renders the same `Plan` as the home page with
-`current=PLAN_PAGE`. Neither `PLAN_PAGE` nor `start` is a registry tool;
+(`tools/plan/page.tsx`) renders `Plan` with `current=PLAN_PAGE`; since
+2026-11-19 it is the plan's only page, and every link back to the plan (the
+last "Next" link, search, the step page, the calendar file's event link via
+`planSiteUrl()`) goes there. Neither `PLAN_PAGE` nor `start` is a registry tool;
 `tools.test.ts` and `scripts/new-tool.mjs` reserve both. Search lists the five
 steps after the tools.
 
@@ -73,8 +76,9 @@ after the result and names the stage when the link crosses into a later one.
 back a stage, or if following "Next" from any tool cycles before the end of
 stage 6.
 
-**Navigation (batch 6, 2026-11).** The header (`components/Shell.tsx`) holds
-two places — "Your plan" (home) and "All tools" (`/tools/`, `TOOLS_PAGE`) —
+**Navigation (batch 6, 2026-11; Home since 2026-11-19).** The header
+(`components/Shell.tsx`) holds two places — "Home" and "All tools" (`/tools/`,
+`TOOLS_PAGE`) —
 then search (`components/CommandPalette.tsx`) and the EN/हिन्दी switch. No tool
 has a tab of its own; every tool is one tap from `/tools/` and from search.
 Below 360px the wordmark is visually hidden (the mark stays, the name stays for
@@ -247,7 +251,7 @@ Kalpit's call.
 
 **Untouched defaults are not persisted.** Every tool boots by reading its key and
 echoing what it loaded straight back, so opening a tool used to write its own
-example numbers to disk before the user typed anything. The home page renders
+example numbers to disk before the user typed anything. The home page then rendered
 `<Tracker />`, so every visitor to the front page got a key written to a disk
 their employer owns, having asked for nothing — and the erase button re-seeded
 storage on the very reload it triggered.
@@ -318,13 +322,15 @@ The record never echoes on mount, so `loadCurrentJob` calls `releaseBootEcho` on
 every read — without it, the first value typed into any of the six tools would
 be silently dropped, the trap described above.
 
-### The plan record, and the door on the home page
+### The home page, and the plan record
 
-Built 2026-09-07. The home page is `src/tools/home/`,
-which keeps `data-tool="home"` on its wrapper (`check:base` asserts
-`dist/index.html` is the home island) and renders `src/tools/plan/` inside it.
-The tracker link and the tool list render under the questions screen only —
-not under the trades, the recap or the return screen.
+The home page is `src/tools/home/`, which keeps `data-tool="home"` on its
+wrapper (`check:base` asserts `dist/index.html` is the home island). Since
+2026-11-19 it holds no form: a headline, the privacy badge, "Which step are you
+at?" and five cards to `/start/<id>/` (`data/doors.ts`), then three quiet rows
+(laid off → F&F check; all tools, counted by `visibleToolCount()`; the maker).
+A saved resign date shows one strip below the cards, read in an effect. The
+plan (`src/tools/plan/`, built 2026-09-07) lives on `/resign-date/`.
 
 Three screens since 2026-11-07 (polish batch 8): the three questions with their
 dates recomputed live beside them, then the dates and the trades to pick a
@@ -426,8 +432,8 @@ Until that ships, the site makes no shoulder-surfing claim anywhere in copy.
 
 ## The board, and filling it from a mailbox
 
-The application tracker lives at `/tracker/` (the home page is the plan door,
-described above). Three pieces, in dependency order.
+The application tracker lives at `/tracker/`, one row on the "Applying"
+step page and on `/tools/`. Three pieces, in dependency order.
 
 **`src/tracker/store.ts`** owns everything that persists. `save()` returns a
 boolean rather than throwing, because a board that shows unsaved work as saved

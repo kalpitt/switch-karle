@@ -1,6 +1,7 @@
 import { addDays } from '../../engine/dates'
 import type { Cliff } from '../../engine/switchCalendar'
 import type { IcsEvent } from '../../lib/ics'
+import { PLAN_PAGE } from '../../data/tools'
 
 /**
  * The event list behind `dates.ics`, kept out of the component so it can be
@@ -90,5 +91,6 @@ export function planSiteUrl(): string {
   const site = (import.meta.env.SITE as string | undefined) ?? ''
   const origin = site !== '' ? site : typeof window === 'undefined' ? '' : window.location.origin
   const base = import.meta.env.BASE_URL || '/'
-  return `${origin.replace(/\/$/, '')}${base.endsWith('/') ? base : `${base}/`}`
+  // The plan has its own page since the home page became the front door (2026-11-19).
+  return `${origin.replace(/\/$/, '')}${base.endsWith('/') ? base : `${base}/`}${PLAN_PAGE}/`
 }

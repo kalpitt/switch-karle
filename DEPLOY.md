@@ -50,8 +50,10 @@ fails if any of these is wrong:
 - Every page in the live sitemap (both languages) returns 200, hydrates with
   no page error and no console error (a blocked style or script is a console
   error), and has an `<h1>`.
-- The home page's three questions lead to the dates screen ("See my options",
-  then a heading with the earliest safe day and "Choose <date>" buttons); the
+- The home page shows five step cards; the first leads to its step page, whose
+  "Start" opens `/resign-date/`, where the three questions lead to the dates
+  screen ("See my options", then a heading with the earliest safe day and
+  "Choose <date>" buttons); the
   Decoder shows a ₹ figure and its bar is not drawn 100% full. When a button's
   words change, change them in `scripts/smoke-prod.mjs` in the same pull
   request, or the smoke job fails after the deploy.
