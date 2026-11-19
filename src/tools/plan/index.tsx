@@ -31,6 +31,8 @@ import {
   resignDatesMovedFrom,
   soonerDefault,
   weekChangesADate,
+  whatIsAhead,
+  type AheadWhat,
 } from './fork'
 import {
   Button,
@@ -45,6 +47,7 @@ import {
   TextArea,
 } from '../../components/ui'
 import { CheckIcon, ChevronRight } from '../../components/icons'
+import { PrivacyLine } from '../../components/PrivacyLine'
 import { useLang, useT, type Lang } from '../../i18n'
 import { hikeMonthOrder } from './hikeMonthOrder'
 import { planIcsEvents, planSiteUrl } from './planEvents'
@@ -85,12 +88,19 @@ interface Answers {
 type T = (key: string, vars?: Record<string, string | number>) => string
 
 /**
- * Ravi from Part 3, and the reason the first screen is not blank: rule 1 says a
- * real calendar renders before anyone types. These fill the fields, the chip
- * says out loud that they are an example, and the chip goes the moment the user
- * edits anything.
+ * Ravi from Part 3. Since the front-door rebuild (2026-11-16) these never fill
+ * the fields: strangers read an example in the fields, and "Your gratuity was
+ * already safe" beside it, as their own result. The fields start empty, and
+ * the example is one boxed line under them, worked out by the same engine call
+ * (`ExampleLine`), so its date follows today. `plan.example.line` names these
+ * three values in words: change one, change the string.
  */
 const EXAMPLE: Answers = { joinDate: '2022-01-12', noticePeriodDays: 90, hikeCreditMonth: 5 }
+/** The work week the example is worked out on: five days, the default (owner decision 2026-11-07). */
+const EXAMPLE_WEEK = 5 as const
+
+/** A first visit: nothing answered. A blank notice is NaN (`NumberField allowBlank`). */
+const BLANK: Answers = { joinDate: '', noticePeriodDays: NaN, hikeCreditMonth: 0 }
 
 export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const t = useT()
@@ -102,7 +112,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const [today, setToday] = useState('')
   const [job, setJob] = useState<CurrentJob>({})
   const [plan, setPlan] = useState<Plan>({})
-  const [answers, setAnswers] = useState<Answers>(EXAMPLE)
+  const [answers, setAnswers] = useState<Answers>(BLANK)
   const [touched, setTouched] = useState(false)
   const [step, setStep] = useState<Step>('questions')
   const [returning, setReturning] = useState(false)
@@ -128,19 +138,17 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
     setToday(todayIso())
     setJob(savedJob)
     setPlan(savedPlan)
-    // A value the user typed in some other tool is theirs, not an example, and
-    // rule 7 says it is never asked for twice.
+    // A value the user typed in some other tool is theirs, and rule 7 says it
+    // is never asked for twice. Anything not saved stays blank: the example
+    // never fills a field (rebuild, 2026-11-16).
     const answeredBefore = savedJob.joinDate != null || savedJob.noticePeriodDays != null
     setAnswers({
-      joinDate: savedJob.joinDate ?? EXAMPLE.joinDate,
-      noticePeriodDays: savedJob.noticePeriodDays ?? EXAMPLE.noticePeriodDays,
-      // For someone who has answered before, a hike month the plan does not
-      // hold IS their answer: they tapped "skip this". Falling back to the
-      // example there puts May back in front of them with no Example chip
-      // beside it, and invents a hike cliff they have already said they do not
-      // have — which moves their earliest clean date.
-      hikeCreditMonth:
-        savedPlan.hikeCreditMonth ?? (answeredBefore ? 0 : EXAMPLE.hikeCreditMonth),
+      joinDate: savedJob.joinDate ?? BLANK.joinDate,
+      noticePeriodDays: savedJob.noticePeriodDays ?? BLANK.noticePeriodDays,
+      // A hike month the plan does not hold is "skip this", for someone who
+      // answered before and for someone who has not: never the example's May,
+      // which would invent a hike cliff and move their earliest clean date.
+      hikeCreditMonth: savedPlan.hikeCreditMonth ?? 0,
     })
     if (answeredBefore) setTouched(true)
     // The small-employer answer is shown, not folded away, once it is given.
@@ -186,6 +194,11 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   const weekMatters = weekChangesADate(forkCliffs, input.asOf, input.noticePeriodDays)
   const speak = gratuityToSpeakOf(forkCliffs, job.workWeekDays, weekMatters)
   const reachable = dateStepReachable(coveredByAct, forkCliffs.length === 2, job.workWeekDays, weekMatters)
+  // What resigning too early would cost, from the cliffs already computed, so
+  // "you keep {what}" is never false when the hike was skipped.
+  const aheadWhat = whatIsAhead(result.cliffs, input.asOf, input.noticePeriodDays)
+  const cleanAnswer =
+    result.earliestCleanDate != null && aheadWhat != null ? { date: result.earliestCleanDate, what: aheadWhat } : null
 
   const fmt = (iso: string) => formatLongDate(iso, lang)
 
@@ -422,9 +435,6 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
   return (
     <div ref={containerRef} data-tool="plan" className="space-y-5">
       <header className="space-y-2">
-        {step === 'questions' && (
-          <p className="text-[13px] font-medium leading-snug text-ink-soft">{t('plan.eyebrow')}</p>
-        )}
         <h1 className="font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[36px]">
           {t('plan.headline')}
         </h1>
@@ -436,7 +446,8 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
       {step === 'questions' && (
         <Card className="space-y-4">
           <StepHeading>{t('plan.q.title')}</StepHeading>
-          {!touched && <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.note')} />}
+          {/* Beside the first field, not in the footer: nothing typed here leaves the device (R7). */}
+          <PrivacyLine />
           {/* On a phone the button follows the three fields and the live dates
               come after it, so the one thing this screen asks for is in reach
               (MOB-07). On a wide screen the dates sit in their own column
@@ -490,6 +501,12 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
               </Button>
             </div>
 
+            {/* Reason, then question, then answer (R3): until the visitor has typed
+                valid answers, the only dates on screen are one boxed example line,
+                never worded as theirs (R4). */}
+            {!(touched && today !== '' && problems.length === 0) ? (
+              <ExampleLine t={t} fmt={fmt} today={today} />
+            ) : (
             <LiveDates
               t={t}
               fmt={fmt}
@@ -509,13 +526,21 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
               onChooseWeek={chooseWeek}
               onChooseCoverage={chooseCoverage}
             />
+            )}
           </div>
         </Card>
       )}
 
       {step === 'dates' && !showRecap && (
         <Card className="space-y-4">
-          <StepHeading>{t('plan.dates.title')}</StepHeading>
+          <StepHeading>
+            {cleanAnswer != null ? t('plan.dates.answer', { date: fmt(cleanAnswer.date) }) : t('plan.dates.title')}
+          </StepHeading>
+          {cleanAnswer != null && (
+            <p className="-mt-2 text-[15px] leading-snug text-ink-soft">
+              {t('plan.dates.answerWhy', { what: t(`plan.what.${cleanAnswer.what}`) })}
+            </p>
+          )}
           {!touched && (
             <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.laterNote')} onChipClick={goToQuestions} />
           )}
@@ -532,6 +557,7 @@ export function Plan({ belowDoor }: { belowDoor?: ReactNode }) {
           <TradeList
             t={t}
             fmt={fmt}
+            what={aheadWhat}
             trades={result.trades}
             cliffs={result.cliffs}
             today={today}
@@ -587,6 +613,26 @@ function StepHeading({ children }: { children: ReactNode }) {
     <h2 data-step-heading tabIndex={-1} className="text-[18px] font-semibold leading-snug outline-none">
       {children}
     </h2>
+  )
+}
+
+/**
+ * The one example on the questions screen (rebuild, 2026-11-16): a boxed line
+ * in a neutral tint, tagged "Example", worked out from `EXAMPLE` by the same
+ * engine call the visitor's answers use, so its date follows today. It never
+ * says "your" (R4). Rendered once the clock is known: the static build has no today.
+ */
+function ExampleLine({ t, fmt, today }: { t: T; fmt: (iso: string) => string; today: string }) {
+  if (today === '') return null
+  const example = switchCalendar(doorEngineInput(EXAMPLE, { workWeekDays: EXAMPLE_WEEK }, {}, today))
+  if (example.earliestCleanDate == null) return null
+  return (
+    <div
+      data-example-line
+      className="rounded-xl border border-line bg-paper px-4 py-3 text-[14px] leading-relaxed text-ink-soft lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
+    >
+      <ExampleNote chip={t('plan.example.chip')} note={t('plan.example.line', { date: fmt(example.earliestCleanDate) })} />
+    </div>
   )
 }
 
@@ -692,7 +738,8 @@ function LiveDates(props: {
                   {props.speak.passed && <CheckIcon size={16} className="mt-[3px] text-leaf" />}
                   <span>{gratuitySentence(t, fmt, props.speak)}</span>
                 </p>
-                <Receipt ids={GRATUITY_DATE_SOURCES} />
+                {/* Why it can be safe before five full years, right under the date it explains. */}
+                <p className="text-[13px] leading-snug text-ink-soft">{t('plan.gratuity.workingDays')}</p>
               </div>
             )}
             {hike != null && props.hikeLabel != null && (
@@ -701,6 +748,8 @@ function LiveDates(props: {
               </p>
             )}
             {ahead.length === 0 && <p className="text-[15px] leading-snug">{t('plan.cliffs.none')}</p>}
+            {/* Receipts after the answers, never between two of them (R7). */}
+            {props.coveredByAct && props.speak != null && <Receipt ids={GRATUITY_DATE_SOURCES} />}
           </div>
 
           {/* Fifty words of legal text that apply to very few visitors, folded
@@ -788,13 +837,14 @@ function DatesSummary(props: {
           {/* Said in the already-passed case too: that date rests on the same
               4-years-plus reading, not on five full years (TR2-01). */}
           <p className="text-[13px] text-ink-soft">{t('plan.gratuity.workingDays')}</p>
-          <Receipt ids={GRATUITY_DATE_SOURCES} />
         </>
       )}
       {hike != null && props.hikeLabel != null && (
         <p className="font-semibold">{t('plan.hike.line', { month: props.hikeLabel, date: fmt(hike.date) })}</p>
       )}
       {ahead.length === 0 && <p>{t('plan.cliffs.none')}</p>}
+      {/* Receipts after the answers, never between two of them (R7). */}
+      {props.coveredByAct && speak != null && <Receipt ids={GRATUITY_DATE_SOURCES} />}
     </div>
   )
 }
@@ -802,6 +852,7 @@ function DatesSummary(props: {
 function TradeList(props: {
   t: T
   fmt: (iso: string) => string
+  what: AheadWhat | null
   trades: readonly Trade[]
   cliffs: readonly Cliff[]
   today: string
@@ -821,6 +872,7 @@ function TradeList(props: {
           today={props.today}
           noticePeriodDays={props.noticePeriodDays}
           losesNothing={trade.id === clean}
+          what={props.what}
           chosen={props.chosenDate != null && props.chosenDate === trade.resignDate}
           onPick={props.onPick}
         />
@@ -838,6 +890,7 @@ function pickerStart(id: Trade['id'], resignDate: string | null, earliestDate: s
 function TradeOption(props: {
   t: T
   fmt: (iso: string) => string
+  what: AheadWhat | null
   trade: Trade
   today: string
   noticePeriodDays: number
@@ -871,7 +924,9 @@ function TradeOption(props: {
 
   const detail =
     trade.id === 'keep-what-is-earned'
-      ? t('plan.trade.earned.detail', { date: fmt(trade.resignDate ?? props.today) })
+      ? props.what == null
+        ? t('plan.trade.earned.none')
+        : t('plan.trade.earned.detail', { date: fmt(trade.resignDate ?? props.today), what: t(`plan.what.${props.what}`) })
       : trade.id === 'own-date' || trade.resignDate == null
         ? t('plan.trade.own.detail')
         : t('plan.trade.fixed.detail', {
@@ -930,7 +985,8 @@ function TradeOption(props: {
           }}
         />
       )}
-      <Button variant="secondary" onClick={pick} className="w-full">
+      {/* The option that loses nothing has the screen's one dark button (R8); the rest are outlined. */}
+      <Button variant={props.losesNothing ? 'primary' : 'secondary'} onClick={pick} className="w-full">
         {isIsoDate(date) ? t('plan.trade.useDate', { date: fmt(date) }) : t('plan.trade.use')}
       </Button>
     </div>

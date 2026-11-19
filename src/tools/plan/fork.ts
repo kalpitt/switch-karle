@@ -230,3 +230,23 @@ export function doorEngineInput(
     asOf: today === '' ? '2000-01-01' : today,
   }
 }
+
+/** What a resign date too early would cost: the `plan.what.*` value, or null when nothing is ahead. */
+export type AheadWhat = 'gratuity' | 'hike' | 'both'
+
+/**
+ * Which of gratuity and the hike a resign date can still lose, from the cliffs
+ * already computed (rebuild, 2026-11-16). The answer sentence on the dates
+ * screen and the "Leave sooner" line name exactly these, so neither says
+ * "your hike" to someone who skipped the hike question, nor "your gratuity" to
+ * someone whose gratuity is already safe.
+ */
+export function whatIsAhead(cliffs: readonly Cliff[], today: string, noticePeriodDays: number): AheadWhat | null {
+  const ahead = cliffs.filter((c) => stillAhead(c, today, noticePeriodDays))
+  const gratuity = ahead.some(isGratuityCliff)
+  const hike = ahead.some((c) => c.id === 'hike')
+  if (gratuity && hike) return 'both'
+  if (gratuity) return 'gratuity'
+  if (hike) return 'hike'
+  return null
+}
