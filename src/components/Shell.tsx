@@ -164,6 +164,8 @@ export function Shell({ current, children }: { current: string; children: ReactN
               </ul>
             </nav>
             <div className="mt-2 flex flex-wrap items-center gap-x-6 border-t border-line pt-2">
+              {/* Three strangers asked what "Erase saved data" erases: name it first (rebuild 4.8). */}
+              <p className="basis-full pt-2 text-ink-soft">{t('app.footer.saved')}</p>
               <BackupData className={FOOT_LINK} />
               <EraseData className="inline-flex min-h-[44px] items-center font-medium text-alarm underline-offset-4 hover:underline" />
             </div>

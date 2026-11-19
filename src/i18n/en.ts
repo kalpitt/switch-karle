@@ -133,8 +133,8 @@ export const en: Record<string, string> = {
   'plan.action.read-what-binds-you.body': 'Paste the clause and see what it actually says.',
   'plan.action.read-what-binds-you.open': 'Open the bond scanner',
   'plan.action.research-two-companies.title': 'Research your first two companies with your own AI',
-  'plan.action.research-two-companies.body': 'The AI prompts page writes the prompt. Nothing is sent from this site.',
-  'plan.action.research-two-companies.open': 'Open AI prompts',
+  'plan.action.research-two-companies.body': 'Questions to ask AI writes the question for you. Nothing is sent from this site.',
+  'plan.action.research-two-companies.open': 'Open Questions to ask AI',
   'plan.action.message-one-ex-colleague.title': 'Message one ex-colleague about a referral',
   'plan.action.message-one-ex-colleague.body': 'Pick someone who no longer works with your manager. A message to a current colleague can reach them.',
   'plan.action.message-one-ex-colleague.open': 'Open the referral prompt',
@@ -173,6 +173,7 @@ export const en: Record<string, string> = {
   'app.skipToContent': 'Skip to content',
   'app.tagline': 'The whole job switch, from “I’m done here” to surviving notice and day 90.',
   'app.privacyBadge': '100% private — runs entirely in your browser, nothing is uploaded',
+  'app.footer.saved': 'Saved on this device only:',
   'app.footer.badge': 'Runs in your browser. Nothing you type is sent anywhere.',
   'app.footer.rules': 'FY 2026-27 rules · estimates, not tax or legal advice · free & open source',
   'app.footer.privacy': 'your data never leaves this device',
@@ -247,7 +248,7 @@ export const en: Record<string, string> = {
   'toolsPage.seoTitle': 'All tools for an Indian job switch, by step',
   'toolsPage.description': 'Every free Switch Karle tool, grouped by the five steps of a job switch: leaving, applying, the offer, notice and joining.',
   'toolsPage.intro': 'Every tool, in the order a job switch happens: from deciding to leave to your first 90 days in the new job.',
-  'toolsPage.plan': 'Not sure which stage you are in?',
+  'toolsPage.plan': 'Not sure which step you are at?',
   'toolsPage.planCta': 'Start with your plan →',
   'toolsPage.startHere': 'Start here',
   'toolsPage.jumpLabel': 'Jump to a step',
@@ -278,25 +279,25 @@ export const en: Record<string, string> = {
   'ui.noticeMonthsNudge': 'Is that {n} months? Notice counts in days here: {n} months is about {days} days.',
   'ui.noticeMonthsUse': 'Use {days} days',
   'journey.stage': 'Stage {n}',
-  'journey.0.name': 'I’m done here',
+  'journey.0.name': 'Thinking of leaving',
   'journey.0.what': 'You have decided to leave and have not applied anywhere yet. See what leaving will cost you.',
-  'journey.1.name': 'Looking, quietly',
+  'journey.1.name': 'Applying',
   'journey.1.what': 'You are applying without telling anyone at work.',
-  'journey.2.name': 'Talking to them',
+  'journey.2.name': 'Interviewing',
   'journey.2.what': 'Interviews are on. Answer the expected-CTC question and check the real hike.',
-  'journey.3.name': 'The number on the table',
+  'journey.3.name': 'Offer in hand',
   'journey.3.what': 'You have an offer. Decode it, compare it, check it is real.',
-  'journey.4.name': 'Telling them',
+  'journey.4.name': 'Resigning',
   'journey.4.what': 'Resigning: the letter, the conversation, the counter-offer.',
-  'journey.5.name': 'Serving it out',
+  'journey.5.name': 'On notice',
   'journey.5.what': 'Serving your notice: handover, F&F, insurance.',
-  'journey.6.name': 'The first 90 days',
+  'journey.6.name': 'Joining a new job',
   'journey.6.what': 'You have joined. PF transfer, background check, tax.',
   'home.kicker': 'Three questions, then the dates that matter before you leave.',
   'home.allTools': 'All {n} tools: offers, notice, F&F, PF and tax',
   'home.decoder.desc': 'See what a CTC actually puts in your bank each month, and what to question in the offer.',
   'home.tracker.desc': 'Keep every application, its CTC and next step on one private board.',
-  'home.prompts.desc': 'Ready-made prompts to research companies and prepare, run in your own AI.',
+  'home.prompts.desc': 'Ready-made questions to paste into ChatGPT or any AI, to research a company and prepare.',
 
   // ---- Front door (rebuild 2026-11-16). Hindi pending: src/i18n/hi-pending.ts ----
   'home.headline': 'Changing jobs? Free tools for every step.',
@@ -338,7 +339,7 @@ export const en: Record<string, string> = {
 
   'tab.decoder': 'In-hand salary calculator',
   'tab.tracker': 'Application tracker',
-  'tab.prompts': 'AI prompts',
+  'tab.prompts': 'Questions to ask AI',
 
   // ---- Common ----
   'common.delete': 'Delete',
@@ -406,7 +407,7 @@ export const en: Record<string, string> = {
   'real-hike.regimeFlip': 'The cheaper tax regime flips between these two jobs. That is in the in-hand number.',
   'real-hike.haircutNote': 'Variable is counted at 70% after tax, not at the quoted figure, then spread over 12 months.',
 
-  'variable-reality.title': 'Variable pay check',
+  'variable-reality.title': 'Variable pay: what you actually get',
   'variable-reality.desc': 'See your monthly in-hand if the variable pays 0%, 50% or 100%.',
   'variable-reality.formTitle': 'Your variable pay',
   'variable-reality.months': 'Months of this FY on payroll',
@@ -421,7 +422,7 @@ export const en: Record<string, string> = {
   'variable-reality.fullYearTax': 'Tax uses your full-year CTC as the base, even when the variable is pro-rated.',
 
   'bonus-clawback.title': 'Joining bonus payback',
-  'bonus-clawback.desc': 'See what you repay if you leave before the clawback ends, tax included.',
+  'bonus-clawback.desc': 'See what you repay, tax included, if you leave within the period in which you must pay the bonus back.',
   'bonus-clawback.formTitle': 'The clawback window',
   'bonus-clawback.amount': 'Joining bonus (gross)',
   'bonus-clawback.window': 'Must stay',
@@ -615,7 +616,7 @@ export const en: Record<string, string> = {
   'leave-encashment.note':
     'Provisional. Employer practice on 26 vs 30 varies. This tool applies only the ₹25,00,000 notified ceiling and the amount received; it does not model the leave-days or average-salary limbs.',
 
-  'fnf-checker.title': 'F&F check',
+  'fnf-checker.title': 'Full-and-final (F&F) settlement check',
   'fnf-checker.desc': 'Check your full-and-final settlement line by line and get a dispute email.',
   'fnf-checker.formTitle': 'What the sheet claims',
   'fnf-checker.join': 'Join date',
@@ -719,7 +720,7 @@ export const en: Record<string, string> = {
     'Dear {manager},\n\nI resign from {role} at {company}, effective {date}. Last working day: {lwd}. Please acknowledge and share the F&F / relieving checklist.\n\nRegards',
 
   'manager-script.title': 'Resignation talk script',
-  'manager-script.desc': 'What to say when you tell your manager, whatever the room is like.',
+  'manager-script.desc': 'What to say when you tell your manager, however your manager reacts.',
   'manager-script.formTitle': 'The room you are walking into',
   'manager-script.preset': 'How this manager usually is',
   'manager-script.preset.supportive': 'Supportive',
@@ -741,7 +742,7 @@ export const en: Record<string, string> = {
   'manager-script.lead': 'Say it in person, then follow up in writing.',
   'hr.disclaimer': 'Templates, not legal advice. Match them to your appointment letter before you send.',
   'hr.expected-ctc.title': 'Expected CTC reply',
-  'hr.expected-ctc.desc': 'Answer “what is your expected CTC?” and ask for the band in the same reply.',
+  'hr.expected-ctc.desc': 'Answer “what is your expected CTC?” and ask for the salary range in the same reply.',
   'hr.early-release.body':
     'Hi [Manager name],\n\nI have shared my resignation dated [date], with last working day [LWD] as per my notice.\n\nI am due to join my next employer on [new joining date], so an earlier release would help me start on time. I will complete a written handover and be available for questions after I leave. Could we look at an early release or a buyout of the remaining notice so my last day can be [proposed LWD]?\n\nI will follow whatever the appointment letter allows. Thank you for considering it.',
   'hr.buyout-ask.body':
@@ -764,7 +765,7 @@ export const en: Record<string, string> = {
   'hr.early-release.desc': 'Ask to leave before your notice ends, politely and in writing.',
   'hr.buyout-ask.title': 'Notice buyout email',
   'hr.buyout-ask.desc': 'Ask HR in writing how your notice buyout is worked out.',
-  'hr.decline-accepted.title': 'Decline-after-accepting email',
+  'hr.decline-accepted.title': 'Email to decline an offer you accepted',
   'hr.decline-accepted.desc': 'Back out of an offer you already accepted, cleanly and in writing.',
   'hr.counter-offer-reply.title': 'Counter-offer reply email',
   'hr.counter-offer-reply.desc': 'Turn down your current employer’s counter-offer in writing, on good terms.',
@@ -942,7 +943,7 @@ export const en: Record<string, string> = {
   'notice-tracker.due': 'Due {date}',
   // ---- One next thing under every result (UX-14, IA-02) ----
   'next.label': 'Next',
-  'next.label.stage': 'Next stage: {stage}',
+  'next.label.stage': 'Next step: {stage}',
   'next.plan.title': 'Back to your plan',
   'next.plan.desc': 'Your dates for the whole switch, in one place.',
   // ---- Dates carried in from the home plan (UX-15, UX-16) ----
@@ -974,8 +975,8 @@ export const en: Record<string, string> = {
   'bond-scanner.disclaimer':
     'This is a pattern scan, not legal advice. Indian case law is fact-specific. The two citations above are not holdings about your letter.',
 
-  'redactor.title': 'Payslip masker',
-  'redactor.desc': 'Hide PAN, Aadhaar, phone numbers and amounts before you share pasted text.',
+  'redactor.title': 'Hide details in a payslip',
+  'redactor.desc': 'Hide PAN, Aadhaar, phone numbers and amounts in a payslip before you share it.',
   'redactor.formTitle': 'Paste the page',
   'redactor.text': 'Payslip or offer text',
   'redactor.textHint':

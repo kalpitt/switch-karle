@@ -52,7 +52,7 @@ export const HR_SCRIPTS: Record<HrScriptSlug, HrScript> = {
     slug: 'decline-accepted',
     titleKey: 'hr.decline-accepted.title',
     descKey: 'hr.decline-accepted.desc',
-    seoTitle: 'Decline-after-accepting email',
+    seoTitle: 'Email to decline an offer you accepted',
     seoDescription: 'A careful decline after you already said yes. Not legal advice.',
     body: '',
   },

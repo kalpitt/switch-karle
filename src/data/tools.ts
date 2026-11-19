@@ -172,7 +172,7 @@ export const TOOLS: ToolDef[] = [
     icon: 'variable',
     titleKey: 'variable-reality.title',
     descKey: 'variable-reality.desc',
-    seoTitle: 'Variable pay check',
+    seoTitle: 'Variable pay: what you actually get',
     seoDescription:
       'Monthly in-hand if variable pays 0%, 50% or 100%, plus first-year pro-rating and lump-versus-spread tax.',
     hasIsland: true,
@@ -180,6 +180,7 @@ export const TOOLS: ToolDef[] = [
     storageKey: 'switchkarle.variable.v1',
     keywords: [
       // Former names (COPY-05), so search still finds them.
+      'variable pay check',
       'variable reality',
       'variable pay reality check',
       'variable की असलियत',
@@ -411,7 +412,7 @@ export const TOOLS: ToolDef[] = [
     icon: 'fnf',
     titleKey: 'fnf-checker.title',
     descKey: 'fnf-checker.desc',
-    seoTitle: 'F&F check',
+    seoTitle: 'Full-and-final (F&F) settlement check',
     seoDescription:
       'Recompute a full-and-final sheet: unpaid leave, notice recovery, gratuity, and whether you may owe them.',
     hasIsland: true,
@@ -989,7 +990,7 @@ export const TOOLS: ToolDef[] = [
     icon: 'redact',
     titleKey: 'redactor.title',
     descKey: 'redactor.desc',
-    seoTitle: 'Payslip masker',
+    seoTitle: 'Hide details in a payslip',
     seoDescription:
       'Mask Aadhaar, PAN, phone, email and rupee amounts on this device before you screenshot a payslip or offer.',
     hasIsland: true,
@@ -997,10 +998,10 @@ export const TOOLS: ToolDef[] = [
     storageKey: 'switchkarle.redactor.v1',
     keywords: [
       // Former names (COPY-05), so search still finds them.
+      'payslip masker',
       'redactor',
       'payslip redactor',
       'mask text',
-      'redactor',
       'mask payslip',
       'hide salary',
       'blur pan aadhaar',
@@ -1079,13 +1080,14 @@ export const TOOLS: ToolDef[] = [
     icon: 'prompts',
     titleKey: 'tab.prompts',
     descKey: 'home.prompts.desc',
-    seoTitle: 'AI prompts',
+    seoTitle: 'Questions to ask AI',
     seoDescription:
       'Copy a context-rich prompt into your own ChatGPT, Claude or Gemini tab. This app never sends your data to an AI.',
     hasIsland: true,
     statutory: false,
     keywords: [
       // Former names (COPY-05), so search still finds them.
+      'AI prompts',
       'prompts',
       'prompt studio',
       'प्रॉम्प्ट्स',
