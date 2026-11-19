@@ -228,3 +228,35 @@ test('the plan has its own page', async ({ page }) => {
   await expect(page.locator('h1')).toHaveCount(1)
   await expect(page.locator('[data-tool="resign-date"] input').first()).toBeVisible()
 })
+
+// The frame around every tool (rebuild 4.7).
+test('a tool names the step it belongs to, one tap from the rest', async ({ page }) => {
+  await open(page, '/decoder/')
+  const more = page.locator('[data-more-for]')
+  await expect(more).toContainText('More for:')
+  await expect(more.getByRole('link', { name: 'I have an offer' })).toHaveAttribute('href', '/start/offer/')
+  // In two steps' lists: both are named.
+  await open(page, '/real-hike/')
+  await expect(page.locator('[data-more-for] a')).toHaveText(['Applying or interviewing', 'I have an offer'])
+  await open(page, '/resign-date/')
+  await expect(page.locator('[data-more-for] a')).toHaveText(['Thinking of leaving'])
+  await open(page, '/tools/')
+  await expect(page.locator('[data-more-for]')).toHaveCount(0)
+})
+
+test('the worked example is a bar across the top of the answer', async ({ page }) => {
+  await open(page, '/decoder/')
+  const bar = page.locator('[data-result-hero] [data-example-bar]')
+  await expect(bar).toBeVisible()
+  await expect(bar).toContainText('Example')
+  const hero = (await page.locator('[data-result-hero]').boundingBox())!
+  const box = (await bar.boundingBox())!
+  expect(Math.round(box.width)).toBe(Math.round(hero.width - 2))
+})
+
+test('the buyout calculator and the buyout email point at each other', async ({ page }) => {
+  await open(page, '/notice-buyout/')
+  await expect(page.locator('[data-see-also="buyout-ask"] a')).toHaveAttribute('href', '/what-to-say/#buyout-ask')
+  await open(page, '/what-to-say/#buyout-ask')
+  await expect(page.locator('[data-see-also="notice-buyout"] a')).toHaveAttribute('href', '/notice-buyout/')
+})
