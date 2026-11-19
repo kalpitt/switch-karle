@@ -23,6 +23,8 @@ export default function DoorPage({ lang = 'en', door }: { lang?: Lang; door: Doo
   )
 }
 
+const DETOUR = 'inline-flex min-h-[44px] items-center py-1 font-semibold text-saffron-strong underline underline-offset-2'
+
 function DoorBody({ door }: { door: Door }) {
   const t = useT()
   const { lang } = useLang()
@@ -43,6 +45,23 @@ function DoorBody({ door }: { door: Door }) {
         {t(`door.${door.id}.name`)}
       </h1>
 
+      {/* Half the people here have already resigned or were let go (cold read, 2026-11-19):
+          their way in comes before the card that is for someone still to resign. */}
+      {door.id === 'notice' && (
+        <ul data-door-detour className="mt-3 space-y-1 text-[15px] leading-snug">
+          <li>
+            <a href={toolHref(lang, 'notice-tracker')} className={DETOUR}>
+              {t('door.notice.which')}
+            </a>
+          </li>
+          <li>
+            <a href={toolHref(lang, 'fnf-checker')} className={DETOUR}>
+              {t('home.laid')} {t('home.laid.cta')}
+            </a>
+          </li>
+        </ul>
+      )}
+
       <div className="mt-5 rounded-2xl border border-line-strong bg-card p-5 sm:p-6">
         <h2 lang={latinLang(leadTitle, lang)} className="text-[19px] font-bold leading-snug text-ink">
           {leadTitle}
@@ -52,16 +71,6 @@ function DoorBody({ door }: { door: Door }) {
           {t('door.start')}
         </a>
       </div>
-      {door.id === 'notice' && (
-        <p className="mt-3 text-[15px] leading-relaxed">
-          <a
-            href={toolHref(lang, 'notice-tracker')}
-            className="inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline underline-offset-2"
-          >
-            {t('door.notice.which')}
-          </a>
-        </p>
-      )}
 
       <h2 className="mt-8 font-display text-[20px] font-bold leading-snug tracking-[-0.01em] text-ink">{t('door.also')}</h2>
       <ul className="mt-2 border-t border-line">

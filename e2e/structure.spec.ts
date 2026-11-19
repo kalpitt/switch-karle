@@ -202,6 +202,7 @@ test('a step page leads with one tool and lists the rest', async ({ page }) => {
 test('a step page links a What to say script straight to that script', async ({ page }) => {
   await open(page, '/start/applying/')
   await expect(page.locator('main a[data-entry="expected-ctc"]')).toHaveAttribute('href', '/what-to-say/#expected-ctc')
+  await expect(page.locator('main a[data-entry="expected-ctc"]')).toContainText('Asked for your expected CTC:')
   await open(page, '/start/leaving/')
   await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/resign-date/')
   await open(page, '/start/notice/')
@@ -209,6 +210,14 @@ test('a step page links a What to say script straight to that script', async ({ 
     'href',
     '/notice-tracker/',
   )
+  await expect(page.getByRole('link', { name: 'Laid off or asked to leave? Check what you are owed' })).toHaveAttribute(
+    'href',
+    '/fnf-checker/',
+  )
+  // Both ways in come before the card for someone who has not resigned yet.
+  const detour = (await page.locator('[data-door-detour]').boundingBox())!
+  const card = (await page.locator('[data-door-lead]').boundingBox())!
+  expect(detour.y).toBeLessThan(card.y)
 })
 
 test('the plan has its own page', async ({ page }) => {

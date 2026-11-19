@@ -332,6 +332,7 @@ export const en: Record<string, string> = {
   'door.all': 'All tools for this step',
   'door.planTitle': 'Resign-date plan',
   'door.notice.which': 'Already resigned? Go to the notice period checklist.',
+  'door.applying.when.expected-ctc': 'Asked for your expected CTC:',
   'door.offer.when.real-hike': 'Offer against your current pay:',
   'door.offer.when.offer-comparison': 'Two or three offers:',
   'door.seoTitle': '{name}: where to start',
