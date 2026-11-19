@@ -10,6 +10,18 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-19 — Follow-ups to the rebuild: notice step renamed, hike question reworded, supporting dates folded
+
+**Decided by Kalpit** (relayed as the rebuild's follow-ups). Step 4 is now
+"Notice period and exit" (was "Resigning or on notice"), led by tracking notice,
+the final settlement and the relieving letter, not the resignation letter. The
+plan's hike question names the current employer and says to skip when no hike is
+due. On the plan's answer page the gratuity and hike dates fold behind "How this
+date was worked out", so one date stands out. All of this copy was written by
+Gemini through `agy` and checked for length and facts by Claude; new strings are
+on the Hindi list. Fitting five step cards on the first Hindi screen waits for
+the Hindi pass, since those cards are still English there.
+
 ## 2026-11-19 — The new home page went live although the step pages missed their cold-read bar
 
 **Decided by Kalpit.** The rebuild plan required flow C (each reviewer at a step

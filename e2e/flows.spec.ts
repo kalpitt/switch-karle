@@ -82,7 +82,7 @@ test('plan: before anything is typed the only dates are one boxed example line; 
   // Both readings behind Ravi: the week would change nothing, so it is not asked.
   await expect(page.getByRole('button', { name: /^I work five days a week/ })).toHaveCount(0)
 
-  await page.getByLabel('Which month does the hike actually reach your account?').selectOption({ label: 'Not sure, skip' })
+  await page.getByLabel('Which month does your current job pay your salary hike?').selectOption({ label: 'No hike due, skip' })
   await expect(page.getByText(/^Your hike lands/)).toHaveCount(0)
 })
 
