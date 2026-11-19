@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DOOR_IDS, DOORS, doorPath, doorSections, doorsFor } from './doors'
+import { DOOR_IDS, DOORS, doorListSections, doorPath, doorSections, doorsFor } from './doors'
 import { JOURNEY_IDS } from './journey'
 import { PLAN_PAGE, TOOLS, toolBySlug } from './tools'
 
@@ -91,5 +91,41 @@ describe('doorsFor (the "More for:" line on a tool)', () => {
 
   it('gives every tool at least one door', () => {
     for (const tool of TOOLS) expect(doorsFor(tool.slug).length, tool.slug).toBeGreaterThan(0)
+  })
+})
+
+describe('doorListSections (/tools/ rows)', () => {
+  const rows = (id: string) =>
+    doorListSections()
+      .find((s) => s.door.id === id)!
+      .rows.map((r) => (r.kind === 'plan' ? 'plan' : r.kind === 'tool' ? r.tool.slug : `wts:${r.situations.map((s) => s.slug).join('+')}`))
+
+  it('folds each door’s What to say scripts into one row, named for the door', () => {
+    expect(rows('applying').filter((r) => r.startsWith('wts:'))).toEqual(['wts:expected-ctc+recruiter-followup'])
+    expect(rows('offer').filter((r) => r.startsWith('wts:'))).toEqual(['wts:decline-accepted'])
+    expect(rows('notice').filter((r) => r.startsWith('wts:'))).toEqual([
+      'wts:manager-script+counter-offer-reply+early-release+buyout-ask',
+    ])
+    for (const id of ['leaving', 'joining']) expect(rows(id).some((r) => r.startsWith('wts:')), id).toBe(false)
+    const notice = doorListSections().find((s) => s.door.id === 'notice')!.rows.find((r) => r.kind === 'group')
+    expect(notice && notice.kind === 'group' && notice.nameKey).toBe('whatToSay.row.notice')
+  })
+
+  it('never lists the What to say page itself; its rows stand for it', () => {
+    for (const id of DOOR_IDS) expect(rows(id), id).not.toContain('what-to-say')
+  })
+
+  it('starts each section with its lead, marked, and the plan leads "leaving"', () => {
+    for (const { door, rows: r } of doorListSections()) {
+      const first = r[0]!
+      expect(first.kind !== 'group' && first.lead, door.id).toBe(true)
+      expect(r.slice(1).some((row) => row.kind !== 'group' && row.lead), door.id).toBe(false)
+    }
+    expect(rows('leaving')[0]).toBe('plan')
+  })
+
+  it('lists every page tool and every script somewhere', () => {
+    const listed = new Set(doorListSections().flatMap((s) => s.rows.flatMap((r) => (r.kind === 'plan' ? [] : r.kind === 'tool' ? [r.tool.slug] : r.situations.map((x) => x.slug)))))
+    expect(TOOLS.filter((t) => t.slug !== 'what-to-say' && !listed.has(t.slug)).map((t) => t.slug)).toEqual([])
   })
 })

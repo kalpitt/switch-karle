@@ -15,6 +15,7 @@ export function RowLink({
   desc,
   entry,
   prefix,
+  tag,
 }: {
   href: string
   title: string
@@ -22,6 +23,8 @@ export function RowLink({
   /** `data-entry`, the slug the row stands for (tests find rows by it). */
   entry: string
   prefix?: string
+  /** A small tag beside the name ("Start here"). */
+  tag?: string
 }) {
   const { lang } = useLang()
   return (
@@ -32,11 +35,18 @@ export function RowLink({
         className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
       >
         <span className="min-w-0 flex-1">
-          <span
-            lang={latinLang(title, lang)}
-            className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2"
-          >
-            {title}
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <span
+              lang={latinLang(title, lang)}
+              className="text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2"
+            >
+              {title}
+            </span>
+            {tag && (
+              <span className="rounded-full bg-saffron-soft px-2 py-1 text-[11px] font-semibold uppercase leading-none tracking-[0.04em] text-saffron-strong">
+                {tag}
+              </span>
+            )}
           </span>
           <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">
             {prefix && <span className="font-semibold text-ink">{prefix} </span>}
@@ -50,11 +60,24 @@ export function RowLink({
 }
 
 /** A list entry (a tool, or a What to say row holding its situations) as a row. */
-export function EntryRow({ entry, prefix }: { entry: ListEntry; prefix?: string }) {
+export function EntryRow({
+  entry,
+  prefix,
+  tag,
+  nameKey,
+}: {
+  entry: ListEntry
+  prefix?: string
+  tag?: string
+  /** A group row's own name (`whatToSay.row.<door>`), used when the dictionary has it. */
+  nameKey?: string
+}) {
   const t = useT()
   const { lang } = useLang()
   const target = entry.kind === 'tool' ? entry.tool : entry.situations[0]!
-  const title = t(entry.kind === 'tool' ? entry.tool.titleKey : entry.group.titleKey)
+  const ownName = nameKey ? t(nameKey) : undefined
+  const title =
+    ownName && ownName !== nameKey ? ownName : t(entry.kind === 'tool' ? entry.tool.titleKey : entry.group.titleKey)
   // A What to say row names the situations it holds.
   const desc =
     entry.kind === 'tool' ? t(entry.tool.descKey) : entry.situations.map((s) => t(s.titleKey)).join(' · ')
@@ -65,6 +88,7 @@ export function EntryRow({ entry, prefix }: { entry: ListEntry; prefix?: string 
       desc={desc}
       entry={entry.kind === 'tool' ? entry.tool.slug : entry.group.slug}
       prefix={prefix}
+      tag={tag}
     />
   )
 }

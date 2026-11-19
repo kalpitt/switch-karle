@@ -40,16 +40,23 @@ test('the nav fits a 320px phone without sideways scroll', async ({ page }) => {
   }
 })
 
-test('/tools/ lists every stage and shows What to say once per stage it has a situation in', async ({ page }) => {
+test('/tools/ lists the five steps, each lead first, and What to say once per step it has a situation in', async ({ page }) => {
   await open(page, '/tools/')
-  await expect(page.locator('h1')).toHaveText('All tools, by stage')
-  await expect(page.locator('main h2')).toHaveCount(7)
-  await expect(page.locator('main h2').first()).toContainText('I’m done here')
+  await expect(page.locator('h1')).toHaveText('All tools, by step')
+  await expect(page.locator('main h2')).toHaveText(['Thinking of leaving', 'Applying or interviewing', 'I have an offer', 'Resigning or on notice', 'Joining a new job'])
+  await expect(page.locator('main')).not.toContainText('Stage 1')
+  for (const id of ['leaving', 'applying', 'offer', 'notice', 'joining']) {
+    await expect(page.locator(`section:has(h2#${id}) li`).first().locator('a')).toContainText('Start here')
+  }
+  await expect(page.locator('section:has(h2#leaving) a[data-entry="resign-date"]')).toHaveAttribute('href', '/resign-date/')
   const wts = page.locator('a[data-entry="what-to-say"]')
   await expect(wts).toHaveCount(3)
   await expect(wts.nth(0)).toHaveAttribute('href', '/what-to-say/#expected-ctc')
+  await expect(wts.nth(0)).toContainText('What to say to recruiters and interviewers')
   await expect(wts.nth(1)).toHaveAttribute('href', '/what-to-say/#decline-accepted')
+  await expect(wts.nth(1)).toContainText('What to say about an offer')
   await expect(wts.nth(2)).toHaveAttribute('href', '/what-to-say/#manager-script')
+  await expect(wts.nth(2)).toContainText('What to say when you resign and leave')
   // The plain names (COPY-05), linking to the unchanged addresses.
   await expect(page.locator('a[data-entry="decoder"]')).toContainText('In-hand salary calculator')
   await expect(page.locator('a[data-entry="decoder"]')).toHaveAttribute('href', '/decoder/')
@@ -57,11 +64,30 @@ test('/tools/ lists every stage and shows What to say once per stage it has a si
   await expect(page.locator('a[data-entry="prompts"]')).toHaveAttribute('href', '/prompts/')
 })
 
+test('/tools/ jump links reach each step and fit a 320px phone', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await open(page, '/tools/')
+  const jump = page.getByRole('navigation', { name: 'Jump to a step' })
+  await expect(jump.getByRole('link')).toHaveText(['Leaving', 'Applying', 'Offer', 'Notice', 'Joining'])
+  for (const link of await jump.getByRole('link').all()) {
+    expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+  }
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+  expect(overflow).toBe(0)
+  await jump.getByRole('link', { name: 'Joining' }).click()
+  await expect(page).toHaveURL(/#joining$/)
+  // The bar stays on screen and the heading is not hidden under it.
+  await expect(jump).toBeInViewport()
+  const bar = (await jump.boundingBox())!
+  const heading = (await page.locator('h2#joining').boundingBox())!
+  expect(heading.y).toBeGreaterThanOrEqual(bar.y + bar.height - 1)
+})
+
 test('/hi/tools/ is the Hindi list, linking to Hindi pages', async ({ page }) => {
   await open(page, '/hi/tools/')
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
   await expect(page.locator('a[data-entry="decoder"]')).toHaveAttribute('href', '/hi/decoder/')
-  await expect(page.locator('a[data-entry="what-to-say"]').first()).toContainText('क्या कहें')
+  await expect(page.locator('a[data-entry="what-to-say"]').first()).toHaveAttribute('href', '/hi/what-to-say/#expected-ctc')
 })
 
 test('the home page links to the full list instead of keeping its own', async ({ page }) => {
