@@ -14,6 +14,11 @@ test('the sitemap lists both languages', () => {
   expect(routes.length).toBeGreaterThan(20)
   // What to say is the one page; its situations are picked inside it (2026-11-07).
   expect(routes).toContain('/what-to-say/')
+  // The plan's own page and the five step pages (rebuild, 2026-11-16), in both languages.
+  for (const path of ['/resign-date/', '/start/leaving/', '/start/applying/', '/start/offer/', '/start/notice/', '/start/joining/']) {
+    expect(routes).toContain(path)
+    expect(routes).toContain(`/hi${path}`)
+  }
   for (const gone of ['/expected-ctc/', '/buyout-ask/', '/manager-script/', '/hi/decline-accepted/']) {
     expect(routes).not.toContain(gone)
   }

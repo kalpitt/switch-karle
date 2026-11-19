@@ -44,7 +44,8 @@ describe('What to say is the one page for every situation', () => {
       'components/NextStep.tsx',
       'components/CommandPalette.tsx',
       'components/Tracker.tsx',
-      'tools/all-tools/index.tsx',
+      'components/ToolRow.tsx',
+      'tools/door/index.tsx',
       'tools/plan/ActionList.tsx',
       'tools/notice-tracker/index.tsx',
     ]) {

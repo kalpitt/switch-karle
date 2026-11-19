@@ -316,6 +316,8 @@ export const en: Record<string, string> = {
   'door.notice.which': 'Already resigned? Go to the notice period checklist.',
   'door.offer.when.real-hike': 'Offer against your current pay:',
   'door.offer.when.offer-comparison': 'Two or three offers:',
+  'door.seoTitle': '{name}: where to start',
+  'planPage.seoTitle': 'When to resign: your gratuity and hike dates',
 
   'tab.decoder': 'In-hand salary calculator',
   'tab.tracker': 'Application tracker',

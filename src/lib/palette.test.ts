@@ -18,9 +18,21 @@ const labels: Record<string, string> = {
 }
 
 describe('palette', () => {
-  it('puts your plan first, then all tools, then every registry tool', () => {
+  it('puts your plan first, then all tools, then every registry tool, then the five steps', () => {
     const items = paletteItems(tools, '/switch-karle/', (s) => `/switch-karle/${s}/`)
-    expect(items.map((i) => i.slug)).toEqual(['home', 'tools', 'epf-transfer', 'decoder'])
+    expect(items.map((i) => i.slug)).toEqual([
+      'home',
+      'tools',
+      'epf-transfer',
+      'decoder',
+      'start/leaving',
+      'start/applying',
+      'start/offer',
+      'start/notice',
+      'start/joining',
+    ])
+    expect(items[6]!.href).toBe('/switch-karle/start/offer/')
+    expect(items[6]!.titleKey).toBe('door.offer.name')
     expect(items[0]!.href).toBe('/switch-karle/')
     expect(items[0]!.titleKey).toBe('nav.plan')
     expect(items[1]!.href).toBe('/switch-karle/tools/')
@@ -31,7 +43,7 @@ describe('palette', () => {
     const label = (k: string) => labels[k] ?? k
     expect(filterPalette(items, 'form 13', label).map((i) => i.slug)).toEqual(['epf-transfer'])
     expect(filterPalette(items, 'DECODER', label).map((i) => i.slug)).toEqual(['decoder'])
-    expect(filterPalette(items, '  ', label)).toHaveLength(4)
+    expect(filterPalette(items, '  ', label)).toHaveLength(9)
   })
 
   it('treats hyphens, spaces, and punctuation as equivalent so in-hand, in hand, and inhand match identically', () => {

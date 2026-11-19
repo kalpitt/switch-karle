@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro'
+import DoorPage from '../../../tools/door/index'
+import { DOOR_IDS, doorPath, type DoorId } from '../../../data/doors'
+import { en } from '../../../i18n/en'
+import { hiDictionary } from '../../../i18n/hi-dictionary'
+
+export function getStaticPaths() {
+  return DOOR_IDS.map((door) => ({ params: { door } }))
+}
+
+// Hindi is hidden until its translation pass (2026-11-19): a string with no Hindi yet shows in English.
+const t = (key: string) => hiDictionary[key] ?? en[key]!
+const door = Astro.params.door as DoorId
+const title = t('door.seoTitle').replace('{name}', t(`door.${door}.name`))
+---
+
+<Base title={title} description={t(`door.${door}.leadWhy`)} slug={doorPath(door)} lang="hi">
+  <DoorPage client:load lang="hi" door={door} />
+</Base>

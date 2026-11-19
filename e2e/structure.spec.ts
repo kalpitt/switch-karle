@@ -158,3 +158,35 @@ test('on a phone the answer is first in reading order and has a heading', async 
   await open(page, '/hi/gratuity/')
   await expect(page.getByRole('heading', { level: 2, name: 'आपका नतीजा' })).toHaveCount(1)
 })
+
+// The step pages (rebuild, 2026-11-16): one tool to start with, as the only dark
+// button, then at most four more, then the way to every tool for this step.
+test('a step page leads with one tool and lists the rest', async ({ page }) => {
+  await open(page, '/start/offer/')
+  await expect(page.locator('h1')).toHaveText('I have an offer')
+  await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/decoder/')
+  const rows = page.locator('main li a[data-entry]')
+  await expect(rows).toHaveCount(4)
+  await expect(rows.first()).toHaveAttribute('href', '/real-hike/')
+  await expect(rows.first()).toContainText('Offer against your current pay:')
+  await expect(page.getByRole('link', { name: 'All tools for this step' })).toHaveAttribute('href', '/tools/#offer')
+  await expect(page.getByRole('link', { name: 'Back' })).toHaveAttribute('href', '/')
+})
+
+test('a step page links a What to say script straight to that script', async ({ page }) => {
+  await open(page, '/start/applying/')
+  await expect(page.locator('main a[data-entry="expected-ctc"]')).toHaveAttribute('href', '/what-to-say/#expected-ctc')
+  await open(page, '/start/leaving/')
+  await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/resign-date/')
+  await open(page, '/start/notice/')
+  await expect(page.getByRole('link', { name: 'Already resigned? Go to the notice period checklist.' })).toHaveAttribute(
+    'href',
+    '/notice-tracker/',
+  )
+})
+
+test('the plan has its own page', async ({ page }) => {
+  await open(page, '/resign-date/')
+  await expect(page.locator('h1')).toHaveCount(1)
+  await expect(page.locator('[data-tool="resign-date"] input').first()).toBeVisible()
+})

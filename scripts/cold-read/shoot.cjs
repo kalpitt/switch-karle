@@ -31,7 +31,8 @@ const wordsOnScreen = () => {
   return n
 }
 
-const browser = await chromium.launch()
+// CHROMIUM_PATH: use a browser already on the machine when the repo's Playwright has none downloaded.
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
 async function page() {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'en-IN',

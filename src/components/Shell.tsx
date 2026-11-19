@@ -3,7 +3,7 @@ import { latinLang } from '../lib/latinLang'
 import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
-import { TOOLS, TOOLS_PAGE, toolBySlug } from '../data/tools'
+import { DOORS_DIR, PLAN_PAGE, TOOLS, TOOLS_PAGE, toolBySlug } from '../data/tools'
 import { HINDI_ON } from '../data/site'
 import { verifiedRange } from '../data/sources'
 import { INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
@@ -32,7 +32,12 @@ export function Shell({ current, children }: { current: string; children: ReactN
   const infoPage = (INFO_PAGES as readonly string[]).includes(current)
   // The home page names itself too: the plan's headline is its <h1> (COPY-03).
   // The all-tools page names itself too.
-  const Brand = tool || infoPage || current === '404' || current === 'home' || current === TOOLS_PAGE ? 'p' : 'h1'
+  // So do the step pages (their step's name) and the plan's page (the plan's headline).
+  const isDoorPage = current.startsWith(`${DOORS_DIR}/`)
+  const Brand =
+    tool || infoPage || isDoorPage || current === PLAN_PAGE || current === '404' || current === 'home' || current === TOOLS_PAGE
+      ? 'p'
+      : 'h1'
   // The page this one is a twin of. The 404 has no twin, so its toggle goes home.
   const slug = tool ? tool.slug : current === 'home' || current === '404' ? '' : current
   const pick = current === '404' ? undefined : setLang
