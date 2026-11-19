@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro'
+import PlanPage from '../tools/plan/page'
+import { PLAN_PAGE } from '../data/tools'
+import { en } from '../i18n/en'
+---
+
+<Base title={en['planPage.seoTitle']!} description={en['plan.tagline']!} slug={PLAN_PAGE} lang="en">
+  <PlanPage client:load lang="en" />
+</Base>

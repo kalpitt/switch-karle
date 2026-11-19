@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro'
+import DoorPage from '../../tools/door/index'
+import { DOOR_IDS, doorPath, type DoorId } from '../../data/doors'
+import { en } from '../../i18n/en'
+
+export function getStaticPaths() {
+  return DOOR_IDS.map((door) => ({ params: { door } }))
+}
+
+const door = Astro.params.door as DoorId
+const title = en['door.seoTitle']!.replace('{name}', en[`door.${door}.name`]!)
+---
+
+<Base title={title} description={en[`door.${door}.leadWhy`]!} slug={doorPath(door)} lang="en">
+  <DoorPage client:load lang="en" door={door} />
+</Base>

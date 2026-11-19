@@ -42,7 +42,20 @@ src/
   layouts/Base.astro  head contract, hreflang en/hi/x-default, PWA register
   pages/[tool].astro + pages/hi/[tool].astro  EN and Hindi twins
   pages/tools.astro + pages/hi/tools.astro    the all-tools list
+  pages/resign-date.astro (+ hi/)             the plan's own page (PLAN_PAGE)
+  pages/start/[door].astro (+ hi/)            the five step pages (data/doors.ts)
 ```
+
+**Step pages and the plan's page (the front-door rebuild, 2026-11-16).**
+`/start/<id>/` (`tools/door`) shows one door from `data/doors.ts`: its lead tool
+as the page's only dark button, up to four more as rows (`components/ToolRow.tsx`,
+shared with `/tools/`), and a link to that door's section of `/tools/`. A step
+page passes `current='start/<id>'` to `IslandRoot`, never the bare id, so the
+language switch and `slugFromPath` see the two-part path. `/resign-date/`
+(`tools/plan/page.tsx`) renders the same `Plan` as the home page with
+`current=PLAN_PAGE`. Neither `PLAN_PAGE` nor `start` is a registry tool;
+`tools.test.ts` and `scripts/new-tool.mjs` reserve both. Search lists the five
+steps after the tools.
 
 Every interactive tool is: **golden tests (first) → pure engine function → island
 wired to `VerdictBanner` + `Disclaimer` + `NextStep` → registry row with its
@@ -112,8 +125,8 @@ x-default. Hindi
 titles use `— स्विच कर ले` so they do not collide with English. Home adds JSON-LD
 `WebApplication`. `/hi/` twins live at `src/pages/hi/`.
 
-`sitemap.xml` and `robots.txt` are generated from the registry plus `/tools/`
-and the info pages (EN + HI locs).
+`sitemap.xml` and `robots.txt` are generated from the registry plus `/tools/`,
+`/resign-date/`, the five `/start/<id>/` pages and the info pages (EN + HI locs).
 Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
 `check-seo.mjs` greps `dist/` for `googletagmanager|gtag|plausible|umami|fathom`.
 

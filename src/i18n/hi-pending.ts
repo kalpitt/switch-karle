@@ -44,4 +44,6 @@ export const HINDI_PENDING: string[] = [
   'door.notice.which',
   'door.offer.when.real-hike',
   'door.offer.when.offer-comparison',
+  'door.seoTitle',
+  'planPage.seoTitle',
 ]

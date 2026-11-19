@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { englishPath, hindiPath, isHiPath, slugFromPath } from './langPath'
+import { englishPath, hindiPath, isHiPath, slugFromPath, withLang } from './langPath'
 
 const base = '/switch-karle/'
 
@@ -26,5 +26,15 @@ describe('langPath', () => {
     expect(englishPath('/switch-karle/hi/decoder/', base)).toBe('/switch-karle/decoder/')
     expect(hindiPath('/switch-karle/decoder/', base)).toBe('/switch-karle/hi/decoder/')
     expect(hindiPath('/switch-karle/hi/decoder/', base)).toBe('/switch-karle/hi/decoder/')
+  })
+
+  it('handles the two-part step pages and the plan page (rebuild, 2026-11-16)', () => {
+    expect(hindiPath('/switch-karle/start/offer/', base)).toBe('/switch-karle/hi/start/offer/')
+    expect(englishPath('/switch-karle/hi/start/offer/', base)).toBe('/switch-karle/start/offer/')
+    expect(slugFromPath('/switch-karle/hi/start/offer/', base)).toBe('start/offer')
+    expect(isHiPath('/switch-karle/start/offer/', base)).toBe(false)
+    expect(withLang('en', 'start/offer')).toMatch(/\/start\/offer\/$/)
+    expect(withLang('hi', 'start/offer')).toMatch(/\/hi\/start\/offer\/$/)
+    expect(hindiPath('/switch-karle/resign-date/', base)).toBe('/switch-karle/hi/resign-date/')
   })
 })

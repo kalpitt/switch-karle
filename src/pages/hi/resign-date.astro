@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro'
+import PlanPage from '../../tools/plan/page'
+import { PLAN_PAGE } from '../../data/tools'
+import { en } from '../../i18n/en'
+import { hiDictionary } from '../../i18n/hi-dictionary'
+
+// Hindi is hidden until its translation pass (2026-11-19): a title with no Hindi yet shows in English.
+const t = (key: string) => hiDictionary[key] ?? en[key]!
+---
+
+<Base title={t('planPage.seoTitle')} description={t('plan.tagline')} slug={PLAN_PAGE} lang="hi">
+  <PlanPage client:load lang="hi" />
+</Base>

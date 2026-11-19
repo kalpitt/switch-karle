@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import { SITE } from '../../site.config.mjs'
-import { TOOLS_PAGE, pageTools } from '../data/tools'
+import { PLAN_PAGE, TOOLS_PAGE, pageTools } from '../data/tools'
+import { DOOR_IDS, doorPath } from '../data/doors'
 import { INFO_PAGES } from '../data/infoPages'
 
 function siteRoot(): string {
@@ -13,7 +14,7 @@ function siteRoot(): string {
 export const GET: APIRoute = () => {
   const root = siteRoot()
   // What to say's situations are not pages (they live at /what-to-say/#<slug>).
-  const slugs = [TOOLS_PAGE, ...pageTools().map((t) => t.slug), ...INFO_PAGES]
+  const slugs = [TOOLS_PAGE, PLAN_PAGE, ...DOOR_IDS.map(doorPath), ...pageTools().map((t) => t.slug), ...INFO_PAGES]
   const en = [`${root}/`, ...slugs.map((slug) => `${root}/${slug}/`)]
   const hi = [`${root}/hi/`, ...slugs.map((slug) => `${root}/hi/${slug}/`)]
   const locs = [...en, ...hi]

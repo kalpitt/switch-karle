@@ -1,12 +1,10 @@
 import { useLang, useT, type Lang } from '../../i18n'
-import { latinLang } from '../../lib/latinLang'
 import { quietGlyphs } from '../../components/quietGlyphs'
-import { listSections, type ListEntry } from '../../data/journey'
+import { listSections } from '../../data/journey'
 import { TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
 import { IslandRoot } from '../../components/IslandRoot'
-import { ChevronRight } from '../../components/icons'
-import { toolHref } from '../../lib/toolHref'
+import { EntryRow } from '../../components/ToolRow'
 
 /**
  * /tools/: every tool, grouped by the seven journey stages (PRODUCT.md). The one
@@ -60,36 +58,5 @@ function AllTools() {
         ))}
       </div>
     </div>
-  )
-}
-
-/** A tool as a list row (VIS-27): name, one line of what it does, a chevron. */
-function EntryRow({ entry }: { entry: ListEntry }) {
-  const t = useT()
-  const { lang } = useLang()
-  const target = entry.kind === 'tool' ? entry.tool : entry.situations[0]!
-  const title = t(entry.kind === 'tool' ? entry.tool.titleKey : entry.group.titleKey)
-  // A What to say row names the situations it holds in this stage.
-  const desc =
-    entry.kind === 'tool' ? t(entry.tool.descKey) : entry.situations.map((s) => t(s.titleKey)).join(' · ')
-  return (
-    <li>
-      <a
-        href={toolHref(lang, target.slug)}
-        data-entry={entry.kind === 'tool' ? entry.tool.slug : entry.group.slug}
-        className="group/row flex min-h-[44px] items-start gap-3 border-b border-line py-3 transition-colors hover:border-field"
-      >
-        <span className="min-w-0 flex-1">
-          <span
-            lang={latinLang(title, lang)}
-            className="block text-[15px] font-semibold leading-snug text-ink group-hover/row:underline group-hover/row:underline-offset-2"
-          >
-            {title}
-          </span>
-          <span className="mt-0.5 block text-[13px] leading-snug text-ink-soft">{desc}</span>
-        </span>
-        <ChevronRight className="mt-1 text-ink-faint" />
-      </a>
-    </li>
   )
 }

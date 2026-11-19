@@ -1,4 +1,5 @@
 import { TOOLS_PAGE, type ToolDef } from '../data/tools'
+import { DOORS, doorPath, type DoorId } from '../data/doors'
 
 export interface PaletteItem {
   slug: string
@@ -94,5 +95,23 @@ export function paletteItems(tools: ToolDef[], homeHref: string, toolHref: (slug
       descKey: tool.descKey,
       keywords: tool.keywords,
     })),
+    // The five step pages come after the tools, so "resign" still finds the
+    // resignation letter first and a tool's own name always wins a tie.
+    ...DOORS.map((door) => ({
+      slug: doorPath(door.id),
+      href: toolHref(doorPath(door.id)),
+      titleKey: `door.${door.id}.name`,
+      descKey: `door.${door.id}.what`,
+      keywords: DOOR_KEYWORDS[door.id],
+    })),
   ]
+}
+
+/** Words people type when what they want is a whole step, not one tool. */
+const DOOR_KEYWORDS: Record<DoorId, string[]> = {
+  leaving: ['leave', 'leaving', 'quit job', 'naukri chhodna'],
+  applying: ['apply', 'job search', 'interview', 'looking for job'],
+  offer: ['offer', 'got an offer', 'offer letter'],
+  notice: ['notice', 'resigned', 'serving notice', 'last working day'],
+  joining: ['joining', 'new job', 'first day', 'onboarding'],
 }
