@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import type { Lang } from '../i18n'
 import { useLang, useT } from '../i18n'
 import { TOOLS, TOOLS_PAGE, toolBySlug } from '../data/tools'
+import { HINDI_ON } from '../data/site'
 import { verifiedRange } from '../data/sources'
 import { INFO_PAGES, SOURCE_CODE_URL, type InfoPage } from '../data/infoPages'
 import { formatLongDate } from '../lib/formatDate'
@@ -60,6 +61,9 @@ export function Shell({ current, children }: { current: string; children: ReactN
 
           <div className="order-2 ml-auto flex items-center gap-2 md:order-3">
             <CommandPalette />
+            {/* Hindi is hidden until its translation pass (HINDI_ON, 2026-11-19). A Hindi page
+                still shows the switch, so someone who reaches one can get back to English. */}
+            {(HINDI_ON || lang === 'hi') && (
             <div role="group" aria-label={t('app.langToggle.label')} className="inline-flex min-h-[44px] items-center rounded-xl bg-paper p-1">
               <LangLink to="en" label="EN, English" current={lang} slug={slug} onPick={pick}>
                 EN
@@ -68,6 +72,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
                 हिन्दी
               </LangLink>
             </div>
+            )}
           </div>
 
           <nav

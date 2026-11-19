@@ -4,6 +4,7 @@ import { loadDictionary, useLang, useT } from '../i18n'
 import { isHiPath, withLang } from '../lib/langPath'
 import { IslandRoot } from './IslandRoot'
 import { buttonClass } from './buttonClass'
+import { HINDI_ON } from '../data/site'
 
 /**
  * The one 404 page. GitHub Pages serves the same 404.html for every missing URL,
@@ -55,14 +56,12 @@ function NotFound() {
         >
           {t('notFound.home')}
         </a>
-        <a
-          href={withLang(other)}
-          lang={other}
-          hrefLang={other}
-          className={buttonClass('secondary')}
-        >
-          {t('notFound.otherHome')}
-        </a>
+        {/* No link into Hindi while it is hidden (HINDI_ON, 2026-11-19); a Hindi 404 still links to English. */}
+        {(HINDI_ON || other === 'en') && (
+          <a href={withLang(other)} lang={other} hrefLang={other} className={buttonClass('secondary')}>
+            {t('notFound.otherHome')}
+          </a>
+        )}
       </div>
       <p className="mt-6 text-[13px] text-ink-soft">{t('notFound.searchHint')}</p>
     </div>

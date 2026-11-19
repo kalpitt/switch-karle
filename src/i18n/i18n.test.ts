@@ -3,10 +3,15 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { dictionaries, translate, translateOrFallback } from './index'
+import { en } from './en'
+import { hi } from './hi'
+import { hiSuite } from './hi-suite'
+import { HINDI_PENDING } from './hi-pending'
 
-const frozenHiKeys: string[] = JSON.parse(
-  readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'hi-freeze.json'), 'utf8'),
-)
+const here = dirname(fileURLToPath(import.meta.url))
+const frozenHiKeys: string[] = JSON.parse(readFileSync(join(here, 'hi-freeze.json'), 'utf8'))
+/** The English at the start of the front-door rebuild (2026-11-19). The Hindi pass deletes it. */
+const enBaseline: Record<string, string> = JSON.parse(readFileSync(join(here, 'en-baseline.json'), 'utf8'))
 
 describe('translate', () => {
   it('returns the English string for the en dictionary', () => {
@@ -81,9 +86,9 @@ describe('dictionary integrity', () => {
     expect(missing).toEqual([])
   })
 
-  it('every English key has a non-blank Hindi pair (full EN→HI parity)', () => {
+  it('every English key has a non-blank Hindi pair (full EN→HI parity), except those waiting for the Hindi pass', () => {
     const missing = Object.keys(dictionaries.en).filter(
-      (key) => !(key in dictionaries.hi) || dictionaries.hi[key].trim() === '',
+      (key) => !HINDI_PENDING.includes(key) && (!(key in dictionaries.hi) || dictionaries.hi[key].trim() === ''),
     )
     expect(missing).toEqual([])
   })
@@ -123,6 +128,29 @@ describe('dictionary integrity', () => {
       (key) => !key.startsWith('flag.') && !(key in dictionaries.en),
     )
     expect(orphaned).toEqual([])
+  })
+})
+
+/**
+ * Hindi is hidden during the front-door rebuild (Kalpit, 2026-11-19). Every
+ * English string that is new or reworded since `en-baseline.json` must be on
+ * the Hindi pass's list, so nothing is quietly left untranslated.
+ */
+describe('Hindi pending list (rebuild, 2026-11-19)', () => {
+  it('lists every English key that is new or reworded since the baseline', () => {
+    const changed = Object.keys(en).filter((key) => enBaseline[key] !== en[key])
+    expect(changed.filter((key) => !HINDI_PENDING.includes(key))).toEqual([])
+  })
+
+  it('names only keys that exist in en.ts, each once', () => {
+    expect(HINDI_PENDING.filter((key) => !(key in en))).toEqual([])
+    expect(new Set(HINDI_PENDING).size).toBe(HINDI_PENDING.length)
+  })
+
+  it('lists nothing that is unchanged and already has its Hindi', () => {
+    // A key comes off the list when the Hindi pass translates it.
+    const done = HINDI_PENDING.filter((key) => enBaseline[key] === en[key] && (key in hi || key in hiSuite))
+    expect(done).toEqual([])
   })
 })
 

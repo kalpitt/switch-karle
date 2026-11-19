@@ -10,6 +10,25 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-19 — Hindi waits until the English rebuild is finished
+
+**Decided by Kalpit.** During the front-door rebuild the English site and its
+words are built and finished first; Hindi is switched back on afterwards as one
+translation pass, so no step of the rebuild waits on Hindi.
+
+How: Hindi is hidden, not removed. `HINDI_ON` in `src/data/site.ts` is false, so
+no English page offers the language switch or links into `/hi/`. The `/hi/`
+pages still build, stay in the sitemap and `hreflang`, and keep their tests, so
+the machinery cannot rot. Keeping Hindi visible meanwhile was rejected: a
+half-translated page, new English lines among old Hindi ones, is the confusion
+the rebuild removes, and the site has no users or distribution yet, so nobody
+loses a Hindi site they used.
+
+Every English string that is new or reworded since the rebuild began
+(`src/i18n/en-baseline.json`) must be listed in `src/i18n/hi-pending.ts`, which
+a test enforces: that list is the Hindi pass's whole job. `AGENTS.md` rule 4
+carries the exception until the pass ends it.
+
 ## 2026-11-16 — The front door is rebuilt: say what the site is, ask which step you are at
 
 **Decided by Kalpit.** He showed the site to someone who had never seen it. She

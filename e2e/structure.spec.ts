@@ -121,10 +121,13 @@ test('a situation in the address opens What to say with it picked, and the langu
   await expect(page.getByRole('button', { name: /copy/i }).first()).toBeVisible()
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://switchkarle.fyi/what-to-say/')
 
-  await page.getByRole('link', { name: 'हिन्दी (Hindi)' }).click()
-  await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/what-to-say\/#buyout-ask$/)
+  // Hindi is hidden (HINDI_ON, 2026-11-19), so the switch is tested from the Hindi side.
+  await open(page, '/hi/what-to-say/#buyout-ask')
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
   await expect(page.locator('main h2')).toHaveText('Notice buyout का email')
+  await page.getByRole('link', { name: 'English' }).click()
+  await expect(page).toHaveURL(/^http:\/\/[^/]+\/what-to-say\/#buyout-ask$/)
+  await expect(page.locator('main h2')).toHaveText('Notice buyout email')
 })
 
 test('in Hindi, क्या कहें opens on the situation the address names', async ({ page }) => {

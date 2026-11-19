@@ -14,9 +14,12 @@ import { fileURLToPath } from 'node:url'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const slug = process.argv[2] ?? ''
 
-if (!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(slug) || slug === 'hi' || slug === 'home') {
+// Addresses that are pages, not tools: the language prefix, the home, all tools,
+// the plan and the step pages' folder (src/data/tools.ts), and the plan sentinel.
+const RESERVED = ['hi', 'home', 'tools', 'resign-date', 'start', 'plan']
+if (!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(slug) || RESERVED.includes(slug)) {
   console.error('usage: node scripts/new-tool.mjs <kebab-slug>')
-  console.error('slug must be English kebab-case and must not be "hi" or "home".')
+  console.error(`slug must be English kebab-case and must not be one of: ${RESERVED.join(', ')}.`)
   process.exit(1)
 }
 

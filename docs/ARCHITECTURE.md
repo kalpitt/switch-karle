@@ -31,6 +31,8 @@ src/
   data/journey.ts  the seven journey stages (`ToolDef.journey`), the list
                    view of them (`listSections`), and each tool's "Next"
                    link (components/NextStep.tsx renders it)
+  data/doors.ts    the five steps visitors pick from (doors in code): which
+                   stages each covers, its lead tool and up to four more
   prompts/         text the user hands to their own AI — English literals,
                    not i18n keys, because they are content and not UI chrome
   lib/storage.ts   switchkarle.<tool>.v<N>
@@ -150,6 +152,16 @@ reads `<html lang>` and loads `en.ts` or `hi-dictionary.ts` (`hi` + `hiSuite`)
 with a top-level `await`, which finishes before any island hydrates. On the
 server and in tests both load. This saves about 30 KB gzipped on English pages
 and 23 KB on Hindi ones.
+
+**Hindi hidden during the rebuild (2026-11-19).** `HINDI_ON` in
+`src/data/site.ts` is false: English pages render no language switch and no
+link into `/hi/` (a Hindi page keeps the switch, to get back to English). The
+`/hi/` pages still build and are tested. Every `en.ts` key that is new or
+reworded since `src/i18n/en-baseline.json` is listed in `src/i18n/hi-pending.ts`
+(enforced by `i18n.test.ts`); the parity test skips those keys, and a Hindi page
+also loads `en.ts` while the list is not empty, so they show in English rather
+than as raw keys. The Hindi pass empties the list, deletes the baseline and
+turns the flag on.
 
 ## Privacy
 

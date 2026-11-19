@@ -221,15 +221,25 @@ test('a missing Hindi page is in Hindi, and its other-language button goes to th
   await expect(page.getByRole('link', { name: 'होम page पर जाएं' })).toHaveAttribute('href', '/hi/')
 })
 
+// Hindi is hidden until its translation pass (HINDI_ON, 2026-11-19): an English
+// page offers no way into Hindi, and a Hindi page reached by its address still
+// switches back to the same English tool. When HINDI_ON is true again, restore the
+// English-to-Hindi click here.
 test('language toggle keeps you on the same tool', async ({ page }) => {
-  await open(page, '/gratuity/')
-  await page.getByRole('link', { name: 'हिन्दी (Hindi)' }).click()
-  await expect(page).toHaveURL(/^http:\/\/[^/]+\/hi\/gratuity\/$/)
+  await open(page, '/hi/gratuity/')
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi')
   await expect(page.locator('astro-island[ssr]')).toHaveCount(0)
   await page.getByRole('link', { name: 'English' }).click()
   await expect(page).toHaveURL(/^http:\/\/[^/]+\/gratuity\/$/)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})
+
+test('while Hindi is hidden, no English page links into Hindi', async ({ page }) => {
+  for (const path of ['/', '/tools/', '/gratuity/', '/no-such-page/']) {
+    await page.goto(path)
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+    await expect(page.locator('body a[href^="/hi"]'), path).toHaveCount(0)
+  }
 })
 
 test('erase removes everything the site saved', async ({ page }) => {
