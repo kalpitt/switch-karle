@@ -98,25 +98,25 @@ export const PLAN_TARGET = 'plan' as const
  * tracker. fake-offer and relieving-chaser skip past them.
  */
 export const NEXT_STEP: Readonly<Record<string, string>> = {
-  // 0 I'm done here
+  // 0 Thinking of leaving
   gratuity: 'leave-encashment',
   'leave-encashment': 'notice-buyout',
   'notice-buyout': 'bond-scanner',
   'bond-scanner': 'bonus-clawback',
   'bonus-clawback': 'clause-library',
   'clause-library': 'tracker',
-  // 1 Looking, quietly
+  // 1 Applying
   tracker: 'prompts',
   prompts: 'redactor',
   redactor: 'expected-ctc',
-  // 2 Talking to them
+  // 2 Interviewing
   // The What to say page with no situation picked shows no Next link (the
   // picker is the next thing); this entry keeps the chain whole for tests.
   [WHAT_TO_SAY]: 'expected-ctc',
   'expected-ctc': 'recruiter-followup',
   'recruiter-followup': 'real-hike',
   'real-hike': 'decoder',
-  // 3 The number on the table
+  // 3 Offer in hand
   decoder: 'offer-comparison',
   'offer-comparison': 'variable-reality',
   'variable-reality': 'esop-reality',
@@ -125,21 +125,21 @@ export const NEXT_STEP: Readonly<Record<string, string>> = {
   'fake-offer': 'resignation-letter',
   // Backed out of an accepted offer: nothing to resign from, so back to the plan.
   'decline-accepted': PLAN_TARGET,
-  // 4 Telling them
+  // 4 Resigning
   'resignation-letter': 'manager-script',
   'manager-script': 'counter-offer',
   'counter-offer': 'counter-offer-reply',
   'counter-offer-reply': 'early-release',
   'early-release': 'buyout-ask',
   'buyout-ask': 'notice-tracker',
-  // 5 Serving it out
+  // 5 On notice
   'notice-tracker': 'handover-doc',
   'handover-doc': 'insurance-gap',
   'insurance-gap': 'fnf-checker',
   'fnf-checker': 'relieving-chaser',
   'relieving-chaser': 'bgv-prep',
   'offer-goes-cold': 'notice-tracker',
-  // 6 The first 90 days
+  // 6 Joining a new job
   'bgv-prep': 'epf-transfer',
   'epf-transfer': 'tax-declaration',
   'tax-declaration': 'form16-shock',

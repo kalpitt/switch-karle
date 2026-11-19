@@ -112,7 +112,7 @@ test('the Next link walks to the next tool, in English and in Hindi', async ({ p
 
 test('a Next link into a later stage names that stage', async ({ page }) => {
   await open(page, '/clause-library/')
-  await expect(page.locator('a[data-next-step="tracker"]')).toContainText('Next stage: Looking, quietly')
+  await expect(page.locator('a[data-next-step="tracker"]')).toContainText('Next step: Applying')
 })
 
 test('the last tool of the journey leads back to the plan', async ({ page }) => {
