@@ -73,6 +73,11 @@ do not silently pick one.
 3. **Never ship a statutory number or legal claim untraced to a primary
    source.** Not from memory, not from another AI, not from a tax blog.
 4. **Never ship a tool in English only.** EN and HI both, or it does not ship.
+   Exception, 2026-11-19: during the front-door rebuild Hindi is hidden
+   (`HINDI_ON`), and new or changed English strings are listed in
+   `src/i18n/hi-pending.ts` instead of being translated. The Hindi pass empties
+   that list, deletes `src/i18n/en-baseline.json`, sets `HINDI_ON` to true, and
+   this exception ends.
 5. **Never start distribution activity** — no promotion, no Search Console, no
    analytics, no SEO submission. Building *so distribution is easy later* is
    required; *doing* it is not authorised.

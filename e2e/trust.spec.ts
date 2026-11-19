@@ -22,9 +22,10 @@ for (const p of PAGES) {
       await expect(page.locator(`[data-info="${p.slug}"]`)).toContainText(p.text)
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${path}$`))
       await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/)
-      // The language switch leads to this page's twin, not home.
-      const other = lang === 'hi' ? `/${p.slug}/` : `/hi/${p.slug}/`
-      await expect(page.locator(`header a[hreflang="${lang === 'hi' ? 'en' : 'hi'}"]`)).toHaveAttribute('href', other)
+      // The language switch leads to this page's twin, not home. While Hindi is hidden
+      // (HINDI_ON, 2026-11-19) only a Hindi page shows it; restore the English half then.
+      if (lang === 'hi') await expect(page.locator('header a[hreflang="en"]')).toHaveAttribute('href', `/${p.slug}/`)
+      else await expect(page.locator('header a[hreflang="hi"]')).toHaveCount(0)
     })
   }
 }

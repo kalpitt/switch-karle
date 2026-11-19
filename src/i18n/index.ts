@@ -1,6 +1,7 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { englishPath, hindiPath } from '../lib/langPath'
+import { HINDI_PENDING } from './hi-pending'
 
 export type Lang = 'en' | 'hi'
 
@@ -29,7 +30,12 @@ export async function loadDictionary(lang: Lang): Promise<void> {
 
 const pageLang: Lang | null =
   typeof document === 'undefined' ? null : document.documentElement.lang === 'hi' ? 'hi' : 'en'
-if (pageLang) await loadDictionary(pageLang)
+// While Hindi waits for its translation pass (`hi-pending.ts`, 2026-11-19), a
+// Hindi page also loads English, so a string with no Hindi yet shows in English
+// as it did on the server, never as its raw key. The Hindi pass empties the list
+// and this goes back to loading one language.
+if (pageLang === 'hi' && HINDI_PENDING.length > 0) await Promise.all([loadDictionary('hi'), loadDictionary('en')])
+else if (pageLang) await loadDictionary(pageLang)
 else await Promise.all([loadDictionary('en'), loadDictionary('hi')])
 
 const STORAGE_KEY = 'switchkarle.lang.v1'

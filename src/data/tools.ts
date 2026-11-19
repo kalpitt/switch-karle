@@ -34,6 +34,16 @@ export const WHAT_TO_SAY = 'what-to-say' as const
 /** The page that lists every tool by stage, /tools/ and /hi/tools/. Not a tool slug. */
 export const TOOLS_PAGE = 'tools' as const
 
+/**
+ * The resign-date plan's own page, /resign-date/ and /hi/resign-date/ (the
+ * front-door rebuild, 2026-11-16). A page like `TOOLS_PAGE`, not a registry
+ * tool: never add it to `TOOLS`.
+ */
+export const PLAN_PAGE = 'resign-date' as const
+
+/** The folder of the five step pages, /start/<id>/ (`src/data/doors.ts`). Not a tool slug. */
+export const DOORS_DIR = 'start' as const
+
 export const TOOLS: ToolDef[] = [
   {
     slug: 'decoder',
