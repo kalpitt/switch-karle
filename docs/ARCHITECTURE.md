@@ -81,8 +81,13 @@ Below 360px the wordmark is visually hidden (the mark stays, the name stays for
 screen readers) so the bar keeps to two rows.
 
 **The tool list has one home.** `/tools/` (`tools/all-tools`) renders
-`listSections()` from `data/journey.ts`: the seven stages, each with its name,
-its one-line "what", and its tools as rows. The home page does not keep a
+`doorListSections()` from `data/doors.ts`: the five steps, each with its name,
+its one-line "what", its lead tool first (tagged "Start here"), then its other
+tools as rows. Each section's id is the door id (`/tools/#offer`), and a
+sticky row of five jump links sits under the header. The plan is the first row
+of `leaving`; What to say's situations fold into one row per step, named
+`whatToSay.row.<door>` when that key exists. `listSections()` (seven stages)
+still feeds the home page's tool count. The home page does not keep a
 second list; it links to `/tools/`, with a count from `distinctToolCount()`.
 Tool names are the plain names of COPY-05 (decision 5, 2026-10-31); a tool's
 former names sit in its `keywords`, so search still finds "Decoder" or

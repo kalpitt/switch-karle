@@ -7,7 +7,7 @@
  * model. Each door covers one or two of them, shows one tool to start with
  * (`lead`) and at most four more (`also`), and is a page at /start/<id>/.
  */
-import { DOORS_DIR, PLAN_PAGE, TOOLS } from './tools'
+import { DOORS_DIR, PLAN_PAGE, TOOLS, WHAT_TO_SAY, toolBySlug } from './tools'
 import type { ToolDef } from './tools'
 import type { JourneyId } from './journey'
 
@@ -91,5 +91,50 @@ export function doorSections(tools: readonly ToolDef[] = TOOLS): { door: Door; s
   return DOORS.map((door) => {
     const rest = tools.filter((tool) => door.journeys.includes(tool.journey)).map((tool) => tool.slug)
     return { door, slugs: [...new Set([door.lead, ...door.also, ...rest])] }
+  })
+}
+
+/** One row of /tools/: the plan, a tool, or one What to say row holding this door's scripts. */
+export type DoorRow =
+  | { kind: 'plan'; lead: boolean }
+  | { kind: 'tool'; tool: ToolDef; lead: boolean }
+  | {
+      kind: 'group'
+      /** What to say's own page, for its one-liner and as the fallback name. */
+      group: ToolDef
+      /** This door's scripts, in the order the section lists them. The row links to the first. */
+      situations: ToolDef[]
+      /** `whatToSay.row.<door>`: the row is named for the door (`listSections` is untouched). */
+      nameKey: string
+    }
+
+/**
+ * `doorSections()` as /tools/ shows it: What to say's scripts folded into one
+ * row per door, sitting where the first script sits, named for the door; the
+ * What to say page itself is not listed again, its rows stand for it. The lead
+ * row is marked so the page can tag it "Start here".
+ */
+export function doorListSections(tools: readonly ToolDef[] = TOOLS): { door: Door; rows: DoorRow[] }[] {
+  const group = tools.find((tool) => tool.slug === WHAT_TO_SAY)
+  return doorSections(tools).map(({ door, slugs }) => {
+    const rows: DoorRow[] = []
+    for (const slug of slugs) {
+      const lead = slug === door.lead
+      if (slug === PLAN_PAGE) {
+        rows.push({ kind: 'plan', lead })
+        continue
+      }
+      if (slug === WHAT_TO_SAY) continue
+      const tool = tools.find((t) => t.slug === slug) ?? toolBySlug(slug)
+      if (!tool) continue
+      if (!tool.partOf) {
+        rows.push({ kind: 'tool', tool, lead })
+        continue
+      }
+      const row = rows.find((r) => r.kind === 'group')
+      if (row && row.kind === 'group') row.situations.push(tool)
+      else if (group) rows.push({ kind: 'group', group, situations: [tool], nameKey: `whatToSay.row.${door.id}` })
+    }
+    return { door, rows }
   })
 }

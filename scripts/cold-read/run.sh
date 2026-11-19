@@ -5,14 +5,14 @@
 # a reviewer started inside the repo inherits AGENTS.md and already knows what
 # the site is. Project memory is switched off for the same reason.
 set -euo pipefail
-SHOTS="$(cd "$1" && pwd)"; MODEL="${2:-claude-fable-5-2}"
+SHOTS="$(cd "$1" && pwd)"; MODEL="${2:-claude-sonnet-5-5}"; EFFORT="${EFFORT:-low}"
 KIT="$(cd "$(dirname "$0")" && pwd)"; OUT="$SHOTS/verdicts"; mkdir -p "$OUT"
 case "$SHOTS" in *switch-karle*) echo "Shots folder is inside the repo. Use a folder outside it."; exit 1;; esac
 if [ -e "$SHOTS/CLAUDE.md" ] || [ -e "$SHOTS/AGENTS.md" ]; then echo "Remove CLAUDE.md / AGENTS.md from the shots folder."; exit 1; fi
 cd "$SHOTS"
 review() { # name persona prompt-file dir
   local text; text="$(sed -e "s|{{PERSONA}}|$2|" -e "s|{{DIR}}|$4|" "$KIT/$3")"
-  env -u CLAUDE_COWORK_MEMORY_PATH_OVERRIDE timeout 600 claude -p "$text" --model "$MODEL" --allowedTools Read < /dev/null > "$OUT/$1.txt" 2> "$OUT/$1.err" || echo "FAILED: $1"
+  env -u CLAUDE_COWORK_MEMORY_PATH_OVERRIDE timeout 600 claude -p "$text" --model "$MODEL" --effort "$EFFORT" --allowedTools Read < /dev/null > "$OUT/$1.txt" 2> "$OUT/$1.err" || echo "FAILED: $1"
 }
 # Hindi pages are reviewed only with HINDI=1: Hindi is hidden until the Hindi pass (2026-11-19),
 # so meanwhile every persona, including the two who prefer Hindi, sees the English pages.
