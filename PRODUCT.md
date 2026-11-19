@@ -200,7 +200,8 @@ twice. Since 2026-11-07 the plan's join date, resign date and last working day
 fill gratuity, F&F, the resignation letter and the notice tracker.
 
 **8. Hindi is the same product, not a translated shell.** Full parity is
-test-enforced. The register is code-mixed — *"Courts ने specialised training cost
+test-enforced. Exception, 2026-11-19: Hindi is hidden during the front-door
+rebuild and switched back on after one translation pass. The register is code-mixed — *"Courts ने specialised training cost
 मांगा है"* — because that is how this audience actually talks about work. A
 native-writer pass should keep that, not sanitise it into pure Hindi.
 

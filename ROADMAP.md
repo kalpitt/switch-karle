@@ -45,6 +45,11 @@ These have been decided. Re-opening them wastes time:
   Kalpit has told nothing: they can say what it is and which they would tap.
   *Status 2026-11-16:* a mock-up of the home page passed with 8 of 8
   reviewers. Nothing is built yet.
+  *Status 2026-11-19:* built and live in English (#119 to #125). The home
+  page passed with 8 of 8 reviewers, and 6 of 6 tapped their step. On the
+  step pages all six found their tool, but only 3 of 6 said the page was for
+  them, because of how the steps are named (laid off is not "resigning").
+  Kalpit put it live anyway. Renaming the steps stays open for the people test.
 - **Kalpit's own review, first.** Decided 2026-11-13. He goes through the
   site himself, start to finish, when he is free. What he finds gets built on
   before anyone else is asked.
@@ -63,6 +68,10 @@ These have been decided. Re-opening them wastes time:
 
 ## Next
 
+- **The Hindi pass.** Translate everything in `src/i18n/hi-pending.ts`, a
+  Hindi reader approves it, and Hindi is switched back on (`HINDI_ON`). Check
+  that all five step cards fit on the first Hindi phone screen; on 2026-11-19
+  only four did.
 - **The tracker accepts a company with no job title.** The one piece of the
   old Phase 1 that did not ship: a card still needs a role, and someone who has
   applied nowhere has none.
