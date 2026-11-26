@@ -10,6 +10,36 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-26 — Build the callback fixer: AI on one page, through our own server
+
+**Decided by Kalpit** ("if you are confident about the plan let's do it",
+2026-11-26), after a written plan, five fresh reviewers playing job switchers
+and a Gemini second opinion. The plan is in the project files, not this repo.
+
+What: one page that takes a resume and an optional role and gives the roles it
+fits best, Naukri and LinkedIn headlines, skills to add, the top three bullets
+rewritten and the biggest gap, with optional add-ons after the result.
+
+Why: people get stuck in the middle of a search (no recruiter calls, momentum
+gone by week two), not at the exit where most tools sit. Kalpit already fixes
+resumes for people by hand; the page does that automatically on a free model.
+
+How, and the calls inside it:
+- **Workers AI on the free plan** in Kalpit's Cloudflare account. Past the
+  free daily quota it errors and charges nothing. Gemini's free tier was
+  rejected because Google may use free-tier inputs to improve its products,
+  which `PRIVACY.md` forbids. Kalpit: the free quota is enough for now.
+- **His Cloudflare account counts as a destination he controls** for
+  `PRIVACY.md`, on Cloudflare's no-training and zero-retention terms. Logs off.
+- **Only facts already in the resume.** Missing facts are flagged, never
+  invented, and code checks that no number appears in an answer unless it is in
+  the resume (Gemini found the mock inventing "9% to 4%").
+- **No email check-ins and no counters**, so the analytics ban stands.
+  Outcomes come from Kalpit asking the people he sends it to.
+- **The long-notice company list is separate**, its own page, later.
+- `PRODUCT.md`, `ROADMAP.md` and `PRIVACY.md` changed in their own pull request,
+  merged by Kalpit, before the code.
+
 ## 2026-11-19 — Follow-ups to the rebuild: notice step renamed, hike question reworded, supporting dates folded
 
 **Decided by Kalpit** (relayed as the rebuild's follow-ups). Step 4 is now
