@@ -65,7 +65,11 @@ function Body() {
   const problem = resumeProblem(cleaned.text)
 
   const removedLine = cleaned.removed
-    .map((r) => t(`fix-my-profile.removed.${r.kind}`, { n: r.count }))
+    .map((r) =>
+      r.count === 1 && ['phone', 'email', 'link'].includes(r.kind)
+        ? t(`fix-my-profile.removed.${r.kind}.one`)
+        : t(`fix-my-profile.removed.${r.kind}`, { n: r.count }),
+    )
     .join(', ')
 
   const run = async (opts: { role?: string; jobPost?: string } = {}) => {

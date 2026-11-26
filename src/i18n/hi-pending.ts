@@ -198,4 +198,7 @@ export const HINDI_PENDING: string[] = [
   'privacy.fixer.title',
   'privacy.fixer.p1',
   'privacy.fixer.p2',
+  'fix-my-profile.removed.phone.one',
+  'fix-my-profile.removed.email.one',
+  'fix-my-profile.removed.link.one',
 ]

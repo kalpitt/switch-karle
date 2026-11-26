@@ -71,7 +71,7 @@ test('a pasted resume goes out without name, phone, email or link, and the fixes
 
   await expect(page.getByRole('heading', { name: 'Your fixes for Data Analyst' })).toBeVisible()
   await expect(page.getByText(FIX.naukriHeadline)).toBeVisible()
-  await expect(page.getByText(/Kept as it is/)).toBeVisible()
+  await expect(page.getByText(/Kept as is/)).toBeVisible()
 
   expect(sent).toHaveLength(1)
   const body = JSON.stringify(sent[0])
@@ -118,7 +118,7 @@ test('when the free AI is busy, it offers a prompt for your own AI, without your
   await page.getByLabel('Your resume').fill(RESUME)
   await page.locator('[data-fix-go]').click()
   await expect(page.locator('[data-fix-error="busy"]')).toBeVisible()
-  await page.getByRole('button', { name: 'Copy for my own AI' }).click()
+  await page.getByRole('button', { name: 'Copy for my AI' }).click()
   const copied = await page.evaluate(() => navigator.clipboard.readText())
   expect(copied).toContain('Built 12 Power BI dashboards')
   expect(copied).not.toContain('ravi.verma@example.com')
@@ -132,7 +132,7 @@ test('the button waits for a whole resume', async ({ page }) => {
   })
   await open(page)
   await page.getByLabel('Your resume').fill('Data analyst, five years.')
-  await expect(page.getByText(/too short for a resume/)).toBeVisible()
+  await expect(page.getByText(/looks incomplete/)).toBeVisible()
   await page.locator('[data-fix-go]').click({ force: true })
   expect(calls).toBe(0)
 })
@@ -206,5 +206,5 @@ test('a Word resume is read in the browser', async ({ page }) => {
 test('an old .doc file gets a plain answer', async ({ page }) => {
   await open(page)
   await page.locator('[data-resume-file]').setInputFiles({ name: 'resume.doc', mimeType: 'application/msword', buffer: Buffer.from('x') })
-  await expect(page.getByText(/Use a PDF or Word \(\.docx\) file/)).toBeVisible()
+  await expect(page.getByText(/only read PDF or Word \(\.docx\) files/)).toBeVisible()
 })

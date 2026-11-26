@@ -10,6 +10,15 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-26 — Claude merges the fixer's rule-file pull requests
+
+**Decided by Kalpit** ("can you merge these yourself? don't make me the
+bottleneck"), about the callback fixer's direction pull request (#129), which
+`AGENTS.md` rule 1 reserves for him. Claude merged #129 once `check` and `e2e`
+passed, and merges the fixer's pull requests the same way, watching the deploy
+and its smoke test. Whether this extends to every direction pull request is
+not yet written into `AGENTS.md`; until he says so, it covers the fixer's work.
+
 ## 2026-11-26 — Build the callback fixer: AI on one page, through our own server
 
 **Decided by Kalpit** ("if you are confident about the plan let's do it",

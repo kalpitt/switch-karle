@@ -215,7 +215,7 @@ test('plan in Hindi: the same door, headline first', async ({ page }) => {
 test('home: says what the site is and offers five steps', async ({ page }) => {
   await open(page, '/')
   await expect(page.locator('h1')).toHaveText('Changing jobs? Free tools for every step.')
-  await expect(page.locator('[data-privacy-line]')).toContainText('Nothing you type is sent anywhere.')
+  await expect(page.locator('[data-privacy-line]')).toContainText('Nothing leaves your device, except when you use the profile fixer')
   await expect(page.getByRole('heading', { level: 2, name: 'Which step are you at?' })).toBeVisible()
   const cards = page.locator('a[data-door-card]')
   await expect(cards).toHaveCount(5)
