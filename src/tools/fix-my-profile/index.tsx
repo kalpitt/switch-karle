@@ -145,6 +145,11 @@ function Body() {
           onChange={(v) => setRole(v.slice(0, ROLE_MAX_CHARS))}
           placeholder={t('fix-my-profile.rolePlaceholder')}
         />
+        {/* Readers on 2026-11-26 wanted the privacy line before the button, not after it. */}
+        <p className="flex gap-2 text-[14px] leading-relaxed text-ink-soft">
+          <ShieldCheck size={16} className="mt-[3px] shrink-0 text-leaf" />
+          <span>{t('fix-my-profile.trust')}</span>
+        </p>
         <Button
           className="w-full"
           disabled={phase.kind === 'working'}
@@ -154,10 +159,6 @@ function Body() {
         >
           {phase.kind === 'working' ? t('fix-my-profile.working') : t('fix-my-profile.go')}
         </Button>
-        <p className="flex gap-2 text-[14px] leading-relaxed text-ink-soft">
-          <ShieldCheck size={16} className="mt-[3px] shrink-0 text-leaf" />
-          <span>{t('fix-my-profile.trust')}</span>
-        </p>
       </Card>
 
       <div ref={resultRef} tabIndex={-1} className="space-y-4 outline-none" aria-live="polite">
@@ -357,18 +358,7 @@ function AddOns({ fix, onJob }: { fix: ProfileFix; onJob: (jobPost: string) => v
     <Card className="space-y-3">
       <h3 className="text-[16px] font-bold">{t('fix-my-profile.more.title')}</h3>
 
-      <button type="button" className={chip} aria-expanded={open === 'job'} onClick={() => toggle('job')}>
-        {t('fix-my-profile.more.job')}
-      </button>
-      {open === 'job' && (
-        <div className="space-y-2">
-          <TextArea label={t('fix-my-profile.more.jobLabel')} value={jobPost} onChange={setJobPost} rows={6} />
-          <Button variant="secondary" disabled={jobPost.trim().length < 80} onClick={() => onJob(jobPost.trim())}>
-            {t('fix-my-profile.more.jobGo')}
-          </Button>
-        </div>
-      )}
-
+      {/* First: people on a long notice said this is the question that loses them calls. */}
       <button type="button" className={chip} aria-expanded={open === 'notice'} onClick={() => toggle('notice')}>
         {t('fix-my-profile.more.notice')}
       </button>
@@ -397,6 +387,18 @@ function AddOns({ fix, onJob }: { fix: ProfileFix; onJob: (jobPost: string) => v
         </div>
       )}
 
+      <button type="button" className={chip} aria-expanded={open === 'job'} onClick={() => toggle('job')}>
+        {t('fix-my-profile.more.job')}
+      </button>
+      {open === 'job' && (
+        <div className="space-y-2">
+          <TextArea label={t('fix-my-profile.more.jobLabel')} value={jobPost} onChange={setJobPost} rows={6} />
+          <Button variant="secondary" disabled={jobPost.trim().length < 80} onClick={() => onJob(jobPost.trim())}>
+            {t('fix-my-profile.more.jobGo')}
+          </Button>
+        </div>
+      )}
+
       <button type="button" className={chip} aria-expanded={open === 'referral'} onClick={() => toggle('referral')}>
         {t('fix-my-profile.more.referral')}
       </button>
@@ -412,7 +414,7 @@ function AddOns({ fix, onJob }: { fix: ProfileFix; onJob: (jobPost: string) => v
         target="_blank"
         rel="noreferrer"
         data-fix-share
-        className="flex min-h-[44px] w-full items-center justify-center rounded-xl bg-leaf px-4 font-semibold text-white"
+        className="inline-flex min-h-[44px] items-center font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink"
       >
         {t('fix-my-profile.share.cta')}
       </a>

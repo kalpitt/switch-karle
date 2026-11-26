@@ -1633,7 +1633,7 @@ export const en: Record<string, string> = {
   'fix-my-profile.rolePlaceholder': 'e.g. Data Analyst',
   'fix-my-profile.go': 'Fix my profile',
   'fix-my-profile.working': 'Fixing… about 15 seconds',
-  'fix-my-profile.trust': 'Your name and contact details are taken out in your browser first. The rest goes to our AI to write fixes. Our server keeps no logs, and Cloudflare says it is not stored or trained on.',
+  'fix-my-profile.trust': 'Before sending, your browser takes out your name, phone, email and links, and shows you what it took out. Company names and work details stay in, so cut anything you want to keep private. Nothing is saved: our server keeps no logs, and Cloudflare\u2019s terms say it does not keep this text or train AI on it.',
   'fix-my-profile.error.badRequest': 'Something went wrong sending that. Refresh the page and try again.',
   'fix-my-profile.error.tooShort': 'This looks incomplete. Paste your full resume.',
   'fix-my-profile.error.tooLong': 'Too long for one resume. Paste only your resume text.',

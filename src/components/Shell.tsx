@@ -139,7 +139,10 @@ export function Shell({ current, children }: { current: string; children: ReactN
             </p>
             {/* Decided 2026-11-07: one privacy line, the badge above. `app.footer.privacy`
                 is no longer rendered; its key stays in the dictionaries. */}
-            <p className="mt-3 max-w-[60ch]">{t('app.footer.rules')}</p>
+            {/* The tax-rules lines say nothing about a resume tool (readers, 2026-11-26). */}
+            {current !== 'fix-my-profile' && (
+              <>
+                <p className="mt-3 max-w-[60ch]">{t('app.footer.rules')}</p>
             {/* The dates come from the sources registry: the oldest and newest check of a
                 verified rule. One hand-set date for the whole site could not be true. */}
             <a
@@ -148,6 +151,8 @@ export function Shell({ current, children }: { current: string; children: ReactN
             >
               {t('app.footer.verified', { from: formatLongDate(checked.from, lang), to: formatLongDate(checked.to, lang) })}
             </a>
+              </>
+            )}
             <p>
               <a href={withLang(lang, 'about')} className={FOOT_INLINE}>
                 {t('app.footer.madeBy')}
