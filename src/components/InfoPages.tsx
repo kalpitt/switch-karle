@@ -264,6 +264,10 @@ function Privacy() {
           </a>
         </p>
       </Section>
+      <Section id="fixer" title={t('privacy.fixer.title')}>
+        <p>{t('privacy.fixer.p1')}</p>
+        <p>{t('privacy.fixer.p2')}</p>
+      </Section>
       <Section id="out" title={t('privacy.out.title')}>
         <p>{t('privacy.out.p1')}</p>
       </Section>

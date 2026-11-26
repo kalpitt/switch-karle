@@ -135,7 +135,7 @@ export function Shell({ current, children }: { current: string; children: ReactN
           <div>
             <p className="flex items-start gap-2 text-[14px] font-semibold leading-snug text-ink">
               <ShieldCheck size={18} className="mt-px text-leaf" />
-              {t('app.footer.badge')}
+              {t(current === 'fix-my-profile' ? 'fix-my-profile.footerBadge' : 'app.footer.badge')}
             </p>
             {/* Decided 2026-11-07: one privacy line, the badge above. `app.footer.privacy`
                 is no longer rendered; its key stays in the dictionaries. */}

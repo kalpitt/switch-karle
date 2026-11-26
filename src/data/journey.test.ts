@@ -17,10 +17,10 @@ const slugs = TOOLS.map((tool) => tool.slug)
 const stageOf = (slug: string) => TOOLS.find((tool) => tool.slug === slug)!.journey
 
 describe('journey stages', () => {
-  it('keeps the approved mapping (2026-10-31)', () => {
+  it('keeps the approved mapping (2026-10-31; fix-my-profile added 2026-11-26)', () => {
     expect(journeySections().map((section) => section.tools.map((tool) => tool.slug).sort())).toEqual([
       ['bond-scanner', 'bonus-clawback', 'clause-library', 'gratuity', 'leave-encashment', 'notice-buyout'],
-      ['prompts', 'redactor', 'tracker'],
+      ['fix-my-profile', 'prompts', 'redactor', 'tracker'],
       ['expected-ctc', 'real-hike', 'recruiter-followup', 'what-to-say'],
       ['decline-accepted', 'decoder', 'esop-reality', 'fake-offer', 'offer-comparison', 'relocation', 'variable-reality'],
       ['buyout-ask', 'counter-offer', 'counter-offer-reply', 'early-release', 'manager-script', 'resignation-letter'],
@@ -129,7 +129,7 @@ describe('one next thing', () => {
     expect(Object.values(NEXT_STEP)).not.toContain('decline-accepted')
   })
 
-  it('walks the main chain from gratuity through all 33 main-path tools in stage order', () => {
+  it('walks the main chain from gratuity through all 34 main-path tools in stage order', () => {
     const walk: string[] = []
     let at: string | undefined = 'gratuity'
     while (at) {
@@ -137,7 +137,7 @@ describe('one next thing', () => {
       const next = nextFor(at)
       at = next?.kind === 'tool' ? next.slug : undefined
     }
-    expect(walk.length).toBe(33)
+    expect(walk.length).toBe(34)
     expect(walk.map(stageOf)).toEqual([...walk.map(stageOf)].sort((a, b) => a - b))
     // The two side paths and the What to say picker page are the only pages off the
     // main chain: the picker and offer-goes-cold rejoin it, decline-accepted goes home.

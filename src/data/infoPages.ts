@@ -9,7 +9,7 @@ export type InfoPage = (typeof INFO_PAGES)[number]
 export const INFO_PAGE_UPDATED: Record<InfoPage, string> = {
   about: '2026-11-07',
   sources: '2026-11-03',
-  privacy: '2026-11-01',
+  privacy: '2026-11-26',
   terms: '2026-11-01',
 }
 
