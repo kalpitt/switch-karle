@@ -19,7 +19,7 @@ enabled = false
 binding = "AI"
 
 [vars]
-MODEL = "@cf/qwen/qwen3-30b-a3b-fp8"
+MODEL = "@cf/google/gemma-4-26b-a4b-it"
 ALLOWED_ORIGIN = "https://switchkarle.fyi"
 
 # Three fixes a minute per visitor. Cloudflare allows a period of 10 or 60 seconds.

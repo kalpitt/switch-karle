@@ -62,9 +62,17 @@ describe('handleFix', () => {
 
   it('asks Qwen3 not to think out loud', async () => {
     const run = vi.fn(async (_model: string, _input: Record<string, unknown>) => ({ response: JSON.stringify(ANSWER) }))
-    await handleFix(post({ resume: RESUME }), env(run))
+    await handleFix(post({ resume: RESUME }), env(run, { MODEL: '@cf/qwen/qwen3.8-27b' }))
     const input = run.mock.calls[0]![1] as unknown as { messages: { content: string }[] }
     expect(input.messages[1]!.content.endsWith('/no_think')).toBe(true)
+  })
+
+  it('sends the default model no Qwen-only tag', async () => {
+    const run = vi.fn(async (_model: string, _input: Record<string, unknown>) => ({ response: JSON.stringify(ANSWER) }))
+    await handleFix(post({ resume: RESUME }), env(run))
+    expect(run.mock.calls[0]![0]).toBe('@cf/google/gemma-4-26b-a4b-it')
+    const input = run.mock.calls[0]![1] as unknown as { messages: { content: string }[] }
+    expect(input.messages[1]!.content).not.toContain('/no_think')
   })
 
   it('refuses another origin, a GET and other paths', async () => {

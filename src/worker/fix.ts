@@ -32,7 +32,8 @@ export interface Env {
   ALLOWED_ORIGIN?: string
 }
 
-export const DEFAULT_MODEL = '@cf/qwen/qwen3-30b-a3b-fp8'
+// Qwen3 30B left the Workers AI catalog in November 2026; Gemma 4 26B (A4B) is the plan's other pick.
+export const DEFAULT_MODEL = '@cf/google/gemma-4-26b-a4b-it'
 export const DEFAULT_ORIGIN = 'https://switchkarle.fyi'
 const MAX_BODY_BYTES = 40_000
 
