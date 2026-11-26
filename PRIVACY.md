@@ -84,6 +84,42 @@ Real inboxes contain other people's personal data — mail misdelivered to the
 user, forwarded threads, family correspondence. Anything that parses in bulk
 will read some of it. Minimise, do not retain, and never surface it.
 
+## The callback fixer, the first feature that sends anything
+
+Since 2026-11-26 (Kalpit's decision). The callback fixer is the one tool that
+moves user text off the device. Here is how it passes the test above, so the
+next feature can be judged the same way.
+
+1. **What moves.** The resume text the user pasted or uploaded, the role they
+   typed, and, only if they open an add-on, one job post or their notice
+   period. Before anything is sent, the browser removes email addresses, phone
+   numbers, PAN, Aadhaar, profile links and the top line when it looks like a
+   name, and shows what it removed. A file is read in the browser; only its
+   text is sent.
+2. **Named feature.** It moves only when the user presses the fixer's button,
+   on a screen that says in plain words what is sent and where. Nothing is sent
+   on page load.
+3. **Destination.** A Cloudflare Worker in Kalpit's own Cloudflare account,
+   which calls a model on Workers AI in that same account. Kalpit decided this
+   counts as a destination he controls. Cloudflare's own terms are the
+   evidence: it "does not use Customer Content processed by Workers AI to train
+   AI models", and for a plain request it "does not retain inputs or outputs
+   after they are no longer needed to process the request"
+   ([Workers AI data usage](https://developers.cloudflare.com/workers-ai/platform/data-usage/),
+   checked 2026-11-26). No AI Gateway, which would add logging.
+4. **Turn off and delete.** Nothing is collected, so there is nothing to
+   delete. The Worker writes no database, no KV, no file. Workers Logs is
+   switched off in its configuration (it is on by default for new Workers and
+   would keep request details for days), and the code never logs request text.
+5. **Only for that feature.** The text is used to write that answer, then
+   dropped. No counters, no analytics, no email.
+6. **No more than it needs.** Contact details are stripped first, and the
+   Worker refuses text longer than a resume needs.
+
+The fixer's page does not carry the site-wide "nothing is uploaded" claim; it
+says what it sends instead. Every other tool keeps the claim, because every
+other tool still runs only in the browser.
+
 ## Copy that must change the day anything ships
 
 These claims are **true today** and must not be edited pre-emptively. They

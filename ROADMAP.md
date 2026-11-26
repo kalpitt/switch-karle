@@ -18,7 +18,9 @@ These have been decided. Re-opening them wastes time:
 - **The journey starts at "I'm done here."** Decided to leave, applied nowhere.
   That person is the first user, not an edge case.
 - **The site owns the whole switch, not the listings.** You find openings on
-  Naukri or LinkedIn. No job boards, resumes, ATS scoring, or interview banks.
+  Naukri or LinkedIn. No job boards, resume builders, ATS scoring, or interview
+  banks. (Since 2026-11-26 the callback fixer rewrites the user's own profile
+  lines; see Now.)
 - **Raw text stays saved on device with disclosure.** Disclosed in copy; we do
   not upload anything.
 - **The erase button is built.** Shipped 2026-09-05 in PR #38, in the footer of
@@ -31,6 +33,22 @@ These have been decided. Re-opening them wastes time:
 
 ## Now
 
+- **The callback fixer.** Decided 2026-11-26. One page, one job: paste or
+  upload a resume, optionally name a role, and get the roles it fits best, a
+  Naukri and a LinkedIn headline, skills to add, the top three bullets
+  rewritten and the biggest gap. Only facts already in the resume; anything
+  missing is flagged, never invented. Contact details are removed on the device
+  before the text goes to our own server (Kalpit's Cloudflare account, Workers
+  AI free plan), which stores nothing. Optional after the result: match one job
+  post, a "when can you join?" answer for any notice period or for someone laid
+  off, a referral message, and a WhatsApp share of the link.
+  *Why:* people get stuck in the middle of the search, with no recruiter calls
+  and momentum gone by week two, not at the exit where most tools sit.
+  *Before launch:* on ten resumes Kalpit already fixed by hand, ours is at least
+  as good as plain ChatGPT on 7 and invents nothing on all 10.
+  *Then:* 15 to 20 people Kalpit knows, at least 5 of them friends of friends.
+  Day 3: did you update Naukri? Day 14: recruiter calls, against the two weeks
+  before. No email sign-up and no counters.
 - **A front door that says what the site is and asks which step you are at.**
   Decided 2026-11-16, after the first cold viewing of the site. A new home
   page, five step pages, the plan on its own page, all tools regrouped under
@@ -63,6 +81,10 @@ These have been decided. Re-opening them wastes time:
 
 ## Next
 
+- **A list of companies that hire people on a long notice period.** Its own
+  page, separate from the fixer, each entry backed by a dated public source
+  (a job post or careers page) and re-checked every six months. Nothing
+  negative about a named company.
 - **The tracker accepts a company with no job title.** The one piece of the
   old Phase 1 that did not ship: a card still needs a role, and someone who has
   applied nowhere has none.
@@ -119,9 +141,11 @@ Shipped, kept here so they are not proposed again:
 Permanently rejected on reputational, ethical, or privacy grounds:
 
 - Job listings, aggregation, search · Naukri Resdex or LinkedIn automation
-- Resume builders, ATS scorers, cover letters, interview-question banks
+- Resume builders, ATS scorers, cover letters, interview-question banks (the
+  callback fixer edits the user's own lines and gives no score)
 - Multi-offer stalling engines and pretextual negotiation scripts
-- Generic AI chatbot wrapper, or direct browser-to-LLM-API calls
+- Generic AI chatbot wrapper, or direct browser-to-LLM-API calls (the callback
+  fixer calls our own server, never a provider from the browser)
 - Salary or personal data in a URL hash or query string
 - IndexedDB
 - **A one-tap Google Calendar template link.** It is genuinely better than a

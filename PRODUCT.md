@@ -60,7 +60,8 @@ Form-16s seen coming before March.
 
 **The first visit says what this is and asks which step you are at.** One
 sentence on what Switch Karle is, a line naming what is inside (calculators and
-letters), the promise that nothing typed is sent anywhere, and one question.
+letters), the promise that nothing typed is sent anywhere (the one tool that
+sends text, the callback fixer, says so on its own screen), and one question.
 Five answers in plain words: thinking of leaving, applying or interviewing, I
 have an offer, resigning or on notice, joining a new job. Each answer opens one
 short page with the single best tool for that moment and a few others. Someone
@@ -97,7 +98,7 @@ first visit is"); the stage names in this table are not shown to them.
 | # | Stage | What is happening | What we do |
 |---|---|---|---|
 | 0 | **"I'm done here"** | Decided to leave, applied nowhere | Price what leaving costs: gratuity earned and the date it flips, notice buyout, leave encashment, what the bond actually says |
-| 1 | **"Looking, quietly"** | Applications out, waiting, in secret | Track it privately, research a company through your own AI, mask a payslip before sharing it |
+| 1 | **"Looking, quietly"** | Applications out, waiting, in secret | Fix the profile so recruiters call (the callback fixer), track it privately, research a company through your own AI, mask a payslip before sharing it |
 | 2 | **"Talking to them"** | Interview loops, invented leave | Answer expected CTC without boxing yourself in, sanity-check a hike before it is offered |
 | 3 | **"The number on the table"** | Offer in hand | Decode CTC to in-hand, compare offers, price variable and ESOP honestly, scan for red flags and scams |
 | 4 | **"Telling them"** | Resigning | The letter, the conversation, the counter-offer, the early release ask |
@@ -128,14 +129,19 @@ capacity does not make any of these a better idea:
 - **Job listings, aggregation, search.** Not our competence and not our value.
 - **Resume builders, ATS scorers, cover letters, interview-question banks.**
   There is no primary source for what an ATS scores. Anything we shipped here
-  would be invented advice with a confident face on it.
+  would be invented advice with a confident face on it. One exception since
+  2026-11-26: the callback fixer rewrites the user's own Naukri and LinkedIn
+  headline, skills and top bullets, using only facts already in their resume.
+  It never invents a number, gives no score, and builds no resume.
 - **Naukri, Resdex or LinkedIn automation.** Gets the user shadowbanned or
   blacklisted. The harm lands on them, not on us.
 - **An in-page AI assistant, or any browser-to-LLM call, even with the user's
-  own key.** The moment the app can reach a model, the promise that nothing
-  leaves the device stops being checkable. Prompt Studio is the sanctioned
-  shape: we write the prompt, the user runs it in their own AI, in their own
-  account, and pastes the answer back.
+  own key.** No chatbot, and the browser never talks to a model provider.
+  Prompt Studio stays the shape for open-ended help: we write the prompt, the
+  user runs it in their own AI. One exception since 2026-11-26: the callback
+  fixer sends resume text, with contact details removed on the device first, to
+  our own server in Kalpit's Cloudflare account, which asks a model running in
+  that account and keeps nothing. The page says so before the button.
 - **Multi-offer stalling engines and pretextual negotiation scripts.** We help
   people negotiate honestly. We do not teach them to lie.
 - **Salary or personal data in a URL.** Not in a query string, not in a hash,
@@ -245,8 +251,10 @@ was.
 
 ## The trust position
 
-The product never sends anything anywhere. No accounts, no analytics, no
-backend, no AI calls. That is the strongest thing about it, and it is currently
+The product sends nothing anywhere, with one named exception. No accounts, no
+analytics. The callback fixer (since 2026-11-26) sends resume text, with
+contact details removed first, to our own server for one AI call, and stores
+nothing; its own screen says so. Every other tool runs only in the browser. That is the strongest thing about it, and it is currently
 claimed in a footer, below a page two and a half screens tall, long after the
 user has typed a salary.
 
