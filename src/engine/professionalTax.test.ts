@@ -28,8 +28,24 @@ describe('professional tax table', () => {
     expect(PROFESSIONAL_TAX_ANNUAL.TN).toBe(1_250 * 2)
   })
 
-  it('Odisha is ₹200 × 11 + ₹300 = ₹2,500 (not ₹2,400)', () => {
-    expect(PROFESSIONAL_TAX_ANNUAL.OD).toBe(200 * 11 + 300)
+  // Checked 2026-11-28 against the primary texts cited in professionalTax.ts.
+  it('Odisha has no professional tax from 1 April 2026 (Ordinance 02 of 2026)', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.OD).toBe(0)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('OD')
+  })
+
+  it('Madhya Pradesh is ₹208 × 11 + ₹212 = ₹2,500', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.MP).toBe(208 * 11 + 212)
+  })
+
+  it('Bihar top slab (income above ₹10 lakh) is ₹2,500 and is no longer unverified', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.BR).toBe(2_500)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('BR')
+  })
+
+  it('Sikkim is ₹200 × 12 = ₹2,400 and is no longer unverified', () => {
+    expect(PROFESSIONAL_TAX_ANNUAL.SK).toBe(200 * 12)
+    expect(PT_AMOUNT_UNVERIFIED).not.toContain('SK')
   })
 
   it('Telangana is ₹200 × 12 = ₹2,400', () => {

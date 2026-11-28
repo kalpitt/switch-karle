@@ -168,12 +168,43 @@ export const SOURCES: readonly SourceEntry[] = [
   },
   {
     id: 'pt-OD',
-    doc: 'Odisha Professional Tax rate chart',
-    section: 'Sl. No. 1',
-    citation: 'Commissionerate of Commercial Taxes & GST, Odisha, Professional Tax rate chart, Sl. No. 1',
-    url: 'https://odishatax.gov.in/professional_tax.php',
+    doc: 'Odisha Ordinance 02 of 2026',
+    section: 's.2',
+    citation:
+      'Odisha State Tax on Professions, Trades, Callings and Employment (Repeal) Ordinance, 2026 (Ordinance 02 of 2026), Odisha Gazette Extraordinary No. 1496, 21 April 2026; in force from 1 April 2026',
+    url: 'https://finance.odisha.gov.in/en/notification/tax-profession',
     status: 'verified',
-    checked: '2026-10-24',
+    checked: '2026-11-28',
+    where: 'src/engine/professionalTax.ts',
+  },
+  {
+    id: 'pt-MP',
+    doc: 'MP Vritti Kar Adhiniyam, 1995',
+    section: 'Schedule',
+    citation: 'Madhya Pradesh Vritti Kar Adhiniyam, 1995, Schedule as substituted by MP Act 20 of 2018 (w.e.f. 1 April 2018)',
+    url: 'https://prsindia.org/files/bills_acts/acts_states/madhya-pradesh/1995/1995MP16.pdf',
+    status: 'verified',
+    checked: '2026-11-28',
+    where: 'src/engine/professionalTax.ts',
+  },
+  {
+    id: 'pt-BR',
+    doc: 'Bihar Professions Tax Act, 2011',
+    section: 'Schedule entry 3',
+    citation: 'Bihar Tax on Professions, Trades, Callings and Employments Act, 2011, Schedule entry 3',
+    url: 'https://indiankanoon.org/doc/89342742/',
+    status: 'verified',
+    checked: '2026-11-28',
+    where: 'src/engine/professionalTax.ts',
+  },
+  {
+    id: 'pt-SK',
+    doc: 'Sikkim Professions Tax Act, 2006',
+    section: 'Schedule entry 1(iv)',
+    citation: 'Sikkim Tax on Professions, Trades, Callings and Employments Act, 2006 (Act 5 of 2006), Schedule entry 1(iv)',
+    url: 'https://prsindia.org/files/bills_acts/acts_states/sikkim/2006/2006SK5.pdf',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/professionalTax.ts',
   },
   {
@@ -214,7 +245,7 @@ export const SOURCES: readonly SourceEntry[] = [
     citation: '',
     note: true,
     status: 'awaiting-ca',
-    checked: '2026-10-24',
+    checked: '2026-11-28',
     where: 'src/engine/professionalTax.ts',
   },
 
@@ -522,6 +553,7 @@ export function verifiedRange(): { from: string; to: string } {
  * dated commit; the text is `corrections.<id>` in the dictionaries.
  */
 export const CORRECTIONS: readonly { id: string; date: string }[] = [
+  { id: 'pt-od-br-sk', date: '2026-11-28' },
   { id: 'pt-tn-od', date: '2026-10-24' },
   { id: 'pt-as-py', date: '2026-10-24' },
   { id: 'form16-interest', date: '2026-10-24' },

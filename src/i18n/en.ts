@@ -497,7 +497,7 @@ export const en: Record<string, string> = {
   'relocation.fromRent': 'Rent here / month',
   'relocation.toRent': 'Rent there / month',
   'relocation.rentHint': 'HRA exemption needs actual rent. 0 = no exemption. Rent above ₹1 lakh/year usually needs the landlord’s PAN for the employer to allow it.',
-  'relocation.ptApprox': 'Professional tax is approximate. Bihar, Jharkhand and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Tamil Nadu shows Chennai’s rate; other Tamil Nadu towns set their own. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
+  'relocation.ptApprox': 'Professional tax is approximate. Jharkhand and other newly listed states are in the dropdown at ₹0 until a primary schedule is sourced. Tamil Nadu shows Chennai’s rate; other Tamil Nadu towns set their own. Punjab levies State Development Tax (₹2,400). “Other” is also ₹0.',
   'relocation.hraNewRegime': 'HRA exemption does not change new-regime tax. The row is shown for old-regime comparison only.',
   'relocation.verdict.nil': 'In-hand does not move. National tax slabs are the same in every state.',
   'relocation.verdict.delta': 'Same CTC, {amount}/month {dir} in-hand after the move.',
@@ -1445,7 +1445,10 @@ export const en: Record<string, string> = {
   'source.pt-KA': 'Karnataka professional tax',
   'source.pt-PB': 'Punjab State Development Tax, in place of professional tax',
   'source.pt-TN': 'Tamil Nadu professional tax (Chennai’s rate)',
-  'source.pt-OD': 'Odisha professional tax',
+  'source.pt-OD': 'Odisha professional tax (repealed from 1 April 2026)',
+  'source.pt-MP': 'Madhya Pradesh professional tax',
+  'source.pt-BR': 'Bihar professional tax',
+  'source.pt-SK': 'Sikkim professional tax',
   'source.pt-TG': 'Telangana professional tax',
   'source.pt-AS': 'Assam professional tax',
   'source.pt-PY': 'Puducherry professional tax',
@@ -1472,6 +1475,8 @@ export const en: Record<string, string> = {
   'source.epf-interest-after-exit': 'Tax on PF interest credited after you leave',
   'source.declaration-rule-205': 'HRA proofs and landlord PAN for your new employer (Form No. 124)',
 
+  'corrections.pt-od-br-sk':
+    'Odisha professional tax was shown as ₹2,500 a year. Odisha repealed it from 1 April 2026, so it is now ₹0. Bihar and Sikkim were left at ₹0; their Acts set ₹2,500 (income above ₹10 lakh) and ₹2,400 a year.',
   'corrections.pt-tn-od':
     'Tamil Nadu professional tax was shown as ₹2,190 a year (the rate before 2018) and Odisha’s as ₹2,400. Both are ₹2,500; Tamil Nadu’s is Chennai’s rate.',
   'corrections.pt-as-py':
@@ -1552,7 +1557,7 @@ export const en: Record<string, string> = {
   'sourceNote.pt-TN':
     "Chennai’s rate. Other Tamil Nadu towns set their own.",
   'sourceNote.pt-other':
-    "Not checked against a primary source yet: the Maharashtra, Gujarat, Andhra Pradesh, West Bengal, Madhya Pradesh and Kerala amounts. Delhi, Haryana, Uttar Pradesh and Rajasthan show ₹0 because no professional-tax Act was found, which does not prove there is none. Bihar, Jharkhand, Chhattisgarh, Sikkim, Meghalaya, Tripura and other states are left at ₹0.",
+    "Not checked against a primary source yet, because the states' official sites could not be reached: the Maharashtra, Gujarat, Andhra Pradesh, West Bengal and Kerala amounts. Delhi, Haryana, Uttar Pradesh and Rajasthan show ₹0 because no professional-tax Act was found, which does not prove there is none. Jharkhand, Chhattisgarh, Meghalaya, Tripura and other states are left at ₹0.",
   'sourceNote.gratuity-four-years-plus':
     "The section sets the 190 / 240-day count. Reading it as a way into the fifth year is the courts’ reading, and no judgment is named in our code yet.",
   'sourceNote.gratuity-wages':

@@ -108,4 +108,11 @@ export const HINDI_PENDING: string[] = [
   'tool.moreFor',
   'seeAlso.notice-buyout',
   'seeAlso.buyout-ask',
+  'source.pt-OD',
+  'source.pt-MP',
+  'source.pt-BR',
+  'source.pt-SK',
+  'corrections.pt-od-br-sk',
+  'sourceNote.pt-other',
+  'relocation.ptApprox',
 ]
