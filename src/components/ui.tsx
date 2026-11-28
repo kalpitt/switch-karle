@@ -615,7 +615,7 @@ function UseMine() {
     field.focus({ preventScroll: true })
   }
   return (
-    <button ref={ref} type="button" onClick={jump} className={`no-print ${buttonClass('ghost', 'sm')} -ml-3.5 shrink-0 sm:-mr-2 sm:ml-0`}>
+    <button ref={ref} type="button" onClick={jump} className={`no-print ${buttonClass('secondary', 'sm')} mt-2 w-full shrink-0 sm:mt-0 sm:w-auto`}>
       {t('ui.useMine')}
       <ArrowDown size={14} />
     </button>

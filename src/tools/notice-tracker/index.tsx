@@ -50,7 +50,7 @@ function MilestoneLink({ id, lang, done }: { id: NoticeItemId; lang: Lang; done:
   return (
     <a
       href={toolHref(lang, slug)}
-      className="no-print inline-flex min-h-[44px] shrink-0 items-center rounded-xl border border-line-strong px-3 text-[13px] font-semibold text-ink-soft transition-colors hover:border-field hover:text-ink"
+      className="no-print ml-8 inline-flex min-h-[44px] max-w-full items-center self-start rounded-xl border border-line-strong px-3 py-2 text-[13px] font-semibold leading-snug text-ink-soft transition-colors hover:border-field hover:text-ink sm:ml-0 sm:shrink-0"
     >
       {t('notice-tracker.open', { tool: t(tool.titleKey) })}
     </a>
@@ -157,9 +157,9 @@ function Body() {
           {result?.milestones.map((m) => {
             const checked = draft.done.includes(m.id)
             return (
-              <div key={m.id} className="flex items-start justify-between gap-3">
-                <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed">
-                  <input type="checkbox" className="mt-0.5" checked={checked} onChange={() => toggle(m.id)} />
+              <div key={m.id} className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                <label className="flex min-w-0 cursor-pointer items-start gap-3 text-[13px] leading-relaxed">
+                  <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0" checked={checked} onChange={() => toggle(m.id)} />
                   <span className={checked ? 'text-ink-faint line-through' : ''}>
                     {t(`notice-tracker.item.${m.id}`)}
                     <span className="mt-0.5 block tnum text-ink-soft">
