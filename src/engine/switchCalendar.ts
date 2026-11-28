@@ -249,8 +249,8 @@ function isGratuity(cliff: Cliff): boolean {
  * date; the door
  * compared the gratuity date with the resign date instead, and told someone on
  * 90 days' notice to stay three months longer than the Act asks. The last
- * working day is `lastWorkingDay()`, which counts the resignation day as day
- * one of notice, so this is the gratuity date less the notice, plus one.
+ * working day is `lastWorkingDay()`, resignation date + notice (the day of
+ * resigning is left out), so this is the gratuity date less the notice.
  *
  * Only for gratuity. The hike is lost by being on notice when it lands, and a
  * bond or a clawback turns on its own contract's wording, so those three stay
@@ -259,7 +259,7 @@ function isGratuity(cliff: Cliff): boolean {
 export function gratuityResignFrom(gratuityDate: string, noticePeriodDays: number): string {
   // The inverse of lastWorkingDay(), guard included.
   const n = Number.isInteger(noticePeriodDays) && noticePeriodDays >= 1 ? noticePeriodDays : 1
-  return addDays(gratuityDate, 1 - n)
+  return addDays(gratuityDate, -n)
 }
 
 /**
@@ -334,9 +334,9 @@ function plannedDate(id: PlannedDateId, date: string, kind: DateKind, today: str
  *
  * "Start applying by" is the latest safe start, never an instruction to wait.
  *
- * The last working day comes from `lastWorkingDay` in `dates.ts`, which counts
- * the resignation day as day one of notice and carries its own CANDIDATE
- * marker for that reading. The other two are conventions.
+ * The last working day comes from `lastWorkingDay` in `dates.ts`, which leaves
+ * the resignation day out (the courts' default) and labels that reading as a
+ * convention. The other two are conventions.
  */
 export function timeline(
   resignDate: string,

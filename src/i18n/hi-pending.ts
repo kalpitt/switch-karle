@@ -154,4 +154,7 @@ export const HINDI_PENDING: string[] = [
   'corrections.form-12b',
   'corrections.advance-tax-interest',
   'bond-scanner.flag.training-bond',
+  'resignation-letter.verdictNext',
+  'source.last-working-day',
+  'sourceNote.last-working-day',
 ]

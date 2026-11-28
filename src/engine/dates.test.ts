@@ -65,9 +65,9 @@ describe('addDays and lastWorkingDay', () => {
     expect(addDays('2024-02-01', 29)).toBe('2024-03-01')
   })
 
-  it('LWD is resignation + notice − 1 calendar day', () => {
-    expect(lastWorkingDay('2026-08-01', 30)).toBe('2026-08-30')
-    expect(lastWorkingDay('2026-08-01', 1)).toBe('2026-08-01')
+  it('LWD is resignation + notice calendar days (the resignation day is left out)', () => {
+    expect(lastWorkingDay('2026-08-01', 30)).toBe('2026-08-31')
+    expect(lastWorkingDay('2026-08-01', 1)).toBe('2026-08-02')
   })
 
   it('flags EPFO overlap when the new join is on or before LWD', () => {

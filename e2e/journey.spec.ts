@@ -25,11 +25,11 @@ test('gratuity opens on the plan’s join date and last working day, and says so
   await seedPlan(page)
   await open(page, '/gratuity/')
   await expect(page.getByLabel('Join date', { exact: true })).toHaveValue('2022-01-12')
-  // 1 June 2027 + 60 days, counting the resignation day as day one.
-  await expect(page.getByLabel('Last working day', { exact: true })).toHaveValue('2027-07-30')
+  // 1 June 2027 + 60 days, the resignation day left out.
+  await expect(page.getByLabel('Last working day', { exact: true })).toHaveValue('2027-07-31')
   await expect(page.locator('[data-plan-dates]')).toContainText('From your plan: join date 12 January 2022')
-  await expect(page.locator('[data-plan-dates]')).toContainText('last working day 30 July 2027')
-  // The day-one count is our reading, and the receipt keeps saying so.
+  await expect(page.locator('[data-plan-dates]')).toContainText('last working day 31 July 2027')
+  // How the notice is counted is a convention, and the receipt keeps saying so.
   await expect(page.locator('[data-receipt]')).toContainText('Convention, not law: Last working day')
 
   // Changing a date in the tool makes it the person's own: the line stops claiming it.

@@ -144,9 +144,9 @@ test('plan: "what this is worth" answers in rupees inside the recap', async ({ p
 
   await page.getByRole('button', { name: 'See what your gratuity is worth' }).click()
   await page.getByLabel('Monthly basic + DA').fill('72000')
-  // 15/26 × ₹72,000 × 6 payable years (5 years 7 months to 29 August 2027).
+  // 15/26 × ₹72,000 × 6 payable years (5 years 7 months to 30 August 2027).
   const worth = page.locator('[data-worth] [role="status"]')
-  await expect(worth).toContainText('Your gratuity with a last working day of 29 August 2027')
+  await expect(worth).toContainText('Your gratuity with a last working day of 30 August 2027')
   await expect(worth).toContainText('₹2,49,231')
   await expect(worth).toContainText('At least this much.')
   await expect(page.getByRole('link', { name: 'Open the full gratuity calculator' })).toHaveAttribute('href', '/gratuity/')

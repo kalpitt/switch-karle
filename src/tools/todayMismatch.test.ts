@@ -35,8 +35,8 @@ describe('Lead 2: one clock, not two', () => {
     const asOfFromTool = todayIso()
 
     const result = noticeTracker({
-      resignDate: '2025-12-15',
-      noticePeriodDays: 90, // LWD is 2026-03-14
+      resignDate: '2025-12-14',
+      noticePeriodDays: 90, // LWD is 2026-03-14 (14 Dec + 90)
       asOf: asOfFromTool,
     })
 

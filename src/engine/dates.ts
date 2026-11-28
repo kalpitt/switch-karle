@@ -109,18 +109,20 @@ export function monthsBetween(from: string, to: string): number {
 
 /**
  * Last working day if the full notice is served.
- * CANDIDATE: LWD = resignation date + notice days − 1 (calendar). The letter can count differently.
+ * Convention: LWD = resignation date + notice days (calendar), the courts' default. The letter can
+ * count differently: one that counts the resignation day itself ends a day earlier.
+ * 2026-11-28: changed from + notice − 1 to the courts' default after the CA review.
  * 2026-10-24: no statute governs. General Clauses Act, 1897 s.9 (the word "from" excludes the
  * first day) binds only Central Acts and Regulations, not contracts. But the Supreme Court in
  * Haru Das Gupta v. State of West Bengal, AIR 1972 SC 1293, called it "well established that where
  * a particular time is given from a certain date within which an act is to be done, the day on
- * that date is to be excluded". On that reading notice "from" the resignation date ends one day
- * LATER than this function (resignation date + notice days). This function counts the
- * resignation day as day one. Which reading applies is the letter's wording.
+ * that date is to be excluded". On that reading notice "from" the resignation date ends on
+ * resignation date + notice days, which is what this function returns. Which reading applies
+ * is the letter's wording.
  */
 export function lastWorkingDay(resignDate: string, noticePeriodDays: number): string {
   const n = Number.isInteger(noticePeriodDays) && noticePeriodDays >= 1 ? noticePeriodDays : 1
-  return addDays(resignDate, n - 1)
+  return addDays(resignDate, n)
 }
 
 /**

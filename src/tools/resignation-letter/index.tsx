@@ -120,24 +120,24 @@ function Body() {
     }
   }, [draft.resignDate, notice])
 
-  /** The later reading of the last working day: notice counted "from" the
-   *  resignation date leaves that day out, so it ends one day later. */
-  const lwdNext = useMemo(() => {
+  /** The earlier reading of the last working day: a letter that counts the
+   *  resignation day itself as day one ends one day before `lwd`. */
+  const lwdEarlier = useMemo(() => {
     try {
-      return addDays(lwd, 1)
+      return addDays(lwd, -1)
     } catch {
       return ''
     }
   }, [lwd])
 
-  // Checked against the later reading, so a join date that overlaps on either
-  // count is flagged (TR2-03).
+  // Checked against the later reading (`lwd`), so a join date that overlaps on
+  // either count is flagged (TR2-03).
   const overlap =
-    lwdNext !== '' &&
+    lwd !== '' &&
     draft.newJoinDate.trim().length >= 10 &&
     (() => {
       try {
-        return epfoDateOverlap(lwdNext, draft.newJoinDate)
+        return epfoDateOverlap(lwd, draft.newJoinDate)
       } catch {
         return false
       }
@@ -147,13 +147,13 @@ function Body() {
    *  date that cannot overlap on either reading is the day after the later
    *  last working day (TR2-03). */
   const earliestSafeJoin = useMemo(() => {
-    if (lwdNext === '') return ''
+    if (lwd === '') return ''
     try {
-      return addDays(lwdNext, 1)
+      return addDays(lwd, 1)
     } catch {
       return ''
     }
-  }, [lwdNext])
+  }, [lwd])
 
   const letter = useMemo(() => buildLetter(draft, lwd, t, lang), [draft, lwd, t, lang])
   const canCopy =
@@ -170,9 +170,9 @@ function Body() {
       <div className="space-y-4 lg:order-last">
         <ResultHeading />
         <VerdictBanner>{t('resignation-letter.verdict', { lwd: formatLongDate(lwd, lang) })}</VerdictBanner>
-        {lwdNext !== '' && (
+        {lwdEarlier !== '' && (
           <p className="text-[14px] leading-relaxed text-ink-soft">
-            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(lwdNext, lang) })}
+            {t('resignation-letter.verdictNext', { lwdNext: formatLongDate(lwdEarlier, lang) })}
           </p>
         )}
         <PlanDatesNote dates={fromPlan} />
