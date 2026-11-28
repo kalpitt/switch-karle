@@ -386,7 +386,7 @@ tool's draft on a first visit only (a saved tool draft wins, exactly like a
 holds, which drives the "From your plan" line (`PlanDatesNote`). Readers:
 `resignation-letter` and `notice-tracker` (resign date), `gratuity` and
 `fnf-checker` (join date, last working day). The last working day rests on the
-day-one count in `lastWorkingDay()`, a convention, so those two tools add the
+count in `lastWorkingDay()` (resignation date + notice, the resignation day left out; the courts' default since 2026-11-28, was + notice − 1), a convention, so those two tools add the
 `last-working-day` source to their receipt whenever they show a plan-derived
 one. Gratuity drops the Example chip only when nothing on screen is a fixture:
 basic + DA and the work week from the record, both dates from the plan.

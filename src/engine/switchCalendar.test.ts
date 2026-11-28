@@ -265,8 +265,8 @@ describe('trades — options that name what each date keeps', () => {
       workWeekDays: 6,
     })
     expect(options.map((o) => o.id)).toEqual(['keep-what-is-earned', 'own-date'])
-    // 17 October 2026 less 90 days' notice, plus one: 20 July 2026.
-    expect(options[0]!.resignDate).toBe('2026-07-20')
+    // 17 October 2026 less 90 days' notice: 19 July 2026.
+    expect(options[0]!.resignDate).toBe('2026-07-19')
   })
 })
 
@@ -292,9 +292,9 @@ describe('timeline — the backward plan, and only once a date exists', () => {
     expect(plan.daysAway).toBe(268)
     expect(plan.needOfferBy).toMatchObject({ date: '2027-05-18', kind: 'convention' })
     expect(plan.startApplyingBy).toMatchObject({ date: '2027-03-23', kind: 'convention' })
-    // lastWorkingDay() in dates.ts counts the resignation day as day one of
-    // notice and carries its own CANDIDATE marker for that reading.
-    expect(plan.lastWorkingDay).toMatchObject({ date: '2027-08-29', kind: 'contractual' })
+    // lastWorkingDay() in dates.ts leaves the resignation day out (the courts'
+    // default): 1 June + 90 = 30 August.
+    expect(plan.lastWorkingDay).toMatchObject({ date: '2027-08-30', kind: 'contractual' })
   })
 
   it('the conventions are exported constants the UI can show and edit', () => {
@@ -358,24 +358,25 @@ describe('forfeited — never silently dropped', () => {
  * has to agree with it: notice is service.
  *
  * Ravi on a five-day week, gratuity 2 October 2026, 90 days' notice. Resign
- * 5 July 2026 and the last working day is 2 October 2026 (day one of notice is
- * the resignation day), which reaches it. Resign a day earlier and it does not.
+ * 4 July 2026 and the last working day is 2 October 2026 (the resignation
+ * day is left out of the notice), which reaches it. Resign a day earlier and it does not.
  */
 describe('gratuity counts the notice period, because gratuity() does', () => {
   const EARLY = { ...RAVI, workWeekDays: 5 as const, asOf: '2026-03-01' }
 
   it('resigning inside the notice window before the gratuity date keeps it', () => {
-    // 20 July 2026 plus 90 days' notice reaches 17 October 2026 as the last
+    // 20 July 2026 plus 90 days' notice reaches 18 October 2026 as the last
     // working day — past the 2 October 2026 gratuity date — while the
     // resignation itself is still well before it.
     const out = switchCalendar({ ...EARLY, targetResignDate: '2026-07-20' })
     expect(byId(out.cliffs)['gratuity-5-day']!.forfeited).toBe(false)
   })
 
-  it('the first resign date that keeps it is the gratuity date less the notice, plus one', () => {
-    expect(gratuityResignFrom('2026-10-02', 90)).toBe('2026-07-05')
-    const kept = byId(markForfeited(cliffs(EARLY), '2026-07-05', 90))
-    const lost = byId(markForfeited(cliffs(EARLY), '2026-07-04', 90))
+  it('the first resign date that keeps it is the gratuity date less the notice', () => {
+    // 2 October 2026 less 90 days: 4 July 2026.
+    expect(gratuityResignFrom('2026-10-02', 90)).toBe('2026-07-04')
+    const kept = byId(markForfeited(cliffs(EARLY), '2026-07-04', 90))
+    const lost = byId(markForfeited(cliffs(EARLY), '2026-07-03', 90))
     expect(kept['gratuity-5-day']!.forfeited).toBe(false)
     expect(lost['gratuity-5-day']!.forfeited).toBe(true)
   })
@@ -398,12 +399,12 @@ describe('gratuity counts the notice period, because gratuity() does', () => {
   it('moves the clean date for gratuity back by the notice, and leaves the hike alone', () => {
     // Before the hike month is known, gratuity is the only cliff ahead.
     const noHike = { joinDate: RAVI.joinDate, noticePeriodDays: 90, workWeekDays: 5 as const, asOf: '2026-03-01' }
-    expect(switchCalendar(noHike).earliestCleanDate).toBe('2026-07-05')
-    // With the working-day fast path, gratuity's own clean date (5 Jul 2026)
+    expect(switchCalendar(noHike).earliestCleanDate).toBe('2026-07-04')
+    // With the working-day fast path, gratuity's own clean date (4 Jul 2026)
     // is now LATER than the hike's (1 Jun 2026), so gratuity decides here —
     // the reverse of the old calendar-day reading, where the hike was always
     // further out.
-    expect(switchCalendar(EARLY).earliestCleanDate).toBe('2026-07-05')
+    expect(switchCalendar(EARLY).earliestCleanDate).toBe('2026-07-04')
   })
 
   it('a gratuity date the notice already covers is not a cliff to wait for', () => {
@@ -453,7 +454,7 @@ describe('the whole calculation, end to end', () => {
     expect(out.conventions).toEqual({ offerLeadWeeks: 8, offerBufferDays: 14 })
     expect(out.timeline!.startApplyingBy.date).toBe('2027-03-23')
     expect(out.timeline!.needOfferBy.date).toBe('2027-05-18')
-    expect(out.timeline!.lastWorkingDay.date).toBe('2027-08-29')
+    expect(out.timeline!.lastWorkingDay.date).toBe('2027-08-30')
   })
 
   it('someone six years in with no hike month gets the backward plan as the whole output', () => {
@@ -467,7 +468,7 @@ describe('the whole calculation, end to end', () => {
     expect(out.cliffs.every((c) => c.passed)).toBe(true)
     expect(out.cliffs.every((c) => c.forfeited === false)).toBe(true)
     expect(out.earliestCleanDate).toBe('2026-09-06')
-    expect(out.timeline!.lastWorkingDay.date).toBe('2026-12-30')
+    expect(out.timeline!.lastWorkingDay.date).toBe('2026-12-31')
   })
 
   it('a leap-day joiner keeps a real 29 February', () => {

@@ -29,7 +29,8 @@ describe('Lead 4: notice-tracker resign-date default', () => {
    */
   it('the engine arithmetic for an untouched fixture is unchanged; only its presentation as fact is', () => {
     const result = noticeTracker({ resignDate: '2026-03-15', noticePeriodDays: 90, asOf: '2026-03-15' })
-    expect(result.daysLeftOnNotice).toBe(89)
+    // 15 March + 90 = 13 June; 90 days left on the resignation day itself.
+    expect(result.daysLeftOnNotice).toBe(90)
     expect(result.served).toBe(false)
 
     // Example-ness is a touched flag: set by a user edit or a saved tracker,

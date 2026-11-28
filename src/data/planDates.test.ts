@@ -56,10 +56,10 @@ describe('planDates', () => {
   })
 
   it('derives the last working day only when the notice period is known too', () => {
-    // Resignation day counts as day one: 1 June + 90 − 1 = 29 August (our reading, see dates.ts).
+    // The resignation day is left out: 1 June + 90 = 30 August (the courts' default, see dates.ts).
     expect(planDates({ resignDate: '2027-06-01' }, { noticePeriodDays: 90 })).toEqual({
       resignDate: '2027-06-01',
-      lastWorkingDay: '2027-08-29',
+      lastWorkingDay: '2027-08-30',
     })
     expect(planDates({}, { noticePeriodDays: 90 })).toEqual({})
   })
@@ -71,7 +71,7 @@ describe('planDates', () => {
     expect(loadPlanDates()).toEqual({
       joinDate: '2022-01-12',
       resignDate: '2027-06-01',
-      lastWorkingDay: '2027-07-30',
+      lastWorkingDay: '2027-07-31',
     })
     expect(localStorage.length).toBe(2)
   })

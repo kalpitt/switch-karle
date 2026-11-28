@@ -1375,7 +1375,7 @@ export const en: Record<string, string> = {
   'ui.disclaimerContract': 'Estimate, not tax or legal advice. Your own contract and letters decide.',
   'ui.resultHeading': 'Your result',
   'resignation-letter.verdictNext':
-    'This counts the resignation day as day one. If your letter says notice runs “from” that date, it may be {lwdNext}. Put the date your letter’s wording gives.',
+    'This counts notice from the day after you resign, the courts\' default. If your letter counts the resignation day itself, your last day is one day earlier: {lwdNext}.',
 
   'app.footer.madeBy': 'Made by Kalpit Tiwari.',
   'app.footer.reportGithub': 'Report on GitHub',
@@ -1477,7 +1477,7 @@ export const en: Record<string, string> = {
   'source.notice-buyout-divisor': 'Notice buyout: monthly pay ÷ 30 × unserved days',
   'source.unpaid-leave-divisor': 'Unpaid-leave recovery: monthly gross ÷ 30 × days',
   'source.last-working-day':
-    'Last working day: we count the resignation day as day one. Notice that runs “from” a date may end a day later.',
+    'Last working day: notice counted from the day after you resign. If your letter counts the resignation day itself, it is one day earlier.',
   'source.clawback-gross': 'Joining-bonus clawback: letters usually ask for the gross amount back',
   'source.clawback-later-year': 'Getting tax back when you repay a bonus in a later tax year',
   'source.esop-perquisite': 'ESOP tax at exercise: market value minus what you pay, taxed as salary',
@@ -1592,7 +1592,7 @@ export const en: Record<string, string> = {
   'sourceNote.unpaid-leave-divisor':
     "No statute fixes the ÷ 30. The Code on Wages caps a deduction for absence in proportion to the days absent, and all deductions at 50% of wages.",
   'sourceNote.last-working-day':
-    "No statute governs a resignation notice. Section 9 binds Central Acts, not contracts. The Supreme Court in Haru Das Gupta left out the first day of a period counted “from” a date. Your letter’s wording decides.",
+    'No statute governs a resignation notice. Section 9 binds Central Acts, not contracts. The Supreme Court in Haru Das Gupta left out the first day of a period counted “from” a date, so we do too. Your letter’s wording decides.',
   'sourceNote.clawback-gross':
     "No statute sets the repayment: asking for the gross amount is contract practice. A joining bonus is taxed as salary.",
   'sourceNote.clawback-later-year':

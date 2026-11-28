@@ -13,9 +13,9 @@ import { loadPlan, type Plan } from './plan'
  * the only screen that writes a join date to the current-job record, which is
  * why a tool can honestly say "from your plan" about it.
  *
- * The last working day is derived, never stored: `lastWorkingDay()` counts the
- * resignation day as day one, which is our reading and not a rule of law (the
- * CANDIDATE marker in `src/engine/dates.ts`). A tool that shows it must keep
+ * The last working day is derived, never stored: `lastWorkingDay()` leaves the
+ * resignation day out (the courts' default reading, not a statute; see the
+ * marker in `src/engine/dates.ts`). A tool that shows it must keep
  * the `last-working-day` source on its receipt so that reading is labelled.
  */
 export interface PlanDates {

@@ -10,6 +10,19 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-28 — The last working day is counted the courts' way
+
+Decided in the CA review thread (the project's coordinator made the call;
+Kalpit had asked for the review to close its items "once and for all"). The
+last working day is now resignation date + notice days, leaving the
+resignation day out, as the Supreme Court reads a period counted "from" a
+date (*Haru Das Gupta v. State of West Bengal*, AIR 1972 SC 1293). It was
+resignation date + notice − 1. The tools say that a letter which counts the
+resignation day itself ends one day earlier. Still a convention, not a
+statute: the letter's wording decides.
+
+---
+
 ## 2026-11-28 — An AI specialist review closes the chartered-accountant items
 
 **Decided by Kalpit** (2026-11-28): "today's AI models with correct and current
