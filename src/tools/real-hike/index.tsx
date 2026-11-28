@@ -140,7 +140,13 @@ function Body() {
   const isExample = JSON.stringify(draft) === JSON.stringify(skeleton())
   const paper = Math.round(result.ctcHikePct)
   const bank = Math.round(result.inHandHikePct)
-  const verdict = t('real-hike.verdict', { paper, bank })
+  // Rupees a month first (persona review, 2026-11-28): "how much more a month?"
+  // is the question; the percentages sit under it.
+  const monthly = Math.round(result.nextRunRateMonthly - result.currentRunRateMonthly)
+  const up = monthly >= 0
+  const verdict = up
+    ? t('real-hike.verdict', { more: formatINR(monthly), bank, paper })
+    : t('real-hike.verdict.less', { less: formatINR(-monthly), bank: Math.abs(bank), paper })
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }))
   const states = (Object.keys(STATE_NAMES) as StateCode[]).map((s) => ({
     value: s,
@@ -160,9 +166,9 @@ function Body() {
         <ResultHeading />
         <ResultHero
           sample={isExample}
-          label={t('hero.real-hike')}
-          value={`${bank}%`}
-          delta={bank !== paper ? { text: t('hero.real-hike.paper', { paper }), tone: bank < paper ? 'loss' : 'gain' } : undefined}
+          label={t(up ? 'hero.real-hike' : 'hero.real-hike.less')}
+          value={`${up ? '+' : '−'}${formatINR(Math.abs(monthly))}`}
+          delta={{ text: t('hero.real-hike.paper', { bank, paper }), tone: bank < paper ? 'loss' : 'gain' }}
           verdict={verdict}
           tone={bank < paper ? 'amber' : 'leaf'}
         >
@@ -209,17 +215,17 @@ function Body() {
       <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{quietGlyphs(t('real-hike.formTitle'))}</h2>
         <PrivacyLine />
-        <MoneyField label={t('real-hike.currentCtc')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
+        <MoneyField label={t('real-hike.currentCtc')} hint={t('real-hike.currentCtcHint')} placeholder={t('ui.money.placeholder')} value={draft.currentCtc} onChange={(v) => set({ currentCtc: v })} />
         <MoneyField
-          label={t('real-hike.currentVariable')}
+          label={t('real-hike.currentVariable')} hint={t('real-hike.currentVariableHint')}
           placeholder={t('ui.money.placeholder')}
           value={draft.currentVariable}
           onChange={(v) => set({ currentVariable: v })}
         />
         <Select label={t('real-hike.currentState')} value={draft.currentState} onChange={(v) => set({ currentState: v })} options={states} />
-        <MoneyField label={t('real-hike.nextCtc')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
+        <MoneyField label={t('real-hike.nextCtc')} hint={t('real-hike.nextCtcHint')} placeholder={t('ui.money.placeholder')} value={draft.nextCtc} onChange={(v) => set({ nextCtc: v })} />
         <MoneyField
-          label={t('real-hike.nextVariable')}
+          label={t('real-hike.nextVariable')} hint={t('real-hike.nextVariableHint')}
           placeholder={t('ui.money.placeholder')}
           value={draft.nextVariable}
           onChange={(v) => set({ nextVariable: v })}

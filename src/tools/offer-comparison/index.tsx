@@ -262,13 +262,13 @@ function MiniOffer({
     <Card className="space-y-3">
       <h2 className="text-[18px] font-semibold leading-snug">{title}</h2>
       <MoneyField
-        label={t('decoder.field.ctc.label')}
+        label={t('decoder.field.ctc.label')} hint={t('decoder.field.ctc.labelHint')}
         placeholder={t('ui.money.placeholder')}
         value={offer.ctcAnnual}
         onChange={(v) => set({ ctcAnnual: v })}
       />
       <MoneyField
-        label={t('decoder.field.variable.label')}
+        label={t('decoder.field.variable.label')} hint={t('decoder.field.variable.labelHint')}
         placeholder={t('ui.money.placeholder')}
         value={offer.variableAnnual}
         onChange={(v) => set({ variableAnnual: v })}

@@ -315,9 +315,9 @@ function Body() {
         <h2 className="text-[18px] font-semibold leading-snug">{t('fnf-checker.formTitle')}</h2>
         <PrivacyLine />
         <DateField label={t('fnf-checker.join')} value={draft.joinDate} onChange={(v) => set({ joinDate: v })} />
-        <DateField label={t('fnf-checker.lwd')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
+        <DateField label={t('fnf-checker.lwd')} hint={t('fnf-checker.lwdHint')} value={draft.lastWorkingDay} onChange={(v) => set({ lastWorkingDay: v })} />
         <MoneyField
-          label={t('fnf-checker.basic')}
+          label={t('fnf-checker.basic')} hint={t('fnf-checker.basicHint')}
           placeholder={t('ui.money.placeholderMonthly')}
           value={draft.monthlyBasic}
           onChange={(v) => {
@@ -325,10 +325,10 @@ function Body() {
             rememberCurrentJob({ monthlyBasic: v })
           }}
         />
-        <MoneyField label={t('fnf-checker.gross')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
+        <MoneyField label={t('fnf-checker.gross')} hint={t('fnf-checker.grossHint')} placeholder={t('ui.money.placeholderMonthly')} value={draft.monthlyGross} onChange={(v) => set({ monthlyGross: v })} />
         <NumberField label={t('fnf-checker.unpaid')} suffix={t('unit.days')} value={draft.unpaidLeaveDays} onChange={(v) => set({ unpaidLeaveDays: v })} />
         <MoneyField label={t('fnf-checker.noticeAmt')} hint={t('fnf-checker.noticeHint')} value={draft.noticeRecovery} onChange={(v) => set({ noticeRecovery: v })} />
-        <Toggle label={t('fnf-checker.gratuity')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
+        <Toggle label={t('fnf-checker.gratuity')} hint={t('fnf-checker.gratuityHint')} checked={draft.gratuityEligible} onChange={(v) => set({ gratuityEligible: v })} />
         {draft.gratuityEligible && (
           <>
             <Toggle

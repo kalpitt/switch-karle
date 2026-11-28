@@ -336,3 +336,18 @@ html {
     display: none;
   }
 }
+
+/*
+ * While a tool still shows its worked example, its boxes hold sample figures:
+ * they read lighter, and a line at the top of the form says to type over them.
+ * Both go the moment one value changes (persona review, 2026-11-28).
+ */
+[data-example-form-hint] {
+  display: none;
+}
+[data-tool]:has([data-example-bar]) [data-example-form-hint] {
+  display: block;
+}
+[data-tool]:has([data-example-bar]) :is(input:not([type='checkbox'], [type='radio']), select) {
+  color: var(--color-ink-faint);
+}
