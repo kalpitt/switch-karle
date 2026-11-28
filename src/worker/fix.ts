@@ -173,7 +173,15 @@ export async function handleFix(request: Request, env: Env): Promise<Response> {
   for (let attempt = 0; attempt < 2; attempt++) {
     let res: unknown
     try {
-      res = await env.AI.run(model, { messages, max_tokens: 2500, temperature: attempt === 0 ? 0.3 : 0.1 })
+      res = await env.AI.run(model, {
+        messages,
+        max_tokens: 2500,
+        temperature: attempt === 0 ? 0.3 : 0.1,
+        // Gemma 4 and newer Qwen think by default and spent the whole budget on it,
+        // leaving an empty answer (live test, 2026-11-28). JSON mode keeps it to the object.
+        chat_template_kwargs: { enable_thinking: false },
+        response_format: { type: 'json_object' },
+      })
     } catch (e) {
       if (isQuotaError(e)) return fail('busy')
       // Cloudflare's own error text (model, binding, limits), not the visitor's.

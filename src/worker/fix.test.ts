@@ -73,6 +73,7 @@ describe('handleFix', () => {
     expect(run.mock.calls[0]![0]).toBe('@cf/google/gemma-4-26b-a4b-it')
     const input = run.mock.calls[0]![1] as unknown as { messages: { content: string }[] }
     expect(input.messages[1]!.content).not.toContain('/no_think')
+    expect(input).toMatchObject({ chat_template_kwargs: { enable_thinking: false }, response_format: { type: 'json_object' } })
   })
 
   it('refuses another origin, a GET and other paths', async () => {
