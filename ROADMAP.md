@@ -13,6 +13,10 @@ These have been decided. Re-opening them wastes time:
   2026-10-31 (PR #71).
 - **No redirect from `kalpit.me/switch-karle/`.** Owner decision. Old links
   need no preservation.
+- **No human CA review.** Decided 2026-11-28: an AI specialist review against
+  primary sources (Acts, Rules, notifications, judgments) closed the CA
+  questions. Every number still traces to a primary source; a point the law
+  leaves open says so on the site. See `docs/DECISIONS.md` 2026-11-28.
 - **Notes mode is deleted**, not parked in code. The replacement is the
   keyboard panic switch in Later.
 - **The journey starts at "I'm done here."** Decided to leave, applied nowhere.
@@ -128,10 +132,6 @@ Shipped, kept here so they are not proposed again:
 
 - **His own review of the site**, then the ten-person test once he is happy.
   See Now.
-- **CA Review R1.** A chartered accountant answering tax questions in writing.
-  *Why:* Statutory tax numbers must come from official sources, never AI
-  guesses. No CA has been found yet; the open questions stay marked
-  `CANDIDATE` and are listed in `docs/DECISIONS.md` ("Parked").
 - **Two Cloudflare settings.** Required checks on `main` and Cloudflare in
   front of the site are on since 2026-11-13. Still to fix: Web Analytics must
   be off, and the `/_astro/` cache rule needs a one-year browser TTL.
