@@ -90,7 +90,7 @@ deploys it and checks it answers. A pull request that changes them first runs
 the real code against the real model with a made-up resume
 (`scripts/probe-fixer.ts`). Both need two repository secrets:
 `CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_API_TOKEN`, a token with Workers
-Scripts Edit, Workers Routes Edit (zone switchkarle.fyi) and Workers AI Read.
+Scripts Edit, Workers Routes Edit (zone switchkarle.fyi) and Workers AI Edit.
 Without them the workflow skips and says so. By hand, from a computer:
 
 ```bash
