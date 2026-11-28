@@ -107,7 +107,7 @@ function Body() {
       <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('epf-transfer.formTitle')}</h2>
         <Select
-          label={t('epf-transfer.intent')}
+          label={t('epf-transfer.intent')} hint={t('epf-transfer.intentHint')}
           value={draft.intent}
           onChange={(v) => set({ intent: v })}
           options={[
@@ -122,8 +122,8 @@ function Body() {
           onChange={(v) => set({ joinDate: v })}
         />
         <DateField label={t('epf-transfer.exit')} value={draft.exitDate} onChange={(v) => set({ exitDate: v })} />
-        <Toggle label={t('epf-transfer.doe')} checked={draft.dateOfExitMarked} onChange={(v) => set({ dateOfExitMarked: v })} />
-        <Toggle label={t('epf-transfer.name')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
+        <Toggle label={t('epf-transfer.doe')} hint={t('epf-transfer.doeHint')} checked={draft.dateOfExitMarked} onChange={(v) => set({ dateOfExitMarked: v })} />
+        <Toggle label={t('epf-transfer.name')} hint={t('epf-transfer.nameHint')} checked={draft.nameMatchesAadhaar} onChange={(v) => set({ nameMatchesAadhaar: v })} />
         <Toggle label={t('epf-transfer.dob')} checked={draft.dobMatchesAadhaar} onChange={(v) => set({ dobMatchesAadhaar: v })} />
       </Card>
       <NextStep className="lg:order-last lg:col-start-2" from="epf-transfer" />

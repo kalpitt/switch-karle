@@ -103,6 +103,15 @@ function Field({
   )
 }
 
+/**
+ * While a tool still shows its worked example, the first tap on a box selects
+ * the sample figure so typing replaces it (persona review, 2026-11-28).
+ */
+function selectIfExample(el: HTMLInputElement) {
+  if (!el.closest('[data-tool]')?.querySelector('[data-example-bar]')) return
+  requestAnimationFrame(() => el.select())
+}
+
 export function NumberField(props: {
   label: string
   hint?: string
@@ -133,6 +142,7 @@ export function NumberField(props: {
           min={min}
           max={props.max}
           step={props.step ?? 1}
+          onFocus={(e) => selectIfExample(e.currentTarget)}
           onChange={(e) => {
             if (props.allowBlank && e.target.value === '') {
               props.onChange(NaN)
@@ -516,9 +526,10 @@ export function MoneyField(props: {
           className="tnum w-full bg-transparent py-2.5 text-[15px] font-medium outline-none placeholder:font-normal placeholder:text-ink-faint"
           placeholder={props.placeholder}
           value={text}
-          onFocus={() => {
+          onFocus={(e) => {
             setFocused(true)
             if (props.value) setText(String(props.value))
+            selectIfExample(e.currentTarget)
           }}
           onBlur={() => {
             setFocused(false)

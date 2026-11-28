@@ -13,6 +13,7 @@ export function PrivacyLine() {
   const t = useT()
   const { lang } = useLang()
   return (
+    <>
     <div data-privacy-line className="flex gap-2 text-[14px] leading-relaxed text-ink-soft">
       <ShieldCheck size={16} className="mt-[3px] text-leaf" />
       <p>
@@ -24,5 +25,10 @@ export function PrivacyLine() {
         </a>
       </p>
     </div>
+    {/* Shown only while the tool still holds its sample numbers (index.css). */}
+    <p data-example-form-hint className="text-[14px] font-semibold leading-snug text-sample">
+      {t('ui.exampleFormHint')}
+    </p>
+    </>
   )
 }

@@ -29,14 +29,14 @@ export function DecoderForm({
 
       <div className="grid grid-cols-2 gap-3">
         <NumberField
-          label={t('decoder.field.ctc.label')}
+          label={t('decoder.field.ctc.label')} hint={t('decoder.field.ctc.labelHint')}
           suffix="LPA"
           step={0.5}
           value={value.ctcAnnual / L}
           onChange={(v) => set({ ctcAnnual: v * L })}
         />
         <NumberField
-          label={t('decoder.field.variable.label')}
+          label={t('decoder.field.variable.label')} hint={t('decoder.field.variable.labelHint')}
           suffix="LPA"
           step={0.5}
           value={value.variableAnnual / L}

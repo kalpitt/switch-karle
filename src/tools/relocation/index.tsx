@@ -222,7 +222,7 @@ function Body() {
       <Card className="space-y-3 lg:row-span-2 lg:sticky lg:top-20">
         <h2 className="text-[18px] font-semibold leading-snug">{t('relocation.formTitle')}</h2>
         <PrivacyLine />
-        <MoneyField label={t('decoder.field.ctc.label')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
+        <MoneyField label={t('decoder.field.ctc.label')} hint={t('decoder.field.ctc.labelHint')} placeholder={t('ui.money.placeholder')} value={draft.ctc} onChange={(v) => set({ ctc: v })} />
         <Select
           label={t('relocation.fromState')}
           value={draft.fromState}

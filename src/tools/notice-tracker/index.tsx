@@ -179,7 +179,7 @@ function Body() {
         <DateField label={t('notice-tracker.resign')} value={draft.resignDate} onChange={(v) => set({ resignDate: v })} />
         <NumberField
           integer
-          label={t('notice-tracker.notice')}
+          label={t('notice-tracker.notice')} hint={t('notice-tracker.noticeHint')}
           suffix={t('unit.days')}
           value={draft.noticePeriodDays}
           onChange={(v) => {
