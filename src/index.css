@@ -322,3 +322,17 @@ html {
   }
 }
 
+/*
+ * Decision A (2026-11-28): arriving from a step page, the form comes before the
+ * worked example on a phone. The form is the grid cell that spans both rows on
+ * a laptop, where the two already sit side by side. Set in Base.astro.
+ */
+@media (max-width: 1023.98px) {
+  html[data-from-step] [data-tool] > [class~='lg:row-span-2'] {
+    order: -1;
+  }
+  /* The form is already above: a button that scrolls up to it only confuses. */
+  html[data-from-step] [data-tool]:has(> [class~='lg:row-span-2']) [data-use-mine] {
+    display: none;
+  }
+}

@@ -6,7 +6,7 @@ import { buttonClass } from '../../components/buttonClass'
 import { latinLang } from '../../lib/latinLang'
 import { withLang } from '../../lib/langPath'
 import { toolHref } from '../../lib/toolHref'
-import { doorById, doorPath, type Door, type DoorId } from '../../data/doors'
+import { LAID_OFF, doorById, doorPath, type Door, type DoorId } from '../../data/doors'
 import { PLAN_PAGE, TOOLS_PAGE, toolBySlug } from '../../data/tools'
 
 /**
@@ -55,7 +55,7 @@ function DoorBody({ door }: { door: Door }) {
             </a>
           </li>
           <li>
-            <a href={toolHref(lang, 'fnf-checker')} className={DETOUR}>
+            <a href={withLang(lang, doorPath(LAID_OFF))} className={DETOUR}>
               {t('home.laid')} {t('home.laid.cta')}
             </a>
           </li>
@@ -83,12 +83,14 @@ function DoorBody({ door }: { door: Door }) {
         })}
       </ul>
 
-      <a
-        href={`${withLang(lang, TOOLS_PAGE)}#${door.id}`}
-        className="mt-5 inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline underline-offset-4"
-      >
-        {t('door.all')}
-      </a>
+      {door.id !== LAID_OFF && (
+        <a
+          href={`${withLang(lang, TOOLS_PAGE)}#${door.id}`}
+          className="mt-5 inline-flex min-h-[44px] items-center font-semibold text-saffron-strong underline underline-offset-4"
+        >
+          {t('door.all')}
+        </a>
+      )}
     </div>
   )
 }

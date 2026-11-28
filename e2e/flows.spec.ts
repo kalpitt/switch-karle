@@ -222,7 +222,7 @@ test('home: says what the site is and offers five steps', async ({ page }) => {
   await expect(cards.first()).toHaveAttribute('href', '/start/leaving/')
   await expect(cards.first()).toContainText('Thinking of leaving')
   for (const card of await cards.all()) expect((await card.boundingBox())!.height).toBeGreaterThanOrEqual(64)
-  await expect(page.getByRole('link', { name: 'Check what you are owed' })).toHaveAttribute('href', '/fnf-checker/')
+  await expect(page.getByRole('link', { name: 'Check what you are owed' })).toHaveAttribute('href', '/start/laid-off/')
   await expect(page.locator('a[data-all-tools]')).toHaveAttribute('href', '/tools/')
   await expect(page.locator('a[data-all-tools]')).toHaveText(/^See all \d+ tools$/)
   await expect(page.getByRole('link', { name: 'Why I built this' })).toHaveAttribute('href', '/about/')

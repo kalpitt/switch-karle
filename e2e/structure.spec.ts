@@ -193,13 +193,40 @@ test('on a phone the answer is first in reading order and has a heading', async 
 test('a step page leads with one tool and lists the rest', async ({ page }) => {
   await open(page, '/start/offer/')
   await expect(page.locator('h1')).toHaveText('I have an offer')
-  await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/decoder/')
+  await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/real-hike/')
   const rows = page.locator('main li a[data-entry]')
   await expect(rows).toHaveCount(4)
-  await expect(rows.first()).toHaveAttribute('href', '/real-hike/')
-  await expect(rows.first()).toContainText('Offer against your current pay:')
+  await expect(rows.first()).toHaveAttribute('href', '/decoder/')
+  await expect(rows.first()).toContainText('Only the offer, without your current pay:')
   await expect(page.getByRole('link', { name: 'All tools for this step' })).toHaveAttribute('href', '/tools/#offer')
   await expect(page.getByRole('link', { name: 'Back' })).toHaveAttribute('href', '/')
+})
+
+// Decision A, 2026-11-28: from a step page the form comes before the worked
+// example on a phone; opened directly, the example still comes first.
+test('arriving from a step page, the form is above the worked example', async ({ page }) => {
+  const formAboveExample = () =>
+    page.evaluate(() => {
+      const form = document.querySelector('[data-tool] input')!.getBoundingClientRect().top
+      const example = document.querySelector('[data-example-bar]')!.getBoundingClientRect().top
+      return form < example
+    })
+  await open(page, '/real-hike/')
+  expect(await formAboveExample()).toBe(false)
+  await open(page, '/start/offer/')
+  await page.getByRole('link', { name: 'Start' }).click()
+  await expect(page).toHaveURL(/\/real-hike\/$/)
+  await expect(page.locator('astro-island[ssr]')).toHaveCount(0)
+  expect(await formAboveExample()).toBe(true)
+})
+
+// Decision D, 2026-11-28: a page of its own for someone who did not choose to leave.
+test('the laid-off page leads with the settlement check and has no all-tools link', async ({ page }) => {
+  await open(page, '/start/laid-off/')
+  await expect(page.locator('h1')).toHaveText('Laid off or asked to leave')
+  await expect(page.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/fnf-checker/')
+  await expect(page.locator('main li a[data-entry]')).toHaveCount(4)
+  await expect(page.getByRole('link', { name: 'All tools for this step' })).toHaveCount(0)
 })
 
 test('a step page links a What to say script straight to that script', async ({ page }) => {
@@ -215,7 +242,7 @@ test('a step page links a What to say script straight to that script', async ({ 
   )
   await expect(page.getByRole('link', { name: 'Laid off or asked to leave? Check what you are owed' })).toHaveAttribute(
     'href',
-    '/fnf-checker/',
+    '/start/laid-off/',
   )
   // Both ways in come before the card for someone who has not resigned yet.
   const detour = (await page.locator('[data-door-detour]').boundingBox())!

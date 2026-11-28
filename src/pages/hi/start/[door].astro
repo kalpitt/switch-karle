@@ -1,12 +1,12 @@
 ---
 import Base from '../../../layouts/Base.astro'
 import DoorPage from '../../../tools/door/index'
-import { DOOR_IDS, doorPath, type DoorId } from '../../../data/doors'
+import { PAGE_DOOR_IDS, doorPath, type DoorId } from '../../../data/doors'
 import { en } from '../../../i18n/en'
 import { hiDictionary } from '../../../i18n/hi-dictionary'
 
 export function getStaticPaths() {
-  return DOOR_IDS.map((door) => ({ params: { door } }))
+  return PAGE_DOOR_IDS.map((door) => ({ params: { door } }))
 }
 
 // Hindi is hidden until its translation pass (2026-11-19): a string with no Hindi yet shows in English.
