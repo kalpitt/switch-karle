@@ -141,3 +141,22 @@ describe('reading the model reply', () => {
     expect(toJson('nothing')).toBeNull()
   })
 })
+
+describe('when the answer cannot be used', () => {
+  it('reads a Gemma-style choices reply when response is empty', () => {
+    expect(replyText({ response: '', choices: [{ message: { content: '{"a":1}' } }] })).toBe('{"a":1}')
+  })
+
+  it('finds the JSON after thinking that has braces of its own', () => {
+    expect(toJson('Plan: {roles, bullets} first.\n{"a":1}')).toEqual({ a: 1 })
+  })
+
+  it('says why, with no resume text in the reason', async () => {
+    const run = vi.fn(async () => ({ choices: [{ message: { content: 'Prepared daily MIS reports' }, finish_reason: 'length' }] }))
+    const res = await handleFix(post({ resume: RESUME }), env(run))
+    const body = (await res.json()) as { error: string; why: string }
+    expect(res.status).toBe(502)
+    expect(body.why).toMatch(/^failed noJson:choices;length:/)
+    expect(body.why).not.toContain('MIS')
+  })
+})

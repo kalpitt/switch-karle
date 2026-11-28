@@ -67,13 +67,32 @@ export function replyText(res: unknown): unknown {
   if (typeof res === 'string') return res
   if (typeof res !== 'object' || res === null) return ''
   const r = res as Record<string, unknown>
-  if ('response' in r) return r.response
+  // Workers AI's own shape. An empty `response` falls through to the others.
+  if (typeof r.response === 'object' && r.response !== null) return r.response
+  if (typeof r.response === 'string' && r.response.trim() !== '') return r.response
+  // OpenAI-style, which newer Workers AI models (Gemma 4) answer in.
   const choice = Array.isArray(r.choices) ? (r.choices[0] as Record<string, unknown> | undefined) : undefined
   const message = choice?.message as Record<string, unknown> | undefined
-  return message?.content ?? ''
+  if (typeof message?.content === 'string' && message.content.trim() !== '') return message.content
+  if (typeof choice?.text === 'string') return choice.text
+  return typeof r.response === 'string' ? r.response : ''
 }
 
-/** Text or an already-parsed object, minus any <think> block, as JSON. */
+/**
+ * Why an answer could not be used, as a fixed word and the reply's top-level
+ * keys: never any of the resume or the model's text. Sent back only on failure,
+ * so the next fix can be aimed without logs.
+ */
+export function replyShape(res: unknown): string {
+  if (typeof res !== 'object' || res === null) return typeof res
+  const r = res as Record<string, unknown>
+  const keys = Object.keys(r).slice(0, 8)
+  const choice = Array.isArray(r.choices) ? (r.choices[0] as Record<string, unknown> | undefined) : undefined
+  const finish = typeof choice?.finish_reason === 'string' ? choice.finish_reason.slice(0, 20) : ''
+  return [keys.join(','), finish].filter(Boolean).join(';')
+}
+
+/** Text or an already-parsed object, minus any thinking, as JSON. */
 export function toJson(reply: unknown): unknown {
   if (typeof reply === 'object' && reply !== null) return reply
   if (typeof reply !== 'string') return null
@@ -81,6 +100,14 @@ export function toJson(reply: unknown): unknown {
   try {
     return JSON.parse(extractJsonObject(text))
   } catch {
+    // Thinking or prose with braces of its own: try from each later "{".
+    for (let i = text.indexOf('{', 1); i !== -1; i = text.indexOf('{', i + 1)) {
+      try {
+        return JSON.parse(extractJsonObject(text.slice(i)))
+      } catch {
+        /* keep looking */
+      }
+    }
     return null
   }
 }
@@ -142,18 +169,33 @@ export async function handleFix(request: Request, env: Env): Promise<Response> {
   ]
 
   // One retry, only when the answer would not parse. Each try costs quota.
+  let why = ''
   for (let attempt = 0; attempt < 2; attempt++) {
     let res: unknown
     try {
-      res = await env.AI.run(model, { messages, max_tokens: 1600, temperature: attempt === 0 ? 0.3 : 0.1 })
+      res = await env.AI.run(model, { messages, max_tokens: 2500, temperature: attempt === 0 ? 0.3 : 0.1 })
     } catch (e) {
-      return fail(isQuotaError(e) ? 'busy' : 'failed')
+      if (isQuotaError(e)) return fail('busy')
+      // Cloudflare's own error text (model, binding, limits), not the visitor's.
+      return failWhy('threw', (e instanceof Error ? e.message : String(e)).slice(0, 160))
     }
-    const fix = parseProfileFix(toJson(replyText(res)))
+    const text = replyText(res)
+    const json = toJson(text)
+    const fix = parseProfileFix(json)
     if (fix) {
       const reply: FixReply = { fix: guardFacts(resume, fix, cleanJob).fix }
       return new Response(JSON.stringify(reply), { status: 200, headers: HEADERS })
     }
+    const stage = text === '' ? 'empty' : json === null ? 'noJson' : 'shape'
+    why = `${stage}:${replyShape(res)}:${typeof text === 'string' ? text.length : 'obj'}`
   }
-  return fail('failed')
+  return failWhy('failed', why)
+}
+
+/** A failure with a short reason that holds nothing the visitor sent. */
+function failWhy(stage: string, detail: string) {
+  return new Response(JSON.stringify({ error: 'failed', why: `${stage} ${detail}`.slice(0, 200) }), {
+    status: STATUS.failed,
+    headers: HEADERS,
+  })
 }

@@ -197,8 +197,9 @@ export function parseProfileFix(json: unknown): ProfileFix | null {
       const x = b as Record<string, unknown>
       const before = str(x.before, 400)
       const after = str(x.after, 400)
-      if (before === '' || after === '') return null
-      return { before, after, hint: str(x.hint, 160) }
+      if (before === '') return null
+      // A line the model could not improve without guessing comes back with no "after".
+      return { before, after: after === '' ? null : after, hint: str(x.hint, 160) }
     })
     .filter((b): b is FixBullet => b !== null)
     .slice(0, 3)
