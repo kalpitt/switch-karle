@@ -855,11 +855,15 @@ export function InheritNote({ text, linkLabel, href }: { text: string; linkLabel
  */
 export function Receipt({
   ids,
-  compact = false,
+  compact = true,
   className = '',
 }: {
   ids: readonly string[]
-  /** One line (how many documents, checked when) with the full list behind a tap. Decoder, decided 2026-11-13. */
+  /**
+   * One line (how many documents, checked when) with the full list behind a tap.
+   * Decoder, decided 2026-11-13; every tool since 2026-11-28 (Kalpit, decision B:
+   * reviewers read the inline sections and open review points as doubt).
+   */
   compact?: boolean
   className?: string
 }) {
@@ -893,31 +897,38 @@ export function Receipt({
 
 
   const verified = entries.filter((e) => e.status === 'verified')
-  if (compact && verified.length > 0) {
+  if (compact) {
     const docCount = new Set(verified.map((e) => e.doc)).size
     const dates = verified.map((e) => e.checked).sort()
-    const when = formatDateRange(dates[0]!, dates[dates.length - 1]!, lang)
+    const when = dates.length ? formatDateRange(dates[0]!, dates[dates.length - 1]!, lang) : ''
+    const lines = [...parts, ...open]
     return (
       <div data-receipt className={`text-[12px] leading-relaxed text-ink-soft ${className}`}>
         <p>
           <span className="font-semibold">{t('receipt.label')}</span>{' '}
-          {t(docCount === 1 ? 'receipt.summaryOne' : 'receipt.summary', { n: docCount, when })}
-          {' · '}
+          {docCount > 0 && (
+            <>
+              {t(docCount === 1 ? 'receipt.summaryOne' : 'receipt.summary', { n: docCount, when })}
+              {' · '}
+            </>
+          )}
           <a href={withLang(lang, 'sources')} className="font-semibold text-ink underline">
             {t('receipt.link')}
           </a>
         </p>
-        <details className="mt-1">
-          <summary className="inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 font-semibold text-ink [&::-webkit-details-marker]:hidden">
-            <ChevronRight size={14} className="transition-transform [details[open]_&]:rotate-90" />
-            {t('receipt.showAll')}
-          </summary>
-          <ul className="list-disc space-y-1 pl-4">
-            {[...parts, ...open].map((line, i) => (
-              <li key={i}>{line}</li>
-            ))}
-          </ul>
-        </details>
+        {lines.length > 0 && (
+          <details className="mt-1">
+            <summary className="inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <ChevronRight size={14} className="transition-transform [details[open]_&]:rotate-90" />
+              {t('receipt.showAll')}
+            </summary>
+            <ul className="list-disc space-y-1 pl-4">
+              {lines.map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </details>
+        )}
       </div>
     )
   }

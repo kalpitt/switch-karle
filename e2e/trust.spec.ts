@@ -54,15 +54,16 @@ test('a statutory verdict carries its receipt, and the form says what happens to
   await page.goto('/hi/gratuity/')
   const receipt = page.locator('[data-receipt]')
   await expect(receipt).toContainText('Code on Social Security, 2020')
-  await expect(receipt).toContainText('lawyer')
+  // Since 2026-11-28 (decision B) the open review points sit in the list behind the tap.
+  await expect(receipt).toContainText(/lawyer/i)
   await expect(receipt.locator('a[href="/hi/sources/"]')).toBeVisible()
   await expect(page.locator('[data-privacy-line]')).toContainText('browser में save')
   await page.locator('[data-privacy-line] button').click()
   await expect(page.getByRole('dialog')).toBeVisible()
 })
 
-// Decided 2026-11-13: the Decoder says how many documents and when they were
-// checked on one line, and keeps the full list one tap away.
+// Decided 2026-11-13 for the Decoder, 2026-11-28 for every tool: how many documents
+// and when they were checked on one line, and the full list one tap away.
 for (const [path, summary, show] of [
   ['/decoder/', /documents, checked \d+ \S+ – \d+ \S+ 2026/, 'Show the full list'],
   ['/hi/decoder/', /documents, check किए: \d+ \S+ – \d+ \S+ 2026/, 'पूरी list देखें'],
