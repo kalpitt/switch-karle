@@ -10,6 +10,26 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-28 — Four changes after a goal-based persona review
+
+**Decided by Kalpit** ("Yes to all 4", 2026-11-28), after seven fresh reviewers,
+each with one goal (laid off, 90-day notice, offer in hand, expected CTC,
+thinking of leaving, joining, a ChatGPT sceptic), went through the live site
+from screenshots. None fully got what they came for. Findings are in the
+project files, not this repo.
+
+- **A. Form first when arriving from a step page.** Six of seven read the
+  worked example as their own result.
+- **B. Sources fold to one line on every tool**, as the Decoder has since
+  2026-11-13: how many documents and when, with sections, conventions and open
+  review points behind "Show the full list". Five of seven read the inline
+  sections and the open review points as doubt about the whole answer. Wording
+  unchanged; a separate review of the open points is under way.
+- **C. The offer step leads with the in-hand hike calculator** (offer against
+  current pay), the Decoder second. Reviewers holding an offer asked "how much
+  more a month?", which the Decoder alone does not answer.
+- **D. A short page for people who were laid off.**
+
 ## 2026-11-26 — Build the callback fixer: AI on one page, through our own server
 
 **Decided by Kalpit** ("if you are confident about the plan let's do it",
