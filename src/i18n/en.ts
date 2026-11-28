@@ -324,7 +324,7 @@ export const en: Record<string, string> = {
   'door.offer.leadWhy': 'Turn the CTC on your offer into the amount that reaches your bank each month.',
   'door.notice.name': 'Notice period and exit',
   'door.notice.what': 'Notice period, final settlement, relieving letter.',
-  'door.notice.leadWhy': 'Track your notice period, check your final settlement, and get your relieving letter.',
+  'door.notice.leadWhy': 'Write your resignation letter, with your last working day worked out.',
   'door.joining.name': 'Joining a new job',
   'door.joining.what': 'PF transfer, tax and your background check.',
   'door.joining.leadWhy': 'Move your PF to the new employer, and fix what usually blocks it.',
