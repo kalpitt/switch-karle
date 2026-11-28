@@ -80,7 +80,7 @@ Pure TypeScript, golden-tested against hand-computed cases (`src/engine/engine.t
 - Old regime: ₹50,000 standard deduction, HRA exemption, 80C/80D, professional-tax deduction.
 - EPF 12% of basic (statutory-ceiling option), gratuity accrual 4.81%, state professional tax (approximate).
 
-**Estimates, not tax or legal advice.** Every statutory answer names its source and the date it was checked, and `/sources/` lists them all. No chartered accountant has reviewed the constants yet; any constant not yet traced to a primary source stays marked `CANDIDATE` in the code and says so on screen.
+**Estimates, not tax or legal advice.** Every statutory answer names its source and the date it was checked, and `/sources/` lists them all. AI agents check each constant against the primary text (Act, Rules, notification or judgment); no human chartered accountant signs them off. A point the law leaves open, or whose primary document could not be opened, says so on screen.
 
 How the repo is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
