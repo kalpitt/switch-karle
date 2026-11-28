@@ -960,8 +960,6 @@ export const hiSuite: Record<string, string> = {
   'receipt.label': 'स्रोत:',
   'receipt.checked': '{items} ({date} को check किया)',
   'receipt.convention': 'Convention है, कानून नहीं: {text}',
-  'receipt.awaiting-ca': 'Chartered accountant का review अभी बाक़ी: {text}',
-  'receipt.awaiting-lawyer': 'Lawyer का review अभी बाक़ी: {text}',
   'receipt.open': '{n} बातों का chartered accountant या lawyer से review अभी बाक़ी है',
   'receipt.openOne': '1 बात का chartered accountant या lawyer से review अभी बाक़ी है',
   'receipt.link': 'हम numbers कैसे check करते हैं',
@@ -1040,8 +1038,6 @@ export const hiSuite: Record<string, string> = {
   'sources.labelledOn': '{date} को label किया',
   'sources.usedBy': 'इनमें इस्तेमाल: {tools}',
   'sources.status.verified': 'Source से check किया',
-  'sources.status.awaiting-ca': 'अभी chartered accountant ने check नहीं किया',
-  'sources.status.awaiting-lawyer': 'अभी lawyer ने check नहीं किया',
   'sources.status.convention': 'Convention है, कानून नहीं',
 
   'source.ita-new-regime': 'नया tax regime',
@@ -1085,6 +1081,15 @@ export const hiSuite: Record<string, string> = {
   'source.epf-interest-after-exit': 'Job छोड़ने के बाद जुड़े PF interest पर tax',
   'source.declaration-rule-205': 'नए employer को HRA proofs और landlord का PAN (Form No. 124)',
 
+  'receipt.unsettled': 'क़ानून या अदालतों ने यह अभी तय नहीं किया: {text}',
+  'receipt.unchecked': 'Primary source अभी खोला नहीं जा सका: {text}',
+  'sources.status.unsettled': 'क़ानून या अदालतों ने अभी तय नहीं किया',
+  'sources.status.unchecked': 'Primary source अभी खोला नहीं जा सका',
+  'source.form-122': 'Form No. 122, पुराना Form 12B',
+  'source.notice-pay-tax': 'Notice pay पर GST और income tax',
+  'sourceNote.notice-pay-tax': 'Employee जो notice pay देता है उस पर GST नहीं (circular का para 7.5, और Madras High Court)। Salary या F&F से काटा जाए तो सिर्फ़ net salary पर tax लगता है। नया employer इसे लौटाए तो वह taxable salary है (s.18(1)(b)(i))।',
+  'corrections.form-12b': 'पिछले employer का statement Form 12B कहा गया था। Income-tax Rules, 2026 में यह Form No. 122 है (Rule 204)।',
+  'corrections.advance-tax-interest': 'Form 16 tool ने कहा था कि advance-tax interest chartered accountant का इंतज़ार कर रहा है। नियम साफ़ है: TDS के बाद बचा tax ₹10,000 या ज़्यादा हो तो लगता है (Income-tax Act, 2025 के s.404 और s.424)।',
   'corrections.pt-od-br-sk':
     'Odisha का professional tax ₹2,500 साल दिखाया गया था। Odisha ने इसे 1 April 2026 से ख़त्म कर दिया, इसलिए अब ₹0 है। Bihar और Sikkim ₹0 छोड़े गए थे; उनके Act ₹2,500 (₹10 lakh से ज़्यादा income पर) और ₹2,400 साल तय करते हैं।',
   'corrections.pt-tn-od':

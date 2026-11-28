@@ -108,8 +108,12 @@ function vestedAtMonth(
  * assessee, as reduced by the amount actually paid by, or recovered from, the
  * assessee". (Old Act: s.17(2)(vi) — the earlier recollection cited that.)
  * VERIFIED: 2026-10-24 | Source: Income-tax Act, 2025 (No. 30 of 2025) as enacted, Gazette of India Extraordinary Part II s.1 No. 35, 21-Aug-2025 (CG-DL-E-22082025-265620), read from ICAI's copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf §17(1)(d) §17(4)(h) | FY: 2026-27
- * Not re-read against the Finance Act 2026-amended PDF on incometaxindia.gov.in,
- * which refused this session's requests (HTTP 403).
+ * VERIFIED: 2026-11-28 | Re-read in ICAI's April 2026 edition of the Act as
+ * amended by the Finance Act 2026: s.17, s.289, s.391 and s.392 carry no
+ * Finance Act 2026 amendment (the Finance Bill 2026 has no clause on them).
+ * Unlisted shares: FMV is "such value ... as determined by a merchant banker
+ * on the specified date" (Rules 2026, Rule 15(6)(d); Category I SEBI merchant
+ * banker, Rule 15(8)(g); a date up to 180 days before exercise, Rule 15(8)(l)).
  *
  * Stops at exercise — sale is a separate capital-gains event. Eligible-startup
  * deferral is NOT modelled. Under s.392(3) with s.289(3) (old s.192(1C)) an

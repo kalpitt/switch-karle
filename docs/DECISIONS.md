@@ -748,7 +748,18 @@ three-door IA, no category headings". The first was a one-PR freeze, not a
 product rule. The second was contradicted by shipped code within a week —
 `src/tools/home/index.tsx` renders category headings today.
 
-## Parked — waiting on a chartered accountant
+## Parked — waiting on a chartered accountant — CLOSED 2026-11-28
+
+**Closed 2026-11-28** by Kalpit's decision that an AI specialist review against
+primary sources closes these (entry at the top). What each item became is in
+`docs/ARCHITECTURE.md` ("Statutory constants") and `src/data/sources.ts`. Still
+open after that review, and shown as open on the site: the 4 years + 190/240
+days reading (a High Court split), whether a plain "special allowance" counts
+in gratuity wages, and professional tax for JH/CG/ML/TR and the unreached state
+schedules (MH, GJ, AP, WB, KL). Not computed by choice: s.424/s.425 interest and
+a PF withdrawal TDS rupee.
+
+The text below is kept as it was.
 
 Every constant below stays `CANDIDATE` until a human CA answers in writing with a
 primary source. An AI reading tax blogs does not count and never will. When the

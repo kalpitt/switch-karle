@@ -65,17 +65,26 @@ export interface GratuityResult {
  * then adds back whatever the excluded parts of pay (HRA, conveyance and the
  * rest of sub-clauses (a) to (i)) exceed one-half of all remuneration by. This
  * engine is given basic + DA only, so it cannot be higher than the Code's
- * figure and may be lower. Computing the Code's wages from a CTC breakdown is
- * parked for the CA review: which components count is the contested part.
+ * figure and may be lower.
+ * VERIFIED (as a floor): 2026-11-28 | Source: Code s.2(88) and proviso; MoLE
+ * FAQs on Labour Codes 30.12.2025 Q3, Q7 and Additional FAQs 16.03.2026 Q1,
+ * Q4, Q13 (https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf).
+ * Into the 50% test: HRA, conveyance, LTA, employer PF and pension, statutory
+ * bonus, overtime, commission. Out of both: gratuity, ESI, retirement
+ * benefits, variable pay, ESOPs, reimbursements. FAQ Q7 reconciles once
+ * gratuity and retrenchment are left out of the excess test (40,000 − 38,000
+ * = 2,000). Not settled by any Rule or judgment: whether a plain "special
+ * allowance" goes into the 50% test or counts as wages outright. That is why
+ * the add-back is not computed from a CTC breakdown.
  */
 
 /**
- * CANDIDATE: ₹20,00,000. s.53(3) caps gratuity at "such amount as may be
+ * VERIFIED: 2026-11-28 | ₹20,00,000. s.53(3) caps gratuity at "such amount as may be
  * notified by the Central Government". No notification under the Code was
  * found, and the final Social Security (Central) Rules, 2026 (G.S.R. 344(E),
  * 8 May 2026, https://egazette.gov.in/WriteReadData/2026/272366.pdf) set none.
  * ₹20L is S.O. 1420(E) of 29 March 2018 under the repealed Act's s.4(3); it
- * carries over only if s.164(2)(a) saves it. CA R1.
+ * carries over under s.164(2)(a) (below).
  * 2026-10-24 check: s.164(2)(a) of the Code (indiacode PDF above) deems "any
  * rule, regulation, notification ... made thereunder" under the repealed Acts
  * to be made "under the corresponding provisions of this Code", in force "to
@@ -84,14 +93,17 @@ export interface GratuityResult {
  * Codes (dated 30.12.2025, Q12) say "The maximum gratuity is as notified by the
  * Central Government which is currently ₹ 20 lakhs"
  * (https://www.labour.gov.in/static/uploads/2026/01/de4758d5bfeffc456d7de97a801891b0.pdf;
- * the FAQ says it is not a legal document). Still CANDIDATE: S.O. 1420(E)
- * itself was not re-read (egazette.gov.in unreachable from here) and the
- * absence of a later s.53(3) notification is not provable from here.
- * Separate point for the CA: the Income-tax Act, 2025 as enacted, s.19(1)
- * Table Sl. 5, still exempts "Gratuity received under the Payment of Gratuity
- * Act, 1972" up to the amount under "section 4(2) and (3) of the said Act" —
- * an Act repealed on 21-Nov-2025. Not modelled here (this file is the
- * payable amount, not its tax).
+ * the FAQ says it is not a legal document). 2026-11-28: S.O. 1420(E) read
+ * from the Tamil Nadu Labour Department's reproduction ("shall not exceed
+ * twenty lakh rupees",
+ * https://labour.tn.gov.in/pdf/archives/Govt-increases-maximum-gratuity-limit.pdf);
+ * no later s.53(3) notification for private employees found (₹25 lakh is the
+ * Central Government's own employees' ceiling, not this one).
+ * Tax, not modelled here: the Income-tax Act, 2025 (as amended by the Finance
+ * Act 2026, unchanged) s.19(1) Table Sl. 5 still names the repealed Payment of
+ * Gratuity Act, 1972. General Clauses Act, 1897 s.8(1) reads that reference as
+ * one to the provision that re-enacts it (Code s.53(2)-(3)), so Sl. 5 applies
+ * to an employee covered by Chapter V of the Code; Sl. 6 to anyone else.
  */
 export const GRATUITY_CAP = 2_000_000
 

@@ -65,11 +65,18 @@ const TRANSFER_STEPS = [
  * more" and para 8 does not apply. Without a valid PAN, s.397(2)(b)(i) takes
  * the higher of that rate and 20%.
  * VERIFIED: 2026-10-24 | Source: Income-tax Act, 2025 (No. 30 of 2025) as enacted, Gazette of India Extraordinary Part II s.1 No. 35, 21-Aug-2025 (CG-DL-E-22082025-265620), read from ICAI's copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf Schedule XI Part A paras 8, 9, 10; §392(7); §397(2)(b)(i) | FY: 2026-27
- * Not re-read against the Finance Act 2026-amended PDF (incometaxindia.gov.in
- * refused this session, HTTP 403).
+ * 2026-11-28: re-read in ICAI's edition of the Act as amended by the Finance
+ * Act 2026; the Act's Schedule XI changes (Finance Bill clause 111) touch
+ * contribution caps and investment rules only.
  *
- * CANDIDATE (still open, CA): tax on interest credited after leaving
- * employment is not in the Act's text; it is case law and CBDT practice.
+ * Interest credited after leaving is taxable, year by year, as income from
+ * other sources: the exemption is for the "accumulated balance due", defined
+ * as the balance "on the day he ceases to be an employee" (Sch. XI Pt A para
+ * 2(g), para 8(1)).
+ * VERIFIED: 2026-11-28 | Source: Income-tax Act, 2025 Sch. XI Pt A paras 2(g),
+ * 8(1); ACIT v. Dilip Ranjrekar, ITAT Bangalore ITA 858/Bang/2016, 10 Nov 2017
+ * para 6.3.3 (https://indiankanoon.org/doc/187041301/); Anurag Singh v. ACIT,
+ * ITAT Lucknow ITA 35/LKW/2014, 27 Nov 2014 (https://indiankanoon.org/doc/87580869/) | FY: 2026-27
  *
  * Known gap: `completedYears` counts this employer only. Para 8(2) also counts
  * an earlier employer's service whose PF was transferred in, so someone this

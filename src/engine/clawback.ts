@@ -19,8 +19,13 @@ import { computeTax } from './tax'
  * 2025 s.18(1)(b)(i)). In the same tax year the employer "may, increase or
  * reduce the amount to be deducted ... for adjusting any excess or deficiency"
  * (s.392(5)(c)). No provision was found that gives relief when the repayment
- * falls in a LATER tax year (s.157 relief is for arrears/advance salary). Open
- * for a CA.
+ * falls in a LATER tax year (s.157 relief is for arrears/advance salary).
+ * VERIFIED (tribunal authority): 2026-11-28 | Tribunals reduce the salary of
+ * the year the amount is actually repaid: Shriram Bagavathyappan v. DCIT, ITAT
+ * Delhi ITA 4815/Del/2025, 24 Feb 2026 (a joining bonus recovered from F&F;
+ * https://indiankanoon.org/doc/139400013/); Vinod Kumar Goenka v. DCIT, ITAT
+ * Mumbai ITA 5189/Mum/2026, 28 Sep 2026 (https://indiankanoon.org/doc/4790397/).
+ * The tax paid in the year of receipt is not refunded.
  * `noticeWouldCoverClawback` is cash-flow framing, not legal advice.
  */
 export interface ClawbackInput {

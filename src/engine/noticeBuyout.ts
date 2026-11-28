@@ -5,7 +5,10 @@ export interface NoticeBuyoutInput {
    * Accrued leave the employer agrees to set against unserved notice. Zero or
    * absent when they do not. CANDIDATE: whether leave may offset notice at all
    * is a matter of the appointment letter and company policy, never a statute.
-   * (2026-10-24: no statute found; appellate case law not searched exhaustively.)
+   * 2026-11-28: the Delhi High Court held a request to adjust notice against
+   * earned leave is only a request; leave cannot be "unilaterally substituted"
+   * for unserved notice (Adarsh Kalhia v. WAPCOS, W.P.(C) 8328/2026, 31 Aug
+   * 2026, https://indiankanoon.org/doc/53365697/).
    */
   leaveDaysApplied?: number
   monthlyBasic: number

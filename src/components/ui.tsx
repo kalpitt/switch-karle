@@ -891,7 +891,7 @@ export function Receipt({
     if (e.status === 'convention') parts.push(t('receipt.convention', { text: t(`source.${e.id}`) }))
   }
   // Open questions sit behind one tap: the answer and its sources stay short to scan.
-  const open = (['awaiting-lawyer', 'awaiting-ca'] as const).flatMap((status) =>
+  const open = (['unsettled', 'unchecked'] as const).flatMap((status) =>
     entries.filter((e) => e.status === status).map((e) => t(`receipt.${status}`, { text: t(`source.${e.id}`) })),
   )
 

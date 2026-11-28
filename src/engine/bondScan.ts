@@ -59,6 +59,12 @@ const RULES: Rule[] = [
  * advice. Retaining original degrees is widely treated as unlawful restraint
  * — still not a substitute for a lawyer.
  *
+ * 2026-11-28: *Vijaya Bank v. Prashant B. Narnaware*, Supreme Court, 2025 INSC
+ * 691, 14 May 2025 (https://indiankanoon.org/doc/42763766/): a 3-year
+ * minimum-service clause with ₹2 lakh payable on early resignation "does not
+ * amount to restraint of trade nor is it opposed to public policy" (para 35).
+ * The sum is still a ceiling that needs proof of loss.
+ *
  * Citations checked 2026-10-24 against the judgment texts (Indian Kanoon
  * mirror):
  * - Kailash Nath Associates v. DDA, Supreme Court, 9 Jan 2015, (2015) 4 SCC

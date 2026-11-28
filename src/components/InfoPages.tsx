@@ -211,7 +211,7 @@ function Sources() {
       </Section>
       <Section id="open" title={t('sources.open.title')}>
         <p>{t('sources.open.intro')}</p>
-        <SourceList statuses={['awaiting-lawyer', 'awaiting-ca']} />
+        <SourceList statuses={['unsettled', 'unchecked']} />
       </Section>
       <Section id="conventions" title={t('sources.conventions.title')}>
         <p>{t('sources.conventions.intro')}</p>
