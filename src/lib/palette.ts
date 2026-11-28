@@ -1,5 +1,5 @@
 import { PLAN_PAGE, TOOLS_PAGE, type ToolDef } from '../data/tools'
-import { DOORS, doorPath, type DoorId } from '../data/doors'
+import { DOORS, LAID_OFF, doorById, doorPath, type DoorId } from '../data/doors'
 
 export interface PaletteItem {
   slug: string
@@ -97,11 +97,11 @@ export function paletteItems(tools: ToolDef[], toolHref: (slug: string) => strin
     })),
     // The five step pages come after the tools, so "resign" still finds the
     // resignation letter first and a tool's own name always wins a tie.
-    ...DOORS.map((door) => ({
+    ...[...DOORS, doorById(LAID_OFF)].map((door) => ({
       slug: doorPath(door.id),
       href: toolHref(doorPath(door.id)),
       titleKey: `door.${door.id}.name`,
-      descKey: `door.${door.id}.what`,
+      descKey: door.id === LAID_OFF ? `door.${door.id}.leadWhy` : `door.${door.id}.what`,
       keywords: DOOR_KEYWORDS[door.id],
     })),
   ]
@@ -114,4 +114,5 @@ const DOOR_KEYWORDS: Record<DoorId, string[]> = {
   offer: ['offer', 'got an offer', 'offer letter'],
   notice: ['notice', 'resigned', 'serving notice', 'last working day'],
   joining: ['joining', 'new job', 'first day', 'onboarding'],
+  'laid-off': ['laid off', 'layoff', 'fired', 'terminated', 'asked to resign', 'job gone', 'naukri gayi'],
 }

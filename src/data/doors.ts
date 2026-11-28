@@ -12,7 +12,16 @@ import type { ToolDef } from './tools'
 import type { JourneyId } from './journey'
 
 export const DOOR_IDS = ['leaving', 'applying', 'offer', 'notice', 'joining'] as const
-export type DoorId = (typeof DOOR_IDS)[number]
+/**
+ * A sixth step page, not one of the five cards: for someone who did not choose
+ * to leave (Kalpit, decision D, 2026-11-28). The home page and the notice step
+ * link to it from their "Laid off or asked to leave?" line. It covers no stage
+ * of its own, so it has no section on /tools/.
+ */
+export const LAID_OFF = 'laid-off'
+export type DoorId = (typeof DOOR_IDS)[number] | typeof LAID_OFF
+/** Every /start/<id>/ page: the five steps and the laid-off page. */
+export const PAGE_DOOR_IDS: readonly DoorId[] = [...DOOR_IDS, LAID_OFF]
 
 export interface Door {
   id: DoorId
@@ -40,8 +49,10 @@ export const DOORS: readonly Door[] = [
   {
     id: 'offer',
     journeys: [3],
-    lead: 'decoder',
-    also: ['real-hike', 'offer-comparison', 'fake-offer', 'variable-reality'],
+    // Offer against current pay first (Kalpit, decision C, 2026-11-28): the
+    // question a reviewer holding an offer asked was "how much more a month?".
+    lead: 'real-hike',
+    also: ['decoder', 'offer-comparison', 'fake-offer', 'variable-reality'],
   },
   {
     id: 'notice',
@@ -60,8 +71,15 @@ export const DOORS: readonly Door[] = [
 /** A step page's address under the site root, without slashes: `start/offer`. */
 export const doorPath = (id: DoorId): string => `${DOORS_DIR}/${id}`
 
+const LAID_OFF_DOOR: Door = {
+  id: LAID_OFF,
+  journeys: [],
+  lead: 'fnf-checker',
+  also: ['gratuity', 'leave-encashment', 'insurance-gap', 'relieving-chaser'],
+}
+
 export function doorById(id: DoorId): Door {
-  return DOORS.find((door) => door.id === id)!
+  return id === LAID_OFF ? LAID_OFF_DOOR : DOORS.find((door) => door.id === id)!
 }
 
 function journeyOf(slug: string): JourneyId | undefined {

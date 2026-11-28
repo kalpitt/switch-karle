@@ -44,7 +44,7 @@ src/
   pages/[tool].astro + pages/hi/[tool].astro  EN and Hindi twins
   pages/tools.astro + pages/hi/tools.astro    the all-tools list
   pages/resign-date.astro (+ hi/)             the plan's own page (PLAN_PAGE)
-  pages/start/[door].astro (+ hi/)            the five step pages (data/doors.ts)
+  pages/start/[door].astro (+ hi/)            the five step pages + /start/laid-off/ (data/doors.ts)
 ```
 
 **Step pages and the plan's page (the front-door rebuild, 2026-11-16).**
@@ -52,7 +52,13 @@ src/
 as the page's only dark button, up to four more as rows (`components/ToolRow.tsx`,
 shared with `/tools/`), and a link to that door's section of `/tools/`. A step
 page passes `current='start/<id>'` to `IslandRoot`, never the bare id, so the
-language switch and `slugFromPath` see the two-part path. `/resign-date/`
+language switch and `slugFromPath` see the two-part path. `/start/laid-off/`
+(`LAID_OFF`, decision D 2026-11-28) is a sixth page from the same component: not
+a home card, no stage, no `/tools/` section; the home page's and the notice
+step's "Laid off or asked to leave?" lines link to it. Arriving on any page from
+a step page, an inline script in `Base.astro` sets `data-from-step` on `<html>`
+(same-origin referrer only), and `index.css` puts the tool's form before its
+worked example on a phone (decision A). `/resign-date/`
 (`tools/plan/page.tsx`) renders `Plan` with `current=PLAN_PAGE`; since
 2026-11-19 it is the plan's only page, and every link back to the plan (the
 last "Next" link, search, the step page, the calendar file's event link via
@@ -136,7 +142,7 @@ titles use `— स्विच कर ले` so they do not collide with Engli
 `WebApplication`. `/hi/` twins live at `src/pages/hi/`.
 
 `sitemap.xml` and `robots.txt` are generated from the registry plus `/tools/`,
-`/resign-date/`, the five `/start/<id>/` pages and the info pages (EN + HI locs).
+`/resign-date/`, the six `/start/<id>/` pages (five steps and laid-off) and the info pages (EN + HI locs).
 Allow-all. Generated ≠ submitted. No sitemap-index. No analytics scripts —
 `check-seo.mjs` greps `dist/` for `googletagmanager|gtag|plausible|umami|fathom`.
 

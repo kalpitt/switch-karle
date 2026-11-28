@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useT, useLang, type Lang } from '../../i18n'
 import { visibleToolCount } from '../../data/journey'
-import { DOORS, doorPath } from '../../data/doors'
+import { DOORS, LAID_OFF, doorPath } from '../../data/doors'
 import { loadPlan } from '../../data/plan'
 import { PLAN_PAGE, TOOLS_PAGE } from '../../data/tools'
 import { withLang } from '../../lib/langPath'
-import { toolHref } from '../../lib/toolHref'
 import { formatLongDate } from '../../lib/formatDate'
 import { IslandRoot } from '../../components/IslandRoot'
 import { ChevronRight, ShieldCheck } from '../../components/icons'
@@ -70,7 +69,7 @@ function Home() {
       <SavedPlanStrip />
 
       <ul className="mt-6 divide-y divide-line border-y border-line text-[15px] leading-snug">
-        <QuietRow lead={t('home.laid')} cta={t('home.laid.cta')} href={toolHref(lang, 'fnf-checker')} />
+        <QuietRow lead={t('home.laid')} cta={t('home.laid.cta')} href={withLang(lang, doorPath(LAID_OFF))} />
         <QuietRow
           lead={t('home.oneTool')}
           cta={t('home.oneTool.cta', { n: visibleToolCount() })}

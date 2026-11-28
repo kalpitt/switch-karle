@@ -32,11 +32,11 @@ describe('the five doors (visitors call them steps)', () => {
     }
   })
 
-  it('keep the tested choice of lead tool (decision D3, 2026-11-16)', () => {
+  it('keep the chosen lead tool (decision D3, 2026-11-16; offer changed by decision C, 2026-11-28)', () => {
     expect(DOORS.map((door) => [door.id, door.lead])).toEqual([
       ['leaving', PLAN_PAGE],
       ['applying', 'real-hike'],
-      ['offer', 'decoder'],
+      ['offer', 'real-hike'],
       ['notice', 'resignation-letter'],
       ['joining', 'epf-transfer'],
     ])
@@ -60,8 +60,9 @@ describe('doorSections (the /tools/ page)', () => {
       expect(slugs[0]).toBe(door.lead)
       for (const slug of door.also) expect(slugs, `${door.id}: ${slug}`).toContain(slug)
     }
-    // real-hike leads "applying" and is also shown under "offer": it is in both lists.
+    // real-hike leads both "applying" and "offer": it is in both lists.
     expect(sections.find((s) => s.door.id === 'offer')!.slugs).toContain('real-hike')
+    expect(sections.find((s) => s.door.id === 'offer')!.slugs).toContain('decoder')
   })
 
   it('has no duplicate rows within a section', () => {
