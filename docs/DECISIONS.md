@@ -10,6 +10,22 @@ code disagree, believe the code and fix this file.
 
 ---
 
+## 2026-11-28 — An AI specialist review closes the chartered-accountant items
+
+**Decided by Kalpit** (2026-11-28): "today's AI models with correct and current
+knowledge [are] more capable than a CA ... Get a specialist CA AI agent, point it
+to correct docs and data to review the requirements and close them once and for
+all", and "feel free to merge PRs until you are happy". This reverses the rule
+under "Parked — waiting on a chartered accountant" that only a human CA's
+written answer may move a constant to `VERIFIED`. What still holds: every
+number traces to a primary source (an Act, Rule, notification, circular or
+judgment), never a blog, and an item the law itself does not settle stays open
+and says so. Claude merges the statutory pull requests from this review once
+`check` and `e2e` pass. The review's report is in the project files, not this
+repo.
+
+---
+
 ## 2026-11-28 — Four changes after a goal-based persona review
 
 **Decided by Kalpit** ("Yes to all 4", 2026-11-28), after seven fresh reviewers,
@@ -745,7 +761,7 @@ entry above. What a document alone cannot settle stays here.
 
 | ID | Item | Why parked |
 |---|---|---|
-| C4 | Professional tax for BR/JH/CG/SK/ML/TR (AS and PY verified 2026-10-24) | No primary state-Act figure |
+| C4 | Professional tax for JH/CG/ML/TR (AS and PY verified 2026-10-24; BR, SK, MP and Odisha's repeal 2026-11-28) | No primary state-Act figure reached |
 | C12 | Notice-period GST / tax / gross-up | Shown as disputed, not computed |
 | C13 | s.234B/C interest | Deliberately not modelled |
 | C14 | ESOP Rule-15 FMV | Awaiting review |
