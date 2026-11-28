@@ -15,10 +15,18 @@ import type { StateCode } from '../engine/types'
  * entry, re-check it against its source, and move its `checked` date.
  *
  * `checked` is the date the rule was last read against the document named in
- * `citation`. For an `awaiting-*` entry it is the date it was last looked at
+ * `citation`. For an `unsettled` or `unchecked` entry it is the date it was last looked at
  * and left open; for a `convention` it is the date the code labelled it one.
  */
-export type SourceStatus = 'verified' | 'awaiting-ca' | 'awaiting-lawyer' | 'convention'
+/**
+ * `unsettled`: the Act's text and the courts leave the point open (a High
+ * Court split, say), so the site gives the safe reading and says so.
+ * `unchecked`: the primary document could not be opened yet.
+ * (Until 2026-11-28 these were `awaiting-lawyer` and `awaiting-ca`; Kalpit
+ * decided that day that an AI specialist review against primary sources
+ * closes the chartered-accountant items, see docs/DECISIONS.md.)
+ */
+export type SourceStatus = 'verified' | 'unsettled' | 'unchecked' | 'convention'
 
 export interface SourceEntry {
   id: string
@@ -244,7 +252,7 @@ export const SOURCES: readonly SourceEntry[] = [
     section: '',
     citation: '',
     note: true,
-    status: 'awaiting-ca',
+    status: 'unchecked',
     checked: '2026-11-28',
     where: 'src/engine/professionalTax.ts',
   },
@@ -272,38 +280,44 @@ export const SOURCES: readonly SourceEntry[] = [
     where: 'src/engine/gratuity.ts',
   },
   {
-    // "the 4-years-plus reading of it is the courts', not cited in the section itself"
     id: 'gratuity-four-years-plus',
     doc: 'Code on Social Security, 2020',
-    section: 's.54',
-    citation: 'Code on Social Security, 2020 s.54(B)(a)',
+    section: 's.54(B)(a)',
+    citation:
+      'Code on Social Security, 2020 s.54(B)(a); TN Forest Plantation Corp v. R. Mathan (Madras HC, 2025); BSNL v. Tony K. John (Kerala HC DB, 2025); PNB v. UoI (Calcutta HC, 2026); BEML v. Appellate Authority (Karnataka HC, 2022)',
+    url: 'https://indiankanoon.org/doc/186744730/',
     note: true,
-    status: 'awaiting-lawyer',
-    checked: '2026-09-27',
+    status: 'unsettled',
+    checked: '2026-11-28',
     where: 'src/engine/gratuity.ts; docs/DECISIONS.md 2026-09-27',
   },
+
   {
     id: 'gratuity-wages',
     doc: 'Code on Social Security, 2020',
     section: 's.2(88)',
-    citation: 'Code on Social Security, 2020 s.2(88)',
+    citation:
+      'Code on Social Security, 2020 s.2(88) and proviso; Ministry of Labour and Employment FAQs on Labour Codes, 30 Dec 2025, Q3, Q7; Additional FAQs, 16 Mar 2026, Q1, Q4, Q13',
     url: SS_CODE,
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-09-27',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/gratuity.ts',
   },
+
   {
     id: 'gratuity-cap',
     doc: 'Code on Social Security, 2020',
     section: 's.53(3)',
-    citation: 'Code on Social Security, 2020 s.53(3), s.164(2)(a); S.O. 1420(E), 29 March 2018',
+    citation:
+      'Code on Social Security, 2020 s.53(3), s.164(2)(a); S.O. 1420(E), 29 March 2018; Ministry of Labour and Employment FAQs on Labour Codes, 30 Dec 2025, Q12',
     url: SS_CODE,
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-10-24',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/gratuity.ts',
   },
+
 
   // ── Leave, notice, F&F ───────────────────────────────────────────────────
   {
@@ -336,7 +350,19 @@ export const SOURCES: readonly SourceEntry[] = [
     status: 'convention',
     checked: '2026-10-24',
     where: 'src/engine/noticeBuyout.ts',
+  },  {
+    id: 'notice-pay-tax',
+    doc: 'CBIC Circular 178/10/2022-GST',
+    section: 'para 7.5',
+    citation:
+      'CBIC Circular 178/10/2022-GST, 3 Aug 2022, para 7.5; GE T&D India v. Dy. Commissioner (Madras HC, 7 Nov 2019); Nandinho Rebello v. DCIT (ITAT Ahmedabad, 18 Apr 2017); Income-tax Act, 2025 s.18(1)(b)(i)',
+    url: 'https://cbic-gst.gov.in/pdf/cir-178-08-2022-cgst.pdf',
+    note: true,
+    status: 'verified',
+    checked: '2026-11-28',
+    where: 'src/engine/noticeBuyout.ts',
   },
+
   {
     id: 'unpaid-leave-divisor',
     doc: '',
@@ -373,24 +399,28 @@ export const SOURCES: readonly SourceEntry[] = [
   {
     id: 'clawback-later-year',
     doc: 'Income-tax Act, 2025',
-    section: 's.392(5)(c)',
-    citation: 'Income-tax Act, 2025 s.392(5)(c)',
+    section: 's.392(5)(c), s.15',
+    citation:
+      'Income-tax Act, 2025 s.392(5)(c), s.15; Shriram Bagavathyappan v. DCIT (ITAT Delhi, ITA 4815/Del/2025, 24 Feb 2026); Vinod Kumar Goenka v. DCIT (ITAT Mumbai, ITA 5189/Mum/2026, 28 Sep 2026)',
+    url: 'https://indiankanoon.org/doc/139400013/',
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-10-24',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/clawback.ts',
   },
+
   {
     id: 'esop-perquisite',
     doc: 'Income-tax Act, 2025',
     section: 's.17(1)(d), s.17(4)(h)',
-    citation: 'Income-tax Act, 2025 (No. 30 of 2025) as enacted, Gazette of India 21 Aug 2025, s.17(1)(d), s.17(4)(h)',
-    url: ITA_2025_ICAI,
+    citation: 'Income-tax Act, 2025 (as amended by the Finance Act 2026) s.17(1)(d), s.17(4)(h), s.289(3)',
+    url: ITA_2025_PDF,
     note: true,
     status: 'verified',
-    checked: '2026-10-24',
+    checked: '2026-11-28',
     where: 'src/engine/esop.ts',
   },
+
   {
     id: 'esop-fmv-rule-15',
     doc: 'Income-tax Rules, 2026',
@@ -403,25 +433,28 @@ export const SOURCES: readonly SourceEntry[] = [
   },
   {
     id: 'form16-combined',
-    doc: '',
-    section: '',
-    citation: '',
+    doc: 'Income-tax Act, 2025',
+    section: 's.19(1) Sl. 2, s.15(2)',
+    citation: 'Income-tax Act, 2025 (as amended by the Finance Act 2026) s.19(1) Table Sl. No. 2, s.15(2)',
+    url: ITA_2025_PDF,
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-10-24',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/form16.ts',
   },
+
   {
     id: 'advance-tax-interest',
     doc: 'Income-tax Act, 2025',
-    section: 's.424, s.425',
-    citation: 'Income-tax Act, 2025 s.424, s.425',
-    url: ITA_2025_ICAI,
+    section: 's.404, s.424, s.425',
+    citation: 'Income-tax Act, 2025 (as amended by the Finance Act 2026) s.403(3), s.404, s.405, s.424, s.425',
+    url: ITA_2025_PDF,
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-10-24',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/form16.ts',
   },
+
   {
     id: 'epf-five-years',
     doc: 'Income-tax Act, 2025',
@@ -446,14 +479,27 @@ export const SOURCES: readonly SourceEntry[] = [
   },
   {
     id: 'epf-interest-after-exit',
-    doc: '',
-    section: '',
-    citation: '',
+    doc: 'Income-tax Act, 2025',
+    section: 'Sch. XI Pt A para 2(g)',
+    citation:
+      'Income-tax Act, 2025 Schedule XI Part A para 2(g), para 8(1); ACIT v. Dilip Ranjrekar (ITAT Bangalore, ITA 858/Bang/2016, 10 Nov 2017); Anurag Singh v. ACIT (ITAT Lucknow, ITA 35/LKW/2014, 27 Nov 2014)',
+    url: 'https://indiankanoon.org/doc/187041301/',
     note: true,
-    status: 'awaiting-ca',
-    checked: '2026-10-24',
+    status: 'verified',
+    checked: '2026-11-28',
     where: 'src/engine/epf.ts',
   },
+  {
+    id: 'form-122',
+    doc: 'Income-tax Rules, 2026',
+    section: 'Rule 204(1), Form No. 122',
+    citation: 'Income-tax Rules, 2026 (G.S.R. 198(E)) Rule 204(1) and Form No. 122, under s.392(4)(a) of the Income-tax Act, 2025',
+    url: IT_RULES_2026,
+    status: 'verified',
+    checked: '2026-11-28',
+    where: 'src/engine/taxDeclaration.ts',
+  },
+
   {
     id: 'declaration-rule-205',
     doc: 'Income-tax Rules, 2026',
@@ -493,13 +539,13 @@ export const TOOL_SOURCES = {
   gratuity: GRATUITY,
   'leave-encashment': ['leave-encashment-exempt', 'leave-daily-rate'],
   'fnf-checker': [...GRATUITY, 'leave-encashment-exempt', 'notice-buyout-divisor', 'unpaid-leave-divisor'],
-  'form16-shock': [...TAX, 'form16-combined', 'advance-tax-interest'],
+  'form16-shock': [...TAX, 'form16-combined', 'advance-tax-interest', 'form-122'],
   'epf-transfer': ['epf-five-years', 'epf-tds', 'epf-interest-after-exit'],
-  'tax-declaration': [...TAX, 'hra-rule-279', 'declaration-rule-205'],
+  'tax-declaration': [...TAX, 'hra-rule-279', 'declaration-rule-205', 'form-122'],
   // Not statutory tools, but each prints a date that rests on a convention.
   'resignation-letter': ['last-working-day'],
   'notice-tracker': ['last-working-day'],
-  'notice-buyout': ['notice-buyout-divisor'],
+  'notice-buyout': ['notice-buyout-divisor', 'notice-pay-tax'],
 } as const satisfies Record<string, readonly string[]>
 
 /**
@@ -554,6 +600,8 @@ export function verifiedRange(): { from: string; to: string } {
  */
 export const CORRECTIONS: readonly { id: string; date: string }[] = [
   { id: 'pt-od-br-sk', date: '2026-11-28' },
+  { id: 'form-12b', date: '2026-11-28' },
+  { id: 'advance-tax-interest', date: '2026-11-28' },
   { id: 'pt-tn-od', date: '2026-10-24' },
   { id: 'pt-as-py', date: '2026-10-24' },
   { id: 'form16-interest', date: '2026-10-24' },

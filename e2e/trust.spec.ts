@@ -54,8 +54,9 @@ test('a statutory verdict carries its receipt, and the form says what happens to
   await page.goto('/hi/gratuity/')
   const receipt = page.locator('[data-receipt]')
   await expect(receipt).toContainText('Code on Social Security, 2020')
-  // Since 2026-11-28 (decision B) the open review points sit in the list behind the tap.
-  await expect(receipt).toContainText(/lawyer/i)
+  // Since 2026-11-28 (decision B) the open points sit in the list behind the tap;
+  // gratuity's open one is the High Court split on 4 years + 240 days.
+  await expect(receipt).toContainText(/अदालतों/)
   await expect(receipt.locator('a[href="/hi/sources/"]')).toBeVisible()
   await expect(page.locator('[data-privacy-line]')).toContainText('browser में save')
   await page.locator('[data-privacy-line] button').click()

@@ -19,9 +19,13 @@ export interface Form16ShockResult {
   sections234Omitted: true
 }
 
-// CANDIDATE: ignores other deductions/exemptions and advance-tax interest; one standard deduction on combined salary, not per employer.
-// Interest citations for FY 2026-27 are s.424 (default in advance tax, old §234B: 1% a month when advance tax paid is below
-// 90% of assessed tax) and s.425 (deferment, old §234C) of the Income-tax Act, 2025 as enacted (Gazette 21-Aug-2025, ICAI copy https://resource.cdn.icai.org/87647dtc-aps2139-inceome-tax-act-2025.pdf). Whether to model them is open (parked C13, CA).
+// VERIFIED: 2026-11-28 | One standard deduction per person on total salary: s.19(1) Table Sl. 2 ("₹ 75000 or the
+// salary, whichever is less" under s.202(1)) with s.15(2) ("employer includes former employer"), Income-tax Act, 2025
+// as amended by the Finance Act 2026. Other deductions and exemptions are left out, which can only overstate the gap.
+// Advance-tax interest is not computed. When it applies: tax payable after TDS actually deducted is ₹10,000 or more
+// (s.404, s.405); none for a resident aged 60+ with no business income (s.403(3)); s.424 charges 1% a month from
+// 1 April when advance tax paid is below 90% of assessed tax net of TDS; s.425 charges on missed instalments
+// (15/45/75/100% by 15 Jun/Sep/Dec/Mar). Read in ICAI's April 2026 edition of the amended Act.
 
 export function form16Shock(input: Form16ShockInput): Form16ShockResult {
   const combinedGross =

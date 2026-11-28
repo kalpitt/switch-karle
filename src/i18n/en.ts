@@ -484,7 +484,8 @@ export const en: Record<string, string> = {
   'esop-reality.cliffed': 'Still cliffed — zero vested',
   'esop-reality.vested': '{n} vested',
   'esop-reality.illiquid': 'This is private-company paper. Post-exit exercise windows are short, and there may be no buyer.',
-  'esop-reality.provisional': 'Not yet reviewed by a chartered accountant. Treat this as provisional, not tax advice.',
+  'esop-reality.provisional':
+    'Checked against the Income-tax Act, 2025 as amended by the Finance Act 2026, and Rule 15 of the Income-tax Rules, 2026. An estimate, not tax advice.',
 
   'relocation.title': 'City move calculator',
   'relocation.desc': 'See how your in-hand changes when the same CTC moves to another city.',
@@ -570,12 +571,14 @@ export const en: Record<string, string> = {
   'notice-buyout.leaveDays': 'Leave days set against notice',
   'notice-buyout.leaveDaysHint': '0 if they will not let you offset. Never more than the unserved days.',
   'notice-buyout.leaveApplied': '{days} leave days applied — {net} unserved days left. Without them the quote is {before}.',
-  'notice-buyout.leaveCandidate': 'Whether leave may be set against notice at all is your appointment letter and company policy, not a statute. Get it in writing before you count on it.',
+  'notice-buyout.leaveCandidate':
+    'Whether leave may be set against notice is your appointment letter and company policy, not a statute, and your employer has to agree (Delhi High Court, Adarsh Kalhia v. WAPCOS, 2026). Get it in writing before you count on it.',
   'notice-buyout.divisor': 'Most letters divide the monthly figure by 30, not 26 and not the actual calendar month. That is contractual practice, not a law.',
   'notice-buyout.bothBases': 'Both bases, side by side',
   'notice-buyout.row.basic': 'On monthly basic',
   'notice-buyout.row.gross': 'On monthly cash gross',
-  'notice-buyout.gstNote': 'GST / income-tax treatment of a notice buyout is disputed and fact-specific — this tool does not compute any tax on it.',
+  'notice-buyout.gstNote':
+    'No GST is due on notice pay you pay your employer (CBIC Circular 178/10/2022 para 7.5; Madras High Court, GE T&D India, 2019). Notice pay recovered from your salary or F&F is not taxed as your income. If your new employer reimburses the buyout, that is taxable salary. This tool does not compute tax on it.',
 
   'gratuity.title': 'Gratuity calculator',
   'gratuity.desc': 'Find the date you qualify for gratuity and roughly how much you get.',
@@ -617,7 +620,8 @@ export const en: Record<string, string> = {
   'leave-encashment.verdict.resign': '{amount} for your unused leave, tax-free up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025.',
   'leave-encashment.verdict.retire': '{amount} for your unused leave, tax-free up to ₹25,00,000 under s.19(1) of the Income-tax Act, 2025.',
   'leave-encashment.caseNote': 'The Bombay High Court held in CIT v. D.P. Malhotra that "retirement, whether on superannuation or otherwise" covers resignation too.',
-  'leave-encashment.limbsNote': 'Two limbs this tool cannot compute, 30 days of leave per year of service and 10 months\' average salary, can only lower this amount, never raise it. Confirm with a CA.',
+  'leave-encashment.limbsNote':
+    'Two limbs this tool cannot compute, 30 days of leave per year of service and 10 months\' average salary, can only lower this amount, never raise it.',
   'leave-encashment.gross': 'Gross',
   'leave-encashment.exempt': 'Tax-free (as worked out here)',
   'leave-encashment.taxable': 'Taxable',
@@ -684,16 +688,19 @@ export const en: Record<string, string> = {
   'form16-shock.e1tds': 'First employer: TDS',
   'form16-shock.e2gross': 'Second employer: taxable salary',
   'form16-shock.e2tds': 'Second employer: TDS',
-  'form16-shock.verdict.owe': 'After combining, about {amount} may still be due. Hand Form 12B to employer 2 in month 1.',
+  'form16-shock.verdict.owe':
+    'After combining, about {amount} may still be due. Hand Form No. 122 (old Form 12B) to employer 2 in month 1.',
   'form16-shock.verdict.ok': 'TDS already covers the combined bill, with {amount} of slack on this simplified picture.',
   'form16-shock.taxable': 'Combined taxable (one standard deduction)',
   'form16-shock.tax': 'Tax if this were one employer',
   'form16-shock.tds': 'TDS already deducted',
   'form16-shock.stdNote': 'Each payroll likely gave you a full standard deduction. The return allows one.',
-  'form16-shock.omit234': 'Advance-tax interest (s.424/425 of the Income-tax Act, 2025 — the old 234B/234C) is omitted until a CA reviews it — this is the tax gap, not a penalty model.',
-  'form16-shock.form12bTitle': 'Form 12B text to hand employer 2',
+  'form16-shock.omit234':
+    'If the tax still due after TDS is ₹10,000 or more, it was advance tax: interest under s.424 (1% a month from 1 April) and s.425 (on missed instalments) is added on top. Paying before 31 March limits it. This tool shows the tax gap only and does not compute that interest.',
+  'form16-shock.form12bTitle':
+    'Form No. 122 (old Form 12B) text to hand employer 2',
   'form16-shock.form12b':
-    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form 12B).',
+    'Previous employer this FY: salary/gross {gross}, TDS {tds}. Please deduct tax on my remaining salary considering this income (Form No. 122, Rule 204).',
   'form16-shock.form12bNote': 'This is a plain summary, not the statutory form — payroll uses it to size your remaining TDS.',
 
   'resignation-letter.title': 'Resignation letter',
@@ -843,7 +850,8 @@ export const en: Record<string, string> = {
   'epf-transfer.intent.transfer': 'Transfer to the new employer (Form 13)',
   'epf-transfer.intent.withdraw': 'Withdraw the balance in cash',
   'epf-transfer.join': 'Joined this employer',
-  'epf-transfer.tenureScope': 'Years counted here are this employer only. Prior PF you already transferred is not added — if aggregate continuous service is already past 5 years, confirm on the portal / with a CA.',
+  'epf-transfer.tenureScope':
+    'Years counted here are this employer only. Prior PF you already transferred is not added — if aggregate continuous service is already past 5 years, confirm your service dates on the EPFO member portal.',
   'epf-transfer.exit': 'Last working day / date of exit',
   'epf-transfer.doe': 'Old employer has marked date of exit on EPFO',
   'epf-transfer.name': 'Name on UAN matches Aadhaar',
@@ -853,21 +861,22 @@ export const en: Record<string, string> = {
   'epf-transfer.verdict.okWithdraw': '{years} completed years. A withdrawal after 5 years of continuous service is the usual exempt case — still confirm on the portal.',
   'epf-transfer.flag.prefer-transfer': 'Do not withdraw to “start clean”. Transfer is the switcher’s move.',
   'epf-transfer.flag.premature-withdrawal':
-    'Premature withdrawal of a recognised PF can attract TDS and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead, then confirm with a CA.',
+    'Premature withdrawal of a recognised PF can attract TDS and tax on employer contribution plus interest. This tool does not invent a rupee figure. Transfer instead.',
   'epf-transfer.flag.doe-unmarked': 'Online transfer often freezes until the old employer marks date of exit. Raise it on the member portal and mail HR the same day.',
   'epf-transfer.flag.name-mismatch': 'Name mismatch vs Aadhaar blocks claims. Get KYC updated through the employer before you file Form 13.',
   'epf-transfer.flag.dob-mismatch': 'Date-of-birth mismatch vs Aadhaar blocks claims. Same remedy: employer KYC, then retry.',
   'epf-transfer.flag.interest-after-exit':
-    'Interest credited after you leave employment can become taxable if the balance sits untransferred. Transferring keeps it inside the recognised fund.',
+    'Interest credited after you leave is taxable each year it is credited, as income from other sources: the exemption covers only the balance on the day you leave. Transfer the balance to your new employer\'s PF to keep it inside the exemption.',
   'epf-transfer.flag.five-year-exempt':
-    'After 5 years of continuous recognised-PF service a withdrawal is the usual exempt case. Confirm on the portal and with a CA. This tool does not invent a rupee.',
+    'After 5 years of continuous recognised-PF service a withdrawal is the usual exempt case. Confirm your service dates on the portal. This tool does not invent a rupee.',
   'epf-transfer.steps': 'Form 13 path (member portal)',
   'epf-transfer.step.activate-uan': 'Activate / log in to your UAN on the EPFO member portal.',
   'epf-transfer.step.kyc': 'Seed Aadhaar, PAN and bank. Name and DOB must match Aadhaar.',
   'epf-transfer.step.form13': 'File the online transfer claim (Form 13) against the new member ID once date of exit is marked.',
   'epf-transfer.step.track-claim': 'Track the claim. If it sits, the usual blocker is unmarked date of exit or a KYC mismatch.',
   'epf-transfer.portal': 'EPFO member portal',
-  'epf-transfer.provisional': 'PF withdrawal tax is not yet reviewed by a chartered accountant. Treat this as provisional, not tax advice.',
+  'epf-transfer.provisional':
+    'Checked against Schedule XI of the Income-tax Act, 2025 as amended by the Finance Act 2026. An estimate, not tax advice.',
 
   'bgv-prep.title': 'Background check (BGV) prep',
   'bgv-prep.desc': 'Know what the background check will find and have the papers ready.',
@@ -932,7 +941,7 @@ export const en: Record<string, string> = {
   'tax-declaration.proof.80d': '80D: health-premium receipts if you declared them.',
   'tax-declaration.proof.form16-prev': 'Previous employer Form 16 often arrives weeks after you leave. You still need it to file. Chase it like a relieving letter.',
   'tax-declaration.proof.form12b':
-    'Hand Form 12B (previous income/TDS) to the new payroll in month 1. s.392(4)(a)(i) of the Income-tax Act, 2025 multi-employer withholding — confirm the exact mechanism with a CA.',
+    'Hand Form No. 122 (old Form 12B: previous employer\'s salary and TDS) to the new payroll in month 1. Rule 204 of the Income-tax Rules, 2026, under s.392(4)(a) of the Income-tax Act, 2025.',
 
   'notice-tracker.title': 'Notice period checklist',
   'notice-tracker.desc': 'Count down your notice and tick off F&F, laptop return, PF and insurance.',
@@ -976,7 +985,7 @@ export const en: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes are generally void under Contract Act s.27. During employment is a different question.',
   'bond-scanner.flag.training-bond':
-    'A bond sum is a ceiling, not a price: the employer still has to show real training and actual loss. In *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) the “training” trips were business trips, and the bond sums were not enforced. A number in the letter is not automatically owed — confirm with a lawyer.',
+    'A bond sum is a ceiling, not a price: the employer still has to show real training and actual loss. In *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) the “training” trips were business trips, and the bond sums were not enforced. A number in the letter is not automatically owed. A minimum-service bond is not void just because it limits resigning: the Supreme Court upheld a 3-year, ₹2 lakh bond in *Vijaya Bank v. Prashant Narnaware* (2025). Whether the full sum is owed still depends on actual loss — confirm with a lawyer.',
   'bond-scanner.flag.liquidated-damages':
     'Liquidated damages are a ceiling that still needs proof of actual loss where loss can be proved (*Kailash Nath Associates v. DDA*, Supreme Court, 2015). Fact-specific — confirm with a lawyer.',
   'bond-scanner.flag.probation-extend': 'Probation extendable at discretion means confirmation is not a date you can bank on. Get the max extension in writing.',
@@ -1350,10 +1359,12 @@ export const en: Record<string, string> = {
   'receipt.label': 'Sources:',
   'receipt.checked': '{items} (checked {date})',
   'receipt.convention': 'Convention, not law: {text}',
-  'receipt.awaiting-ca': 'Not yet reviewed by a chartered accountant: {text}',
-  'receipt.awaiting-lawyer': 'Not yet reviewed by a lawyer: {text}',
-  'receipt.open': '{n} points still to be reviewed by a chartered accountant or lawyer',
-  'receipt.openOne': '1 point still to be reviewed by a chartered accountant or lawyer',
+  'receipt.unsettled': 'The law or the courts leave this open: {text}',
+  'receipt.unchecked': 'Primary source not yet opened: {text}',
+  'receipt.open':
+    '{n} points still open',
+  'receipt.openOne':
+    '1 point still open',
   'receipt.link': 'How we check numbers',
   'receipt.summary': '{n} documents, checked {when}',
   'receipt.summaryOne': '1 document, checked {when}',
@@ -1394,7 +1405,7 @@ export const en: Record<string, string> = {
     'The whole switch, from “I’m done here” to your first 90 days in the new job: what an offer really pays, the dates that matter before you resign, what to say to your manager and HR, what you are owed when you leave, and the PF, insurance and tax steps after you join.',
   'about.checks.title': 'How the numbers are checked',
   'about.checks.p':
-    'Every tax and legal rule comes from the Act, notification or judgment itself, and carefully built AI agents check each number against that text. No chartered accountant has reviewed them yet, and every answer says what is still open.',
+    'Every tax and legal rule comes from the Act, notification or judgment itself, and carefully built AI agents check each number against that text. No human chartered accountant signs them off. Where the law still leaves a point open, the answer says so.',
   'about.promise.title': 'What it costs you',
   'about.who.title': 'Who makes it',
   'about.who': 'Switch Karle is made by Kalpit Tiwari.',
@@ -1413,14 +1424,15 @@ export const en: Record<string, string> = {
   'sources.how.p1':
     'A rule comes only from a primary document: an Act, the Rules under it, a gazette notification, an official rate chart or circular, or a court judgment. Never from a tax blog, and never from an AI’s memory.',
   'sources.how.p2':
-    'The checking is done by carefully built AI agents. They open those documents and match each number against the text, section by section. “Checked” means that match was made on that date. It does not mean a chartered accountant has reviewed it: none has yet. Rules still waiting for that review say so, here and under the tool’s answer.',
+    'The checking is done by carefully built AI agents. They open those documents and match each number against the text, section by section. “Checked” means that match was made on that date. No human chartered accountant or lawyer signs them off. Where the law or the courts leave a point open, it says so, here and under the tool’s answer.',
   'sources.how.p3':
     'Some numbers are not law at all, only how most employers and letters do it. Those say “convention, not law”, and your own contract decides.',
   'sources.how.code': 'Each source is also written next to the code that uses it, and the code is public.',
   'sources.checked.title': 'Checked against the source',
-  'sources.open.title': 'Still being checked',
+  'sources.open.title':
+    'Still open',
   'sources.open.intro':
-    'These rules are in use, but no chartered accountant or lawyer has signed them off yet. Treat a number that rests on one as provisional.',
+    'These rules are in use, but the law or the courts do not settle them yet, or we could not open the primary document. Treat a number that rests on one as provisional.',
   'sources.conventions.title': 'Conventions, not law',
   'sources.conventions.intro': 'No statute fixes these. They are how most employers and letters do it. Your own contract decides.',
   'sources.corrections.title': 'Corrections',
@@ -1430,8 +1442,8 @@ export const en: Record<string, string> = {
   'sources.labelledOn': 'Labelled {date}',
   'sources.usedBy': 'Used in: {tools}',
   'sources.status.verified': 'Checked against the source',
-  'sources.status.awaiting-ca': 'Not yet checked by a chartered accountant',
-  'sources.status.awaiting-lawyer': 'Not yet checked by a lawyer',
+  'sources.status.unsettled': 'Left open by the law or the courts',
+  'sources.status.unchecked': 'Primary source not yet opened',
   'sources.status.convention': 'Convention, not law',
 
   'source.ita-new-regime': 'The new tax regime',
@@ -1445,6 +1457,8 @@ export const en: Record<string, string> = {
   'source.pt-KA': 'Karnataka professional tax',
   'source.pt-PB': 'Punjab State Development Tax, in place of professional tax',
   'source.pt-TN': 'Tamil Nadu professional tax (Chennai’s rate)',
+  'source.form-122': 'Form No. 122, the old Form 12B',
+  'source.notice-pay-tax': 'GST and income tax on notice pay',
   'source.pt-OD': 'Odisha professional tax (repealed from 1 April 2026)',
   'source.pt-MP': 'Madhya Pradesh professional tax',
   'source.pt-BR': 'Bihar professional tax',
@@ -1477,6 +1491,10 @@ export const en: Record<string, string> = {
 
   'corrections.pt-od-br-sk':
     'Odisha professional tax was shown as ₹2,500 a year. Odisha repealed it from 1 April 2026, so it is now ₹0. Bihar and Sikkim were left at ₹0; their Acts set ₹2,500 (income above ₹10 lakh) and ₹2,400 a year.',
+  'corrections.form-12b':
+    'The previous-employer statement was called Form 12B. Under the Income-tax Rules, 2026 it is Form No. 122 (Rule 204).',
+  'corrections.advance-tax-interest':
+    'The Form 16 tool said advance-tax interest waited for a chartered accountant. The rule is clear: it applies when the tax left after TDS is ₹10,000 or more (s.404 and s.424 of the Income-tax Act, 2025).',
   'corrections.pt-tn-od':
     'Tamil Nadu professional tax was shown as ₹2,190 a year (the rate before 2018) and Odisha’s as ₹2,400. Both are ₹2,500; Tamil Nadu’s is Chennai’s rate.',
   'corrections.pt-as-py':
@@ -1543,7 +1561,8 @@ export const en: Record<string, string> = {
     'Everything here is an estimate, not tax, legal or financial advice. For a decision that matters, check it with a chartered accountant or a lawyer.',
   'terms.contract':
     'Your own contract, offer letter and payroll decide. Where a tool uses a convention, such as notice pay ÷ 30, leave ÷ 26 or ÷ 30, or how the last working day is counted, your documents override it.',
-  'terms.fy': 'Tax rules are for FY 2026-27. Some are provisional or not yet checked by a chartered accountant, and “How we check numbers” lists them.',
+  'terms.fy':
+    'Tax rules are for FY 2026-27. A few points are still open, and “How we check numbers” lists them.',
   'terms.drafts': 'Letters, scripts and prompts are drafts. You edit them, send them, and stand behind them yourself.',
   'terms.asis':
     'The site is free and comes as it is, without any warranty. The code is under the MIT licence, which says the same for the software. You decide what to do with an answer, and you act on it yourself.',
@@ -1559,15 +1578,17 @@ export const en: Record<string, string> = {
   'sourceNote.pt-other':
     "Not checked against a primary source yet, because the states' official sites could not be reached: the Maharashtra, Gujarat, Andhra Pradesh, West Bengal and Kerala amounts. Delhi, Haryana, Uttar Pradesh and Rajasthan show ₹0 because no professional-tax Act was found, which does not prove there is none. Jharkhand, Chhattisgarh, Meghalaya, Tripura and other states are left at ₹0.",
   'sourceNote.gratuity-four-years-plus':
-    "The section sets the 190 / 240-day count. Reading it as a way into the fifth year is the courts’ reading, and no judgment is named in our code yet.",
+    'The section sets the 190 / 240-day count. The Madras, Kerala and Calcutta High Courts read it as completing the fifth year (R. Mathan, 2025; BSNL v. Tony K. John, 2025; PNB, 2026); the Karnataka High Court did not (BEML, 2022). In Karnataka, plan on a full five years.',
   'sourceNote.gratuity-wages':
-    "“Wages” start from basic + DA and add back pay above half of the total. The tool uses basic + DA only, so its figure is a floor.",
+    '“Wages” start from basic + DA and add back pay above half of the total. HRA, conveyance, LTA, employer PF and statutory bonus count toward that half; variable pay, ESOPs and reimbursements do not (Labour Ministry FAQs). Whether a plain “special allowance” counts is not settled. The tool uses basic + DA only, so its figure is a floor.',
   'sourceNote.gratuity-cap':
-    "s.53(3) caps gratuity at an amount the Central Government notifies. No notification under the Code was found. ₹20 lakh carries over from 2018 only if the saving clause keeps it.",
+    's.53(3) caps gratuity at a notified amount. The 2018 notification (₹20 lakh) carries over under s.164(2)(a), and the Labour Ministry confirms ₹20 lakh. No higher limit has been notified.',
   'sourceNote.leave-daily-rate':
     "No statute fixes the daily rate. Your employer’s leave policy decides.",
   'sourceNote.notice-buyout-divisor':
     "No statute fixes the basis or the ÷ 30. The Code on Wages proviso covers ten or more employees absent together, not one person resigning. Your contract decides.",
+  'sourceNote.notice-pay-tax':
+    'No GST on notice pay an employee pays (the circular\'s para 7.5, and the Madras High Court). Recovered from salary or F&F, only the net salary is taxed. Reimbursed by a new employer, it is taxable salary (s.18(1)(b)(i)).',
   'sourceNote.unpaid-leave-divisor':
     "No statute fixes the ÷ 30. The Code on Wages caps a deduction for absence in proportion to the days absent, and all deductions at 50% of wages.",
   'sourceNote.last-working-day':
@@ -1575,19 +1596,19 @@ export const en: Record<string, string> = {
   'sourceNote.clawback-gross':
     "No statute sets the repayment: asking for the gross amount is contract practice. A joining bonus is taxed as salary.",
   'sourceNote.clawback-later-year':
-    "Your employer can adjust TDS within the same tax year. No provision was found that gives relief when the repayment falls in a later year.",
+    'Your employer can adjust TDS within the same tax year. No section covers a repayment in a later year, but tax tribunals let you reduce that later year\'s salary by the amount actually repaid (ITAT Delhi, 2026; ITAT Mumbai, 2026). The tax already paid is not refunded. Keep proof of repayment; your Form 16 may not show it.',
   'sourceNote.esop-perquisite':
-    "Read from the Act as enacted (ICAI’s copy). The Finance Act 2026 text was not re-read.",
+    'Checked against the Act as amended by the Finance Act 2026: these sections are unchanged. Leaving the job ends a start-up\'s deferral; the tax is then due within 14 days (s.289(3)).',
   'sourceNote.form16-combined':
-    "The tool takes one standard deduction on the combined salary and leaves out other deductions and exemptions.",
+    'One standard deduction per person, on total salary from every employer (s.19(1) Sl. 2; s.15(2) counts a former employer). The tool leaves out other deductions and exemptions, so the gap it shows is an upper estimate.',
   'sourceNote.advance-tax-interest':
-    "These are the old 234B and 234C. The interest is not computed; whether to model it waits for a chartered accountant.",
+    'Advance tax is due when the tax left after TDS is ₹10,000 or more (s.404); only TDS actually deducted counts. Residents aged 60 or more with no business income owe none (s.403(3)). The tool does not compute the interest.',
   'sourceNote.epf-five-years':
     "Read from the Act as enacted (ICAI’s copy). Service with an earlier employer counts when its PF was transferred in.",
   'sourceNote.epf-tds':
     "Read from the Act as enacted (ICAI’s copy). The tool does not compute a TDS amount.",
   'sourceNote.epf-interest-after-exit':
-    "The Act’s text does not cover it. It rests on case law and CBDT practice.",
+    'The Act exempts the balance “on the day he ceases to be an employee” (Sch. XI Pt A para 2(g)). Tax tribunals tax later interest year by year (ITAT Bangalore, Dilip Ranjrekar, 2017; ITAT Lucknow, Anurag Singh, 2014).',
 
   // ---- The answer's headline (ResultHero): a short label over the one big figure ----
   'hero.gratuity': 'Gratuity on these numbers',

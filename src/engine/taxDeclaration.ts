@@ -29,11 +29,11 @@ export interface TaxDeclarationResult {
  * Rule 205 | FY: 2026-27. Form 16 from the previous employer often arrives
  * after you have left — that delay is the point of the tool, not a statute.
  *
- * Form 12B (previous-employer income/TDS declaration to the new payroll) is
- * the particulars an employee may furnish under s.392(4)(a)(i) of the
- * Income-tax Act, 2025 (not s.392(2), which does not exist in that Act).
- * This engine does not assert a "second slab benefit" withholding mechanism
- * — confirm with a CA.
+ * The old Form 12B (previous-employer income/TDS declaration to the new
+ * payroll) is Form No. 122 under Rule 204(1) of the Income-tax Rules, 2026,
+ * "for the purpose of making deduction" under s.392(1); its Part B is for
+ * s.392(4)(a)(i) of the Income-tax Act, 2025.
+ * VERIFIED: 2026-11-28 | Source: Income-tax Rules, 2026 (G.S.R. 198(E)) Rule 204(1), Form No. 122 | FY: 2026-27
  */
 export function taxDeclaration(input: TaxDeclarationInput): TaxDeclarationResult {
   const breakdown = decodeOffer(input.offer)
