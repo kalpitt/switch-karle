@@ -1,0 +1,62 @@
+# The profile fixer's Cloudflare Worker (DEPLOY.md, "The profile fixer's Worker").
+# On a pull request that changes it: run the real code against the real model with
+# a made-up resume. On main: deploy it, then check it answers.
+# Both need the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets;
+# without them every step says so and passes.
+name: Profile fixer Worker
+
+on:
+  pull_request:
+    paths: ['src/worker/**', 'src/engine/profileFix.ts', 'src/prompts/profileFix.ts', 'scripts/probe-fixer.ts', '.github/workflows/worker.yml']
+  push:
+    branches: [main]
+    paths: ['src/worker/**', 'src/engine/profileFix.ts', 'src/prompts/profileFix.ts', '.github/workflows/worker.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker-${{ github.event_name }}
+  cancel-in-progress: false
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  probe:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Try the real model with a made-up resume
+        run: npx --yes tsx@4 scripts/probe-fixer.ts
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run src/worker src/engine/profileFix.test.ts
+      - name: Deploy the Worker
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then echo "No Cloudflare secrets: deploy skipped."; exit 0; fi
+          npx --yes wrangler@4 deploy -c src/worker/wrangler.toml
+      - name: Check it answers
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then exit 0; fi
+          sleep 10
+          out=$(curl -s -w ' %{http_code}' -X POST https://switchkarle.fyi/api/fix -H 'origin: https://switchkarle.fyi' -H 'content-type: application/json' -d '{"resume":"too short"}')
+          echo "$out"
+          case "$out" in *tooShort*400) ;; *) echo "::error::The Worker did not answer as expected."; exit 1;; esac

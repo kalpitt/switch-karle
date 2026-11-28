@@ -89,7 +89,10 @@ export function replyShape(res: unknown): string {
   const keys = Object.keys(r).slice(0, 8)
   const choice = Array.isArray(r.choices) ? (r.choices[0] as Record<string, unknown> | undefined) : undefined
   const finish = typeof choice?.finish_reason === 'string' ? choice.finish_reason.slice(0, 20) : ''
-  return [keys.join(','), finish].filter(Boolean).join(';')
+  const usage = r.usage as Record<string, unknown> | undefined
+  const details = usage?.completion_tokens_details as Record<string, unknown> | undefined
+  const tokens = [usage?.completion_tokens, details?.reasoning_tokens].filter((n) => typeof n === 'number').join('/')
+  return [keys.join(','), finish, tokens].filter(Boolean).join(';')
 }
 
 /** Text or an already-parsed object, minus any thinking, as JSON. */
@@ -175,7 +178,8 @@ export async function handleFix(request: Request, env: Env): Promise<Response> {
     try {
       res = await env.AI.run(model, {
         messages,
-        max_tokens: 2500,
+        // The second try has room for thinking too, in case the switch below is ignored.
+        max_tokens: attempt === 0 ? 2500 : 8000,
         temperature: attempt === 0 ? 0.3 : 0.1,
         // Gemma 4 and newer Qwen think by default and spent the whole budget on it,
         // leaving an empty answer (live test, 2026-11-28). JSON mode keeps it to the object.
@@ -200,9 +204,12 @@ export async function handleFix(request: Request, env: Env): Promise<Response> {
   return failWhy('failed', why)
 }
 
+/** Which build answered, so a failure report says whether a fix is live. */
+export const WORKER_BUILD = '2026-11-28b'
+
 /** A failure with a short reason that holds nothing the visitor sent. */
 function failWhy(stage: string, detail: string) {
-  return new Response(JSON.stringify({ error: 'failed', why: `${stage} ${detail}`.slice(0, 200) }), {
+  return new Response(JSON.stringify({ error: 'failed', why: `${WORKER_BUILD} ${stage} ${detail}`.slice(0, 200) }), {
     status: STATUS.failed,
     headers: HEADERS,
   })

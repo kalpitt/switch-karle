@@ -84,8 +84,14 @@ server, as the first argument).
 The site is static, but one tool, the profile fixer (`/fix-my-profile/`),
 calls `POST /api/fix`, answered by a Cloudflare Worker on the same address
 (`src/worker/`, see `docs/ARCHITECTURE.md`). It is deployed separately from
-the site, by hand, and only when `src/worker/`, `src/engine/profileFix.ts` or
-`src/prompts/profileFix.ts` changes:
+the site, by `.github/workflows/worker.yml`: a merge to `main` that changes
+`src/worker/`, `src/engine/profileFix.ts` or `src/prompts/profileFix.ts`
+deploys it and checks it answers. A pull request that changes them first runs
+the real code against the real model with a made-up resume
+(`scripts/probe-fixer.ts`). Both need two repository secrets:
+`CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_API_TOKEN`, a token with Workers
+Scripts Edit, Workers Routes Edit (zone switchkarle.fyi) and Workers AI Read.
+Without them the workflow skips and says so. By hand, from a computer:
 
 ```bash
 npx wrangler login            # once, opens Cloudflare in the browser

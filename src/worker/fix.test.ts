@@ -157,7 +157,7 @@ describe('when the answer cannot be used', () => {
     const res = await handleFix(post({ resume: RESUME }), env(run))
     const body = (await res.json()) as { error: string; why: string }
     expect(res.status).toBe(502)
-    expect(body.why).toMatch(/^failed noJson:choices;length:/)
+    expect(body.why).toMatch(/^\S+ failed noJson:choices;length:/)
     expect(body.why).not.toContain('MIS')
   })
 })
