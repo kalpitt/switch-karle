@@ -197,7 +197,40 @@ downloads a share image.
 Local-first is the **default**, not the boundary — that changed on 2026-08-30.
 User data may leave the device only to deliver a feature the user explicitly
 turned on, only to a destination Kalpit controls, and only while it stays on.
-Nothing today does. No third-party analytics. No IndexedDB. No salary in URLs.
+One feature does: the profile fixer (below). No third-party analytics. No
+IndexedDB. No salary in URLs.
+
+### The profile fixer: the one tool with a server
+
+Shipped 2026-11-26 (`PRIVACY.md`, "The callback fixer"). Slug `fix-my-profile`,
+stage 1, listed on the applying step after its lead.
+
+- `src/engine/profileFix.ts` (pure, golden-tested): `cleanResume` strips the
+  name line, phones, emails, links, address and date-of-birth lines, PAN and
+  Aadhaar, and reports what it removed; `parseProfileFix` makes the model's
+  JSON safe to render; `guardFacts` drops any rewrite carrying a number the
+  resume lacks or a "before" line the resume does not contain, and moves a
+  skill the resume never names to "worth showing".
+- `src/prompts/profileFix.ts`: the model prompt, and `ownAiPrompt`, the same
+  words for the user's own AI when our quota is used up.
+- `src/worker/` is a Cloudflare Worker, not part of the Astro build: `fix.ts`
+  (`handleFix`, tested in `fix.test.ts` with a fake AI binding), `index.ts`,
+  `wrangler.toml`. It answers `POST /api/fix` on the site's own address
+  (Worker route `switchkarle.fyi/api/*`), so the page's CSP keeps
+  `connect-src 'self'`. Same-origin check, 40 KB body cap, 3 requests a minute
+  per address (rate-limit binding), cleans the text again, one model call on
+  Workers AI (model in `MODEL`), one retry if the answer will not parse,
+  `guardFacts`, `cache-control: no-store`. It stores nothing and logs nothing;
+  `[observability] enabled = false`. Quota used up → `503 {error:'busy'}`.
+- `src/lib/resumeFile.ts` reads PDF (`pdfjs-dist`) and Word (`mammoth`) in the
+  browser, loaded only when a file is picked. `astro.config.mjs` puts both in
+  `resume-pdf`/`resume-docx` chunks and the service worker skips them, so no
+  visitor downloads them by opening the site.
+- The island keeps nothing in storage (no `storageKey`): a resume does not
+  belong in a browser that may be an employer's. On this page the footer badge
+  is `fix-my-profile.footerBadge` instead of the site-wide one.
+- `e2e/fixer.spec.ts` answers `/api/fix` itself and checks that what the page
+  sends has no name, phone, email or link, plus the PDF and Word readers.
 
 ### Three tools persist raw sensitive text, indefinitely, in plaintext
 

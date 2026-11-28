@@ -8,10 +8,10 @@ new place.
 
 **Live: [switchkarle.fyi](https://switchkarle.fyi/)**
 
-Free and open source. Every number runs in your browser. Nothing is uploaded. No
-accounts, no analytics, no AI calls.
+Free and open source. Every number runs in your browser, and nothing is uploaded, except by the one tool that says so: the profile fixer sends resume text, with contact details taken out, to our own server for one AI answer and keeps nothing. No
+accounts, no analytics.
 
-You find openings on Naukri or LinkedIn. We do not do job listings, resumes, ATS
+You find openings on Naukri or LinkedIn. We do not do job listings, resume builders, ATS
 scoring or interview banks, and we are not going to — see [PRODUCT.md](PRODUCT.md)
 for what that decision is and why.
 
@@ -66,7 +66,7 @@ Every English URL has a Hindi twin at `/hi/<same-slug>/`. Language follows the U
 
 ## Privacy is a promise, not an architecture
 
-- **100% client-side.** No server, no accounts, no analytics. Your offer never leaves this device.
+- **Client-side, with one named exception.** No accounts, no analytics. Your offer never leaves this device. The profile fixer is the only tool that sends anything: resume text, contact details removed first, to a Worker in our own Cloudflare account that keeps nothing (`PRIVACY.md`).
 - **No AI calls.** Bring your own AI: the app generates prompts you paste into ChatGPT/Claude/Gemini.
 - Data lives in `localStorage` under `switchkarle.<tool>.v<N>`, and one backup file you can download and restore from the footer ("Back up or restore"), made and kept on your device.
 

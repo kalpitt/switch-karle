@@ -1,0 +1,29 @@
+# The callback fixer's Worker (PRIVACY.md, "The callback fixer").
+# Deploy: npx wrangler deploy -c src/worker/wrangler.toml   (DEPLOY.md)
+
+name = "switchkarle-fix"
+main = "index.ts"
+compatibility_date = "2026-11-01"
+
+# Only reachable on the site's own address, so the page calls it same-origin
+# and the CSP keeps connect-src 'self'. No *.workers.dev address.
+workers_dev = false
+routes = [{ pattern = "switchkarle.fyi/api/*", zone_name = "switchkarle.fyi" }]
+
+# OFF on purpose. New Workers keep request logs for days by default; this one
+# must keep nothing a user sent. Do not turn on, and do not add AI Gateway.
+[observability]
+enabled = false
+
+[ai]
+binding = "AI"
+
+[vars]
+MODEL = "@cf/google/gemma-4-26b-a4b-it"
+ALLOWED_ORIGIN = "https://switchkarle.fyi"
+
+# Three fixes a minute per visitor. Cloudflare allows a period of 10 or 60 seconds.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 3, period = 60 }

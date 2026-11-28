@@ -35,7 +35,7 @@ export const DOORS: readonly Door[] = [
     id: 'applying',
     journeys: [1, 2],
     lead: 'real-hike',
-    also: ['expected-ctc', 'tracker', 'prompts'],
+    also: ['fix-my-profile', 'expected-ctc', 'tracker', 'prompts'],
   },
   {
     id: 'offer',

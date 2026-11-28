@@ -66,6 +66,10 @@ export default defineConfig({
           '**/inter-cyrillic*',
           '**/inter-greek*',
           '**/inter-vietnamese*',
+          // The profile fixer's PDF and Word readers: fetched only when a file is picked.
+          '**/resume-pdf*',
+          '**/resume-docx*',
+          '**/pdf.worker*',
         ],
         cleanupOutdatedCaches: true,
       },
@@ -96,5 +100,19 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss(), dictionaryPreload()],
+    build: {
+      rollupOptions: {
+        output: {
+          // The profile fixer's file readers (PDF, Word) are large and only
+          // load when someone picks a file. Named so the service worker can
+          // leave them out of the precache (globIgnores above): no visitor
+          // downloads them just by opening the site.
+          manualChunks(id) {
+            if (id.includes('node_modules/pdfjs-dist')) return 'resume-pdf'
+            if (/node_modules\/(mammoth|jszip|@xmldom|lop|bluebird|dingbat-to-unicode|underscore|xmlbuilder|base64-js|pako|option|duck|path-is-absolute|argparse)/.test(id)) return 'resume-docx'
+          },
+        },
+      },
+    },
   },
 })

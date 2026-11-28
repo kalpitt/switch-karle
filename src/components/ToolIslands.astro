@@ -26,6 +26,7 @@ import TaxDeclarationTool from '../tools/tax-declaration/index'
 import NoticeTrackerTool from '../tools/notice-tracker/index'
 import BondScannerTool from '../tools/bond-scanner/index'
 import RedactorTool from '../tools/redactor/index'
+import FixMyProfileTool from '../tools/fix-my-profile/index'
 import ClauseLibraryTool from '../tools/clause-library/index'
 import OfferGoesColdTool from '../tools/offer-goes-cold/index'
 import { WHAT_TO_SAY } from '../data/tools'
@@ -66,5 +67,6 @@ const { slug, lang } = Astro.props
 {slug === 'notice-tracker' && <NoticeTrackerTool client:load lang={lang} />}
 {slug === 'bond-scanner' && <BondScannerTool client:load lang={lang} />}
 {slug === 'redactor' && <RedactorTool client:load lang={lang} />}
+{slug === 'fix-my-profile' && <FixMyProfileTool client:load lang={lang} />}
 {slug === 'clause-library' && <ClauseLibraryTool client:load lang={lang} />}
 {slug === 'offer-goes-cold' && <OfferGoesColdTool client:load lang={lang} />}

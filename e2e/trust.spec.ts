@@ -39,7 +39,7 @@ test('every footer links to the four pages and the source code', async ({ page }
   await expect(footer.locator('a[href="https://github.com/kalpitt/switch-karle"]')).toBeVisible()
   await expect(footer.locator('a[href="/sources/"]').first()).toContainText('Sources checked')
   // One privacy line (decided 2026-11-07), not a second "never leaves this device".
-  await expect(footer).toContainText('Runs in your browser. Nothing you type is sent anywhere.')
+  await expect(footer).toContainText('Runs in your browser. Nothing leaves your device, except when you use the profile fixer')
   await expect(footer).not.toContainText('never leaves this device')
 })
 

@@ -79,6 +79,35 @@ data exists in it and nothing is posted anywhere. Run it yourself with
 `node scripts/smoke-prod.mjs` (or pass another origin, such as a local
 server, as the first argument).
 
+## The profile fixer's Worker
+
+The site is static, but one tool, the profile fixer (`/fix-my-profile/`),
+calls `POST /api/fix`, answered by a Cloudflare Worker on the same address
+(`src/worker/`, see `docs/ARCHITECTURE.md`). It is deployed separately from
+the site, by `.github/workflows/worker.yml`: a merge to `main` that changes
+`src/worker/`, `src/engine/profileFix.ts` or `src/prompts/profileFix.ts`
+deploys it and checks it answers. A pull request that changes them first runs
+the real code against the real model with a made-up resume
+(`scripts/probe-fixer.ts`). Both need two repository secrets:
+`CLOUDFLARE_ACCOUNT_ID`, and `CLOUDFLARE_API_TOKEN`, a token with Workers
+Scripts Edit, Workers Routes Edit (zone switchkarle.fyi) and Workers AI Edit.
+Without them the workflow skips and says so. By hand, from a computer:
+
+```bash
+npx wrangler login            # once, opens Cloudflare in the browser
+npx wrangler deploy -c src/worker/wrangler.toml
+```
+
+It runs on the Workers Free plan: Workers AI gives 10,000 neurons a day, and
+past that every call fails with error 4006 until 05:30 IST, charging nothing.
+The page then says the AI is busy and offers a prompt for the user's own AI.
+**Keep `[observability] enabled = false`** and do not add AI Gateway: either
+would store what users send (`PRIVACY.md`). Until the Worker is deployed the
+page shows "not switched on yet" and offers the same prompt. To switch the
+model, change `MODEL` in `wrangler.toml` and deploy again. To take the tool
+offline, delete the Worker's route in the Cloudflare dashboard (Workers &
+Pages → switchkarle-fix → Settings → Domains & Routes).
+
 ## Rollback
 
 If a deploy breaks the site:

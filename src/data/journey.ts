@@ -109,8 +109,9 @@ export const NEXT_STEP: Readonly<Record<string, string>> = {
   'notice-buyout': 'bond-scanner',
   'bond-scanner': 'bonus-clawback',
   'bonus-clawback': 'clause-library',
-  'clause-library': 'tracker',
+  'clause-library': 'fix-my-profile',
   // 1 Applying
+  'fix-my-profile': 'tracker',
   tracker: 'prompts',
   prompts: 'redactor',
   redactor: 'expected-ctc',
