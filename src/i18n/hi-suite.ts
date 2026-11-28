@@ -1055,7 +1055,10 @@ export const hiSuite: Record<string, string> = {
   'source.pt-KA': 'Karnataka का professional tax',
   'source.pt-PB': 'Punjab State Development Tax, professional tax की जगह',
   'source.pt-TN': 'Tamil Nadu का professional tax (Chennai का rate)',
-  'source.pt-OD': 'Odisha का professional tax',
+  'source.pt-OD': 'Odisha का professional tax (1 April 2026 से ख़त्म)',
+  'source.pt-MP': 'Madhya Pradesh का professional tax',
+  'source.pt-BR': 'Bihar का professional tax',
+  'source.pt-SK': 'Sikkim का professional tax',
   'source.pt-TG': 'Telangana का professional tax',
   'source.pt-AS': 'Assam का professional tax',
   'source.pt-PY': 'Puducherry का professional tax',
@@ -1082,6 +1085,8 @@ export const hiSuite: Record<string, string> = {
   'source.epf-interest-after-exit': 'Job छोड़ने के बाद जुड़े PF interest पर tax',
   'source.declaration-rule-205': 'नए employer को HRA proofs और landlord का PAN (Form No. 124)',
 
+  'corrections.pt-od-br-sk':
+    'Odisha का professional tax ₹2,500 साल दिखाया गया था। Odisha ने इसे 1 April 2026 से ख़त्म कर दिया, इसलिए अब ₹0 है। Bihar और Sikkim ₹0 छोड़े गए थे; उनके Act ₹2,500 (₹10 lakh से ज़्यादा income पर) और ₹2,400 साल तय करते हैं।',
   'corrections.pt-tn-od':
     'Tamil Nadu का professional tax ₹2,190 साल दिखाया गया था (2018 से पहले का rate) और Odisha का ₹2,400। दोनों ₹2,500 हैं; Tamil Nadu का rate Chennai का है।',
   'corrections.pt-as-py':
