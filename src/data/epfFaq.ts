@@ -17,7 +17,7 @@ export function epfFaqJsonLd(): Record<string, unknown> {
         name: 'Should I withdraw my EPF when I switch jobs?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Usually no. File an online Form 13 transfer to the new employer. A cash withdrawal before five years of continuous service can be a taxable premature withdrawal. Switch Karle does not invent a TDS rupee — confirm with a CA.',
+          text: 'Usually no. File an online Form 13 transfer to the new employer. A cash withdrawal before five years of continuous service can be a taxable premature withdrawal. Switch Karle does not invent a TDS rupee.',
         },
       },
       {

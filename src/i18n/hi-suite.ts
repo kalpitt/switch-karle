@@ -351,7 +351,8 @@ export const hiSuite: Record<string, string> = {
   'esop-reality.vested': '{n} vested',
   'esop-reality.illiquid':
     'यह private-company का paper है। Exit के बाद exercise window छोटी होती है, और buyer मिलना ज़रूरी नहीं।',
-  'esop-reality.provisional': 'अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
+  'esop-reality.provisional':
+    'Finance Act 2026 से amended Income-tax Act, 2025 और Income-tax Rules, 2026 के Rule 15 से check किया गया। यह अनुमान है, tax advice नहीं।',
 
   // ---- Relocation ----
   'relocation.title': 'शहर बदलने का calculator',
@@ -367,7 +368,7 @@ export const hiSuite: Record<string, string> = {
   'relocation.rentHint':
     'HRA exemption के लिए असल rent चाहिए। 0 = कोई exemption नहीं। ₹1 lakh/year से ऊपर rent पर employer आमतौर पर landlord का PAN माँगता है।',
   'relocation.ptApprox':
-    'Professional tax approximate है। Bihar, Jharkhand और अन्य नए listed states dropdown में ₹0 पर हैं जब तक primary schedule नहीं मिलता। Tamil Nadu में Chennai का rate दिखाया गया है; Tamil Nadu के दूसरे शहर अपना rate ख़ुद तय करते हैं। Punjab में State Development Tax (₹2,400) लगता है। "Other" भी ₹0 है।',
+    'Professional tax अनुमानित है। Jharkhand और नए जोड़े गए दूसरे states dropdown में ₹0 पर हैं जब तक primary schedule न मिले। Tamil Nadu Chennai का rate दिखाता है; Tamil Nadu के दूसरे शहर अपना rate तय करते हैं। Punjab State Development Tax (₹2,400) लेता है। “Other” भी ₹0 है।',
   'relocation.hraNewRegime': 'HRA exemption new-regime tax नहीं बदलता। यह row सिर्फ़ old-regime comparison के लिए दिखाई गई है।',
   'relocation.verdict.nil': 'In-hand नहीं बदलता। National tax slabs हर राज्य में same हैं।',
   'relocation.verdict.delta': 'Same CTC, move के बाद in-hand {amount}/month {dir}।',
@@ -443,13 +444,15 @@ export const hiSuite: Record<string, string> = {
   'notice-buyout.leaveDays': 'Notice के बदले लगाए गए leave days',
   'notice-buyout.leaveDaysHint': 'अगर offset करने नहीं देंगे तो 0 रखें। Unserved days से ज़्यादा कभी नहीं।',
   'notice-buyout.leaveApplied': '{days} leave days लगाए गए — {net} unserved days बचे। इनके बिना quote {before} है।',
-  'notice-buyout.leaveCandidate': 'Leave को notice के बदले लगाया जा सकता है या नहीं, यह आपके appointment letter और company policy से तय होता है, किसी statute से नहीं। भरोसा करने से पहले लिखित में ले लें।',
+  'notice-buyout.leaveCandidate':
+    'Leave को notice के बदले गिना जा सकता है या नहीं, यह आपका appointment letter और company policy तय करते हैं, कोई statute नहीं, और employer की सहमति ज़रूरी है (Delhi High Court, Adarsh Kalhia v. WAPCOS, 2026)। इस पर भरोसा करने से पहले लिखित में लें।',
   'notice-buyout.divisor':
     'ज़्यादातर letters monthly figure को 30 से divide करती हैं, 26 से नहीं और actual calendar month से भी नहीं। यह contractual practice है, कानून नहीं।',
   'notice-buyout.bothBases': 'दोनों bases, side by side',
   'notice-buyout.row.basic': 'Monthly basic पर',
   'notice-buyout.row.gross': 'Monthly cash gross पर',
-  'notice-buyout.gstNote': 'Notice buyout पर GST / income-tax का treatment disputed है — यह tool कोई tax compute नहीं करता।',
+  'notice-buyout.gstNote':
+    'आप employer को जो notice pay देते हैं उस पर GST नहीं लगता (CBIC Circular 178/10/2022 para 7.5; Madras High Court, GE T&D India, 2019)। Salary या F&F से काटा गया notice pay आपकी income के रूप में tax नहीं होता। नया employer buyout लौटाए, तो वह taxable salary है। यह tool उस पर tax नहीं निकालता।',
 
   // ---- Gratuity ----
   'gratuity.title': 'Gratuity calculator',
@@ -491,7 +494,8 @@ export const hiSuite: Record<string, string> = {
   'leave-encashment.verdict.resign': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.verdict.retire': 'आपकी बची leave के लिए {amount}, Income-tax Act, 2025 की s.19(1) के तहत ₹25,00,000 तक tax-free।',
   'leave-encashment.caseNote': 'Bombay High Court ने CIT v. D.P. Malhotra में कहा था कि "retirement, whether on superannuation or otherwise" resignation को भी cover करता है।',
-  'leave-encashment.limbsNote': 'दो limbs जो यह tool compute नहीं करता, हर साल की service के 30 दिन leave और 10 महीनों की average salary, इस amount को सिर्फ़ घटा सकते हैं, बढ़ा नहीं सकते। किसी CA से confirm कर लें।',
+  'leave-encashment.limbsNote':
+    'दो limbs जो यह tool compute नहीं करता, हर साल की service के 30 दिन leave और 10 महीनों की average salary, इस amount को सिर्फ़ कम कर सकते हैं, कभी बढ़ा नहीं सकते।',
   'leave-encashment.gross': 'Gross',
   'leave-encashment.exempt': 'Tax-free (यहाँ के हिसाब से)',
   'leave-encashment.taxable': 'Taxable',
@@ -560,17 +564,19 @@ export const hiSuite: Record<string, string> = {
   'form16-shock.e1tds': 'पहला employer: TDS',
   'form16-shock.e2gross': 'दूसरा employer: taxable salary',
   'form16-shock.e2tds': 'दूसरा employer: TDS',
-  'form16-shock.verdict.owe': 'Combine करने के बाद, लगभग {amount} अभी भी due हो सकता है। महीना 1 में employer 2 को Form 12B दें।',
+  'form16-shock.verdict.owe':
+    'Combine करने के बाद लगभग {amount} अभी देना बाक़ी हो सकता है। महीना 1 में employer 2 को Form No. 122 (पुराना Form 12B) दें।',
   'form16-shock.verdict.ok': 'TDS पहले से combined bill cover कर रहा है, इस simplified picture में {amount} की slack है।',
   'form16-shock.taxable': 'Combined taxable (एक standard deduction)',
   'form16-shock.tax': 'अगर यह एक employer होता तो Tax',
   'form16-shock.tds': 'पहले से deduct हुआ TDS',
   'form16-shock.stdNote': 'हर payroll ने probably आपको पूरा standard deduction दिया। Return सिर्फ़ एक allow करता है।',
   'form16-shock.omit234':
-    'Advance-tax interest (Income-tax Act, 2025 की s.424/425 — पुराने 234B/234C) तब तक omit किया गया है जब तक कोई CA review न करे — यह tax gap है, penalty model नहीं।',
-  'form16-shock.form12bTitle': 'Employer 2 को देने वाला Form 12B text',
+    'TDS के बाद बचा tax ₹10,000 या ज़्यादा हो, तो वह advance tax था: उस पर s.424 (1 April से हर महीने 1%) और s.425 (छूटी किस्तों पर) का interest ऊपर से लगता है। 31 March से पहले भरने से यह कम होता है। यह tool सिर्फ़ tax gap दिखाता है, वह interest नहीं जोड़ता।',
+  'form16-shock.form12bTitle':
+    'Employer 2 को देने के लिए Form No. 122 (पुराना Form 12B) का text',
   'form16-shock.form12b':
-    'इस FY में previous employer: salary/gross {gross}, TDS {tds}। कृपया मेरी बाक़ी salary पर tax deduct करते समय इस income को ध्यान में रखें (Form 12B)।',
+    'इस FY में पिछला employer: salary/gross {gross}, TDS {tds}। कृपया इस income को ध्यान में रखकर मेरी बाक़ी salary पर tax काटें (Form No. 122, Rule 204)।',
   'form16-shock.form12bNote': 'यह एक plain summary है, statutory form नहीं — payroll इससे आपकी बाक़ी TDS का अंदाज़ा लेता है।',
 
   // ---- Resignation letter ----
@@ -720,7 +726,7 @@ export const hiSuite: Record<string, string> = {
   'epf-transfer.intent.withdraw': 'Balance cash में withdraw करें',
   'epf-transfer.join': 'इस employer के साथ join किया',
   'epf-transfer.tenureScope':
-    'यहाँ गिने गए years सिर्फ़ इस employer के हैं। जो PF आप पहले transfer कर चुके हैं वह add नहीं है — अगर aggregate continuous service पहले ही 5 साल से ज़्यादा है, तो portal / किसी CA से confirm करें।',
+    'यहाँ गिने गए years सिर्फ़ इस employer के हैं। जो PF आप पहले transfer कर चुके हैं वह add नहीं है — अगर aggregate continuous service पहले ही 5 साल से ज़्यादा है, तो EPFO member portal पर अपनी service dates confirm करें।',
   'epf-transfer.exit': 'Last working day / date of exit',
   'epf-transfer.doe': 'Old employer ने EPFO पर date of exit mark कर दी है',
   'epf-transfer.name': 'UAN पर नाम Aadhaar से match करता है',
@@ -732,23 +738,24 @@ export const hiSuite: Record<string, string> = {
     '{years} completed years। 5 साल की continuous service के बाद withdrawal आमतौर पर exempt case है — फिर भी portal पर confirm करें।',
   'epf-transfer.flag.prefer-transfer': '"Start clean" के लिए withdraw न करें। Transfer switcher का move है।',
   'epf-transfer.flag.premature-withdrawal':
-    'Recognised PF की premature withdrawal पर TDS लग सकता है और employer contribution plus interest पर tax। यह tool कोई rupee figure नहीं बनाता। इसके बदले transfer करें, फिर किसी CA से confirm करें।',
+    'Recognised PF की premature withdrawal पर TDS लग सकता है और employer contribution plus interest पर tax। यह tool कोई rupee figure नहीं बनाता। इसके बदले transfer करें।',
   'epf-transfer.flag.doe-unmarked':
     'Online transfer अक्सर तब तक freeze रहता है जब तक old employer date of exit mark न करे। इसे member portal पर raise करें और उसी दिन HR को mail करें।',
   'epf-transfer.flag.name-mismatch':
     'Aadhaar से name mismatch claims को block करता है। Form 13 file करने से पहले employer के through KYC update कराएं।',
   'epf-transfer.flag.dob-mismatch': 'Aadhaar से date-of-birth mismatch claims को block करता है। वही remedy: employer KYC, फिर retry।',
   'epf-transfer.flag.interest-after-exit':
-    'Employment छोड़ने के बाद credited interest taxable हो सकता है अगर balance untransferred रहे। Transfer करने से यह recognised fund के अंदर ही रहता है।',
+    'Job छोड़ने के बाद credit हुआ interest हर साल, credit होते ही, income from other sources के रूप में taxable है: छूट सिर्फ़ उस balance पर है जो छोड़ने के दिन था। Balance को नए employer के PF में transfer करें ताकि वह छूट के अंदर रहे।',
   'epf-transfer.flag.five-year-exempt':
-    '5 साल की continuous recognised-PF service के बाद withdrawal आमतौर पर exempt case है। Portal और किसी CA से confirm करें। यह tool कोई rupee नहीं बनाता।',
+    '5 साल की continuous recognised-PF service के बाद withdrawal आमतौर पर exempt case है। Portal पर अपनी service dates confirm करें। यह tool कोई rupee नहीं बनाता।',
   'epf-transfer.steps': 'Form 13 का path (member portal)',
   'epf-transfer.step.activate-uan': 'EPFO member portal पर अपना UAN activate करें / log in करें।',
   'epf-transfer.step.kyc': 'Aadhaar, PAN और bank seed करें। Name और DOB Aadhaar से match होना चाहिए।',
   'epf-transfer.step.form13': 'Date of exit mark होने के बाद नए member ID के against online transfer claim (Form 13) file करें।',
   'epf-transfer.step.track-claim': 'Claim track करें। अगर यह अटक जाए, तो usual blocker unmarked date of exit या KYC mismatch होता है।',
   'epf-transfer.portal': 'EPFO Member Portal',
-  'epf-transfer.provisional': 'PF withdrawal पर tax का अभी chartered accountant ने review नहीं किया है। इसे provisional मानें, tax advice नहीं।',
+  'epf-transfer.provisional':
+    'Finance Act 2026 से amended Income-tax Act, 2025 की Schedule XI से check किया गया। यह अनुमान है, tax advice नहीं।',
 
   // ---- BGV prep ----
   'bgv-prep.title': 'Background check (BGV) की तैयारी',
@@ -821,7 +828,7 @@ export const hiSuite: Record<string, string> = {
   'tax-declaration.proof.form16-prev':
     'Previous employer का Form 16 अक्सर आपके जाने के हफ़्तों बाद आता है। File करने के लिए आपको फिर भी चाहिए। इसे relieving letter जैसे chase करें।',
   'tax-declaration.proof.form12b':
-    'महीना 1 में नए payroll को Form 12B (previous income/TDS) दें। Income-tax Act, 2025 की s.392(4)(a)(i) multi-employer withholding — exact mechanism किसी CA से confirm करें।',
+    'महीना 1 में नए payroll को Form No. 122 (पुराना Form 12B: पिछले employer की salary और TDS) दें। Income-tax Rules, 2026 का Rule 204, Income-tax Act, 2025 की s.392(4)(a) के तहत।',
 
   // ---- Notice tracker ----
   'notice-tracker.title': 'Notice period checklist',
@@ -867,7 +874,7 @@ export const hiSuite: Record<string, string> = {
   'bond-scanner.flag.post-exit-noncompete':
     'Post-employment non-competes आमतौर पर Contract Act s.27 के तहत void होते हैं। Employment के दौरान वाला सवाल अलग है।',
   'bond-scanner.flag.training-bond':
-    'Bond की रकम एक ceiling है, price नहीं: employer को फिर भी असली training और actual loss दिखाना होता है। *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) में “training” trips असल में business trips थीं, और bond की रकम enforce नहीं हुई। Letter में लिखा number automatically owed नहीं है — किसी lawyer से confirm करें।',
+    'Bond की रकम एक ceiling है, price नहीं: employer को फिर भी असली training और actual loss दिखाना होता है। *Sicpa India v. Manas Pratim Deb* (Delhi HC, 2011) में “training” trips असल में business trips थीं, और bond की रकम enforce नहीं हुई। Letter में लिखा number automatically owed नहीं है। Minimum-service bond सिर्फ़ इसलिए void नहीं होता कि वह resign करने पर रोक लगाता है: Supreme Court ने *Vijaya Bank v. Prashant Narnaware* (2025) में 3 साल, ₹2 lakh का bond सही माना। पूरी रकम देनी है या नहीं, यह अब भी actual loss पर टिका है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.liquidated-damages':
     'Liquidated damages एक ceiling हैं; जहाँ loss साबित किया जा सकता है, वहाँ actual loss का proof फिर भी चाहिए (*Kailash Nath Associates v. DDA*, Supreme Court, 2015)। यह fact-specific है — किसी lawyer से confirm करें।',
   'bond-scanner.flag.probation-extend':
@@ -960,8 +967,10 @@ export const hiSuite: Record<string, string> = {
   'receipt.label': 'स्रोत:',
   'receipt.checked': '{items} ({date} को check किया)',
   'receipt.convention': 'Convention है, कानून नहीं: {text}',
-  'receipt.open': '{n} बातों का chartered accountant या lawyer से review अभी बाक़ी है',
-  'receipt.openOne': '1 बात का chartered accountant या lawyer से review अभी बाक़ी है',
+  'receipt.open':
+    '{n} बातें अभी खुली हैं',
+  'receipt.openOne':
+    '1 बात अभी खुली है',
   'receipt.link': 'हम numbers कैसे check करते हैं',
   'receipt.summary': '{n} documents, check किए: {when}',
   'receipt.summaryOne': '1 document, check किया: {when}',
@@ -972,7 +981,7 @@ export const hiSuite: Record<string, string> = {
   'ui.disclaimerContract': 'ये अनुमान हैं, tax या कानूनी सलाह नहीं। आपका अपना contract और letters ही तय करते हैं।',
   'ui.resultHeading': 'आपका नतीजा',
   'resignation-letter.verdictNext':
-    'यह resignation वाले दिन को पहला दिन गिनता है। अगर letter में notice उस date “से” गिना जाता है, तो यह {lwdNext} हो सकता है। आपके letter की wording जो date दे, वही लिखें।',
+    'यह notice resign करने के अगले दिन से गिनता है, अदालतों का default। अगर आपका letter resignation के दिन को भी गिनता है, तो आपका last day एक दिन पहले है: {lwdNext}।',
 
   'app.footer.madeBy': 'Kalpit Tiwari ने बनाया।',
   'app.footer.reportGithub': 'GitHub पर बताएं',
@@ -1002,7 +1011,7 @@ export const hiSuite: Record<string, string> = {
     'पूरा job switch, “बस, अब यहाँ नहीं” से नई नौकरी के पहले 90 दिन तक: offer असल में कितना देता है, resign करने से पहले ज़रूरी dates, manager और HR से क्या कहें, छोड़ते समय आपका कितना बनता है, और join करने के बाद PF, insurance और tax के काम।',
   'about.checks.title': 'Numbers कैसे check होते हैं',
   'about.checks.p':
-    'हर tax और कानूनी नियम सीधे Act, notification या court के फ़ैसले से आता है, और ध्यान से बनाए गए AI agents हर number को उसी text से मिलाते हैं। अभी किसी chartered accountant ने इन्हें review नहीं किया है, और हर जवाब बताता है कि क्या अभी खुला है।',
+    'हर tax और कानूनी नियम सीधे Act, notification या court के फ़ैसले से आता है, और ध्यान से बनाए गए AI agents हर number को उस text से मिलाते हैं। कोई इंसानी chartered accountant इन पर मुहर नहीं लगाता। जहाँ क़ानून कोई बात अभी खुली छोड़ता है, जवाब वह बताता है।',
   'about.promise.title': 'आपको इसकी क्या कीमत चुकानी है',
   'about.who.title': 'इसे कौन बनाता है',
   'about.who': 'Switch Karle को Kalpit Tiwari बनाते हैं।',
@@ -1021,14 +1030,15 @@ export const hiSuite: Record<string, string> = {
   'sources.how.p1':
     'कोई भी नियम सिर्फ़ primary document से आता है: Act, उसके तहत बने Rules, gazette notification, सरकारी rate chart या circular, या court का फ़ैसला। Tax blog से कभी नहीं, और AI की याददाश्त से भी कभी नहीं।',
   'sources.how.p2':
-    'Checking ध्यान से बनाए गए AI agents करते हैं। वे इन documents को खोलते हैं और हर number को section-by-section text से मिलाते हैं। “Check किया” का मतलब है कि उस date पर यह मिलान हुआ। इसका मतलब यह नहीं कि किसी chartered accountant ने review किया है: अभी तक किसी ने नहीं किया। जो नियम अभी उस review का इंतज़ार कर रहे हैं, वे यहाँ और tool के जवाब के नीचे यह बताते हैं।',
+    'Checking ध्यान से बनाए गए AI agents करते हैं। वे इन documents को खोलते हैं और हर number को section-by-section text से मिलाते हैं। “Checked” का मतलब है कि उस date को यह मिलान हुआ। कोई इंसानी chartered accountant या lawyer इन पर मुहर नहीं लगाता। जहाँ क़ानून या अदालतें कोई बात खुली छोड़ती हैं, यह यहाँ और tool के जवाब के नीचे बताया जाता है।',
   'sources.how.p3':
     'कुछ numbers कानून हैं ही नहीं, बस ज़्यादातर employers और letters ऐसे ही करते हैं। उन पर लिखा है “convention है, कानून नहीं”, और आपका अपना contract ही तय करता है।',
   'sources.how.code': 'हर source उस code के पास भी लिखा है जो उसे इस्तेमाल करता है, और code public है।',
   'sources.checked.title': 'Source से check किए गए',
-  'sources.open.title': 'अभी check होना बाक़ी',
+  'sources.open.title':
+    'अभी खुली बातें',
   'sources.open.intro':
-    'ये नियम इस्तेमाल हो रहे हैं, पर अभी किसी chartered accountant या lawyer ने इन पर मुहर नहीं लगाई है। इन पर टिके number को provisional मानें।',
+    'ये नियम इस्तेमाल हो रहे हैं, पर क़ानून या अदालतों ने इन्हें अभी तय नहीं किया, या हम primary document खोल नहीं पाए। इन पर टिका number provisional मानें।',
   'sources.conventions.title': 'Convention है, कानून नहीं',
   'sources.conventions.intro': 'कोई कानून इन्हें तय नहीं करता। ज़्यादातर employers और letters ऐसे ही करते हैं। आपका अपना contract ही तय करता है।',
   'sources.corrections.title': 'सुधार',
@@ -1069,7 +1079,7 @@ export const hiSuite: Record<string, string> = {
   'source.notice-buyout-divisor': 'Notice buyout: monthly pay ÷ 30 × बाक़ी दिन',
   'source.unpaid-leave-divisor': 'Unpaid leave की recovery: monthly gross ÷ 30 × दिन',
   'source.last-working-day':
-    'Last working day: हम resignation वाले दिन को पहला दिन गिनते हैं। किसी date “से” चलने वाला notice एक दिन बाद ख़त्म हो सकता है।',
+    'Last working day: notice resign करने के अगले दिन से गिना जाता है। अगर आपका letter resignation के दिन को भी गिनता है, तो यह एक दिन पहले है।',
   'source.clawback-gross': 'Joining bonus clawback: letters आम तौर पर gross रक़म वापस माँगते हैं',
   'source.clawback-later-year': 'Bonus अगले tax year में लौटाने पर tax वापस मिलना',
   'source.esop-perquisite': 'Exercise पर ESOP tax: market value में से आपका दिया पैसा घटाकर, salary की तरह tax',
@@ -1158,7 +1168,8 @@ export const hiSuite: Record<string, string> = {
     'यहाँ सब कुछ अनुमान है, tax, कानूनी या financial सलाह नहीं। किसी अहम फ़ैसले से पहले chartered accountant या lawyer से check करें।',
   'terms.contract':
     'आपका अपना contract, offer letter और payroll ही तय करते हैं। जहाँ कोई tool convention इस्तेमाल करता है, जैसे notice pay ÷ 30, leave ÷ 26 या ÷ 30, या last working day कैसे गिना जाए, वहाँ आपके documents ही मान्य हैं।',
-  'terms.fy': 'Tax के नियम FY 2026-27 के हैं। कुछ provisional हैं या अभी chartered accountant ने check नहीं किए, और “हम numbers कैसे check करते हैं” page उन्हें गिनाता है।',
+  'terms.fy':
+    'Tax के नियम FY 2026-27 के हैं। कुछ बातें अभी खुली हैं, और “हम numbers कैसे check करते हैं” उनकी list देता है।',
   'terms.drafts': 'Letters, scripts और prompts drafts हैं। उन्हें आप edit करते हैं, भेजते हैं, और उनकी ज़िम्मेदारी आपकी है।',
   'terms.asis':
     'यह site free है और जैसी है वैसी दी जाती है, बिना किसी warranty के। Code MIT licence के तहत है, जो software के लिए यही कहता है। जवाब का क्या करना है, यह आप तय करते हैं, और उस पर क़दम भी आप ख़ुद उठाते हैं।',
@@ -1172,13 +1183,13 @@ export const hiSuite: Record<string, string> = {
   'sourceNote.pt-TN':
     "Chennai का rate। Tamil Nadu के दूसरे शहर अपना rate ख़ुद तय करते हैं।",
   'sourceNote.pt-other':
-    "अभी primary source से check नहीं हुआ: Maharashtra, Gujarat, Andhra Pradesh, West Bengal, Madhya Pradesh और Kerala की रक़म। Delhi, Haryana, Uttar Pradesh और Rajasthan में ₹0 दिखता है क्योंकि कोई professional-tax Act नहीं मिला, पर इससे साबित नहीं होता कि कोई है ही नहीं। Bihar, Jharkhand, Chhattisgarh, Sikkim, Meghalaya, Tripura और बाक़ी states ₹0 पर छोड़े गए हैं।",
+    'अभी primary source से check नहीं किया, क्योंकि states की official sites नहीं खुलीं: Maharashtra, Gujarat, Andhra Pradesh, West Bengal और Kerala की amounts। Delhi, Haryana, Uttar Pradesh और Rajasthan ₹0 दिखाते हैं क्योंकि कोई professional-tax Act नहीं मिला, जो यह साबित नहीं करता कि कोई नहीं है। Jharkhand, Chhattisgarh, Meghalaya, Tripura और बाक़ी states ₹0 पर छोड़े गए हैं।',
   'sourceNote.gratuity-four-years-plus':
-    "Section 190 / 240 दिन की गिनती तय करता है। इसे पाँचवें साल में जाने का रास्ता मानना courts की reading है, और हमारे code में अभी कोई फ़ैसला नाम से दर्ज नहीं है।",
+    'Section 190 / 240 दिन की गिनती तय करता है। Madras, Kerala और Calcutta High Court इसे पाँचवाँ साल पूरा होना मानते हैं (R. Mathan, 2025; BSNL v. Tony K. John, 2025; PNB, 2026); Karnataka High Court नहीं मानता (BEML, 2022)। Karnataka में पूरे पाँच साल मानकर plan करें।',
   'sourceNote.gratuity-wages':
-    "“Wages” basic + DA से शुरू होती हैं और कुल pay के आधे से ऊपर का हिस्सा वापस जोड़ती हैं। Tool सिर्फ़ basic + DA लेता है, इसलिए उसका figure कम से कम इतना है।",
+    '“Wages” basic + DA से शुरू होती हैं और कुल के आधे से ऊपर का pay वापस जोड़ा जाता है। HRA, conveyance, LTA, employer PF और statutory bonus उस आधे में गिने जाते हैं; variable pay, ESOPs और reimbursements नहीं (Labour Ministry FAQs)। सादा “special allowance” गिना जाए या नहीं, यह तय नहीं है। Tool सिर्फ़ basic + DA लेता है, इसलिए इसका figure न्यूनतम है।',
   'sourceNote.gratuity-cap':
-    "s.53(3) gratuity को उस रक़म तक सीमित करता है जो Central Government notify करे। Code के तहत कोई notification नहीं मिला। ₹20 lakh 2018 से तभी आगे चलता है जब saving clause उसे बचाए।",
+    's.53(3) gratuity को notified amount पर cap करता है। 2018 का notification (₹20 lakh) s.164(2)(a) के तहत लागू रहता है, और Labour Ministry ₹20 lakh confirm करता है। कोई ऊँची limit notify नहीं हुई।',
   'sourceNote.leave-daily-rate':
     "कोई कानून daily rate तय नहीं करता। आपके employer की leave policy तय करती है।",
   'sourceNote.notice-buyout-divisor':
@@ -1186,21 +1197,21 @@ export const hiSuite: Record<string, string> = {
   'sourceNote.unpaid-leave-divisor':
     "कोई कानून ÷ 30 तय नहीं करता। Code on Wages ग़ैरहाज़िरी की कटौती को ग़ैरहाज़िर दिनों के अनुपात तक, और सारी कटौतियों को wages के 50% तक सीमित करता है।",
   'sourceNote.last-working-day':
-    "Resignation notice पर कोई कानून लागू नहीं होता। Section 9 Central Acts पर लागू है, contracts पर नहीं। Supreme Court ने Haru Das Gupta में किसी date “से” गिनी जाने वाली अवधि का पहला दिन छोड़ दिया था। आपके letter की wording तय करती है।",
+    'Resignation notice पर कोई statute लागू नहीं होता। Section 9 Central Acts पर लागू है, contracts पर नहीं। Supreme Court ने Haru Das Gupta में किसी date “से” गिनी गई अवधि का पहला दिन छोड़ा, इसलिए हम भी छोड़ते हैं। आपके letter के शब्द तय करते हैं।',
   'sourceNote.clawback-gross':
     "कोई कानून वापसी तय नहीं करता: gross रक़म माँगना contract का चलन है। Joining bonus पर salary की तरह tax लगता है।",
   'sourceNote.clawback-later-year':
-    "आपका employer उसी tax year में TDS adjust कर सकता है। अगले साल लौटाने पर राहत देने वाला कोई provision नहीं मिला।",
+    'आपका employer उसी tax year में TDS adjust कर सकता है। बाद के साल में लौटाने पर कोई section लागू नहीं होता, पर tax tribunals उस बाद वाले साल की salary को सच में लौटाई गई रक़म से घटाने देते हैं (ITAT Delhi, 2026; ITAT Mumbai, 2026)। पहले भरा tax वापस नहीं मिलता। लौटाने का proof रखें; आपके Form 16 में यह न दिखे, ऐसा हो सकता है।',
   'sourceNote.esop-perquisite':
-    "Act के enacted text से पढ़ा गया (ICAI की copy)। Finance Act 2026 का text दोबारा नहीं पढ़ा गया।",
+    'Finance Act 2026 से amended Act से check किया गया: ये sections नहीं बदले। Job छोड़ने पर start-up की deferral ख़त्म हो जाती है; tax फिर 14 दिन में देना होता है (s.289(3))।',
   'sourceNote.form16-combined':
-    "Tool पूरी salary पर एक standard deduction लेता है और बाक़ी deductions और exemptions छोड़ देता है।",
+    'हर व्यक्ति के लिए एक standard deduction, हर employer की कुल salary पर (s.19(1) Sl. 2; s.15(2) पुराने employer को भी गिनता है)। Tool बाक़ी deductions और exemptions छोड़ देता है, इसलिए दिखाया गया gap ऊपरी अनुमान है।',
   'sourceNote.advance-tax-interest':
-    "ये पुराने 234B और 234C हैं। Interest का हिसाब नहीं किया जाता; इसे model करना है या नहीं, यह chartered accountant के जवाब पर टिका है।",
+    'Advance tax तब देना होता है जब TDS के बाद बचा tax ₹10,000 या ज़्यादा हो (s.404); सिर्फ़ सच में कटा TDS गिना जाता है। 60 साल या ज़्यादा के resident, जिनकी कोई business income नहीं, उन्हें नहीं देना (s.403(3))। Tool interest नहीं निकालता।',
   'sourceNote.epf-five-years':
     "Act के enacted text से पढ़ा गया (ICAI की copy)। पिछले employer की service गिनी जाती है अगर उसका PF transfer होकर आया हो।",
   'sourceNote.epf-tds':
     "Act के enacted text से पढ़ा गया (ICAI की copy)। Tool TDS की रक़म नहीं निकालता।",
   'sourceNote.epf-interest-after-exit':
-    "Act का text इसे cover नहीं करता। यह case law और CBDT के चलन पर टिका है।",
+    'Act उस balance को छूट देता है जो “on the day he ceases to be an employee” था (Sch. XI Pt A para 2(g))। Tax tribunals बाद के interest पर हर साल tax लगाते हैं (ITAT Bangalore, Dilip Ranjrekar, 2017; ITAT Lucknow, Anurag Singh, 2014)।',
 };
